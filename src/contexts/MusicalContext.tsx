@@ -15,6 +15,7 @@ import {
   InversionIndex,
   ixActual,
   ixActualArray,
+  NoteIndices,
 } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
@@ -28,7 +29,7 @@ import { NoteGroupingId } from "@/types/NoteGroupingId";
 import { IndexUtils } from "@/utils/IndexUtils";
 
 export interface MusicalSettings {
-  selectedNoteIndices: ActualIndex[]; // Read-only
+  selectedNoteIndices: NoteIndices; // Read-only
   selectedMusicalKey: MusicalKey;
   currentChordRef?: ChordReference;
   setSelectedMusicalKey: (key: MusicalKey) => void;
@@ -41,7 +42,7 @@ export interface MusicalSettings {
   // Freeform-only operations
   toggleNote: (note: ActualIndex) => void;
   clearNotes: () => void;
-  setNotesDirectly: (notes: ActualIndex[]) => void; // For transpose, etc.
+  setNotesDirectly: (notes: NoteIndices) => void; // For transpose, etc.
 }
 
 const MusicalContext = createContext<MusicalSettings | null>(null);
@@ -50,7 +51,7 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const isScales = useIsScalePreviewMode();
-  const [selectedNoteIndices, setSelectedNoteIndices] = useState<ActualIndex[]>(
+  const [selectedNoteIndices, setSelectedNoteIndices] = useState<NoteIndices>(
     isScales ? [] : ixActualArray([7, 11, 14])
   );
   const [selectedMusicalKey, setSelectedMusicalKey] =
@@ -112,7 +113,7 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({
     setSelectedNoteIndices([]);
   }, []);
 
-  const setNotesDirectly = useCallback((notes: ActualIndex[]) => {
+  const setNotesDirectly = useCallback((notes: NoteIndices) => {
     // Only allow in freeform mode or for system operations
     setSelectedNoteIndices(notes);
   }, []);

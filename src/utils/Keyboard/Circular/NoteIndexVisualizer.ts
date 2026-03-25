@@ -1,5 +1,5 @@
 import { ChromaticIndex } from "@/types/ChromaticIndex";
-import { ActualIndex } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { CircularVisMode } from "@/types/SettingModes";
 import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
 import { PolarMath } from "./PolarMath";
@@ -11,7 +11,7 @@ export class NoteIndexVisualizer {
   ) {}
 
   getVisualization(
-    indices: ActualIndex[],
+    indices: NoteIndices,
     mode: CircularVisMode
   ): CartesianPoint[] {
     switch (mode) {

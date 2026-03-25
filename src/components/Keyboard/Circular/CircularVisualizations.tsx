@@ -1,5 +1,5 @@
 import React from "react";
-import { ActualIndex } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { CircularVisMode } from "@/types/SettingModes";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
@@ -7,7 +7,7 @@ import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualiz
 const DOT_RADIUS = 6;
 export class CircularVisualizations {
   static draw(
-    selectedNoteIndices: ActualIndex[],
+    selectedNoteIndices: NoteIndices,
     circularVisMode: CircularVisMode,
     innerRadius: number,
     color: string
@@ -35,7 +35,7 @@ export class CircularVisualizations {
   }
 
   private static drawBaseNoteDot(
-    selectedNoteIndices: ActualIndex[],
+    selectedNoteIndices: NoteIndices,
     innerRadius: number
   ): JSX.Element {
     const baseIndex = selectedNoteIndices[0];

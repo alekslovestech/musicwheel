@@ -1,13 +1,14 @@
-import { ixActualArray } from "../types/IndexTypes";
-import { NoteGroupingLibrary } from "../types/NoteGroupingLibrary";
-import { NoteGroupingId } from "../types/NoteGroupingId";
 import {
+  ixActualArray,
+  NoteIndices,
   InversionIndex,
   ixInversion,
   ActualIndex,
   OffsetIndex,
   ixActual,
 } from "../types/IndexTypes";
+import { NoteGroupingLibrary } from "../types/NoteGroupingLibrary";
+import { NoteGroupingId } from "../types/NoteGroupingId";
 
 import { IndexUtils } from "./IndexUtils";
 import {
@@ -21,7 +22,7 @@ export class ChordUtils {
    * Example: C-E-G (original) at inversion 1 → bass note is E
    */
   static getBassNoteFromOriginalChord(
-    originalChordIndices: ActualIndex[],
+    originalChordIndices: NoteIndices,
     inversionIndex: InversionIndex,
   ): ActualIndex {
     const reverseIndex = ixInversion(
@@ -36,7 +37,7 @@ export class ChordUtils {
    * Example: E-G-C → bass note is E
    */
   static getBassNoteFromInvertedChord(
-    invertedChordIndices: ActualIndex[],
+    invertedChordIndices: NoteIndices,
   ): ActualIndex {
     return invertedChordIndices[0] as ActualIndex;
   }
@@ -68,7 +69,7 @@ export class ChordUtils {
     bassIndex: ActualIndex,
     chordType: NoteGroupingId,
     inversionIndex: InversionIndex = ixInversion(0),
-  ): ActualIndex[] {
+  ): NoteIndices {
     // Get the offsets for this chord type and inversion
     const chordOffsets = this.getOffsetsFromIdAndInversion(
       chordType,
@@ -89,7 +90,7 @@ export class ChordUtils {
 
   static calculateChordNotesFromChordReference(
     chordReference: ChordReference,
-  ): ActualIndex[] {
+  ): NoteIndices {
     const chordOffsets = ChordUtils.getOffsetsFromIdAndInversion(
       chordReference.id,
       chordReference.inversionIndex,

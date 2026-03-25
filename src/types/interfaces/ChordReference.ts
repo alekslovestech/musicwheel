@@ -5,6 +5,7 @@ import {
   InversionIndex,
   ixActual,
   ixInversion,
+  NoteIndices,
 } from "../IndexTypes";
 import { NoteGroupingId } from "../NoteGroupingId";
 
@@ -31,7 +32,7 @@ export function makeEmptyChordReference(): ChordReference {
 }
 
 export function makeUnknownChordReference(
-  indices: ActualIndex[]
+  indices: NoteIndices
 ): ChordReference {
   return makeChordReference(indices[0], ChordType.Unknown);
 }

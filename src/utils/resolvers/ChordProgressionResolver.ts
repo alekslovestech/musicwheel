@@ -1,4 +1,4 @@
-import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
+import { ActualIndex, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import {
   ScaleDegree,
@@ -9,7 +9,7 @@ import { makeChordReference } from "@/types/interfaces/ChordReference";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 interface SequenceResult {
-  noteArrays: ActualIndex[][];
+  noteArrays: NoteIndices[];
   totalMovement: number;
 }
 
@@ -22,7 +22,7 @@ export class ChordProgressionResolver {
   static computeProgressionOctaves(
     romanStrings: string[],
     chords: AbsoluteChord[],
-  ): ActualIndex[][] {
+  ): NoteIndices[] {
     if (chords.length === 0) return [];
 
     const degrees = romanStrings.map(
@@ -41,7 +41,7 @@ export class ChordProgressionResolver {
     degrees: ScaleDegree[],
     startOctave: number,
   ): SequenceResult {
-    const noteArrays: ActualIndex[][] = [];
+    const noteArrays: NoteIndices[] = [];
     let prevRoot = chromaticToActual(chords[0].chromaticIndex, startOctave);
     let totalMovement = 0;
 
@@ -63,7 +63,7 @@ export class ChordProgressionResolver {
       const rootLow = notesLow[0];
       const rootHigh = notesHigh[0];
 
-      let chosen: ActualIndex[];
+      let chosen: NoteIndices;
       if (i === 0) {
         chosen = startOctave === 1 ? notesHigh : notesLow;
       } else {

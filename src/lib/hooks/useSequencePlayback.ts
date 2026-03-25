@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
-import { ActualIndex } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
@@ -51,7 +51,7 @@ export const useSequencePlayback = ({
   const [selectedProgression, setSelectedProgression] =
     useState<ChordProgressionType | null>(null);
   const chordIndexRef = useRef<number>(0);
-  const precomputedProgressionRef = useRef<ActualIndex[][] | null>(null);
+  const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
 
   // Helper functions - define these first
   const stopCurrentPlayback = useCallback(() => {

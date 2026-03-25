@@ -10,6 +10,7 @@ import {
   ActualIndex,
   actualToChromatic,
   InversionIndex,
+  NoteIndices,
 } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
@@ -53,7 +54,7 @@ export class SpellingUtils {
   }
 
   static computeNotesFromMusicalKey(
-    actualIndices: ActualIndex[],
+    actualIndices: NoteIndices,
     selectedMusicalKey: MusicalKey
   ): NoteWithOctave[] {
     return actualIndices.map((actualIndex) =>
@@ -65,7 +66,7 @@ export class SpellingUtils {
   }
 
   static computeNotesFromChordPreset(
-    chordIndices: ActualIndex[],
+    chordIndices: NoteIndices,
     chordRef: ChordReference
   ): NoteWithOctave[] {
     return chordIndices.map((actualIndex) =>
@@ -74,7 +75,7 @@ export class SpellingUtils {
   }
 
   static computeNotesWithOptimalStrategy(
-    selectedNoteIndices: ActualIndex[],
+    selectedNoteIndices: NoteIndices,
     selectedMusicalKey: MusicalKey,
     currentChordRef?: ChordReference
   ): NoteWithOctave[] {
