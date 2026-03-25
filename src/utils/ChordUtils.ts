@@ -22,11 +22,11 @@ export class ChordUtils {
    */
   static getBassNoteFromOriginalChord(
     originalChordIndices: ActualIndex[],
-    inversionIndex: InversionIndex
+    inversionIndex: InversionIndex,
   ): ActualIndex {
     const reverseIndex = ixInversion(
       (originalChordIndices.length - inversionIndex) %
-        originalChordIndices.length
+        originalChordIndices.length,
     );
     return originalChordIndices[reverseIndex] as ActualIndex;
   }
@@ -36,7 +36,7 @@ export class ChordUtils {
    * Example: E-G-C → bass note is E
    */
   static getBassNoteFromInvertedChord(
-    invertedChordIndices: ActualIndex[]
+    invertedChordIndices: ActualIndex[],
   ): ActualIndex {
     return invertedChordIndices[0] as ActualIndex;
   }
@@ -48,7 +48,7 @@ export class ChordUtils {
 
   static getOffsetsFromIdAndInversion(
     id: NoteGroupingId,
-    inversionIndex: InversionIndex = ixInversion(0)
+    inversionIndex: InversionIndex = ixInversion(0),
   ): OffsetIndex[] {
     const definition = NoteGroupingLibrary.getGroupingById(id);
     if (!definition) {
@@ -67,12 +67,12 @@ export class ChordUtils {
   static calculateChordNotesFromBassNote(
     bassIndex: ActualIndex,
     chordType: NoteGroupingId,
-    inversionIndex: InversionIndex = ixInversion(0)
+    inversionIndex: InversionIndex = ixInversion(0),
   ): ActualIndex[] {
     // Get the offsets for this chord type and inversion
     const chordOffsets = this.getOffsetsFromIdAndInversion(
       chordType,
-      inversionIndex
+      inversionIndex,
     );
 
     // The bass note is the first offset in the inversion
@@ -88,15 +88,16 @@ export class ChordUtils {
   }
 
   static calculateChordNotesFromChordReference(
-    chordReference: ChordReference
+    chordReference: ChordReference,
   ): ActualIndex[] {
     const chordOffsets = ChordUtils.getOffsetsFromIdAndInversion(
       chordReference.id,
-      chordReference.inversionIndex
+      chordReference.inversionIndex,
     );
     const newNotes = chordOffsets.map(
-      (offset: number) => (offset + chordReference.rootNote) as ActualIndex
+      (offset: number) => (offset + chordReference.rootNote) as ActualIndex,
     );
     return ixActualArray(IndexUtils.fitChordToAbsoluteRange(newNotes));
   }
+
 }
