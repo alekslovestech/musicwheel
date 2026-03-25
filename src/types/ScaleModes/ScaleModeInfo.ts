@@ -45,10 +45,9 @@ export class ScaleModeInfo {
     tonicIndex: ChromaticIndex
   ): ScaleDegreeInfo | null {
     const relativeOffset = subChromatic(chromaticIndex, tonicIndex); // Normalize to 0-11
-    const scaleDegreePosition: ScaleDegreeIndex =
-      this.scalePattern.findPositionInScale(relativeOffset);
+    const scaleDegreePosition = this.scalePattern.findPositionInScale(relativeOffset);
 
-    return scaleDegreePosition === -1
+    return scaleDegreePosition === null
       ? null
       : this.scalePattern.getScaleDegreeInfoFromPosition(scaleDegreePosition);
   }
