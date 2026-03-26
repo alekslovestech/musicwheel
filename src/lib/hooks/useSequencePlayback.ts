@@ -190,7 +190,7 @@ export const useSequencePlayback = ({
     const progression = ChordProgressionLibrary.getProgression(selectedProgression);
     precomputedProgressionRef.current = ChordProgressionResolver.computeProgressionOctaves(
       progression.progression,
-      progression.resolvedChords(musicalKey)
+      musicalKey
     );
 
     stopCurrentPlayback();

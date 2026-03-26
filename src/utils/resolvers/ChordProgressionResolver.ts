@@ -1,5 +1,6 @@
 import { chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
 import {
   ScaleDegree,
   scaleDegreeGoesDown,
@@ -21,12 +22,16 @@ export class ChordProgressionResolver {
    */
   static computeProgressionOctaves(
     romanStrings: string[],
-    chords: AbsoluteChord[],
+    musicalKey: MusicalKey,
   ): NoteIndices[] {
-    if (chords.length === 0) return [];
+    if (romanStrings.length === 0) return [];
 
     const degrees = romanStrings.map(
       (r) => RomanResolver.createRomanChordFromString(r).scaleDegree,
+    );
+
+    const chords: AbsoluteChord[] = romanStrings.map((r) =>
+      RomanResolver.resolveAsAbsoluteChord(r, musicalKey),
     );
 
     const seq0 = this.buildSequence(chords, degrees, 0);
