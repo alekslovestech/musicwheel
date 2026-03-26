@@ -78,14 +78,12 @@ export class ScalePattern {
   /**
    * Finds the position of a note in the scale based on its relative offset from the tonic.
    * @param relativeOffset The offset from the tonic (0-11)
-   * @returns The position in the scale (0-6), or -1 if not found
+   * @returns The position in the scale (0-6), or null if the note is not in the scale
    */
-  public findPositionInScale(relativeOffset: number): ScaleDegreeIndex {
-    // Normalize the offset to be within 0-11
+  public findPositionInScale(relativeOffset: number): ScaleDegreeIndex | null {
     const normalizedOffset = relativeOffset % TWELVE;
-    return ixScaleDegreeIndex(
-      this.pattern.findIndex((offset) => offset === normalizedOffset)
-    );
+    const index = this.pattern.findIndex((offset) => offset === normalizedOffset);
+    return index === -1 ? null : ixScaleDegreeIndex(index);
   }
 
   /**

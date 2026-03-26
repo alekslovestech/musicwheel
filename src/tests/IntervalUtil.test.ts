@@ -1,4 +1,4 @@
-import { ActualIndex } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalUtils } from "../utils/IntervalUtils";
 
 describe("IntervalUtils.cyclicIntervals", () => {
@@ -29,7 +29,7 @@ describe("IntervalUtils.cyclicIntervals", () => {
 
     test.each(testCases)("$name", ({ input, expected }) => {
       expect(
-        IntervalUtils.cyclicIntervalsFromActualIndices(input as ActualIndex[]),
+        IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices),
       ).toEqual(expected);
     });
   });
@@ -59,7 +59,7 @@ describe("IntervalUtils.cyclicIntervals", () => {
 
     test.each(testCases)("$name", ({ input, expected }) => {
       expect(
-        IntervalUtils.cyclicIntervalsFromActualIndices(input as ActualIndex[]),
+        IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices),
       ).toEqual(expected);
     });
   });
@@ -127,7 +127,7 @@ describe("IntervalUtils.cyclicIntervals", () => {
 
     test.each(testCases)("$name", ({ input, expected }) => {
       expect(
-        IntervalUtils.cyclicIntervalsFromActualIndices(input as ActualIndex[]),
+        IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices),
       ).toEqual(expected);
     });
   });

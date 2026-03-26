@@ -1,7 +1,7 @@
 import { TWELVE, TWENTY4 } from "@/types/constants/NoteConstants";
 
 import { ChromaticIndex, subChromatic } from "@/types/ChromaticIndex";
-import { ActualIndex, ixActualArray } from "@/types/IndexTypes";
+import { ActualIndex, ixActualArray, NoteIndices } from "@/types/IndexTypes";
 
 export class IndexUtils {
   //everything relative to root note
@@ -58,15 +58,15 @@ export class IndexUtils {
    * @param amount The number of semitones to shift (positive for up, negative for down)
    * @returns The transposed indices as ActualIndex array
    */
-  static transposeNotes(indices: ActualIndex[], amount: number): ActualIndex[] {
+  static transposeNotes(indices: NoteIndices, amount: number): NoteIndices {
     return ixActualArray(this.shiftIndices(indices, amount));
   }
 
   //if the new index is already selected, remove it, otherwise add it
   static ToggleNewIndex(
-    selectedNoteIndices: ActualIndex[],
+    selectedNoteIndices: NoteIndices,
     newIndex: ActualIndex
-  ): ActualIndex[] {
+  ): NoteIndices {
     let updatedIndices = selectedNoteIndices.includes(newIndex)
       ? selectedNoteIndices.filter((index) => index !== newIndex)
       : [...selectedNoteIndices, newIndex];

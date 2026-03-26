@@ -4,9 +4,10 @@ import { useCallback, useRef, useState } from "react";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
-import { chromaticToActual } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { AbsoluteChord } from "@/types/AbsoluteChord";
+import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
+import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 import { TWELVE } from "@/types/constants/NoteConstants";
 
@@ -50,6 +51,7 @@ export const useSequencePlayback = ({
   const [selectedProgression, setSelectedProgression] =
     useState<ChordProgressionType | null>(null);
   const chordIndexRef = useRef<number>(0);
+  const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
 
   // Helper functions - define these first
   const stopCurrentPlayback = useCallback(() => {
@@ -112,19 +114,19 @@ export const useSequencePlayback = ({
   ]);
 
   const playProgressionStep = useCallback(() => {
-    if (!selectedProgression || !selectedMusicalKey) return;
+    const precomputed = precomputedProgressionRef.current;
+    if (!precomputed || precomputed.length === 0) return;
 
-    const progression =
-      ChordProgressionLibrary.getProgression(selectedProgression);
-    const currentChord: AbsoluteChord = progression.getChordAtIndex(
-      chordIndexRef.current,
-      selectedMusicalKey
-    );
+    setNotesDirectly(precomputed[chordIndexRef.current]);
 
-    setNotesDirectly([chromaticToActual(currentChord.chromaticIndex)]);
+    const isLastChord = chordIndexRef.current === precomputed.length - 1;
+    chordIndexRef.current = (chordIndexRef.current + 1) % precomputed.length;
 
-    chordIndexRef.current = (chordIndexRef.current + 1) % progression.length;
-  }, [selectedProgression, selectedMusicalKey, setNotesDirectly]);
+    if (isLastChord) {
+      setPlaybackState(PlaybackState.SequenceComplete);
+      stopCurrentPlayback();
+    }
+  }, [setNotesDirectly, setPlaybackState, stopCurrentPlayback]);
 
   const getPlaybackDuration = useCallback(
     (scalePlaybackMode: ScalePlaybackMode) => {
@@ -182,15 +184,21 @@ export const useSequencePlayback = ({
   ]);
 
   const startChordProgressionPlayback = useCallback(() => {
-    if (!selectedProgression || !selectedMusicalKey) return;
+    if (!selectedProgression) return;
+    const musicalKey = selectedMusicalKey ?? DEFAULT_MUSICAL_KEY;
+
+    const progression = ChordProgressionLibrary.getProgression(selectedProgression);
+    precomputedProgressionRef.current = ChordProgressionResolver.computeProgressionOctaves(
+      progression.progression,
+      musicalKey
+    );
 
     stopCurrentPlayback();
     chordIndexRef.current = 0;
     playProgressionStep();
-    const playbackDuration = getPlaybackDuration(scalePlaybackMode);
     sequenceTimerRef.current = setInterval(
       () => playProgressionStep(),
-      playbackDuration
+      PLAYBACK_DURATION_CHORDPROGRESSION
     );
     setPlaybackState(PlaybackState.SequencePlaying);
   }, [

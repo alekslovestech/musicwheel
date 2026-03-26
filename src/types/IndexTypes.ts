@@ -21,7 +21,9 @@ export function ixActual(n: number): ActualIndex {
   return n as ActualIndex;
 }
 
-export function ixActualArray(numbers: number[]): ActualIndex[] {
+export type NoteIndices = ActualIndex[];
+
+export function ixActualArray(numbers: number[]): NoteIndices {
   return numbers.map(ixActual);
 }
 

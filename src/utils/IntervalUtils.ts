@@ -3,11 +3,11 @@ import {
   makeChromaticIndex,
   subChromatic,
 } from "@/types/ChromaticIndex";
-import { ActualIndex } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalDistance, ixIntervalDistance } from "@/types/IntervalClass";
 export class IntervalUtils {
   static cyclicIntervalsFromActualIndices(
-    indices: ActualIndex[],
+    indices: NoteIndices,
   ): IntervalDistance[] {
     const pcs = indices.map((index) => makeChromaticIndex(index));
     const sortedPcs = pcs.sort((a, b) => a - b);

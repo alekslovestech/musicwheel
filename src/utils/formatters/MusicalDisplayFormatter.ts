@@ -21,6 +21,7 @@ import {
   ixInversion,
   actualToChromatic,
   addOffsetToActual,
+  NoteIndices,
 } from "@/types/IndexTypes";
 import { NoteGrouping } from "@/types/NoteGrouping";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
@@ -36,7 +37,7 @@ import { NoteFormatter } from "./NoteFormatter";
 
 export class MusicalDisplayFormatter {
   static getDisplayInfoFromIndices(
-    indices: ActualIndex[],
+    indices: NoteIndices,
     chordDisplayMode: ChordDisplayMode,
     musicalKey: MusicalKey
   ): ChordDisplayInfo {
@@ -64,7 +65,7 @@ export class MusicalDisplayFormatter {
   }
 
   static getChordPresetDisplayInfo(
-    selectedNoteIndices: ActualIndex[],
+    selectedNoteIndices: NoteIndices,
     chordRef: ChordReference,
     chordDisplayMode: ChordDisplayMode
   ): ChordDisplayInfo {
@@ -149,7 +150,7 @@ export class MusicalDisplayFormatter {
 
   // We need to modify getChordReferenceFromIndices to preserve the bass note information
   static getChordReferenceFromIndices(
-    indices: ActualIndex[]
+    indices: NoteIndices
   ): ChordReference | null {
     if (indices.length === 0) return makeEmptyChordReference();
 
@@ -171,7 +172,7 @@ export class MusicalDisplayFormatter {
   }
 
   // Add a new method that also returns the original bass note
-  static getChordReferenceWithBassFromIndices(indices: ActualIndex[]): {
+  static getChordReferenceWithBassFromIndices(indices: NoteIndices): {
     chordRef: ChordReference | null;
     bassNote: ActualIndex | null;
   } {
@@ -183,7 +184,7 @@ export class MusicalDisplayFormatter {
 
   private static findRootPositionMatch(
     normalizedIndices: number[],
-    originalIndices: ActualIndex[]
+    originalIndices: NoteIndices
   ): ChordReference | null {
     const allIds = NoteGroupingLibrary.getAllIds();
 
@@ -207,7 +208,7 @@ export class MusicalDisplayFormatter {
 
   private static findInversionMatch(
     normalizedIndices: number[],
-    originalIndices: ActualIndex[]
+    originalIndices: NoteIndices
   ): ChordReference | null {
     const allIds = NoteGroupingLibrary.getAllIds();
 
@@ -230,7 +231,7 @@ export class MusicalDisplayFormatter {
   }
 
   private static createChordReferenceIndices(
-    indices: ActualIndex[],
+    indices: NoteIndices,
     id: NoteGroupingId,
     inversionIndex: InversionIndex
   ): ChordReference {

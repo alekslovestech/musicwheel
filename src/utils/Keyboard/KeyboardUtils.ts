@@ -5,7 +5,7 @@ import { GlobalMode } from "@/types/enums/GlobalMode";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 
 import { ChromaticIndex } from "@/types/ChromaticIndex";
-import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
+import { ActualIndex, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
@@ -21,7 +21,7 @@ export class KeyboardUtils {
 
   static isSelectedEitherOctave(
     chromaticIndex: ChromaticIndex,
-    selectedNoteIndices: ActualIndex[]
+    selectedNoteIndices: NoteIndices
   ): boolean {
     const actualIndex0 = chromaticToActual(chromaticIndex, 0);
     const actualIndex1 = chromaticToActual(chromaticIndex, 1);
@@ -62,7 +62,7 @@ export class KeyboardUtils {
   // Unified function: returns adjacent key state (black status and selection status)
   static getAdjacentKeyState(
     chromaticIndex: ChromaticIndex,
-    selectedNoteIndices: ActualIndex[]
+    selectedNoteIndices: NoteIndices
   ): {
     prevAccidentalExists: boolean;
     nextAccidentalExists: boolean;

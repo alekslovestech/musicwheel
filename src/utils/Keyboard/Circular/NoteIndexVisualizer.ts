@@ -1,5 +1,5 @@
 import { ChromaticIndex } from "@/types/ChromaticIndex";
-import { ActualIndex } from "@/types/IndexTypes";
+import { ActualIndex, NoteIndices } from "@/types/IndexTypes";
 import { CircularVisMode } from "@/types/SettingModes";
 import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
 import { PolarMath } from "./PolarMath";
@@ -7,12 +7,12 @@ import { PolarMath } from "./PolarMath";
 export class NoteIndexVisualizer {
   constructor(
     private readonly radius: number,
-    private readonly center: CartesianPoint = { x: 0, y: 0 }
+    private readonly center: CartesianPoint = { x: 0, y: 0 },
   ) {}
 
   getVisualization(
-    indices: ActualIndex[],
-    mode: CircularVisMode
+    indices: NoteIndices,
+    mode: CircularVisMode,
   ): CartesianPoint[] {
     switch (mode) {
       case CircularVisMode.Radial:
@@ -28,13 +28,13 @@ export class NoteIndexVisualizer {
   }
 
   private getCartesianFromIndex(
-    index: ChromaticIndex | ActualIndex
+    index: ChromaticIndex | ActualIndex,
   ): CartesianPoint {
     const middleAngle = PolarMath.NoteIndexToMiddleAngle(index);
     const cartPoint = PolarMath.getCartesianFromPolar(
       this.radius,
       middleAngle,
-      true
+      true,
     );
     return { x: cartPoint.x + this.center.x, y: cartPoint.y + this.center.y };
   }

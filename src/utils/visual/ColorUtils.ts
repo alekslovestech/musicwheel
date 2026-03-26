@@ -1,4 +1,4 @@
-import { ActualIndex } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalDistance } from "@/types/IntervalClass";
 import chroma from "chroma-js";
 import { IntervalUtils } from "@/utils/IntervalUtils";
@@ -9,7 +9,7 @@ import {
 } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getChordColor(indices: ActualIndex[]): string {
+  static getChordColor(indices: NoteIndices): string {
     const cyclicIntervals =
       IntervalUtils.cyclicIntervalsFromActualIndices(indices);
     const mixcolor = this.mixChordColor(cyclicIntervals, "lch");
