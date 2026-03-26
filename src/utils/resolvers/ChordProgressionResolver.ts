@@ -1,4 +1,4 @@
-import { ActualIndex, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
+import { chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import {
   ScaleDegree,
@@ -41,11 +41,18 @@ export class ChordProgressionResolver {
     degrees: ScaleDegree[],
     startOctave: number,
   ): SequenceResult {
-    const noteArrays: NoteIndices[] = [];
-    let prevRoot = chromaticToActual(chords[0].chromaticIndex, startOctave);
+    const firstNotes = ChordUtils.calculateChordNotesFromChordReference(
+      makeChordReference(
+        chromaticToActual(chords[0].chromaticIndex, startOctave),
+        chords[0].chordType,
+      ),
+    );
+
+    const noteArrays: NoteIndices[] = [firstNotes];
+    let prevRoot = firstNotes[0];
     let totalMovement = 0;
 
-    for (let i = 0; i < chords.length; i++) {
+    for (let i = 1; i < chords.length; i++) {
       const chord = chords[i];
       const notesLow = ChordUtils.calculateChordNotesFromChordReference(
         makeChordReference(
@@ -62,29 +69,19 @@ export class ChordProgressionResolver {
 
       const rootLow = notesLow[0];
       const rootHigh = notesHigh[0];
+      const goDown = scaleDegreeGoesDown(degrees[i - 1], degrees[i]);
 
-      let chosen: NoteIndices;
-      if (i === 0) {
-        chosen = startOctave === 1 ? notesHigh : notesLow;
-      } else {
-        const goDown = scaleDegreeGoesDown(degrees[i - 1], degrees[i]);
-
-        chosen = goDown
-          ? rootLow < prevRoot
-            ? notesLow
-            : rootHigh < prevRoot
-              ? notesHigh
-              : rootLow <= rootHigh
-                ? notesLow
-                : notesHigh
-          : rootHigh >= prevRoot
+      const chosen = goDown
+        ? rootLow < prevRoot
+          ? notesLow
+          : rootHigh < prevRoot
             ? notesHigh
-            : rootLow >= prevRoot
-              ? notesLow
-              : rootHigh >= rootLow
-                ? notesHigh
-                : notesLow;
-      }
+            : notesLow
+        : rootHigh >= prevRoot
+          ? notesHigh
+          : rootLow >= prevRoot
+            ? notesLow
+            : notesHigh;
 
       const chosenRoot = chosen[0];
       totalMovement += Math.abs(chosenRoot - prevRoot);

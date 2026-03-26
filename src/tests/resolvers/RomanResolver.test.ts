@@ -3,7 +3,7 @@ import { ChordType } from "@/types/enums/ChordType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { NoteConverter } from "@/utils/NoteConverter";
-import { GreekTestConstants } from "../tests/utils/GreekTestConstants";
+import { GreekTestConstants } from "../utils/GreekTestConstants";
 
 function verifyResolvedChord(
   musicalKey: MusicalKey,
