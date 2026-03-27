@@ -6,7 +6,6 @@ import { GlobalMode } from "@/types/enums/GlobalMode";
 
 import { NoteIndices } from "@/types/IndexTypes";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 import { TWELVE } from "@/types/constants/NoteConstants";
@@ -184,13 +183,12 @@ export const useSequencePlayback = ({
   ]);
 
   const startChordProgressionPlayback = useCallback(() => {
-    if (!selectedProgression) return;
-    const musicalKey = selectedMusicalKey ?? DEFAULT_MUSICAL_KEY;
+    if (!selectedProgression || !selectedMusicalKey) return;
 
     const progression = ChordProgressionLibrary.getProgression(selectedProgression);
     precomputedProgressionRef.current = ChordProgressionResolver.computeProgressionOctaves(
       progression.progression,
-      musicalKey
+      selectedMusicalKey
     );
 
     stopCurrentPlayback();

@@ -5,6 +5,7 @@ import { LAYOUT_PATTERNS } from "@/lib/design";
 import { useBorder } from "@/lib/hooks";
 
 import { ChordProgressionSelector } from "../ChordProgressionSelector";
+import { MusicalKeySelector } from "../MusicalKeySelector";
 import { TransposeWidget } from "../TransposeWidget";
 import { PlaybackWidget } from "../PlaybackWidget";
 
@@ -24,6 +25,7 @@ export const SettingsPanelChordProgressions = () => {
         <div
           className={`${LAYOUT_PATTERNS.centerFlexCol} rounded p-2 flex-1 ${settingsGap} ${border}`}
         >
+          <MusicalKeySelector useDropdownSelector={false} />
           <ChordProgressionSelector />
         </div>
 
@@ -34,7 +36,7 @@ export const SettingsPanelChordProgressions = () => {
           <div
             className={`${LAYOUT_PATTERNS.centerFlexCol} max-w-xs self-center gap-2`}
           >
-            <TransposeWidget target="notes" />
+            <TransposeWidget target="key" />
             <PlaybackWidget />
           </div>
         </div>
