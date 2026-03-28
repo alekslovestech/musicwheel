@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
 import { NoteIndices } from "@/types/IndexTypes";
+import { chordDurationMsFromTempo } from "@/types/ChordProgressions/ChordProgression";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
@@ -23,7 +24,6 @@ import {
 
 const PLAYBACK_DURATION_SCALE_SINGLE_NOTE = 300;
 const PLAYBACK_DURATION_SCALE_TRIAD = 500;
-const PLAYBACK_DURATION_CHORDPROGRESSION = 500;
 
 interface UseSequencePlaybackProps {
   isAudioInitialized: boolean;
@@ -51,11 +51,12 @@ export const useSequencePlayback = ({
     useState<ChordProgressionType | null>(null);
   const chordIndexRef = useRef<number>(0);
   const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
+  const chordStepDurationsMsRef = useRef<number[] | null>(null);
 
   // Helper functions - define these first
   const stopCurrentPlayback = useCallback(() => {
-    if (sequenceTimerRef.current) {
-      clearInterval(sequenceTimerRef.current);
+    if (sequenceTimerRef.current !== null) {
+      clearTimeout(sequenceTimerRef.current);
       sequenceTimerRef.current = null;
     }
   }, []);
@@ -114,17 +115,24 @@ export const useSequencePlayback = ({
 
   const playProgressionStep = useCallback(() => {
     const precomputed = precomputedProgressionRef.current;
-    if (!precomputed || precomputed.length === 0) return;
+    const durationsMs = chordStepDurationsMsRef.current;
+    if (!precomputed?.length || !durationsMs?.length) return;
 
-    setNotesDirectly(precomputed[chordIndexRef.current]);
+    const i = chordIndexRef.current;
+    setNotesDirectly(precomputed[i]);
 
-    const isLastChord = chordIndexRef.current === precomputed.length - 1;
-    chordIndexRef.current = (chordIndexRef.current + 1) % precomputed.length;
-
+    const isLastChord = i === precomputed.length - 1;
     if (isLastChord) {
       setPlaybackState(PlaybackState.SequenceComplete);
       stopCurrentPlayback();
+      return;
     }
+
+    chordIndexRef.current = i + 1;
+    const delayAfterThisChord = durationsMs[i];
+    sequenceTimerRef.current = setTimeout(() => {
+      playProgressionStep();
+    }, delayAfterThisChord);
   }, [setNotesDirectly, setPlaybackState, stopCurrentPlayback]);
 
   const getPlaybackDuration = useCallback(
@@ -144,10 +152,15 @@ export const useSequencePlayback = ({
         playbackDuration
       );
     } else if (globalMode === GlobalMode.ChordProgressions) {
-      sequenceTimerRef.current = setInterval(
-        () => playProgressionStep(),
-        PLAYBACK_DURATION_CHORDPROGRESSION
-      );
+      const durationsMs = chordStepDurationsMsRef.current;
+      const nextIndex = chordIndexRef.current;
+      const delayBeforeNextChord =
+        nextIndex > 0 && durationsMs != null && durationsMs.length > 0
+          ? durationsMs[nextIndex - 1]
+          : 0;
+      sequenceTimerRef.current = setTimeout(() => {
+        playProgressionStep();
+      }, delayBeforeNextChord);
     }
     setPlaybackState(PlaybackState.SequencePlaying);
   }, [
@@ -187,17 +200,16 @@ export const useSequencePlayback = ({
 
     const progression = ChordProgressionLibrary.getProgression(selectedProgression);
     precomputedProgressionRef.current = ChordProgressionResolver.computeProgressionOctaves(
-      progression.progression,
+      progression.romans,
       selectedMusicalKey
+    );
+    chordStepDurationsMsRef.current = progression.progression.map((entry) =>
+      chordDurationMsFromTempo(progression.tempo, entry.duration)
     );
 
     stopCurrentPlayback();
     chordIndexRef.current = 0;
     playProgressionStep();
-    sequenceTimerRef.current = setInterval(
-      () => playProgressionStep(),
-      PLAYBACK_DURATION_CHORDPROGRESSION
-    );
     setPlaybackState(PlaybackState.SequencePlaying);
   }, [
     selectedProgression,
@@ -205,6 +217,20 @@ export const useSequencePlayback = ({
     setPlaybackState,
     playProgressionStep,
     stopCurrentPlayback,
+  ]);
+
+  // Chord progressions: auto-start playback when any menu selection changes
+  useEffect(() => {
+    if (!isAudioInitialized) return;
+    if (globalMode !== GlobalMode.ChordProgressions) return;
+    if (!selectedProgression || !selectedMusicalKey) return;
+    startChordProgressionPlayback();
+  }, [
+    globalMode,
+    isAudioInitialized,
+    selectedProgression,
+    selectedMusicalKey,
+    startChordProgressionPlayback,
   ]);
 
   // Unified playback functions - define these last

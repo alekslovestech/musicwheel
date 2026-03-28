@@ -4,9 +4,17 @@ import React from "react";
 import { Select } from "./Common/Select";
 import { useAudio } from "@/contexts/AudioContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
+import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 
 export const ChordProgressionSelector = () => {
   const { selectedProgression, setSelectedProgression } = useAudio();
+
+  const chordSequenceText =
+    selectedProgression != null
+      ? ChordProgressionLibrary.getProgression(
+          selectedProgression
+        ).romans.join(" → ")
+      : null;
 
   const handleChordProgressionChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -37,6 +45,9 @@ export const ChordProgressionSelector = () => {
               </option>
             ))}
           </Select>
+          {chordSequenceText != null ? (
+            <div>{chordSequenceText}</div>
+          ) : null}
         </div>
       }
     </div>

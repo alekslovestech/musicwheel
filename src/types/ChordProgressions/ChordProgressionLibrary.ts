@@ -14,28 +14,29 @@ class ChordProgressionLibrarySingleton {
     return ChordProgressionLibrarySingleton.instance;
   }
 
-  public getProgression(type: ChordProgressionType): ChordProgression {
-    switch (type) {
+  public getProgression(chordProgEnum: ChordProgressionType): ChordProgression {
+    switch (chordProgEnum) {
       case ChordProgressionType.Perfect_Cadence:
-        return new ChordProgression(["V", "I"], "Perfect (Authentic) Cadence");
+        return new ChordProgression(["V", "I"], chordProgEnum);
 
       case ChordProgressionType.Plagal_Cadence:
-        return new ChordProgression(["IV", "I"], "Plagal Cadence");
+        return new ChordProgression(["IV", "I"], chordProgEnum);
 
       case ChordProgressionType.LetItBe:
-        return new ChordProgression(["I", "V", "vi", "IV"], "Let It Be");
+        return new ChordProgression(["I", "V", "vi", "IV"], chordProgEnum, 102);
 
       case ChordProgressionType.WithOrWithoutYou:
-        return new ChordProgression(["I", "♭VII", "IV"], "With or Without You");
+        return new ChordProgression(["I", "♭VII", "IV"], chordProgEnum, 110);
 
       case ChordProgressionType.Something:
         return new ChordProgression(
           ["I", "Imaj7", "I7", "IV", "iv", "I"],
-          "Something"
+          chordProgEnum,
+          133,
         );
 
       default:
-        throw new Error(`Unknown chord progression type: ${type}`);
+        throw new Error(`Unknown chord progression type: ${chordProgEnum}`);
     }
   }
 }
