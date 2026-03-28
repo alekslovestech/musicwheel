@@ -11,13 +11,13 @@ export const ChordProgressionSelector = () => {
 
   const chordSequenceText =
     selectedProgression != null
-      ? ChordProgressionLibrary.getProgression(
-          selectedProgression
-        ).romans.join(" → ")
+      ? ChordProgressionLibrary.getProgression(selectedProgression).romans.join(
+          "→",
+        )
       : null;
 
   const handleChordProgressionChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const progression = event.target.value as ChordProgressionType;
     setSelectedProgression(progression);
@@ -45,9 +45,7 @@ export const ChordProgressionSelector = () => {
               </option>
             ))}
           </Select>
-          {chordSequenceText != null ? (
-            <div>{chordSequenceText}</div>
-          ) : null}
+          {chordSequenceText != null ? <div>{chordSequenceText}</div> : null}
         </div>
       }
     </div>

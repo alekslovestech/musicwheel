@@ -5,7 +5,7 @@ import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 /** LilyPond-style note length denominator (1 = whole, 4 = quarter, 8 = eighth, …). */
 type ChordProgressionNoteDuration = number;
 
-const DEFAULT_CHORD_PROGRESSION_DURATION: ChordProgressionNoteDuration = 1;
+const DEFAULT_CHORD_PROGRESSION_DURATION: ChordProgressionNoteDuration = 4; //quarter is default
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
 
@@ -24,7 +24,7 @@ export function chordDurationMsFromTempo(
 
 export interface ChordProgressionEntry {
   roman: string;
-  duration: ChordProgressionNoteDuration;
+  duration: ChordProgressionNoteDuration | undefined;
 }
 
 // Represents a chord progression

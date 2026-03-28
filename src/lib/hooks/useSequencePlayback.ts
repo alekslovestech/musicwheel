@@ -5,22 +5,15 @@ import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
 import { NoteIndices } from "@/types/IndexTypes";
-import { chordDurationMsFromTempo } from "@/types/ChordProgressions/ChordProgression";
-import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
-import { TWELVE } from "@/types/constants/NoteConstants";
-
-import { IndexUtils } from "@/utils/IndexUtils";
 
 import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
-
 import {
-  ScaleDegreeIndex,
-  ixScaleDegreeIndex,
-} from "@/types/ScaleModes/ScaleDegreeType";
+  computeScalePlaybackStep,
+  prepareChordProgressionSequence,
+} from "@/lib/sequencePlaybackHelpers";
 
 const PLAYBACK_DURATION_SCALE_SINGLE_NOTE = 300;
 const PLAYBACK_DURATION_SCALE_TRIAD = 500;
@@ -70,41 +63,25 @@ export const useSequencePlayback = ({
   const playScaleStep = useCallback(() => {
     if (!selectedMusicalKey) return;
 
-    const currentScaleDegreeIndex = scaleIndexRef.current as ScaleDegreeIndex;
+    const step = computeScalePlaybackStep(
+      selectedMusicalKey,
+      scaleIndexRef.current,
+      scalePlaybackMode
+    );
 
-    // First: check if we've played the last regular scale degree and next should be the octave
-    if (currentScaleDegreeIndex === selectedMusicalKey.scalePatternLength) {
-      // Play the octave (degree 0, one octave higher)
-      const octaveNoteIndices = selectedMusicalKey.getNoteIndicesForScaleDegree(
-        ixScaleDegreeIndex(0), // degree 0
-        scalePlaybackMode
-      );
-      // Add 12 semitones (one octave) to each note
-      const fittedOctaveIndices = IndexUtils.transposeNotes(
-        octaveNoteIndices,
-        TWELVE
-      );
-      setNotesDirectly(fittedOctaveIndices);
+    if (step.notesToPlay !== null) {
+      setNotesDirectly(step.notesToPlay);
+    }
 
+    if (step.shouldEndSequence) {
       setPlaybackState(PlaybackState.SequenceComplete);
       stopCurrentPlayback();
       return;
     }
 
-    // If we're past the octave, just return (should not happen, defensive)
-    if (currentScaleDegreeIndex > selectedMusicalKey.scalePatternLength) {
-      return;
+    if (step.nextIndex !== null) {
+      scaleIndexRef.current = step.nextIndex;
     }
-
-    // Play current note or chord
-    const noteIndices = selectedMusicalKey.getNoteIndicesForScaleDegree(
-      currentScaleDegreeIndex,
-      scalePlaybackMode
-    );
-    setNotesDirectly(noteIndices);
-
-    // Always increment once at the end
-    scaleIndexRef.current++;
   }, [
     selectedMusicalKey,
     scalePlaybackMode,
@@ -198,14 +175,12 @@ export const useSequencePlayback = ({
   const startChordProgressionPlayback = useCallback(() => {
     if (!selectedProgression || !selectedMusicalKey) return;
 
-    const progression = ChordProgressionLibrary.getProgression(selectedProgression);
-    precomputedProgressionRef.current = ChordProgressionResolver.computeProgressionOctaves(
-      progression.romans,
+    const prepared = prepareChordProgressionSequence(
+      selectedProgression,
       selectedMusicalKey
     );
-    chordStepDurationsMsRef.current = progression.progression.map((entry) =>
-      chordDurationMsFromTempo(progression.tempo, entry.duration)
-    );
+    precomputedProgressionRef.current = prepared.precomputedProgression;
+    chordStepDurationsMsRef.current = prepared.chordStepDurationsMs;
 
     stopCurrentPlayback();
     chordIndexRef.current = 0;
