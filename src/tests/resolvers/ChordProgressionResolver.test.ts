@@ -2,6 +2,7 @@ import { ixActualArray } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { KeyType } from "@/types/enums/KeyType";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 describe("ChordProgressionResolver.computeProgressionOctaves", () => {
   function expectRoots(
@@ -9,8 +10,11 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
     musicalKey: MusicalKey,
     expectedRoots: number[],
   ) {
+    const romanChords = roman.map((r) =>
+      RomanResolver.createRomanChordFromString(r),
+    );
     const resolved = ChordProgressionResolver.computeProgressionOctaves(
-      roman,
+      romanChords,
       musicalKey,
     );
     expect(resolved.map((chord) => chord[0])).toEqual(ixActualArray(expectedRoots));
@@ -18,7 +22,10 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
 
   it("returns empty array for empty progression", () => {
     expect(
-      ChordProgressionResolver.computeProgressionOctaves([], DEFAULT_MUSICAL_KEY),
+      ChordProgressionResolver.computeProgressionOctaves(
+        [],
+        DEFAULT_MUSICAL_KEY,
+      ),
     ).toEqual([]);
   });
 

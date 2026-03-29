@@ -12,9 +12,9 @@ function verifyResolvedChord(
   chordType: ChordType
 ) {
   const noteIndex = NoteConverter.toChromaticIndex(noteName);
-  const absoluteChord = RomanResolver.resolveAsAbsoluteChord(
-    romanNumeral,
-    musicalKey
+  const absoluteChord = RomanResolver.resolveRomanChord(
+    RomanResolver.createRomanChordFromString(romanNumeral),
+    musicalKey,
   );
   expect(absoluteChord).toEqual({
     chromaticIndex: noteIndex,

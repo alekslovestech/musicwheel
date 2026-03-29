@@ -81,8 +81,8 @@ export function prepareChordProgressionSequence(
   const progression = ChordProgressionLibrary.getProgression(progressionType);
   const precomputedProgression =
     ChordProgressionResolver.computeProgressionOctaves(
-      progression.romans,
-      musicalKey
+      progression.progression.map((e) => e.romanChord),
+      musicalKey,
     );
   const chordStepLilypondDurations = progression.progression.map((entry) =>
     entry.duration ?? DEFAULT_CHORD_PROGRESSION_DURATION

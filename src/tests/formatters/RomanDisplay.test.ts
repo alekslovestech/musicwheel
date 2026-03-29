@@ -7,17 +7,17 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { MusicalKeyFormatter } from "@/utils/formatters/MusicalKeyFormatter";
 import { ScaleModeFormatter } from "@/utils/formatters/ScaleModeFormatter";
-import { GreekTestConstants } from "./utils/GreekTestConstants";
+import { GreekTestConstants } from "../utils/GreekTestConstants";
 
 function verifyRomanDisplayStrings(
   greekMode: ScaleModeType,
-  expectedNotes: string[]
+  expectedNotes: string[],
 ) {
   const scaleModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
   const romanDisplayStrings =
     ScaleModeFormatter.formatAllScaleDegreesForDisplay(
       scaleModeInfo,
-      KeyDisplayMode.Roman
+      KeyDisplayMode.Roman,
     );
 
   expect(romanDisplayStrings).toEqual(expectedNotes);
@@ -28,7 +28,7 @@ function verifyRomanArray(musicalKey: MusicalKey, expectedArray: string[]) {
 
   const displayStrings = MusicalKeyFormatter.formatAllNotesForDisplay(
     musicalKey,
-    KeyDisplayMode.Roman
+    KeyDisplayMode.Roman,
   );
   expect(displayStrings).toEqual(expectedArray);
 }

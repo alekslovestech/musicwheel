@@ -5,6 +5,7 @@ import {
   ScaleDegree,
   scaleDegreeGoesDown,
 } from "@/types/ScaleModes/ScaleDegreeType";
+import { RomanChord } from "@/types/RomanChord";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { makeChordReference } from "@/types/interfaces/ChordReference";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
@@ -21,17 +22,15 @@ export class ChordProgressionResolver {
    * (up or down) to select the next root octave. Returns the sequence with the least total movement.
    */
   static computeProgressionOctaves(
-    romanStrings: string[],
+    romanChords: RomanChord[],
     musicalKey: MusicalKey,
   ): NoteIndices[] {
-    if (romanStrings.length === 0) return [];
+    if (romanChords.length === 0) return [];
 
-    const degrees = romanStrings.map(
-      (r) => RomanResolver.createRomanChordFromString(r).scaleDegree,
-    );
+    const degrees = romanChords.map((r) => r.scaleDegree);
 
-    const chords: AbsoluteChord[] = romanStrings.map((r) =>
-      RomanResolver.resolveAsAbsoluteChord(r, musicalKey),
+    const chords: AbsoluteChord[] = romanChords.map((r) =>
+      RomanResolver.resolveRomanChord(r, musicalKey),
     );
 
     const seq0 = this.buildSequence(chords, degrees, 0);

@@ -3,7 +3,7 @@ import { ChordType } from "@/types/enums/ChordType";
 
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
-import { ixScaleDegree } from "../types/ScaleModes/ScaleDegreeType";
+import { ixScaleDegree } from "../../types/ScaleModes/ScaleDegreeType";
 
 export function verifyRomanChord(numeral: string, expected: RomanChord) {
   expect(RomanResolver.createRomanChordFromString(numeral)).toEqual(expected);
@@ -40,7 +40,7 @@ describe("RomanNumeral chord tests", () => {
           expected: new RomanChord(
             ixScaleDegree(1),
             ChordType.Major,
-            AccidentalType.Sharp
+            AccidentalType.Sharp,
           ),
         },
         {
@@ -48,7 +48,7 @@ describe("RomanNumeral chord tests", () => {
           expected: new RomanChord(
             ixScaleDegree(1),
             ChordType.Major,
-            AccidentalType.Flat
+            AccidentalType.Flat,
           ),
         },
         {
@@ -56,7 +56,7 @@ describe("RomanNumeral chord tests", () => {
           expected: new RomanChord(
             ixScaleDegree(3),
             ChordType.Minor,
-            AccidentalType.Flat
+            AccidentalType.Flat,
           ),
         },
         {
@@ -64,7 +64,7 @@ describe("RomanNumeral chord tests", () => {
           expected: new RomanChord(
             ixScaleDegree(3),
             ChordType.Minor,
-            AccidentalType.Sharp
+            AccidentalType.Sharp,
           ),
         },
         {
@@ -72,7 +72,7 @@ describe("RomanNumeral chord tests", () => {
           expected: new RomanChord(
             ixScaleDegree(6),
             ChordType.Major,
-            AccidentalType.Flat
+            AccidentalType.Flat,
           ),
         },
       ],
@@ -136,7 +136,7 @@ describe("RomanNumeral chord tests", () => {
           expected: new RomanChord(
             ixScaleDegree(1),
             ChordType.Major7,
-            AccidentalType.Sharp
+            AccidentalType.Sharp,
           ),
         },
         {
@@ -145,7 +145,7 @@ describe("RomanNumeral chord tests", () => {
             ixScaleDegree(1),
             ChordType.Major,
             undefined,
-            5
+            5,
           ),
         },
         {
@@ -154,7 +154,7 @@ describe("RomanNumeral chord tests", () => {
             ixScaleDegree(1),
             ChordType.Major,
             undefined,
-            5
+            5,
           ),
         },
         {
@@ -163,7 +163,7 @@ describe("RomanNumeral chord tests", () => {
             ixScaleDegree(1),
             ChordType.Minor,
             undefined,
-            5
+            5,
           ),
         },
       ],
@@ -184,7 +184,7 @@ describe("RomanNumeral chord tests", () => {
         invalidCases.forEach(({ numeral, error }) => {
           test(`${numeral} (${error})`, () => {
             expect(() =>
-              RomanResolver.createRomanChordFromString(numeral)
+              RomanResolver.createRomanChordFromString(numeral),
             ).toThrow();
           });
         });

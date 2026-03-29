@@ -5,16 +5,16 @@ import { Select } from "./Common/Select";
 import { useAudio } from "@/contexts/AudioContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 
 export const ChordProgressionSelector = () => {
   const { selectedProgression, setSelectedProgression } = useAudio();
 
+  if (selectedProgression === null) return null;
+  const progression =
+    ChordProgressionLibrary.getProgression(selectedProgression);
   const chordSequenceText =
-    selectedProgression != null
-      ? ChordProgressionLibrary.getProgression(selectedProgression).romans.join(
-          "→",
-        )
-      : null;
+    ChordProgressionFormatter.formatRomanNumeralsForDisplay(progression);
 
   const handleChordProgressionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,

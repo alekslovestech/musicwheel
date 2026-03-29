@@ -24,18 +24,13 @@ export class ChordProgression {
     return this.progression.length;
   }
 
-  /** Roman numerals only, in order. */
-  get romans(): string[] {
-    return this.progression.map((e) => e.roman);
-  }
-
   constructor(
     progression_as_strings: string[],
     name: string | undefined,
     tempo: number = DEFAULT_CHORD_PROGRESSION_BPM,
   ) {
     this.progression = progression_as_strings.map((roman) => ({
-      roman,
+      romanChord: RomanResolver.createRomanChordFromString(roman),
       duration: DEFAULT_CHORD_PROGRESSION_DURATION,
     }));
     this.name = name || "Unknown";
@@ -47,8 +42,8 @@ export class ChordProgression {
   }
 
   resolvedChords(musicalKey: MusicalKey): AbsoluteChord[] {
-    return this.progression.map(({ roman }) =>
-      RomanResolver.resolveAsAbsoluteChord(roman, musicalKey),
+    return this.progression.map(({ romanChord }) =>
+      RomanResolver.resolveRomanChord(romanChord, musicalKey),
     );
   }
 }
