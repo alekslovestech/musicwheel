@@ -6,6 +6,7 @@ import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
+import type { LilypondDuration } from "@/types/ChordProgressions/ChordProgressionEntry";
 
 interface ParsedRomanLexeme {
   accidentalPrefix: string;
@@ -20,6 +21,20 @@ const chordTypeRegex: RegExp = /\+|7|maj7|o|o7|dim|dim7|aug|ø7/;
 const romanRegex: RegExp = new RegExp(
   `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${chordTypeRegex.source})?(\/(${pureRomanRegex.source}))?$`,
 );
+
+/** Trailing `:denominator` for LilyPond-style length (e.g. `IV:2` → half note). */
+const progressionDurationSuffixRegex = /^(.+):(\d+)$/;
+
+function splitProgressionToken(token: string): {
+  romanPart: string;
+  duration: LilypondDuration | undefined;
+} {
+  const match = token.match(progressionDurationSuffixRegex);
+  if (match) {
+    return { romanPart: match[1], duration: Number(match[2]) };
+  }
+  return { romanPart: token, duration: undefined };
+}
 
 function splitRomanString(romanString: string): ParsedRomanLexeme {
   const match = romanString.match(romanRegex);
@@ -92,5 +107,19 @@ export class RomanResolver {
     }
 
     return new RomanChord(ordinal!, chordType, accidental, bassDegree);
+  }
+
+  /**
+   * Parses a progression step token: Roman chord plus optional trailing `:lilypondDenominator`.
+   */
+  static parseChordProgressionToken(token: string): {
+    romanChord: RomanChord;
+    duration: LilypondDuration | undefined;
+  } {
+    const { romanPart, duration } = splitProgressionToken(token.trim());
+    return {
+      romanChord: RomanResolver.createRomanChordFromString(romanPart),
+      duration,
+    };
   }
 }
