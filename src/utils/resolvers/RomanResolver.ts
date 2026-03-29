@@ -6,7 +6,34 @@ import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
-import { RomanParser } from "@/utils/resolvers/RomanParser";
+
+interface ParsedRomanLexeme {
+  accidentalPrefix: string;
+  pureRoman: string;
+  chordSuffix: string;
+  bassRoman: string | undefined;
+}
+
+const accidentalRegex: RegExp = /#|♯|b|♭/;
+const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
+const chordTypeRegex: RegExp = /\+|7|maj7|o|o7|dim|dim7|aug|ø7/;
+const romanRegex: RegExp = new RegExp(
+  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${chordTypeRegex.source})?(\/(${pureRomanRegex.source}))?$`,
+);
+
+function splitRomanString(romanString: string): ParsedRomanLexeme {
+  const match = romanString.match(romanRegex);
+  if (match) {
+    return {
+      accidentalPrefix: match[1] || "",
+      pureRoman: match[2],
+      chordSuffix: match[3] || "",
+      bassRoman: match[5] || undefined,
+    };
+  }
+
+  throw new Error(`No match found for roman string: ${romanString}`);
+}
 
 export class RomanResolver {
   /**
@@ -43,7 +70,7 @@ export class RomanResolver {
    * @throws Error if the Roman numeral string is invalid
    */
   static createRomanChordFromString(romanString: string): RomanChord {
-    const parsedRoman = RomanParser.splitRomanString(romanString);
+    const parsedRoman = splitRomanString(romanString);
     const accidental: AccidentalType = AccidentalFormatter.parseAccidentalType(
       parsedRoman.accidentalPrefix,
     );
@@ -64,6 +91,6 @@ export class RomanResolver {
       throw new Error(`Invalid roman notation ${romanString}`);
     }
 
-    return new RomanChord(ordinal, chordType, accidental, bassDegree);
+    return new RomanChord(ordinal!, chordType, accidental, bassDegree);
   }
 }

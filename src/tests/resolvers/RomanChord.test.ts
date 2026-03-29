@@ -3,7 +3,6 @@ import { ChordType } from "@/types/enums/ChordType";
 
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
-import { ixScaleDegree } from "../../types/ScaleModes/ScaleDegreeType";
 
 export function verifyRomanChord(numeral: string, expected: RomanChord) {
   expect(RomanResolver.createRomanChordFromString(numeral)).toEqual(expected);
@@ -16,19 +15,19 @@ describe("RomanNumeral chord tests", () => {
       cases: [
         {
           numeral: "I",
-          expected: new RomanChord(ixScaleDegree(1), ChordType.Major),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major),
         },
         {
           numeral: "IV",
-          expected: new RomanChord(ixScaleDegree(4), ChordType.Major),
+          expected: RomanChord.fromScaleDegree(4, ChordType.Major),
         },
         {
           numeral: "vi",
-          expected: new RomanChord(ixScaleDegree(6), ChordType.Minor),
+          expected: RomanChord.fromScaleDegree(6, ChordType.Minor),
         },
         {
           numeral: "vii",
-          expected: new RomanChord(ixScaleDegree(7), ChordType.Minor),
+          expected: RomanChord.fromScaleDegree(7, ChordType.Minor),
         },
       ],
     },
@@ -37,40 +36,40 @@ describe("RomanNumeral chord tests", () => {
       cases: [
         {
           numeral: "♯I",
-          expected: new RomanChord(
-            ixScaleDegree(1),
+          expected: RomanChord.fromScaleDegree(
+            1,
             ChordType.Major,
             AccidentalType.Sharp,
           ),
         },
         {
           numeral: "♭I",
-          expected: new RomanChord(
-            ixScaleDegree(1),
+          expected: RomanChord.fromScaleDegree(
+            1,
             ChordType.Major,
             AccidentalType.Flat,
           ),
         },
         {
           numeral: "♭iii",
-          expected: new RomanChord(
-            ixScaleDegree(3),
+          expected: RomanChord.fromScaleDegree(
+            3,
             ChordType.Minor,
             AccidentalType.Flat,
           ),
         },
         {
           numeral: "♯iii",
-          expected: new RomanChord(
-            ixScaleDegree(3),
+          expected: RomanChord.fromScaleDegree(
+            3,
             ChordType.Minor,
             AccidentalType.Sharp,
           ),
         },
         {
           numeral: "♭VI",
-          expected: new RomanChord(
-            ixScaleDegree(6),
+          expected: RomanChord.fromScaleDegree(
+            6,
             ChordType.Major,
             AccidentalType.Flat,
           ),
@@ -82,39 +81,39 @@ describe("RomanNumeral chord tests", () => {
       cases: [
         {
           numeral: "I7",
-          expected: new RomanChord(ixScaleDegree(1), ChordType.Dominant7),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Dominant7),
         },
         {
           numeral: "I+",
-          expected: new RomanChord(ixScaleDegree(1), ChordType.Augmented),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Augmented),
         },
         {
           numeral: "Imaj7",
-          expected: new RomanChord(ixScaleDegree(1), ChordType.Major7),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major7),
         },
         {
           numeral: "viio",
-          expected: new RomanChord(ixScaleDegree(7), ChordType.Diminished),
+          expected: RomanChord.fromScaleDegree(7, ChordType.Diminished),
         },
         {
           numeral: "viio7",
-          expected: new RomanChord(ixScaleDegree(7), ChordType.Diminished7),
+          expected: RomanChord.fromScaleDegree(7, ChordType.Diminished7),
         },
         {
           numeral: "IV7",
-          expected: new RomanChord(ixScaleDegree(4), ChordType.Dominant7),
+          expected: RomanChord.fromScaleDegree(4, ChordType.Dominant7),
         },
         {
           numeral: "vi7",
-          expected: new RomanChord(ixScaleDegree(6), ChordType.Minor7),
+          expected: RomanChord.fromScaleDegree(6, ChordType.Minor7),
         },
         {
           numeral: "IVmaj7",
-          expected: new RomanChord(ixScaleDegree(4), ChordType.Major7),
+          expected: RomanChord.fromScaleDegree(4, ChordType.Major7),
         },
         {
           numeral: "viiø7",
-          expected: new RomanChord(ixScaleDegree(7), ChordType.HalfDiminished),
+          expected: RomanChord.fromScaleDegree(7, ChordType.HalfDiminished),
         },
       ],
     },
@@ -133,36 +132,36 @@ describe("RomanNumeral chord tests", () => {
       cases: [
         {
           numeral: "♯Imaj7",
-          expected: new RomanChord(
-            ixScaleDegree(1),
+          expected: RomanChord.fromScaleDegree(
+            1,
             ChordType.Major7,
             AccidentalType.Sharp,
           ),
         },
         {
           numeral: "I/V",
-          expected: new RomanChord(
-            ixScaleDegree(1),
+          expected: RomanChord.fromScaleDegree(
+            1,
             ChordType.Major,
-            undefined,
+            AccidentalType.None,
             5,
           ),
         },
         {
           numeral: "I/v",
-          expected: new RomanChord(
-            ixScaleDegree(1),
+          expected: RomanChord.fromScaleDegree(
+            1,
             ChordType.Major,
-            undefined,
+            AccidentalType.None,
             5,
           ),
         },
         {
           numeral: "i/V",
-          expected: new RomanChord(
-            ixScaleDegree(1),
+          expected: RomanChord.fromScaleDegree(
+            1,
             ChordType.Minor,
-            undefined,
+            AccidentalType.None,
             5,
           ),
         },
