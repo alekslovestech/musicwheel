@@ -2,8 +2,8 @@ import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { TWELVE } from "@/types/constants/NoteConstants";
 
-import { MusicalKeyFormatter } from "@/utils/formatters/MusicalKeyFormatter";
-import { GreekTestConstants } from "../utils/GreekTestConstants";
+import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormatter";
+import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
 function verifyScaleDegreesArray(
   musicalKey: MusicalKey,
@@ -11,19 +11,16 @@ function verifyScaleDegreesArray(
 ) {
   expect(expectedArray.length).toBe(TWELVE);
 
-  const displayStrings = MusicalKeyFormatter.formatAllNotesForDisplay(
+  const displayStrings = MusicalKeyNoteFormatter.formatAllNotesForDisplay(
     musicalKey,
     KeyDisplayMode.ScaleDegree,
   );
   expect(displayStrings).toEqual(expectedArray);
 }
+
 describe("Scale Degree Display", () => {
   describe("Scale Degree Arrays", () => {
-    let constants: GreekTestConstants;
-
-    beforeEach(() => {
-      constants = GreekTestConstants.getInstance();
-    });
+    const constants = GreekTestConstants.getInstance();
 
     const scaleCases = [
       {
@@ -31,12 +28,12 @@ describe("Scale Degree Display", () => {
         cases: [
           {
             key: "C Ionian",
-            musicalKey: () => constants.C_IONIAN_KEY,
+            musicalKey: constants.C_IONIAN_KEY,
             expected: ["1", "", "2", "", "3", "4", "", "5", "", "6", "", "7"],
           },
           {
             key: "D Ionian",
-            musicalKey: () => constants.D_IONIAN_KEY,
+            musicalKey: constants.D_IONIAN_KEY,
             expected: ["", "7", "1", "", "2", "", "3", "4", "", "5", "", "6"],
           },
         ],
@@ -46,12 +43,12 @@ describe("Scale Degree Display", () => {
         cases: [
           {
             key: "C Dorian",
-            musicalKey: () => constants.C_DORIAN_KEY,
+            musicalKey: constants.C_DORIAN_KEY,
             expected: ["1", "", "2", "♭3", "", "4", "", "5", "", "6", "♭7", ""],
           },
           {
             key: "D Dorian",
-            musicalKey: () => constants.D_DORIAN_KEY,
+            musicalKey: constants.D_DORIAN_KEY,
             expected: ["♭7", "", "1", "", "2", "♭3", "", "4", "", "5", "", "6"],
           },
         ],
@@ -62,7 +59,7 @@ describe("Scale Degree Display", () => {
       describe(desc, () => {
         cases.forEach(({ key, musicalKey, expected }) => {
           it(`should display correct scale degrees for ${key}`, () => {
-            verifyScaleDegreesArray(musicalKey(), expected);
+            verifyScaleDegreesArray(musicalKey, expected);
           });
         });
       });

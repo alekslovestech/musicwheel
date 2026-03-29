@@ -10,7 +10,7 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";
-import { MusicalKeyFormatter } from "@/utils/formatters/MusicalKeyFormatter";
+import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormatter";
 import { ChromaticNoteResolver } from "@/utils/resolvers/ChromaticNoteResolver";
 import { track } from "@/lib/track";
 
@@ -43,7 +43,7 @@ export class KeyboardUtils {
 
     return !isDiatonic
       ? ""
-      : MusicalKeyFormatter.formatNoteForDisplay(
+      : MusicalKeyNoteFormatter.formatNoteForDisplay(
           selectedMusicalKey,
           chromaticIndex,
           keyDisplayMode

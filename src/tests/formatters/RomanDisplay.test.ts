@@ -1,11 +1,11 @@
-import { TWELVE } from "@/types/constants/NoteConstants";
+import { SEVEN, TWELVE } from "@/types/constants/NoteConstants";
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 import { ScaleModeLibrary } from "@/types/ScaleModes/ScaleModeLibrary";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
-import { MusicalKeyFormatter } from "@/utils/formatters/MusicalKeyFormatter";
+import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormatter";
 import { ScaleModeFormatter } from "@/utils/formatters/ScaleModeFormatter";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
 
@@ -13,6 +13,7 @@ function verifyRomanDisplayStrings(
   greekMode: ScaleModeType,
   expectedNotes: string[],
 ) {
+  expect(expectedNotes.length).toBe(SEVEN);
   const scaleModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
   const romanDisplayStrings =
     ScaleModeFormatter.formatAllScaleDegreesForDisplay(
@@ -26,12 +27,13 @@ function verifyRomanDisplayStrings(
 function verifyRomanArray(musicalKey: MusicalKey, expectedArray: string[]) {
   expect(expectedArray.length).toBe(TWELVE);
 
-  const displayStrings = MusicalKeyFormatter.formatAllNotesForDisplay(
+  const displayStrings = MusicalKeyNoteFormatter.formatAllNotesForDisplay(
     musicalKey,
     KeyDisplayMode.Roman,
   );
   expect(displayStrings).toEqual(expectedArray);
 }
+
 describe("Roman Mode Index Arrays", () => {
   const modePatternCases = [
     {
@@ -82,11 +84,7 @@ describe("Roman Mode Index Arrays", () => {
 });
 
 describe("getScaleDegreeDisplayString", () => {
-  let constants: GreekTestConstants;
-
-  beforeEach(() => {
-    constants = GreekTestConstants.getInstance();
-  });
+  const constants = GreekTestConstants.getInstance();
 
   const scaleCases = [
     {
@@ -94,7 +92,7 @@ describe("getScaleDegreeDisplayString", () => {
       cases: [
         {
           key: "C Ionian",
-          musicalKey: () => constants.C_IONIAN_KEY,
+          musicalKey: constants.C_IONIAN_KEY,
           expected: [
             "I",
             "",
@@ -112,7 +110,7 @@ describe("getScaleDegreeDisplayString", () => {
         },
         {
           key: "D Ionian",
-          musicalKey: () => constants.D_IONIAN_KEY,
+          musicalKey: constants.D_IONIAN_KEY,
           expected: [
             "",
             "vii°",
@@ -135,7 +133,7 @@ describe("getScaleDegreeDisplayString", () => {
       cases: [
         {
           key: "C Dorian",
-          musicalKey: () => constants.C_DORIAN_KEY,
+          musicalKey: constants.C_DORIAN_KEY,
           expected: [
             "i",
             "",
@@ -153,7 +151,7 @@ describe("getScaleDegreeDisplayString", () => {
         },
         {
           key: "D Dorian",
-          musicalKey: () => constants.D_DORIAN_KEY,
+          musicalKey: constants.D_DORIAN_KEY,
           expected: [
             "♭VII",
             "",
@@ -177,7 +175,7 @@ describe("getScaleDegreeDisplayString", () => {
     describe(desc, () => {
       cases.forEach(({ key, musicalKey, expected }) => {
         it(`should display correct scale degrees for ${key}`, () => {
-          verifyRomanArray(musicalKey(), expected);
+          verifyRomanArray(musicalKey, expected);
         });
       });
     });

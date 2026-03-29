@@ -9,21 +9,22 @@ import { ChromaticNoteResolver } from "@/utils/resolvers/ChromaticNoteResolver";
 import { ScaleModeFormatter } from "./ScaleModeFormatter";
 import { NoteFormatter } from "./NoteFormatter";
 
-export class MusicalKeyFormatter {
+/** Display labels for each chromatic pitch in the context of a key (note names, degrees, or roman). */
+export class MusicalKeyNoteFormatter {
   static formatNoteForDisplay(
     musicalKey: MusicalKey,
     chromaticIndex: ChromaticIndex,
-    keyTextMode: KeyDisplayMode
+    keyTextMode: KeyDisplayMode,
   ): string {
     const scaleDegreeInfo =
       musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(
         chromaticIndex,
-        musicalKey.tonicIndex
+        musicalKey.tonicIndex,
       );
     if (keyTextMode === KeyDisplayMode.NoteNames) {
       const noteInfo = ChromaticNoteResolver.resolveAbsoluteNote(
         chromaticIndex,
-        musicalKey.getDefaultAccidental()
+        musicalKey.getDefaultAccidental(),
       );
       return NoteFormatter.formatForDisplay(noteInfo);
     }
@@ -32,16 +33,16 @@ export class MusicalKeyFormatter {
     return ScaleModeFormatter.formatScaleDegreeForDisplay(
       musicalKey.scaleModeInfo,
       scaleDegreeInfo,
-      keyTextMode
+      keyTextMode,
     );
   }
 
   static formatAllNotesForDisplay(
     musicalKey: MusicalKey,
-    keyTextMode: KeyDisplayMode
+    keyTextMode: KeyDisplayMode,
   ): string[] {
     return Array.from({ length: TWELVE }, (_, i) =>
-      this.formatNoteForDisplay(musicalKey, ixChromatic(i), keyTextMode)
+      this.formatNoteForDisplay(musicalKey, ixChromatic(i), keyTextMode),
     );
   }
 }
