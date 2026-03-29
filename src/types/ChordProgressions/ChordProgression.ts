@@ -1,17 +1,16 @@
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
+import {
+  type ChordProgressionEntry,
+  DEFAULT_CHORD_PROGRESSION_DURATION,
+  type LilypondDuration,
+} from "@/types/ChordProgressions/ChordProgressionEntry";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
-/** LilyPond-style note length denominator (1 = whole, 4 = quarter, 8 = eighth, …). */
-export type LilypondDuration = number;
-
-export const DEFAULT_CHORD_PROGRESSION_DURATION: LilypondDuration = 4; // quarter is default
+export type { ChordProgressionEntry, LilypondDuration };
+export { DEFAULT_CHORD_PROGRESSION_DURATION };
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
-export interface ChordProgressionEntry {
-  roman: string;
-  duration: LilypondDuration | undefined;
-}
 
 // Represents a chord progression
 export class ChordProgression {

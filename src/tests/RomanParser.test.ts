@@ -1,5 +1,7 @@
-import { createParsedRomanString } from "@/types/interfaces/ParsedRomanString";
-import { RomanResolver } from "@/utils/resolvers/RomanResolver";
+import {
+  createParsedRomanString,
+  RomanParser,
+} from "@/utils/resolvers/RomanParser";
 
 describe("SplitRomanString tests", () => {
   const testCases = [
@@ -62,11 +64,11 @@ describe("SplitRomanString tests", () => {
 
   testCases.forEach(({ desc, input, expected }) => {
     test(desc, () => {
-      expect(RomanResolver.splitRomanString(input)).toEqual(expected);
+      expect(RomanParser.splitRomanString(input)).toEqual(expected);
     });
   });
 
   test("Invalid slash chord throws error", () => {
-    expect(() => RomanResolver.splitRomanString("I/V/VII")).toThrow();
+    expect(() => RomanParser.splitRomanString("I/V/VII")).toThrow();
   });
 });
