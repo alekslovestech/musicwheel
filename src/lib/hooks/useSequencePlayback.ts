@@ -11,6 +11,11 @@ import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import {
+  DEFAULT_CHORD_PROGRESSION_BPM,
+  DEFAULT_CHORD_PROGRESSION_DURATION,
+  type LilypondDuration,
+} from "@/types/ChordProgressions/ChordProgression";
+import {
   computeScalePlaybackStep,
   prepareChordProgressionSequence,
 } from "@/lib/sequencePlaybackHelpers";
@@ -24,6 +29,19 @@ interface UseSequencePlaybackProps {
   setPlaybackState: (state: PlaybackState) => void;
 }
 
+/**
+ * Milliseconds one chord should sound for, given BPM (beat = quarter) and a
+ * LilyPond-style duration denominator (1 = whole, 4 = quarter, 8 = eighth).
+ */
+export function chordDurationMsFromTempo(
+  tempoBpm: number = DEFAULT_CHORD_PROGRESSION_BPM,
+  lilyPondDuration: LilypondDuration = DEFAULT_CHORD_PROGRESSION_DURATION,
+): number {
+  const msPerQuarter = 60000 / tempoBpm;
+  const lengthInQuarters = 4 / lilyPondDuration;
+  return msPerQuarter * lengthInQuarters;
+}
+
 export const useSequencePlayback = ({
   isAudioInitialized,
   playbackState,
@@ -34,7 +52,7 @@ export const useSequencePlayback = ({
 
   // Scale-specific state
   const [scalePlaybackMode, setScalePlaybackMode] = useState<ScalePlaybackMode>(
-    ScalePlaybackMode.SingleNote
+    ScalePlaybackMode.SingleNote,
   );
   const scaleIndexRef = useRef<number>(0);
   const sequenceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -44,7 +62,8 @@ export const useSequencePlayback = ({
     useState<ChordProgressionType | null>(null);
   const chordIndexRef = useRef<number>(0);
   const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
-  const chordStepDurationsMsRef = useRef<number[] | null>(null);
+  const chordStepLilypondDurationsRef = useRef<LilypondDuration[] | null>(null);
+  const chordProgressionTempoRef = useRef<number | null>(null);
 
   // Helper functions - define these first
   const stopCurrentPlayback = useCallback(() => {
@@ -66,7 +85,7 @@ export const useSequencePlayback = ({
     const step = computeScalePlaybackStep(
       selectedMusicalKey,
       scaleIndexRef.current,
-      scalePlaybackMode
+      scalePlaybackMode,
     );
 
     if (step.notesToPlay !== null) {
@@ -92,8 +111,9 @@ export const useSequencePlayback = ({
 
   const playProgressionStep = useCallback(() => {
     const precomputed = precomputedProgressionRef.current;
-    const durationsMs = chordStepDurationsMsRef.current;
-    if (!precomputed?.length || !durationsMs?.length) return;
+    const lilyDurations = chordStepLilypondDurationsRef.current;
+    const tempo = chordProgressionTempoRef.current;
+    if (!precomputed?.length || !lilyDurations?.length || tempo == null) return;
 
     const i = chordIndexRef.current;
     setNotesDirectly(precomputed[i]);
@@ -106,7 +126,10 @@ export const useSequencePlayback = ({
     }
 
     chordIndexRef.current = i + 1;
-    const delayAfterThisChord = durationsMs[i];
+    const delayAfterThisChord = chordDurationMsFromTempo(
+      tempo,
+      lilyDurations[i],
+    );
     sequenceTimerRef.current = setTimeout(() => {
       playProgressionStep();
     }, delayAfterThisChord);
@@ -118,7 +141,7 @@ export const useSequencePlayback = ({
         ? PLAYBACK_DURATION_SCALE_SINGLE_NOTE
         : PLAYBACK_DURATION_SCALE_TRIAD;
     },
-    []
+    [],
   );
 
   const resumeCurrentPlayback = useCallback(() => {
@@ -126,14 +149,18 @@ export const useSequencePlayback = ({
     if (globalMode === GlobalMode.Scales) {
       sequenceTimerRef.current = setInterval(
         () => playScaleStep(),
-        playbackDuration
+        playbackDuration,
       );
     } else if (globalMode === GlobalMode.ChordProgressions) {
-      const durationsMs = chordStepDurationsMsRef.current;
+      const lilyDurations = chordStepLilypondDurationsRef.current;
+      const tempo = chordProgressionTempoRef.current;
       const nextIndex = chordIndexRef.current;
       const delayBeforeNextChord =
-        nextIndex > 0 && durationsMs != null && durationsMs.length > 0
-          ? durationsMs[nextIndex - 1]
+        nextIndex > 0 &&
+        lilyDurations != null &&
+        lilyDurations.length > 0 &&
+        tempo != null
+          ? chordDurationMsFromTempo(tempo, lilyDurations[nextIndex - 1])
           : 0;
       sequenceTimerRef.current = setTimeout(() => {
         playProgressionStep();
@@ -159,7 +186,7 @@ export const useSequencePlayback = ({
     const playbackDuration = getPlaybackDuration(scalePlaybackMode);
     sequenceTimerRef.current = setInterval(
       () => playScaleStep(),
-      playbackDuration
+      playbackDuration,
     );
     setPlaybackState(PlaybackState.SequencePlaying);
   }, [
@@ -177,10 +204,11 @@ export const useSequencePlayback = ({
 
     const prepared = prepareChordProgressionSequence(
       selectedProgression,
-      selectedMusicalKey
+      selectedMusicalKey,
     );
     precomputedProgressionRef.current = prepared.precomputedProgression;
-    chordStepDurationsMsRef.current = prepared.chordStepDurationsMs;
+    chordStepLilypondDurationsRef.current = prepared.chordStepLilypondDurations;
+    chordProgressionTempoRef.current = prepared.tempo;
 
     stopCurrentPlayback();
     chordIndexRef.current = 0;

@@ -1,4 +1,7 @@
-import { chordDurationMsFromTempo } from "@/types/ChordProgressions/ChordProgression";
+import {
+  DEFAULT_CHORD_PROGRESSION_DURATION,
+  LilypondDuration,
+} from "@/types/ChordProgressions/ChordProgression";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { NoteIndices } from "@/types/IndexTypes";
@@ -66,7 +69,9 @@ export function computeScalePlaybackStep(
 
 export interface PreparedChordProgressionSequence {
   precomputedProgression: NoteIndices[];
-  chordStepDurationsMs: number[];
+  /** LilyPond-style denominator per step; convert to ms with `chordDurationMsFromTempo(tempo, d)`. */
+  chordStepLilypondDurations: LilypondDuration[];
+  tempo: number;
 }
 
 export function prepareChordProgressionSequence(
@@ -79,8 +84,8 @@ export function prepareChordProgressionSequence(
       progression.romans,
       musicalKey
     );
-  const chordStepDurationsMs = progression.progression.map((entry) =>
-    chordDurationMsFromTempo(progression.tempo, entry.duration)
+  const chordStepLilypondDurations = progression.progression.map((entry) =>
+    entry.duration ?? DEFAULT_CHORD_PROGRESSION_DURATION
   );
-  return { precomputedProgression, chordStepDurationsMs };
+  return { precomputedProgression, chordStepLilypondDurations, tempo: progression.tempo };
 }

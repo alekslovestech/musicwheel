@@ -3,28 +3,14 @@ import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 /** LilyPond-style note length denominator (1 = whole, 4 = quarter, 8 = eighth, …). */
-type ChordProgressionNoteDuration = number;
+export type LilypondDuration = number;
 
-const DEFAULT_CHORD_PROGRESSION_DURATION: ChordProgressionNoteDuration = 4; //quarter is default
+export const DEFAULT_CHORD_PROGRESSION_DURATION: LilypondDuration = 4; // quarter is default
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
-
-/**
- * Milliseconds one chord should sound for, given BPM (beat = quarter) and a
- * LilyPond-style duration denominator (1 = whole, 4 = quarter, 8 = eighth).
- */
-export function chordDurationMsFromTempo(
-  tempoBpm: number = DEFAULT_CHORD_PROGRESSION_BPM,
-  lilyPondDuration: ChordProgressionNoteDuration = DEFAULT_CHORD_PROGRESSION_DURATION,
-): number {
-  const msPerQuarter = 60000 / tempoBpm;
-  const lengthInQuarters = 4 / lilyPondDuration;
-  return msPerQuarter * lengthInQuarters;
-}
-
 export interface ChordProgressionEntry {
   roman: string;
-  duration: ChordProgressionNoteDuration | undefined;
+  duration: LilypondDuration | undefined;
 }
 
 // Represents a chord progression
