@@ -5,9 +5,8 @@ import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 
 describe("RomanChordFormatter.formatProgressionRomanChord", () => {
   function expectProgressionLabel(chord: RomanChord, expected: string) {
-    expect(RomanChordFormatter.formatProgressionRomanChord(chord)).toBe(
-      expected,
-    );
+    const actual = RomanChordFormatter.formatProgressionRomanChord(chord);
+    expect(actual).toBe(expected);
   }
 
   it("formats triads and sevenths like progression input", () => {
