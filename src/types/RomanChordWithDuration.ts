@@ -5,7 +5,14 @@ export type LilypondDuration = number;
 
 export const DEFAULT_CHORD_PROGRESSION_DURATION: LilypondDuration = 4; // quarter is default
 
-export interface ChordProgressionEntry {
+export interface RomanChordWithDuration {
   romanChord: RomanChord;
   duration: LilypondDuration | undefined;
+}
+
+export function makeRomanChordWithDuration(
+  romanChord: RomanChord,
+  duration: LilypondDuration | undefined = undefined,
+): RomanChordWithDuration {
+  return { romanChord, duration };
 }

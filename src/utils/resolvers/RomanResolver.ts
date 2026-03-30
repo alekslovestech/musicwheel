@@ -6,7 +6,11 @@ import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
-import type { LilypondDuration } from "@/types/ChordProgressions/ChordProgressionEntry";
+import {
+  makeRomanChordWithDuration,
+  type RomanChordWithDuration,
+  type LilypondDuration,
+} from "@/types/RomanChordWithDuration";
 
 interface ParsedRomanLexeme {
   accidentalPrefix: string;
@@ -112,14 +116,11 @@ export class RomanResolver {
   /**
    * Parses a progression step token: Roman chord plus optional trailing `:lilypondDenominator`.
    */
-  static parseChordProgressionToken(token: string): {
-    romanChord: RomanChord;
-    duration: LilypondDuration | undefined;
-  } {
-    const { romanPart, duration } = splitProgressionToken(token.trim());
-    return {
-      romanChord: RomanResolver.createRomanChordFromString(romanPart),
+  static parseRomanChordWithDuration(input: string): RomanChordWithDuration {
+    const { romanPart, duration } = splitProgressionToken(input.trim());
+    return makeRomanChordWithDuration(
+      this.createRomanChordFromString(romanPart),
       duration,
-    };
+    );
   }
 }

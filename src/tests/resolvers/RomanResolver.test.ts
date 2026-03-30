@@ -124,30 +124,30 @@ describe("createRomanChordFromString", () => {
   });
 });
 
-describe("parseChordProgressionToken", () => {
+describe("parseChordProgressionDuration", () => {
   test("parses bare numeral with no duration suffix", () => {
-    expect(RomanResolver.parseChordProgressionToken("IV")).toEqual({
+    expect(RomanResolver.parseRomanChordWithDuration("IV")).toEqual({
       romanChord: RomanChord.fromScaleDegree(4, ChordType.Major),
       duration: undefined,
     });
   });
 
   test("parses IV:2 as degree IV with LilyPond denominator 2", () => {
-    expect(RomanResolver.parseChordProgressionToken("IV:2")).toEqual({
+    expect(RomanResolver.parseRomanChordWithDuration("IV:2")).toEqual({
       romanChord: RomanChord.fromScaleDegree(4, ChordType.Major),
       duration: 2,
     });
   });
 
   test("parses chord suffix before duration (ii7:8)", () => {
-    expect(RomanResolver.parseChordProgressionToken("ii7:8")).toEqual({
+    expect(RomanResolver.parseRomanChordWithDuration("ii7:8")).toEqual({
       romanChord: RomanChord.fromScaleDegree(2, ChordType.Minor7),
       duration: 8,
     });
   });
 
   test("parses accidental and duration (♭III:4)", () => {
-    expect(RomanResolver.parseChordProgressionToken("♭III:4")).toEqual({
+    expect(RomanResolver.parseRomanChordWithDuration("♭III:4")).toEqual({
       romanChord: RomanChord.fromScaleDegree(
         3,
         ChordType.Major,
@@ -158,7 +158,7 @@ describe("parseChordProgressionToken", () => {
   });
 
   test("parses slash chord with duration (I/v:2)", () => {
-    expect(RomanResolver.parseChordProgressionToken("I/v:2")).toEqual({
+    expect(RomanResolver.parseRomanChordWithDuration("I/v:2")).toEqual({
       romanChord: RomanChord.fromScaleDegree(
         1,
         ChordType.Major,
@@ -170,18 +170,22 @@ describe("parseChordProgressionToken", () => {
   });
 
   test("trims whitespace around token", () => {
-    expect(RomanResolver.parseChordProgressionToken("  V:1  ")).toEqual({
+    expect(RomanResolver.parseRomanChordWithDuration("  V:1  ")).toEqual({
       romanChord: RomanChord.fromScaleDegree(5, ChordType.Major),
       duration: 1,
     });
   });
 
   test("token without digits after colon is not split; invalid roman throws", () => {
-    expect(() => RomanResolver.parseChordProgressionToken("IV:half")).toThrow();
+    expect(() =>
+      RomanResolver.parseRomanChordWithDuration("IV:half"),
+    ).toThrow();
   });
 
   test("invalid roman after stripping duration still throws", () => {
-    expect(() => RomanResolver.parseChordProgressionToken("I/V/VII:4")).toThrow();
+    expect(() =>
+      RomanResolver.parseRomanChordWithDuration("I/V/VII:4"),
+    ).toThrow();
   });
 });
 
