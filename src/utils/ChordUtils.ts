@@ -1,6 +1,6 @@
 import {
   chromaticToActual,
-  ixActualArray,
+  toNoteIndices,
   NoteIndices,
   InversionIndex,
   ixInversion,
@@ -159,6 +159,6 @@ export class ChordUtils {
     const newNotes = chordOffsets.map(
       (offset: number) => (offset + chordReference.rootNote) as ActualIndex,
     );
-    return ixActualArray(IndexUtils.fitChordToAbsoluteRange(newNotes));
+    return toNoteIndices(IndexUtils.fitChordToAbsoluteRange(newNotes));
   }
 }

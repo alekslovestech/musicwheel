@@ -3,7 +3,7 @@ import {
   actualIndexToChromaticAndOctave,
   chromaticToActual,
   ixActual,
-  ixActualArray,
+  toNoteIndices,
   ixInversion,
 } from "@/types/IndexTypes";
 import { IndexUtils } from "@/utils/IndexUtils";
@@ -41,7 +41,7 @@ describe("IndexUtils", () => {
       it(desc, () => {
         expect(
           ChordUtils.getBassNoteFromOriginalChord(
-            ixActualArray(indices),
+            toNoteIndices(indices),
             ixInversion(inv)
           )
         ).toEqual(expected);
@@ -204,9 +204,9 @@ describe("IndexUtils", () => {
 
     cases.forEach(({ desc, input, amount, expected }) => {
       it(desc, () => {
-        const actualInput = ixActualArray(input);
+        const actualInput = toNoteIndices(input);
         const result = IndexUtils.transposeNotes(actualInput, amount);
-        expect(result).toEqual(ixActualArray(expected));
+        expect(result).toEqual(toNoteIndices(expected));
       });
     });
   });

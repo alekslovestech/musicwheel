@@ -2,7 +2,7 @@ import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { SpecialType } from "@/types/enums/SpecialType";
 
-import { ixActualArray } from "../types/IndexTypes";
+import { toNoteIndices } from "../types/IndexTypes";
 import { MusicalDisplayFormatter } from "../utils/formatters/MusicalDisplayFormatter";
 
 function verifyChordRef(
@@ -12,7 +12,7 @@ function verifyChordRef(
   indices: number[]
 ) {
   const actualRef = MusicalDisplayFormatter.getChordReferenceFromIndices(
-    ixActualArray(indices)
+    toNoteIndices(indices)
   );
   expect(actualRef?.rootNote).toBe(rootNote);
   expect(actualRef?.id).toBe(type);

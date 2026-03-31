@@ -3,7 +3,7 @@ import {
   createNoteWithOctave,
   NoteWithOctave,
 } from "@/types/interfaces/NoteWithOctave";
-import { ixActualArray } from "@/types/IndexTypes";
+import { toNoteIndices } from "@/types/IndexTypes";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
@@ -18,7 +18,7 @@ describe("SpellingChordPreset - Chord preset-based note spelling", () => {
     expectedNotes: NoteWithOctave[]
   ) {
     test(description, () => {
-      const indices = ixActualArray(chordIndices);
+      const indices = toNoteIndices(chordIndices);
       //const chordMatch = MusicalDisplayFormatter.getMatchFromIndices(indices);
       const chordRef =
         MusicalDisplayFormatter.getChordReferenceFromIndices(indices);

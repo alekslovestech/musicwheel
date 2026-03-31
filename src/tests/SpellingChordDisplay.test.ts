@@ -1,4 +1,4 @@
-import { ixActualArray } from "@/types/IndexTypes";
+import { toNoteIndices } from "@/types/IndexTypes";
 
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordDisplayMode } from "@/types/SettingModes";
@@ -17,7 +17,7 @@ describe("SpellingChordDisplay - Chord display info", () => {
     expectedChordName: string
   ) {
     test(description, () => {
-      const indices = ixActualArray(chordIndices);
+      const indices = toNoteIndices(chordIndices);
       const chordRef =
         MusicalDisplayFormatter.getChordReferenceFromIndices(indices);
       const result = MusicalDisplayFormatter.getChordPresetDisplayInfo(
@@ -38,7 +38,7 @@ describe("SpellingChordDisplay - Chord display info", () => {
     test(description, () => {
       const definition = NoteGroupingLibrary.getGroupingById(chordRef.id);
       const indices = definition
-        ? ixActualArray(
+        ? toNoteIndices(
             definition.offsets.map((offset) => chordRef.rootNote + offset)
           )
         : [];

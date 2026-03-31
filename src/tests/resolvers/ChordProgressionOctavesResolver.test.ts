@@ -1,4 +1,4 @@
-import { ixActualArray } from "@/types/IndexTypes";
+import { toNoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { KeyType } from "@/types/enums/KeyType";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
@@ -17,7 +17,7 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
       romanChords,
       musicalKey,
     );
-    expect(resolved.map((chord) => chord[0])).toEqual(ixActualArray(expectedRoots));
+    expect(resolved.map((chord) => chord[0])).toEqual(toNoteIndices(expectedRoots));
   }
 
   it("returns empty array for empty progression", () => {

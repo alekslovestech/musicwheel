@@ -14,7 +14,7 @@ import {
   ActualIndex,
   InversionIndex,
   ixActual,
-  ixActualArray,
+  toNoteIndices,
   NoteIndices,
 } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
@@ -52,7 +52,7 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const isScales = useIsScalePreviewMode();
   const [selectedNoteIndices, setSelectedNoteIndices] = useState<NoteIndices>(
-    isScales ? [] : ixActualArray([7, 11, 14])
+    isScales ? [] : toNoteIndices([7, 11, 14])
   );
   const [selectedMusicalKey, setSelectedMusicalKey] =
     useState<MusicalKey>(DEFAULT_MUSICAL_KEY);

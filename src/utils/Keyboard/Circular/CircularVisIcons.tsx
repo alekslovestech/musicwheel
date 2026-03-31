@@ -1,4 +1,4 @@
-import { ixActualArray } from "@/types/IndexTypes";
+import { toNoteIndices } from "@/types/IndexTypes";
 import { CircularVisMode } from "@/types/SettingModes";
 import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
@@ -33,7 +33,7 @@ export class CircularVisIcons {
 
   private renderPoints = (mode: CircularVisMode): JSX.Element => {
     const points = this.visualizer.getVisualization(
-      ixActualArray([11, 3, 7]),
+      toNoteIndices([11, 3, 7]),
       mode
     );
     const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");

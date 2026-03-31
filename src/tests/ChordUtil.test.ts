@@ -3,7 +3,7 @@ import { ChordType } from "../types/enums/ChordType";
 import {
   InversionIndex,
   ixActual,
-  ixActualArray,
+  toNoteIndices,
   ixInversion,
 } from "../types/IndexTypes";
 import { NoteConverter } from "../utils/NoteConverter";
@@ -23,7 +23,7 @@ function verifyChordNameWithMode(
   displayMode: ChordDisplayMode = ChordDisplayMode.Letters,
   musicalKey: MusicalKey = DEFAULT_MUSICAL_KEY
 ) {
-  const actualIndices = ixActualArray(indices);
+  const actualIndices = toNoteIndices(indices);
   const chordRef =
     MusicalDisplayFormatter.getChordReferenceFromIndices(actualIndices);
 
@@ -215,7 +215,7 @@ describe("ChordUtils", () => {
     it("uses root position when bass equals root", () => {
       const chord = new AbsoluteChord("C", ChordType.Major);
       expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(
-        ixActualArray([0, 4, 7]),
+        toNoteIndices([0, 4, 7]),
       );
     });
 
@@ -226,7 +226,7 @@ describe("ChordUtils", () => {
         NoteConverter.toChromaticIndex("G"),
       );
       expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(
-        ixActualArray([7, 12, 16]),
+        toNoteIndices([7, 12, 16]),
       );
     });
   });

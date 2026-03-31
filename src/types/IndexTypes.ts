@@ -23,7 +23,7 @@ export function ixActual(n: number): ActualIndex {
 
 export type NoteIndices = ActualIndex[];
 
-export function ixActualArray(numbers: number[]): NoteIndices {
+export function toNoteIndices(numbers: number[]): NoteIndices {
   return numbers.map(ixActual);
 }
 

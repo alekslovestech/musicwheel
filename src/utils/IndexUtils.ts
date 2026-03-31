@@ -1,7 +1,7 @@
 import { TWELVE, TWENTY4 } from "@/types/constants/NoteConstants";
 
 import { ChromaticIndex, subChromatic } from "@/types/ChromaticIndex";
-import { ActualIndex, ixActualArray, NoteIndices } from "@/types/IndexTypes";
+import { ActualIndex, NoteIndices, toNoteIndices } from "@/types/IndexTypes";
 
 export class IndexUtils {
   //everything relative to root note
@@ -59,7 +59,7 @@ export class IndexUtils {
    * @returns The transposed indices as ActualIndex array
    */
   static transposeNotes(indices: NoteIndices, amount: number): NoteIndices {
-    return ixActualArray(this.shiftIndices(indices, amount));
+    return toNoteIndices(this.shiftIndices(indices, amount));
   }
 
   //if the new index is already selected, remove it, otherwise add it
