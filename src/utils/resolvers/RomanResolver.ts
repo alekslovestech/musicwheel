@@ -11,6 +11,7 @@ import {
   type NoteLength,
 } from "@/types/Timed";
 import { addChromatic } from "@/types/ChromaticIndex";
+import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 
 interface ParsedRomanLexeme {
@@ -78,7 +79,12 @@ export class RomanResolver {
           : 0;
     chromaticIndex = addChromatic(chromaticIndex, accidentalOffset);
 
-    return new AbsoluteChord(chromaticIndex, romanChord.chordType);
+    const bassNote =
+      romanChord.bassDegree !== undefined
+        ? scale[ixScaleDegreeIndex(romanChord.bassDegree - 1)]
+        : chromaticIndex;
+
+    return new AbsoluteChord(chromaticIndex, romanChord.chordType, bassNote);
   }
 
   static resolveRomanChordWithDuration(

@@ -33,6 +33,10 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
     expectRoots(["I"], DEFAULT_MUSICAL_KEY, [0]);
   });
 
+  it("slash I/V: bass is scale degree V (G=7 in C major), not the chord root", () => {
+    expectRoots(["I/V"], DEFAULT_MUSICAL_KEY, [7]);
+  });
+
   describe("two-chord voice leading direction", () => {
     it("I→V: shortest circular path is descending, so high C (12) → low G (7) wins", () => {
       // seq1 totalMovement=5 beats seq0 totalMovement=7

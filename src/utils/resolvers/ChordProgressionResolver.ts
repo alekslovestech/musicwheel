@@ -1,4 +1,4 @@
-import { chromaticToActual, NoteIndices } from "@/types/IndexTypes";
+import { NoteIndices } from "@/types/IndexTypes";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import {
@@ -7,7 +7,6 @@ import {
 } from "@/types/ScaleModes/ScaleDegreeType";
 import { RomanChord } from "@/types/RomanChord";
 import { ChordUtils } from "@/utils/ChordUtils";
-import { makeChordReference } from "@/types/interfaces/ChordReference";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 interface SequenceResult {
@@ -45,11 +44,9 @@ export class ChordProgressionResolver {
     degrees: ScaleDegree[],
     startOctave: number,
   ): SequenceResult {
-    const firstNotes = ChordUtils.calculateChordNotesFromChordReference(
-      makeChordReference(
-        chromaticToActual(chords[0].chromaticIndex, startOctave),
-        chords[0].chordType,
-      ),
+    const firstNotes = ChordUtils.noteIndicesFromAbsoluteChord(
+      chords[0],
+      startOctave,
     );
 
     const noteArrays: NoteIndices[] = [firstNotes];
@@ -58,18 +55,8 @@ export class ChordProgressionResolver {
 
     for (let i = 1; i < chords.length; i++) {
       const chord = chords[i];
-      const notesLow = ChordUtils.calculateChordNotesFromChordReference(
-        makeChordReference(
-          chromaticToActual(chord.chromaticIndex, 0),
-          chord.chordType,
-        ),
-      );
-      const notesHigh = ChordUtils.calculateChordNotesFromChordReference(
-        makeChordReference(
-          chromaticToActual(chord.chromaticIndex, 1),
-          chord.chordType,
-        ),
-      );
+      const notesLow = ChordUtils.noteIndicesFromAbsoluteChord(chord, 0);
+      const notesHigh = ChordUtils.noteIndicesFromAbsoluteChord(chord, 1);
 
       const rootLow = notesLow[0];
       const rootHigh = notesHigh[0];

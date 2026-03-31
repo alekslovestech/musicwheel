@@ -12,8 +12,12 @@ function verifyResolvedChord(
   romanNumeral: string,
   noteName: string,
   chordType: ChordType,
+  bassNoteName?: string,
 ) {
   const noteIndex = NoteConverter.toChromaticIndex(noteName);
+  const bassIndex = NoteConverter.toChromaticIndex(
+    bassNoteName ?? noteName,
+  );
   const absoluteChord = RomanResolver.resolveRomanChord(
     RomanResolver.createRomanChordFromString(romanNumeral),
     musicalKey,
@@ -21,6 +25,7 @@ function verifyResolvedChord(
   expect(absoluteChord).toEqual({
     chromaticIndex: noteIndex,
     chordType: chordType,
+    bassNote: bassIndex,
   });
 }
 
@@ -79,6 +84,14 @@ describe("parseChordProgressionDuration", () => {
       input: "IV:half",
     },
     {
+      desc: "unsupported note length denominator throws (IV:3)",
+      input: "IV:3",
+    },
+    {
+      desc: "unsupported note length denominator throws (IV:64)",
+      input: "IV:64",
+    },
+    {
       desc: "invalid roman after stripping duration still throws",
       input: "I/V/VII:4",
     },
@@ -112,6 +125,12 @@ describe("Resolved roman numeral tests", () => {
         { numeral: "I", note: "C", type: ChordType.Major },
         { numeral: "Imaj7", note: "C", type: ChordType.Major7 },
         { numeral: "V", note: "G", type: ChordType.Major },
+        {
+          numeral: "I/V",
+          note: "C",
+          type: ChordType.Major,
+          bassNote: "G",
+        },
       ],
     },
     {
@@ -120,6 +139,12 @@ describe("Resolved roman numeral tests", () => {
       cases: [
         { numeral: "I", note: "E", type: ChordType.Major },
         { numeral: "V", note: "B", type: ChordType.Major },
+        {
+          numeral: "I/V",
+          note: "E",
+          type: ChordType.Major,
+          bassNote: "B",
+        },
       ],
     },
     {
@@ -138,6 +163,7 @@ describe("Resolved roman numeral tests", () => {
             testCase.numeral,
             testCase.note,
             testCase.type,
+            "bassNote" in testCase ? testCase.bassNote : undefined,
           );
         });
       });
