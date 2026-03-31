@@ -4,6 +4,7 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { NoteConverter } from "@/utils/NoteConverter";
+import { makeRomanChordWithDuration } from "@/types/RomanChordWithDuration";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
 
 function verifyResolvedChord(
@@ -23,169 +24,91 @@ function verifyResolvedChord(
   });
 }
 
-describe("createRomanChordFromString", () => {
-  const testCases = [
+describe("parseChordProgressionDuration", () => {
+  const validCases = [
     {
-      desc: "Basic numeral",
-      input: "I",
-      expected: RomanChord.fromScaleDegree(1, ChordType.Major),
-    },
-    {
-      desc: "Sharp accidental",
-      input: "♯I",
-      expected: RomanChord.fromScaleDegree(
-        1,
-        ChordType.Major,
-        AccidentalType.Sharp,
+      desc: "parses bare numeral with no duration suffix",
+      input: "IV",
+      expected: makeRomanChordWithDuration(
+        RomanChord.fromScaleDegree(4, ChordType.Major),
       ),
     },
     {
-      desc: "Flat accidental",
-      input: "♭I",
-      expected: RomanChord.fromScaleDegree(
-        1,
-        ChordType.Major,
-        AccidentalType.Flat,
+      desc: "parses IV:2 as degree IV with LilyPond denominator 2",
+      input: "IV:2",
+      expected: makeRomanChordWithDuration(
+        RomanChord.fromScaleDegree(4, ChordType.Major),
+        2,
       ),
     },
     {
-      desc: "Flat minor",
-      input: "♭iii",
-      expected: RomanChord.fromScaleDegree(
-        3,
-        ChordType.Minor,
-        AccidentalType.Flat,
+      desc: "parses chord suffix before duration (ii7:8)",
+      input: "ii7:8",
+      expected: makeRomanChordWithDuration(
+        RomanChord.fromScaleDegree(2, ChordType.Minor7),
+        8,
       ),
     },
     {
-      desc: "Dominant 7",
-      input: "I7",
-      expected: RomanChord.fromScaleDegree(1, ChordType.Dominant7),
-    },
-    {
-      desc: "Augmented",
-      input: "I+",
-      expected: RomanChord.fromScaleDegree(1, ChordType.Augmented),
-    },
-    {
-      desc: "Major 7",
-      input: "Imaj7",
-      expected: RomanChord.fromScaleDegree(1, ChordType.Major7),
-    },
-    {
-      desc: "Sharp with major 7",
-      input: "♯Imaj7",
-      expected: RomanChord.fromScaleDegree(
-        1,
-        ChordType.Major7,
-        AccidentalType.Sharp,
+      desc: "parses accidental and duration (♭III:4)",
+      input: "♭III:4",
+      expected: makeRomanChordWithDuration(
+        RomanChord.fromScaleDegree(
+          3,
+          ChordType.Major,
+          AccidentalType.Flat,
+        ),
+        4,
       ),
     },
     {
-      desc: "Major/major slash chord",
-      input: "I/V",
-      expected: RomanChord.fromScaleDegree(
-        1,
-        ChordType.Major,
-        AccidentalType.None,
-        5,
+      desc: "parses slash chord with duration (I/v:2)",
+      input: "I/v:2",
+      expected: makeRomanChordWithDuration(
+        RomanChord.fromScaleDegree(
+          1,
+          ChordType.Major,
+          AccidentalType.None,
+          5,
+        ),
+        2,
       ),
     },
     {
-      desc: "Major/minor slash chord",
-      input: "I/v",
-      expected: RomanChord.fromScaleDegree(
+      desc: "trims whitespace around token",
+      input: "  V:1  ",
+      expected: makeRomanChordWithDuration(
+        RomanChord.fromScaleDegree(5, ChordType.Major),
         1,
-        ChordType.Major,
-        AccidentalType.None,
-        5,
-      ),
-    },
-    {
-      desc: "Minor/major slash chord",
-      input: "i/V",
-      expected: RomanChord.fromScaleDegree(
-        1,
-        ChordType.Minor,
-        AccidentalType.None,
-        5,
       ),
     },
   ];
 
-  testCases.forEach(({ desc, input, expected }) => {
-    test(desc, () => {
-      expect(RomanResolver.createRomanChordFromString(input)).toEqual(expected);
+  const throwCases = [
+    {
+      desc: "token without digits after colon is not split; invalid roman throws",
+      input: "IV:half",
+    },
+    {
+      desc: "invalid roman after stripping duration still throws",
+      input: "I/V/VII:4",
+    },
+  ];
+
+  validCases.forEach((testCase) => {
+    test(testCase.desc, () => {
+      expect(RomanResolver.parseRomanChordWithDuration(testCase.input)).toEqual(
+        testCase.expected,
+      );
     });
   });
 
-  test("Invalid slash chord throws error", () => {
-    expect(() => RomanResolver.createRomanChordFromString("I/V/VII")).toThrow();
-  });
-});
-
-describe("parseChordProgressionDuration", () => {
-  test("parses bare numeral with no duration suffix", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("IV")).toEqual({
-      romanChord: RomanChord.fromScaleDegree(4, ChordType.Major),
-      duration: undefined,
+  throwCases.forEach((testCase) => {
+    test(testCase.desc, () => {
+      expect(() =>
+        RomanResolver.parseRomanChordWithDuration(testCase.input),
+      ).toThrow();
     });
-  });
-
-  test("parses IV:2 as degree IV with LilyPond denominator 2", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("IV:2")).toEqual({
-      romanChord: RomanChord.fromScaleDegree(4, ChordType.Major),
-      duration: 2,
-    });
-  });
-
-  test("parses chord suffix before duration (ii7:8)", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("ii7:8")).toEqual({
-      romanChord: RomanChord.fromScaleDegree(2, ChordType.Minor7),
-      duration: 8,
-    });
-  });
-
-  test("parses accidental and duration (♭III:4)", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("♭III:4")).toEqual({
-      romanChord: RomanChord.fromScaleDegree(
-        3,
-        ChordType.Major,
-        AccidentalType.Flat,
-      ),
-      duration: 4,
-    });
-  });
-
-  test("parses slash chord with duration (I/v:2)", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("I/v:2")).toEqual({
-      romanChord: RomanChord.fromScaleDegree(
-        1,
-        ChordType.Major,
-        AccidentalType.None,
-        5,
-      ),
-      duration: 2,
-    });
-  });
-
-  test("trims whitespace around token", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("  V:1  ")).toEqual({
-      romanChord: RomanChord.fromScaleDegree(5, ChordType.Major),
-      duration: 1,
-    });
-  });
-
-  test("token without digits after colon is not split; invalid roman throws", () => {
-    expect(() =>
-      RomanResolver.parseRomanChordWithDuration("IV:half"),
-    ).toThrow();
-  });
-
-  test("invalid roman after stripping duration still throws", () => {
-    expect(() =>
-      RomanResolver.parseRomanChordWithDuration("I/V/VII:4"),
-    ).toThrow();
   });
 });
 

@@ -9,7 +9,7 @@ export function verifyRomanChord(numeral: string, expected: RomanChord) {
 }
 
 describe("RomanNumeral chord tests", () => {
-  const testCases = [
+  const validGroups = [
     {
       desc: "Basic major and minor chords",
       cases: [
@@ -118,16 +118,6 @@ describe("RomanNumeral chord tests", () => {
       ],
     },
     {
-      desc: "Invalid cases",
-      invalidCases: [
-        { numeral: "i+", error: "aug chord cannot be lowercase" },
-        { numeral: "imaj7", error: "maj7 cannot be lowercase" },
-        { numeral: "VIIo", error: "dim chord cannot be uppercase" },
-        { numeral: "VIIo7", error: "dim7 chord cannot be uppercase" },
-        { numeral: "VIIø7", error: "dim7 cannot be uppercase" },
-      ],
-    },
-    {
       desc: "Combined features",
       cases: [
         {
@@ -169,25 +159,33 @@ describe("RomanNumeral chord tests", () => {
     },
   ];
 
-  testCases.forEach(({ desc, cases, invalidCases }) => {
-    describe(desc, () => {
-      if (cases) {
-        cases.forEach(({ numeral, expected }) => {
-          test(numeral, () => {
-            verifyRomanChord(numeral, expected);
-          });
-        });
-      }
+  const invalidGroup = {
+    desc: "Invalid cases",
+    cases: [
+      { numeral: "i+", error: "aug chord cannot be lowercase" },
+      { numeral: "imaj7", error: "maj7 cannot be lowercase" },
+      { numeral: "VIIo", error: "dim chord cannot be uppercase" },
+      { numeral: "VIIo7", error: "dim7 chord cannot be uppercase" },
+      { numeral: "VIIø7", error: "dim7 cannot be uppercase" },
+      { numeral: "I/V/VII", error: "invalid slash chord" },
+    ],
+  };
 
-      if (invalidCases) {
-        invalidCases.forEach(({ numeral, error }) => {
-          test(`${numeral} (${error})`, () => {
-            expect(() =>
-              RomanResolver.createRomanChordFromString(numeral),
-            ).toThrow();
-          });
+  validGroups.forEach((group) => {
+    describe(group.desc, () => {
+      group.cases.forEach(({ numeral, expected }) => {
+        test(numeral, () => {
+          verifyRomanChord(numeral, expected);
         });
-      }
+      });
+    });
+  });
+
+  describe(invalidGroup.desc, () => {
+    invalidGroup.cases.forEach(({ numeral, error }) => {
+      test(`${numeral} (${error})`, () => {
+        expect(() => RomanResolver.createRomanChordFromString(numeral)).toThrow();
+      });
     });
   });
 });

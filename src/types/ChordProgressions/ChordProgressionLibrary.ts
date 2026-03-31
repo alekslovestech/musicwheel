@@ -23,10 +23,31 @@ class ChordProgressionLibrarySingleton {
         return new ChordProgression(["IV", "I"], chordProgEnum);
 
       case ChordProgressionType.LetItBe:
-        return new ChordProgression(["I", "V", "vi", "IV"], chordProgEnum, 102);
+        return new ChordProgression(
+          [
+            "I:2",
+            "I",
+            "V",
+            "V",
+            "vi",
+            "vi",
+            "IV",
+            "IV",
+            "I:2",
+            "I",
+            "V",
+            "V",
+            "IV/I",
+            "I/V:4",
+            "viio",
+            "I/V:2",
+          ],
+          chordProgEnum,
+          102,
+        );
 
       case ChordProgressionType.WithOrWithoutYou:
-        return new ChordProgression(["I", "♭VII", "IV"], chordProgEnum, 110);
+        return new ChordProgression(["I:1", "♭VII", "IV"], chordProgEnum, 110);
 
       case ChordProgressionType.Something:
         return new ChordProgression(

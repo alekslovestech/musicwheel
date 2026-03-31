@@ -4,6 +4,10 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
+import {
+  makeAbsoluteChordWithDuration,
+  type AbsoluteChordWithDuration,
+} from "@/types/AbsoluteChordWithDuration";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import {
@@ -55,9 +59,6 @@ function splitRomanString(romanString: string): ParsedRomanLexeme {
 }
 
 export class RomanResolver {
-  /**
-   * Resolves a parsed Roman chord in the context of a musical key.
-   */
   static resolveRomanChord(
     romanChord: RomanChord,
     musicalKey: MusicalKey,
@@ -66,10 +67,8 @@ export class RomanResolver {
       musicalKey.tonicIndex,
     );
 
-    // Get the base chromatic index from the scale
     let chromaticIndex = scale[romanChord.scaleDegreeIndex];
 
-    // Apply any accidentals
     const accidentalOffset =
       romanChord.accidental === AccidentalType.Flat
         ? -1
@@ -79,6 +78,22 @@ export class RomanResolver {
     chromaticIndex = addChromatic(chromaticIndex, accidentalOffset);
 
     return new AbsoluteChord(chromaticIndex, romanChord.chordType);
+  }
+
+  static resolveRomanChordWithDuration(
+    entry: RomanChordWithDuration,
+    musicalKey: MusicalKey,
+  ): AbsoluteChordWithDuration {
+    if (entry.duration === undefined) {
+      throw new Error(
+        "Expected carried duration to be applied before resolving RomanChordWithDuration",
+      );
+    }
+
+    return makeAbsoluteChordWithDuration(
+      this.resolveRomanChord(entry.romanChord, musicalKey),
+      entry.duration,
+    );
   }
 
   /**
@@ -113,9 +128,6 @@ export class RomanResolver {
     return new RomanChord(ordinal!, chordType, accidental, bassDegree);
   }
 
-  /**
-   * Parses a progression step token: Roman chord plus optional trailing `:lilypondDenominator`.
-   */
   static parseRomanChordWithDuration(input: string): RomanChordWithDuration {
     const { romanPart, duration } = splitProgressionToken(input.trim());
     return makeRomanChordWithDuration(

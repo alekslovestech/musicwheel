@@ -16,3 +16,16 @@ export function makeRomanChordWithDuration(
 ): RomanChordWithDuration {
   return { romanChord, duration };
 }
+
+/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length (initially {@link DEFAULT_CHORD_PROGRESSION_DURATION}). */
+export function applyCarriedProgressionDurations(
+  entries: RomanChordWithDuration[],
+): RomanChordWithDuration[] {
+  let lastDuration = DEFAULT_CHORD_PROGRESSION_DURATION;
+  return entries.map((entry) => {
+    if (entry.duration !== undefined) {
+      lastDuration = entry.duration;
+    }
+    return makeRomanChordWithDuration(entry.romanChord, lastDuration);
+  });
+}

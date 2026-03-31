@@ -4,6 +4,7 @@ import {
   type RomanChordWithDuration,
   DEFAULT_CHORD_PROGRESSION_DURATION,
   type LilypondDuration,
+  applyCarriedProgressionDurations,
   makeRomanChordWithDuration,
 } from "@/types/RomanChordWithDuration";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
@@ -12,13 +13,17 @@ export type {
   RomanChordWithDuration as ChordProgressionEntry,
   LilypondDuration,
 };
-export { DEFAULT_CHORD_PROGRESSION_DURATION, makeRomanChordWithDuration };
+export {
+  applyCarriedProgressionDurations,
+  DEFAULT_CHORD_PROGRESSION_DURATION,
+  makeRomanChordWithDuration,
+};
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
 
 // Represents a chord progression
 export class ChordProgression {
-  /** Harmony and rhythmic length per step (duration is a LilyPond-style denominator). */
+  /** Harmony and rhythmic length per step (LilyPond-style denominator; omitted tokens inherit the previous length). */
   progression: RomanChordWithDuration[];
   name: string;
   /** Whole progression tempo in beats per minute (beat = quarter note). */
@@ -33,20 +38,17 @@ export class ChordProgression {
     name: string | undefined,
     tempo: number = DEFAULT_CHORD_PROGRESSION_BPM,
   ) {
-    this.progression = progression_as_strings.map((roman) =>
-      RomanResolver.parseRomanChordWithDuration(roman),
+    this.progression = applyCarriedProgressionDurations(
+      progression_as_strings.map((roman) =>
+        RomanResolver.parseRomanChordWithDuration(roman),
+      ),
     );
     this.name = name || "Unknown";
     this.tempo = tempo;
   }
 
   getChordAtIndex(index: number, musicalKey: MusicalKey): AbsoluteChord {
-    return this.resolvedChords(musicalKey)[index];
-  }
-
-  resolvedChords(musicalKey: MusicalKey): AbsoluteChord[] {
-    return this.progression.map(({ romanChord }) =>
-      RomanResolver.resolveRomanChord(romanChord, musicalKey),
-    );
+    const entry = this.progression[index];
+    return RomanResolver.resolveRomanChordWithDuration(entry, musicalKey).chord;
   }
 }

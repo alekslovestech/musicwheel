@@ -1,5 +1,4 @@
 import {
-  DEFAULT_CHORD_PROGRESSION_DURATION,
   LilypondDuration,
 } from "@/types/ChordProgressions/ChordProgression";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
@@ -14,6 +13,7 @@ import {
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 export interface ScalePlaybackStepOutput {
   notesToPlay: NoteIndices | null;
@@ -79,13 +79,14 @@ export function prepareChordProgressionSequence(
   musicalKey: MusicalKey
 ): PreparedChordProgressionSequence {
   const progression = ChordProgressionLibrary.getProgression(progressionType);
+  const resolved = progression.progression.map((entry) =>
+    RomanResolver.resolveRomanChordWithDuration(entry, musicalKey),
+  );
   const precomputedProgression =
     ChordProgressionResolver.computeProgressionOctaves(
       progression.progression.map((e) => e.romanChord),
       musicalKey,
     );
-  const chordStepLilypondDurations = progression.progression.map((entry) =>
-    entry.duration ?? DEFAULT_CHORD_PROGRESSION_DURATION
-  );
+  const chordStepLilypondDurations = resolved.map((e) => e.duration);
   return { precomputedProgression, chordStepLilypondDurations, tempo: progression.tempo };
 }
