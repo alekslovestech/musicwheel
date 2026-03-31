@@ -1,30 +1,37 @@
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
-import {
-  type RomanChordWithDuration,
-  DEFAULT_CHORD_PROGRESSION_DURATION,
-  type LilypondDuration,
-  applyCarriedProgressionDurations,
-  makeRomanChordWithDuration,
-} from "@/types/RomanChordWithDuration";
+import type { RomanChord } from "@/types/RomanChord";
+import { makeTimed, type Timed, type NoteLength } from "@/types/Timed";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
-export type {
-  RomanChordWithDuration as ChordProgressionEntry,
-  LilypondDuration,
-};
+export type ChordProgressionEntry = Timed<RomanChord>;
 export {
-  applyCarriedProgressionDurations,
-  DEFAULT_CHORD_PROGRESSION_DURATION,
-  makeRomanChordWithDuration,
+  makeTimed,
 };
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
+/** Default step length when no `:denominator` is given on the first token (quarter). */
+export const DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH: NoteLength = 4;
+
+/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length (initially {@link DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH}). */
+export function applyCarriedProgressionDurations(
+  entries: Timed<RomanChord>[],
+): Timed<RomanChord>[] {
+  let lastNoteLength = DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH;
+  const result: Timed<RomanChord>[] = [];
+  for (const entry of entries) {
+    if (entry.noteLength !== undefined) {
+      lastNoteLength = entry.noteLength;
+    }
+    result.push(makeTimed(entry.value, lastNoteLength));
+  }
+  return result;
+}
 
 // Represents a chord progression
 export class ChordProgression {
   /** Harmony and rhythmic length per step (LilyPond-style denominator; omitted tokens inherit the previous length). */
-  progression: RomanChordWithDuration[];
+  progression: Timed<RomanChord>[];
   name: string;
   /** Whole progression tempo in beats per minute (beat = quarter note). */
   tempo: number;
@@ -45,10 +52,5 @@ export class ChordProgression {
     );
     this.name = name || "Unknown";
     this.tempo = tempo;
-  }
-
-  getChordAtIndex(index: number, musicalKey: MusicalKey): AbsoluteChord {
-    const entry = this.progression[index];
-    return RomanResolver.resolveRomanChordWithDuration(entry, musicalKey).chord;
   }
 }

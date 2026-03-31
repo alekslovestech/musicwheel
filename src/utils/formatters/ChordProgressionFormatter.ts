@@ -6,7 +6,7 @@ export class ChordProgressionFormatter {
   static formatRomanNumeralsForDisplay(progression: ChordProgression): string {
     return progression.progression
       .map((e) =>
-        RomanChordFormatter.formatProgressionRomanChord(e.romanChord),
+        RomanChordFormatter.formatProgressionRomanChord(e.value),
       )
       .join("→");
   }

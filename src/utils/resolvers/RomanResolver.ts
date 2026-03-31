@@ -5,16 +5,13 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import {
-  makeAbsoluteChordWithDuration,
-  type AbsoluteChordWithDuration,
-} from "@/types/AbsoluteChordWithDuration";
+  isNoteLength,
+  makeTimed,
+  type Timed,
+  type NoteLength,
+} from "@/types/Timed";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
-import {
-  makeRomanChordWithDuration,
-  type RomanChordWithDuration,
-  type LilypondDuration,
-} from "@/types/RomanChordWithDuration";
 
 interface ParsedRomanLexeme {
   accidentalPrefix: string;
@@ -35,13 +32,17 @@ const progressionDurationSuffixRegex = /^(.+):(\d+)$/;
 
 function splitProgressionToken(token: string): {
   romanPart: string;
-  duration: LilypondDuration | undefined;
+  noteLength: NoteLength | undefined;
 } {
   const match = token.match(progressionDurationSuffixRegex);
   if (match) {
-    return { romanPart: match[1], duration: Number(match[2]) };
+    const parsed = Number(match[2]);
+    if (!isNoteLength(parsed)) {
+      throw new Error(`Unsupported note length: ${match[2]}`);
+    }
+    return { romanPart: match[1], noteLength: parsed };
   }
-  return { romanPart: token, duration: undefined };
+  return { romanPart: token, noteLength: undefined };
 }
 
 function splitRomanString(romanString: string): ParsedRomanLexeme {
@@ -81,18 +82,18 @@ export class RomanResolver {
   }
 
   static resolveRomanChordWithDuration(
-    entry: RomanChordWithDuration,
+    entry: Timed<RomanChord>,
     musicalKey: MusicalKey,
-  ): AbsoluteChordWithDuration {
-    if (entry.duration === undefined) {
+  ): Timed<AbsoluteChord> {
+    if (entry.noteLength === undefined) {
       throw new Error(
-        "Expected carried duration to be applied before resolving RomanChordWithDuration",
+        "Expected carried note length to be applied before resolving RomanChordWithDuration",
       );
     }
 
-    return makeAbsoluteChordWithDuration(
-      this.resolveRomanChord(entry.romanChord, musicalKey),
-      entry.duration,
+    return makeTimed(
+      this.resolveRomanChord(entry.value, musicalKey),
+      entry.noteLength,
     );
   }
 
@@ -128,11 +129,8 @@ export class RomanResolver {
     return new RomanChord(ordinal!, chordType, accidental, bassDegree);
   }
 
-  static parseRomanChordWithDuration(input: string): RomanChordWithDuration {
-    const { romanPart, duration } = splitProgressionToken(input.trim());
-    return makeRomanChordWithDuration(
-      this.createRomanChordFromString(romanPart),
-      duration,
-    );
+  static parseRomanChordWithDuration(input: string): Timed<RomanChord> {
+    const { romanPart, noteLength } = splitProgressionToken(input.trim());
+    return makeTimed(this.createRomanChordFromString(romanPart), noteLength);
   }
 }

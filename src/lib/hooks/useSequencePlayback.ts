@@ -12,9 +12,9 @@ import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import {
   DEFAULT_CHORD_PROGRESSION_BPM,
-  DEFAULT_CHORD_PROGRESSION_DURATION,
-  type LilypondDuration,
+  DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
 } from "@/types/ChordProgressions/ChordProgression";
+import type { NoteLength } from "@/types/Timed";
 import {
   computeScalePlaybackStep,
   prepareChordProgressionSequence,
@@ -31,14 +31,14 @@ interface UseSequencePlaybackProps {
 
 /**
  * Milliseconds one chord should sound for, given BPM (beat = quarter) and a
- * LilyPond-style duration denominator (1 = whole, 4 = quarter, 8 = eighth).
+ * LilyPond-style note-length denominator (1 = whole, 4 = quarter, 8 = eighth).
  */
 export function chordDurationMsFromTempo(
   tempoBpm: number = DEFAULT_CHORD_PROGRESSION_BPM,
-  lilyPondDuration: LilypondDuration = DEFAULT_CHORD_PROGRESSION_DURATION,
+  noteLength: NoteLength = DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
 ): number {
   const msPerQuarter = 60000 / tempoBpm;
-  const lengthInQuarters = 4 / lilyPondDuration;
+  const lengthInQuarters = 4 / noteLength;
   return msPerQuarter * lengthInQuarters;
 }
 
@@ -62,7 +62,7 @@ export const useSequencePlayback = ({
     useState<ChordProgressionType | null>(null);
   const chordIndexRef = useRef<number>(0);
   const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
-  const chordStepLilypondDurationsRef = useRef<LilypondDuration[] | null>(null);
+  const chordStepNoteLengthsRef = useRef<NoteLength[] | null>(null);
   const chordProgressionTempoRef = useRef<number | null>(null);
 
   // Helper functions - define these first
@@ -111,9 +111,10 @@ export const useSequencePlayback = ({
 
   const playProgressionStep = useCallback(() => {
     const precomputed = precomputedProgressionRef.current;
-    const lilyDurations = chordStepLilypondDurationsRef.current;
+    const stepNoteLengths = chordStepNoteLengthsRef.current;
     const tempo = chordProgressionTempoRef.current;
-    if (!precomputed?.length || !lilyDurations?.length || tempo == null) return;
+    if (!precomputed?.length || !stepNoteLengths?.length || tempo == null)
+      return;
 
     const i = chordIndexRef.current;
     setNotesDirectly(precomputed[i]);
@@ -128,7 +129,7 @@ export const useSequencePlayback = ({
     chordIndexRef.current = i + 1;
     const delayAfterThisChord = chordDurationMsFromTempo(
       tempo,
-      lilyDurations[i],
+      stepNoteLengths[i],
     );
     sequenceTimerRef.current = setTimeout(() => {
       playProgressionStep();
@@ -152,15 +153,18 @@ export const useSequencePlayback = ({
         playbackDuration,
       );
     } else if (globalMode === GlobalMode.ChordProgressions) {
-      const lilyDurations = chordStepLilypondDurationsRef.current;
+      const stepNoteLengths = chordStepNoteLengthsRef.current;
       const tempo = chordProgressionTempoRef.current;
       const nextIndex = chordIndexRef.current;
       const delayBeforeNextChord =
         nextIndex > 0 &&
-        lilyDurations != null &&
-        lilyDurations.length > 0 &&
+        stepNoteLengths != null &&
+        stepNoteLengths.length > 0 &&
         tempo != null
-          ? chordDurationMsFromTempo(tempo, lilyDurations[nextIndex - 1])
+          ? chordDurationMsFromTempo(
+              tempo,
+              stepNoteLengths[nextIndex - 1],
+            )
           : 0;
       sequenceTimerRef.current = setTimeout(() => {
         playProgressionStep();
@@ -207,7 +211,7 @@ export const useSequencePlayback = ({
       selectedMusicalKey,
     );
     precomputedProgressionRef.current = prepared.precomputedProgression;
-    chordStepLilypondDurationsRef.current = prepared.chordStepLilypondDurations;
+    chordStepNoteLengthsRef.current = prepared.chordStepNoteLengths;
     chordProgressionTempoRef.current = prepared.tempo;
 
     stopCurrentPlayback();
