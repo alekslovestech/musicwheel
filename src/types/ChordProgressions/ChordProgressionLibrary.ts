@@ -22,6 +22,9 @@ class ChordProgressionLibrarySingleton {
       case ChordProgressionType.Plagal_Cadence:
         return new ChordProgression(["IV:1", "I"], chordProgEnum);
 
+      case ChordProgressionType.Line_Cliche:
+        return new ChordProgression(["I:1", "I+", "vi/I"], chordProgEnum);
+
       case ChordProgressionType.LetItBe:
         return new ChordProgression(
           [
