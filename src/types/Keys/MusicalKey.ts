@@ -7,7 +7,7 @@ import { ScaleModeLibrary } from "@/types/ScaleModes/ScaleModeLibrary";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 import { ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
-import { NoteIndices, ixActualArray } from "@/types/IndexTypes";
+import { NoteIndices, toNoteIndices } from "@/types/IndexTypes";
 import { KeySignature } from "@/types/Keys/KeySignature";
 
 import { NoteConverter } from "@/utils/NoteConverter";
@@ -68,7 +68,7 @@ export class MusicalKey {
   ): NoteIndices {
     const offsets = this.getOffsets(scaleDegreeIndex, scalePlaybackMode);
     const noteIndices = offsets.map((offset) => offset + this.tonicIndex);
-    return ixActualArray(IndexUtils.fitChordToAbsoluteRange(noteIndices));
+    return toNoteIndices(IndexUtils.fitChordToAbsoluteRange(noteIndices));
   }
 
   toString(): string {

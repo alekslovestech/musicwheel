@@ -1,12 +1,14 @@
 import {
-  ixActualArray,
+  chromaticToActual,
+  toNoteIndices,
   NoteIndices,
   InversionIndex,
   ixInversion,
   ActualIndex,
   OffsetIndex,
-  ixActual,
 } from "../types/IndexTypes";
+import { AbsoluteChord } from "../types/AbsoluteChord";
+import { ChromaticIndex, makeChromaticIndex } from "../types/ChromaticIndex";
 import { NoteGroupingLibrary } from "../types/NoteGroupingLibrary";
 import { NoteGroupingId } from "../types/NoteGroupingId";
 
@@ -17,6 +19,15 @@ import {
 } from "@/types/interfaces/ChordReference";
 
 export class ChordUtils {
+  static noteIndicesFromAbsoluteChord(
+    chord: AbsoluteChord,
+    rootOctaveOffset: number,
+  ): NoteIndices {
+    return this.calculateChordNotesFromChordReference(
+      this.chordReferenceFromAbsoluteChord(chord, rootOctaveOffset),
+    );
+  }
+
   /**
    * Given the original (uninverted) chord indices, calculate what the bass note would be at a specific inversion.
    * Example: C-E-G (original) at inversion 1 → bass note is E
@@ -30,16 +41,6 @@ export class ChordUtils {
         originalChordIndices.length,
     );
     return originalChordIndices[reverseIndex] as ActualIndex;
-  }
-
-  /**
-   * Given inverted chord indices, find the bass note (always the first note).
-   * Example: E-G-C → bass note is E
-   */
-  static getBassNoteFromInvertedChord(
-    invertedChordIndices: NoteIndices,
-  ): ActualIndex {
-    return invertedChordIndices[0] as ActualIndex;
   }
 
   static hasInversions = (id: NoteGroupingId): boolean => {
@@ -61,33 +62,6 @@ export class ChordUtils {
     return definition.inversions[inversionIndex];
   }
 
-  /**
-   * Calculate chord notes where the clicked note becomes the bass note.
-   * This is more intuitive than clicking on the root note.
-   */
-  static calculateChordNotesFromBassNote(
-    bassIndex: ActualIndex,
-    chordType: NoteGroupingId,
-    inversionIndex: InversionIndex = ixInversion(0),
-  ): NoteIndices {
-    // Get the offsets for this chord type and inversion
-    const chordOffsets = this.getOffsetsFromIdAndInversion(
-      chordType,
-      inversionIndex,
-    );
-
-    // The bass note is the first offset in the inversion
-    const bassOffset = chordOffsets[0];
-
-    // Calculate what root note would produce this bass note
-    // bassIndex = rootIndex + bassOffset, so rootIndex = bassIndex - bassOffset
-    const rootIndex = ixActual(bassIndex - bassOffset);
-
-    const chordRef = makeChordReference(rootIndex, chordType, inversionIndex);
-    // Now calculate the chord from this root, which will handle octave fitting
-    return this.calculateChordNotesFromChordReference(chordRef);
-  }
-
   static calculateChordNotesFromChordReference(
     chordReference: ChordReference,
   ): NoteIndices {
@@ -98,7 +72,46 @@ export class ChordUtils {
     const newNotes = chordOffsets.map(
       (offset: number) => (offset + chordReference.rootNote) as ActualIndex,
     );
-    return ixActualArray(IndexUtils.fitChordToAbsoluteRange(newNotes));
+    return toNoteIndices(IndexUtils.fitChordToAbsoluteRange(newNotes));
   }
 
+  private static inversionIndexForSlashBass(
+    chordType: NoteGroupingId,
+    rootChromatic: ChromaticIndex,
+    bassChromatic: ChromaticIndex,
+  ): InversionIndex {
+    // Normalize to pitch class for comparison
+    const rootPc = makeChromaticIndex(rootChromatic);
+    const bassPc = makeChromaticIndex(bassChromatic);
+
+    if (rootPc === bassPc) return ixInversion(0);
+
+    const def = NoteGroupingLibrary.getGroupingById(chordType);
+    for (let i = 0; i < def.inversions.length; i++) {
+      const offsets = this.getOffsetsFromIdAndInversion(
+        chordType,
+        ixInversion(i),
+      );
+      // Working with numbers, don't double up on type conversions
+      const invBassPc = makeChromaticIndex(rootPc + offsets[0]);
+      if (invBassPc === bassPc) return ixInversion(i);
+    }
+    return ixInversion(0);
+  }
+
+  private static chordReferenceFromAbsoluteChord(
+    chord: AbsoluteChord,
+    rootOctaveOffset: number,
+  ): ChordReference {
+    const inversion = this.inversionIndexForSlashBass(
+      chord.chordType,
+      chord.chromaticIndex,
+      chord.bassNote,
+    );
+    return makeChordReference(
+      chromaticToActual(chord.chromaticIndex, rootOctaveOffset),
+      chord.chordType,
+      inversion,
+    );
+  }
 }

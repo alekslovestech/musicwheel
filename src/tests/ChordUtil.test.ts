@@ -1,17 +1,19 @@
-import { ChordType } from "../types/enums/ChordType";
+import { AbsoluteChord } from "@/types/AbsoluteChord";
+import { ChordType } from "@/types/enums/ChordType";
 import {
   InversionIndex,
   ixActual,
-  ixActualArray,
+  toNoteIndices,
   ixInversion,
-} from "../types/IndexTypes";
-import { KeyType } from "../types/enums/KeyType";
-import { DEFAULT_MUSICAL_KEY } from "../types/Keys/MusicalKey";
+} from "@/types/IndexTypes";
+import { NoteConverter } from "@/utils/NoteConverter";
+import { KeyType } from "@/types/enums/KeyType";
+import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 
-import { MusicalKey } from "../types/Keys/MusicalKey";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
 
-import { ChordDisplayMode } from "../types/SettingModes";
-import { ChordUtils } from "../utils/ChordUtils";
+import { ChordDisplayMode } from "@/types/SettingModes";
+import { ChordUtils } from "@/utils/ChordUtils";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { makeChordReference } from "@/types/interfaces/ChordReference";
 
@@ -19,9 +21,9 @@ function verifyChordNameWithMode(
   expectedChordName: string,
   indices: number[],
   displayMode: ChordDisplayMode = ChordDisplayMode.Letters,
-  musicalKey: MusicalKey = DEFAULT_MUSICAL_KEY
+  musicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
 ) {
-  const actualIndices = ixActualArray(indices);
+  const actualIndices = toNoteIndices(indices);
   const chordRef =
     MusicalDisplayFormatter.getChordReferenceFromIndices(actualIndices);
 
@@ -34,7 +36,7 @@ function verifyChordNameWithMode(
         chordRef,
         displayMode,
         musicalKey,
-        ixActual(bassNote ?? 0)
+        ixActual(bassNote ?? 0),
       )
     : "";
 
@@ -46,7 +48,7 @@ function verifyChordNotesFromIndex(
   expectedNotes: number[],
   index: number,
   chordType: ChordType,
-  inversion: InversionIndex = ixInversion(0)
+  inversion: InversionIndex = ixInversion(0),
 ) {
   const chordRef = makeChordReference(ixActual(index), chordType, inversion);
   const result = ChordUtils.calculateChordNotesFromChordReference(chordRef);
@@ -56,7 +58,7 @@ function verifyChordNotesFromIndex(
 function verifyOffsetsFromIdAndInversion(
   expectedOffsets: number[],
   id: ChordType,
-  inversionIndex: InversionIndex = ixInversion(0)
+  inversionIndex: InversionIndex = ixInversion(0),
 ) {
   const result = ChordUtils.getOffsetsFromIdAndInversion(id, inversionIndex);
   expect(result).toEqual(expectedOffsets);
@@ -206,6 +208,26 @@ describe("ChordUtils", () => {
       } from index ${index}`, () => {
         verifyChordNotesFromIndex(expected, index, type, inversion);
       });
+    });
+  });
+
+  describe("noteIndicesFromAbsoluteChord", () => {
+    it("uses root position when bass equals root", () => {
+      const chord = new AbsoluteChord("C", ChordType.Major);
+      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(
+        toNoteIndices([0, 4, 7]),
+      );
+    });
+
+    it("uses inversion when bass differs (C major / G bass)", () => {
+      const chord = new AbsoluteChord(
+        NoteConverter.toChromaticIndex("C"),
+        ChordType.Major,
+        NoteConverter.toChromaticIndex("G"),
+      );
+      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(
+        toNoteIndices([7, 12, 16]),
+      );
     });
   });
 });

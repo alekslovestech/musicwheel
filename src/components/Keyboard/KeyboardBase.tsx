@@ -30,7 +30,13 @@ export const useKeyboardHandlers = () => {
         }
       }
     },
-    [toggleNote, currentChordRef, setChordRootNote, setChordBassNote]
+    [
+      toggleNote,
+      currentChordRef,
+      setChordRootNote,
+      setChordBassNote,
+      isFreeformMode,
+    ],
   );
 
   const checkIsBassNote = useCallback(
@@ -44,7 +50,7 @@ export const useKeyboardHandlers = () => {
       }
       return index === currentChordRef.rootNote;
     },
-    [currentChordRef, isFreeformMode]
+    [currentChordRef, isFreeformMode],
   );
 
   return {

@@ -1,4 +1,4 @@
-import { ixActualArray } from "@/types/IndexTypes";
+import { toNoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { KeyType } from "@/types/enums/KeyType";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
@@ -17,7 +17,7 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
       romanChords,
       musicalKey,
     );
-    expect(resolved.map((chord) => chord[0])).toEqual(ixActualArray(expectedRoots));
+    expect(resolved.map((chord) => chord[0])).toEqual(toNoteIndices(expectedRoots));
   }
 
   it("returns empty array for empty progression", () => {
@@ -31,6 +31,10 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
 
   it("single chord returns the octave-0 variant when both sequences tie on movement", () => {
     expectRoots(["I"], DEFAULT_MUSICAL_KEY, [0]);
+  });
+
+  it("slash I/V: bass is scale degree V (G=7 in C major), not the chord root", () => {
+    expectRoots(["I/V"], DEFAULT_MUSICAL_KEY, [7]);
   });
 
   describe("two-chord voice leading direction", () => {

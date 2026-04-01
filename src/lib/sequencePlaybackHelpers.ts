@@ -1,7 +1,4 @@
-import {
-  DEFAULT_CHORD_PROGRESSION_DURATION,
-  LilypondDuration,
-} from "@/types/ChordProgressions/ChordProgression";
+import type { NoteLength } from "@/types/Timed";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { NoteIndices } from "@/types/IndexTypes";
@@ -14,6 +11,7 @@ import {
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 export interface ScalePlaybackStepOutput {
   notesToPlay: NoteIndices | null;
@@ -32,18 +30,18 @@ export const defaultScalePlaybackStepOutput: ScalePlaybackStepOutput = {
 export function computeScalePlaybackStep(
   key: MusicalKey,
   currentIndex: number,
-  scalePlaybackMode: ScalePlaybackMode
+  scalePlaybackMode: ScalePlaybackMode,
 ): ScalePlaybackStepOutput {
   const currentScaleDegreeIndex = currentIndex as ScaleDegreeIndex;
 
   if (currentScaleDegreeIndex === key.scalePatternLength) {
     const octaveNoteIndices = key.getNoteIndicesForScaleDegree(
       ixScaleDegreeIndex(0),
-      scalePlaybackMode
+      scalePlaybackMode,
     );
     const fittedOctaveIndices = IndexUtils.transposeNotes(
       octaveNoteIndices,
-      TWELVE
+      TWELVE,
     );
     return {
       ...defaultScalePlaybackStepOutput,
@@ -58,7 +56,7 @@ export function computeScalePlaybackStep(
 
   const noteIndices = key.getNoteIndicesForScaleDegree(
     currentScaleDegreeIndex,
-    scalePlaybackMode
+    scalePlaybackMode,
   );
   return {
     ...defaultScalePlaybackStepOutput,
@@ -67,25 +65,52 @@ export function computeScalePlaybackStep(
   };
 }
 
-export interface PreparedChordProgressionSequence {
+export class PreparedChordProgressionSequence {
   precomputedProgression: NoteIndices[];
-  /** LilyPond-style denominator per step; convert to ms with `chordDurationMsFromTempo(tempo, d)`. */
-  chordStepLilypondDurations: LilypondDuration[];
+  /** Note length (LilyPond-style denominator) per step; convert to ms with `chordDurationMsFromTempo(tempo, d)`. */
+  chordStepNoteLengths: NoteLength[];
   tempo: number;
+
+  constructor(args: {
+    precomputedProgression: NoteIndices[];
+    chordStepNoteLengths: NoteLength[];
+    tempo: number;
+  }) {
+    this.precomputedProgression = args.precomputedProgression;
+    this.chordStepNoteLengths = args.chordStepNoteLengths;
+    this.tempo = args.tempo;
+  }
+
+  getNotes(): NoteIndices[] {
+    return this.precomputedProgression;
+  }
+
+  getNoteLengths(): NoteLength[] {
+    return this.chordStepNoteLengths;
+  }
+
+  get length(): number {
+    return this.precomputedProgression.length;
+  }
 }
 
 export function prepareChordProgressionSequence(
   progressionType: ChordProgressionType,
-  musicalKey: MusicalKey
+  musicalKey: MusicalKey,
 ): PreparedChordProgressionSequence {
   const progression = ChordProgressionLibrary.getProgression(progressionType);
+  const resolved = progression.progression.map((entry) =>
+    RomanResolver.resolveRomanChordWithDuration(entry, musicalKey),
+  );
   const precomputedProgression =
     ChordProgressionResolver.computeProgressionOctaves(
-      progression.progression.map((e) => e.romanChord),
+      progression.progression.map((e) => e.value),
       musicalKey,
     );
-  const chordStepLilypondDurations = progression.progression.map((entry) =>
-    entry.duration ?? DEFAULT_CHORD_PROGRESSION_DURATION
-  );
-  return { precomputedProgression, chordStepLilypondDurations, tempo: progression.tempo };
+  const chordStepNoteLengths = resolved.map((e) => e.noteLength!);
+  return new PreparedChordProgressionSequence({
+    precomputedProgression,
+    chordStepNoteLengths,
+    tempo: progression.tempo,
+  });
 }

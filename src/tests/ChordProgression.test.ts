@@ -4,6 +4,7 @@ import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { KeyType } from "@/types/enums/KeyType";
+import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 describe("Chord progression derives correct chords for C major key", () => {
   const cMajor = DEFAULT_MUSICAL_KEY;
@@ -17,7 +18,7 @@ describe("Chord progression derives correct chords for C major key", () => {
       desc: "50s progression for C major",
       progression: new ChordProgression(
         ["I", "vi", "IV", "V"],
-        "50s progression"
+        "50s progression",
       ),
       key: cMajor,
       expected: [
@@ -31,7 +32,7 @@ describe("Chord progression derives correct chords for C major key", () => {
       desc: "Something progression for C major",
       progression: new ChordProgression(
         ["I", "Imaj7", "I7", "IV"],
-        "Something"
+        "Something",
       ),
       key: cMajor,
       expected: [
@@ -45,7 +46,7 @@ describe("Chord progression derives correct chords for C major key", () => {
       desc: "Something progression for F major",
       progression: new ChordProgression(
         ["I", "Imaj7", "I7", "IV"],
-        "Something"
+        "Something",
       ),
       key: fMajor,
       expected: [
@@ -89,10 +90,10 @@ describe("Chord progression derives correct chords for C major key", () => {
       ],
     },
     {
-      desc: "Let it be: Axis of Awesome progression for C major",
+      desc: "Let it be: progression for C major",
       progression: new ChordProgression(
         ["I", "V", "vi", "IV"],
-        "Axis of Awesome"
+        "Axis of Awesome",
       ),
       key: cMajor,
       expected: [
@@ -106,7 +107,7 @@ describe("Chord progression derives correct chords for C major key", () => {
       desc: "With or without you: Axis of Awesome progression for D major",
       progression: new ChordProgression(
         ["I", "V", "vi", "IV"],
-        "Axis of Awesome"
+        "Axis of Awesome",
       ),
       key: dMajor,
       expected: [
@@ -120,7 +121,7 @@ describe("Chord progression derives correct chords for C major key", () => {
       desc: "I → ♭VI → IV → I",
       progression: new ChordProgression(
         ["I", "♭VI", "IV", "I"],
-        "Black Hole Sun"
+        "Black Hole Sun",
       ),
       key: gMajor,
       expected: [
@@ -134,7 +135,10 @@ describe("Chord progression derives correct chords for C major key", () => {
 
   testCases.forEach(({ desc, progression, key, expected }) => {
     it(desc, () => {
-      expect(progression.resolvedChords(key)).toEqual(expected);
+      const resolved = progression.progression.map(
+        ({ value }) => RomanResolver.resolveRomanChord(value, key),
+      );
+      expect(resolved).toEqual(expected);
     });
   });
 });

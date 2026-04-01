@@ -18,7 +18,7 @@ export class RomanChord {
     scaleDegree: ScaleDegree,
     chordType: ChordType,
     accidental: AccidentalType = AccidentalType.None,
-    bassDegree: number | undefined = undefined
+    bassDegree: number | undefined = undefined,
   ) {
     this.scaleDegree = scaleDegree;
     this.chordType = chordType;
@@ -26,16 +26,29 @@ export class RomanChord {
     this.bassDegree = bassDegree;
   }
 
+  static fromScaleDegree(
+    scaleDegree: number,
+    chordType: ChordType,
+    accidental: AccidentalType = AccidentalType.None,
+    bassScaleDegree: number | undefined = undefined,
+  ): RomanChord {
+    const bass =
+      bassScaleDegree !== undefined
+        ? ixScaleDegree(bassScaleDegree)
+        : undefined;
+    return new RomanChord(
+      ixScaleDegree(scaleDegree),
+      chordType,
+      accidental,
+      bass,
+    );
+  }
+
   get scaleDegreeIndex(): ScaleDegreeIndex {
     return ixScaleDegreeIndex(this.scaleDegree - 1);
   }
 
-  /**
-   * Converts a Roman numeral string to a scale degree.
-   * @param roman The Roman numeral string (e.g., "I", "II", "iii")
-   * @returns The corresponding scale degree
-   */
-  static fromRoman(roman: string): ScaleDegree {
+  static fromRoman(roman: string): ScaleDegree | undefined {
     const normalized = roman.toUpperCase();
     switch (normalized) {
       case "I":
@@ -53,7 +66,7 @@ export class RomanChord {
       case "VII":
         return ixScaleDegree(7);
       default:
-        return ixScaleDegree(-1);
+        return undefined;
     }
   }
 

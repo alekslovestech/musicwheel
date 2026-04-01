@@ -1,6 +1,6 @@
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
-import { ixActualArray } from "@/types/IndexTypes";
+import { toNoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordDisplayMode } from "@/types/SettingModes";
 
@@ -10,12 +10,12 @@ function verifyDisplayInfo(
   expectedNoteGrouping: string,
   expectedChordName: string,
   indices: number[],
-  musicalKey: MusicalKey = DEFAULT_MUSICAL_KEY
+  musicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
 ) {
   const result = MusicalDisplayFormatter.getDisplayInfoFromIndices(
-    ixActualArray(indices),
-    ChordDisplayMode.Letters_Short,
-    musicalKey
+    toNoteIndices(indices),
+    ChordDisplayMode.Letters,
+    musicalKey,
   );
   expect(result.noteGroupingString).toBe(expectedNoteGrouping);
   expect(result.chordName).toBe(expectedChordName);

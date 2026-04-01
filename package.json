@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "yarn generate-icons && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "generate-icons": "ts-node scripts/generate-icons/generate-icons.ts",
     "test": "jest",
     "test:watch": "jest --watch"
