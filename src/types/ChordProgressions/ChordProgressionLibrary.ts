@@ -25,6 +25,10 @@ class ChordProgressionLibrarySingleton {
       case ChordProgressionType.Line_Cliche:
         return new ChordProgression(["I:1", "I+", "vi/I"], chordProgEnum);
 
+      //correct but plays weird if a Major is specified - investigate
+      case ChordProgressionType.Around_The_World:
+        return new ChordProgression(["i:2", "v", "VI", "VII"], chordProgEnum);
+
       case ChordProgressionType.LetItBe:
         return new ChordProgression(
           [

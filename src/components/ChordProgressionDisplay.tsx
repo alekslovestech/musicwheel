@@ -3,17 +3,15 @@ import React from "react";
 
 import type { FormattedBarToken } from "@/utils/formatters/ChordProgressionFormatter";
 
+export const COLUMNS_PER_BAR = 16;
 export type ChordProgressionDisplayProps = {
   bars: FormattedBarToken[][];
-  columnsPerBar?: number;
   className?: string;
 };
 
-export const ChordProgressionDisplay: React.FC<ChordProgressionDisplayProps> = ({
-  bars,
-  columnsPerBar = 16,
-  className,
-}) => {
+export const ChordProgressionDisplay: React.FC<
+  ChordProgressionDisplayProps
+> = ({ bars, className }) => {
   if (bars.length === 0) return null;
 
   return (
@@ -23,7 +21,7 @@ export const ChordProgressionDisplay: React.FC<ChordProgressionDisplayProps> = (
           key={barIndex}
           className="grid items-stretch"
           style={{
-            gridTemplateColumns: `repeat(${columnsPerBar}, minmax(0, 1fr))`,
+            gridTemplateColumns: `repeat(${COLUMNS_PER_BAR}, minmax(0, 1fr))`,
           }}
         >
           {bar.map((tok, tokIndex) => (

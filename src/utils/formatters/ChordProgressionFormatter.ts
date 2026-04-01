@@ -1,5 +1,6 @@
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import { RomanChordFormatter } from "./RomanChordFormatter";
+import { COLUMNS_PER_BAR } from "@/components/ChordProgressionDisplay";
 
 export type FormattedBarToken = {
   label: string;
@@ -9,7 +10,9 @@ export type FormattedBarToken = {
 
 export class ChordProgressionFormatter {
   /** Progression-style roman labels formatted as bar tokens for UI rendering. */
-  static formatForDisplay(progression: ChordProgression): FormattedBarToken[][] {
+  static formatForDisplay(
+    progression: ChordProgression,
+  ): FormattedBarToken[][] {
     const bars: FormattedBarToken[][] = [];
 
     // 4/4 bars: 4 quarter-note beats per bar.
@@ -26,10 +29,10 @@ export class ChordProgressionFormatter {
         );
       }
 
-      const colSpan = 16 / entry.noteLength;
+      const colSpan = COLUMNS_PER_BAR / entry.noteLength;
       const label = RomanChordFormatter.formatRomanChord(entry.value);
 
-      if (colsInBar > 0 && colsInBar + colSpan > 16) {
+      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) {
         bars.push(barTokens);
         barTokens = [];
         colsInBar = 0;
@@ -38,7 +41,7 @@ export class ChordProgressionFormatter {
       barTokens.push({ label, colSpan });
       colsInBar += colSpan;
 
-      if (colsInBar === 16) {
+      if (colsInBar === COLUMNS_PER_BAR) {
         bars.push(barTokens);
         barTokens = [];
         colsInBar = 0;
