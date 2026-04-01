@@ -2,6 +2,7 @@
 import React from "react";
 
 import { Select } from "./Common/Select";
+import { ChordProgressionDisplay } from "./ChordProgressionDisplay";
 import { useAudio } from "@/contexts/AudioContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
@@ -10,9 +11,9 @@ import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFo
 export const ChordProgressionSelector = () => {
   const { selectedProgression, setSelectedProgression } = useAudio();
 
-  const chordSequenceText =
+  const chordSequenceBars =
     selectedProgression != null
-      ? ChordProgressionFormatter.formatRomanNumeralsForDisplay(
+      ? ChordProgressionFormatter.formatForDisplay(
           ChordProgressionLibrary.getProgression(selectedProgression),
         )
       : null;
@@ -52,7 +53,9 @@ export const ChordProgressionSelector = () => {
             </option>
           ))}
         </Select>
-        {chordSequenceText != null ? <div>{chordSequenceText}</div> : null}
+        {chordSequenceBars != null ? (
+          <ChordProgressionDisplay bars={chordSequenceBars} />
+        ) : null}
       </div>
     </div>
   );

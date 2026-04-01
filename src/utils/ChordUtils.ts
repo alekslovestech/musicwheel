@@ -6,7 +6,6 @@ import {
   ixInversion,
   ActualIndex,
   OffsetIndex,
-  ixActual,
 } from "../types/IndexTypes";
 import { AbsoluteChord } from "../types/AbsoluteChord";
 import { ChromaticIndex, makeChromaticIndex } from "../types/ChromaticIndex";

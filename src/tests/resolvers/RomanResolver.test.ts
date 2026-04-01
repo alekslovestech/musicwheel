@@ -4,8 +4,22 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { NoteConverter } from "@/utils/NoteConverter";
-import { makeTimed } from "@/types/Timed";
+import { makeTimed, type NoteLength } from "@/types/Timed";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
+
+// Local helper to shorten creation of timed RomanChords in test cases:
+function timedRoman(
+  degree: number,
+  type: ChordType,
+  accidental: AccidentalType = AccidentalType.None,
+  bass?: number,
+  noteLength?: NoteLength,
+) {
+  return makeTimed(
+    RomanChord.fromScaleDegree(degree, type, accidental, bass),
+    noteLength,
+  );
+}
 
 function verifyResolvedChord(
   musicalKey: MusicalKey,
@@ -15,9 +29,7 @@ function verifyResolvedChord(
   bassNoteName?: string,
 ) {
   const noteIndex = NoteConverter.toChromaticIndex(noteName);
-  const bassIndex = NoteConverter.toChromaticIndex(
-    bassNoteName ?? noteName,
-  );
+  const bassIndex = NoteConverter.toChromaticIndex(bassNoteName ?? noteName);
   const absoluteChord = RomanResolver.resolveRomanChord(
     RomanResolver.createRomanChordFromString(romanNumeral),
     musicalKey,
@@ -34,47 +46,56 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses bare numeral with no duration suffix",
       input: "IV",
-      expected: makeTimed(RomanChord.fromScaleDegree(4, ChordType.Major)),
+      expected: timedRoman(4, ChordType.Major),
     },
     {
       desc: "parses IV:2 as degree IV with LilyPond denominator 2",
       input: "IV:2",
-      expected: makeTimed(RomanChord.fromScaleDegree(4, ChordType.Major), 2),
+      expected: timedRoman(
+        4,
+        ChordType.Major,
+        AccidentalType.None,
+        undefined,
+        2,
+      ),
     },
     {
       desc: "parses chord suffix before duration (ii7:8)",
       input: "ii7:8",
-      expected: makeTimed(RomanChord.fromScaleDegree(2, ChordType.Minor7), 8),
+      expected: timedRoman(
+        2,
+        ChordType.Minor7,
+        AccidentalType.None,
+        undefined,
+        8,
+      ),
     },
     {
       desc: "parses accidental and duration (♭III:4)",
       input: "♭III:4",
-      expected: makeTimed(
-        RomanChord.fromScaleDegree(
-          3,
-          ChordType.Major,
-          AccidentalType.Flat,
-        ),
+      expected: timedRoman(
+        3,
+        ChordType.Major,
+        AccidentalType.Flat,
+        undefined,
         4,
       ),
     },
     {
       desc: "parses slash chord with duration (I/v:2)",
       input: "I/v:2",
-      expected: makeTimed(
-        RomanChord.fromScaleDegree(
-          1,
-          ChordType.Major,
-          AccidentalType.None,
-          5,
-        ),
-        2,
-      ),
+      expected: timedRoman(1, ChordType.Major, AccidentalType.None, 5, 2),
     },
     {
       desc: "trims whitespace around token",
       input: "  V:1  ",
-      expected: makeTimed(RomanChord.fromScaleDegree(5, ChordType.Major), 1),
+      expected: timedRoman(
+        5,
+        ChordType.Major,
+        AccidentalType.None,
+        undefined,
+        1,
+      ),
     },
   ];
 

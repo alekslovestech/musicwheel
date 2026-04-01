@@ -68,7 +68,7 @@ class ChordProgressionLibrarySingleton {
 
       case ChordProgressionType.Something:
         return new ChordProgression(
-          ["I", "Imaj7", "I7", "IV", "iv", "I"],
+          ["I:1", "Imaj7", "I7", "IV", "iv", "I"],
           chordProgEnum,
           133,
         );

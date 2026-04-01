@@ -1,13 +1,6 @@
-import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { AbsoluteChord } from "@/types/AbsoluteChord";
 import type { RomanChord } from "@/types/RomanChord";
 import { makeTimed, type Timed, type NoteLength } from "@/types/Timed";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
-
-export type ChordProgressionEntry = Timed<RomanChord>;
-export {
-  makeTimed,
-};
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
 /** Default step length when no `:denominator` is given on the first token (quarter). */
