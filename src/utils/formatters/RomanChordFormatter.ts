@@ -12,27 +12,17 @@ export class RomanChordFormatter {
    * Progression / parser vocabulary (7, maj7, dim, slash bass), for chord-progression UI
    * and stable labels. Scale-mode UI continues to use {@link formatRomanChord}.
    */
-  static formatProgressionRomanChord(romanChord: RomanChord): string {
+  static formatRomanChord(romanChord: RomanChord, includesBass = true): string {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(
       romanChord.accidental,
     );
     const romanNumeralString = this.getProgressionRootNumeral(romanChord);
     const chordPostfix = this.getProgressionChordSuffix(romanChord.chordType);
     const bass =
-      romanChord.bassDegree !== undefined
+      includesBass && romanChord.bassDegree !== undefined
         ? `/${this.bassNumeral(romanChord.bassDegree as ScaleDegree)}`
         : "";
     return `${accidentalString}${romanNumeralString}${chordPostfix}${bass}`;
-  }
-
-  static formatRomanChord(romanChord: RomanChord): string {
-    const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(
-      romanChord.accidental,
-    );
-    const romanNumeralString = this.getScaleDegreeAsRomanString(romanChord);
-    const chordPostfix = this.getProgressionChordSuffix(romanChord.chordType);
-
-    return `${accidentalString}${romanNumeralString}${chordPostfix}`;
   }
 
   private static getProgressionRootNumeral(
@@ -82,18 +72,6 @@ export class RomanChordFormatter {
   private static bassNumeral(degree: ScaleDegree): RomanNumeralString {
     const idx = Number(degree) - 1;
     return this.UPPER_ROMAN_NUMERALS[idx];
-  }
-
-  private static getScaleDegreeAsRomanString(
-    romanChord: RomanChord,
-  ): RomanNumeralString {
-    const scaleDegreeIndex = romanChord.scaleDegreeIndex;
-    const isLowercase =
-      romanChord.chordType === ChordType.Minor ||
-      romanChord.chordType === ChordType.Diminished;
-    return isLowercase
-      ? this.LOWER_ROMAN_NUMERALS[scaleDegreeIndex]
-      : this.UPPER_ROMAN_NUMERALS[scaleDegreeIndex];
   }
 
   private static UPPER_ROMAN_NUMERALS: RomanNumeralString[] = [

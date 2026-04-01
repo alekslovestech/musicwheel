@@ -27,7 +27,7 @@ export class ChordProgressionFormatter {
       }
 
       const colSpan = 16 / entry.noteLength;
-      const label = RomanChordFormatter.formatProgressionRomanChord(entry.value);
+      const label = RomanChordFormatter.formatRomanChord(entry.value);
 
       if (colsInBar > 0 && colsInBar + colSpan > 16) {
         bars.push(barTokens);

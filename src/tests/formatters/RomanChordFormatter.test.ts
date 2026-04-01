@@ -3,9 +3,9 @@ import { ChordType } from "@/types/enums/ChordType";
 import { RomanChord } from "@/types/RomanChord";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 
-describe("RomanChordFormatter.formatProgressionRomanChord", () => {
+describe("RomanChordFormatter.formatRomanChord", () => {
   function expectProgressionLabel(chord: RomanChord, expected: string) {
-    const actual = RomanChordFormatter.formatProgressionRomanChord(chord);
+    const actual = RomanChordFormatter.formatRomanChord(chord);
     expect(actual).toBe(expected);
   }
 
@@ -20,8 +20,24 @@ describe("RomanChordFormatter.formatProgressionRomanChord", () => {
       "I7",
     );
     expectProgressionLabel(
+      RomanChord.fromScaleDegree(2, ChordType.Minor7),
+      "iimin7",
+    );
+    expectProgressionLabel(
       RomanChord.fromScaleDegree(1, ChordType.Major7),
       "Imaj7",
+    );
+    expectProgressionLabel(
+      RomanChord.fromScaleDegree(2, ChordType.Diminished),
+      "ii°",
+    );
+    expectProgressionLabel(
+      RomanChord.fromScaleDegree(7, ChordType.HalfDiminished),
+      "viiø7",
+    );
+    expectProgressionLabel(
+      RomanChord.fromScaleDegree(7, ChordType.Diminished7),
+      "vii°7",
     );
     expectProgressionLabel(
       RomanChord.fromScaleDegree(7, ChordType.Major, AccidentalType.Flat),
