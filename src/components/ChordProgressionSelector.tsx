@@ -8,7 +8,10 @@ import { useMusical } from "@/contexts/MusicalContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import type { FormattedBarToken } from "@/utils/formatters/ChordProgressionFormatter";
+import {
+  COLUMNS_PER_BAR,
+  type BarRow,
+} from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
@@ -57,10 +60,10 @@ export const ChordProgressionSelector = () => {
       selectedMusicalKey,
     );
 
-    const bars: FormattedBarToken[][] = [];
+    const bars: BarRow[] = [];
 
     let colsInBar = 0;
-    let barTokens: FormattedBarToken[] = [];
+    let barTokens: BarRow = [];
 
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i];
@@ -70,7 +73,7 @@ export const ChordProgressionSelector = () => {
         );
       }
 
-      const colSpan = 16 / entry.noteLength;
+      const colSpan = COLUMNS_PER_BAR / entry.noteLength;
       const indices = resolvedNoteArrays[i] ?? [];
       const label = MusicalDisplayFormatter.getDisplayInfoFromIndices(
         indices,
@@ -87,7 +90,7 @@ export const ChordProgressionSelector = () => {
       barTokens.push({ label, colSpan });
       colsInBar += colSpan;
 
-      if (colsInBar === 16) {
+      if (colsInBar === COLUMNS_PER_BAR) {
         bars.push(barTokens);
         barTokens = [];
         colsInBar = 0;

@@ -36,7 +36,7 @@ export const DisplayProvider: React.FC<{ children: ReactNode }> = ({
     isScales ? KeyDisplayMode.ScaleDegree : KeyDisplayMode.NoteNames
   );
   const [chordDisplayMode, setChordDisplayMode] = useState<ChordDisplayMode>(
-    ChordDisplayMode.Letters
+    ChordDisplayMode.Symbols
   );
 
   const [monochromeMode, setMonochromeMode] = useState<boolean>(isScales);
