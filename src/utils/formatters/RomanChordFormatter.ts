@@ -30,7 +30,7 @@ export class RomanChordFormatter {
       romanChord.accidental,
     );
     const romanNumeralString = this.getScaleDegreeAsRomanString(romanChord);
-    const chordPostfix = this.getChordTypePostfix(romanChord.chordType);
+    const chordPostfix = this.getProgressionChordSuffix(romanChord.chordType);
 
     return `${accidentalString}${romanNumeralString}${chordPostfix}`;
   }
@@ -61,14 +61,15 @@ export class RomanChordFormatter {
       case ChordType.Minor:
         return "";
       case ChordType.Dominant7:
-      case ChordType.Minor7:
         return "7";
+      case ChordType.Minor7:
+        return "min7";
       case ChordType.Major7:
         return "maj7";
       case ChordType.Diminished:
-        return "dim";
+        return "°";
       case ChordType.Diminished7:
-        return "dim7";
+        return "°7";
       case ChordType.HalfDiminished:
         return "ø7";
       case ChordType.Augmented:
@@ -113,23 +114,4 @@ export class RomanChordFormatter {
     "vi",
     "vii",
   ];
-
-  private static getChordTypePostfix(chordType: ChordType): string {
-    switch (chordType) {
-      case ChordType.Diminished:
-        return "°";
-      case ChordType.Augmented:
-        return "+";
-      case ChordType.Minor:
-      case ChordType.Major:
-      case ChordType.Dominant7:
-      case ChordType.Minor7:
-      case ChordType.Major7:
-      case ChordType.Diminished7:
-      case ChordType.HalfDiminished:
-        return "";
-      default:
-        return "";
-    }
-  }
 }
