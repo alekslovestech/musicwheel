@@ -4,5 +4,7 @@ export enum ChordProgressionType {
   LetItBe = "Let It Be",
   LetItBe_Intermission = "Let It Be (Intermission)",
   WithOrWithoutYou = "With or Without You",
-  Something = "Something",
+  Something = "Something (Beatles)",
+  Blues = "Blues Progression",
+  Creep = "Creep (Radiohead)",
 }

@@ -17,10 +17,10 @@ class ChordProgressionLibrarySingleton {
   public getProgression(chordProgEnum: ChordProgressionType): ChordProgression {
     switch (chordProgEnum) {
       case ChordProgressionType.Perfect_Cadence:
-        return new ChordProgression(["V", "I"], chordProgEnum);
+        return new ChordProgression(["V:1", "I"], chordProgEnum);
 
       case ChordProgressionType.Plagal_Cadence:
-        return new ChordProgression(["IV", "I"], chordProgEnum);
+        return new ChordProgression(["IV:1", "I"], chordProgEnum);
 
       case ChordProgressionType.LetItBe:
         return new ChordProgression(
@@ -72,6 +72,15 @@ class ChordProgressionLibrarySingleton {
           chordProgEnum,
           133,
         );
+
+      case ChordProgressionType.Blues:
+        return new ChordProgression(
+          ["I:2", "I", "I", "I", "IV", "IV", "I", "I", "V", "IV", "I", "I"],
+          chordProgEnum,
+        );
+
+      case ChordProgressionType.Creep:
+        return new ChordProgression(["I:1", "III", "IV", "iv"], chordProgEnum);
 
       default:
         throw new Error(`Unknown chord progression type: ${chordProgEnum}`);

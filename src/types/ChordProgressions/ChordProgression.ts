@@ -6,7 +6,7 @@ export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
 /** Default step length when no `:denominator` is given on the first token (quarter). */
 export const DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH: NoteLength = 4;
 
-/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length (initially {@link DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH}). */
+/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length. */
 export function applyCarriedProgressionDurations(
   entries: Timed<RomanChord>[],
 ): Timed<RomanChord>[] {
