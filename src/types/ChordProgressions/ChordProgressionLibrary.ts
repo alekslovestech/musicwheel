@@ -27,7 +27,11 @@ class ChordProgressionLibrarySingleton {
 
       //correct but plays weird if a Major is specified - investigate
       case ChordProgressionType.Around_The_World:
-        return new ChordProgression(["i:2", "v", "VI", "VII"], chordProgEnum);
+        return new ChordProgression(
+          ["i:2", "v", "VI", "VII"],
+          chordProgEnum,
+          132,
+        );
 
       case ChordProgressionType.LetItBe:
         return new ChordProgression(
