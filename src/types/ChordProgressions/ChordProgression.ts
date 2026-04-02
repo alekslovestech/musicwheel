@@ -1,5 +1,6 @@
 import type { RomanChord } from "@/types/RomanChord";
 import { makeTimed, type Timed, type NoteLength } from "@/types/Timed";
+import { DEFAULT_MUSICAL_KEY, type MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
@@ -28,6 +29,8 @@ export class ChordProgression {
   name: string;
   /** Whole progression tempo in beats per minute (beat = quarter note). */
   tempo: number;
+  /** Optional metadata: recommended key to use when selecting this progression. */
+  suggestedMusicalKey: MusicalKey;
 
   get length(): number {
     return this.progression.length;
@@ -37,6 +40,7 @@ export class ChordProgression {
     progression_as_strings: string[],
     name: string | undefined,
     tempo: number = DEFAULT_CHORD_PROGRESSION_BPM,
+    suggestedMusicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
   ) {
     this.progression = applyCarriedProgressionDurations(
       progression_as_strings.map((roman) =>
@@ -45,5 +49,6 @@ export class ChordProgression {
     );
     this.name = name || "Unknown";
     this.tempo = tempo;
+    this.suggestedMusicalKey = suggestedMusicalKey;
   }
 }

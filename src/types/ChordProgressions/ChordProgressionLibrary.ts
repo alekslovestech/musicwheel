@@ -1,5 +1,7 @@
 import { ChordProgression } from "./ChordProgression";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { KeyType } from "@/types/enums/KeyType";
 
 class ChordProgressionLibrarySingleton {
   private static instance: ChordProgressionLibrarySingleton;
@@ -31,6 +33,7 @@ class ChordProgressionLibrarySingleton {
           ["i:2", "v", "VI", "VII"],
           chordProgEnum,
           132,
+          MusicalKey.fromClassicalMode("A", KeyType.Minor),
         );
 
       case ChordProgressionType.LetItBe:
@@ -55,6 +58,7 @@ class ChordProgressionLibrarySingleton {
           ],
           chordProgEnum,
           102,
+          MusicalKey.fromClassicalMode("C", KeyType.Major),
         );
 
       case ChordProgressionType.LetItBe_Intermission:
@@ -72,16 +76,23 @@ class ChordProgressionLibrarySingleton {
           ],
           chordProgEnum,
           102,
+          MusicalKey.fromClassicalMode("C", KeyType.Major),
         );
 
       case ChordProgressionType.WithOrWithoutYou:
-        return new ChordProgression(["I:1", "♭VII", "IV"], chordProgEnum, 110);
+        return new ChordProgression(
+          ["I:1", "♭VII", "IV"],
+          chordProgEnum,
+          110,
+          MusicalKey.fromClassicalMode("D", KeyType.Major),
+        );
 
       case ChordProgressionType.Something:
         return new ChordProgression(
           ["I:1", "Imaj7", "I7", "IV", "iv", "I"],
           chordProgEnum,
           133,
+          MusicalKey.fromClassicalMode("C", KeyType.Major),
         );
 
       case ChordProgressionType.Blues:
@@ -91,7 +102,12 @@ class ChordProgressionLibrarySingleton {
         );
 
       case ChordProgressionType.Creep:
-        return new ChordProgression(["I:1", "III", "IV", "iv"], chordProgEnum);
+        return new ChordProgression(
+          ["I:1", "III", "IV", "iv"],
+          chordProgEnum,
+          92,
+          MusicalKey.fromClassicalMode("G", KeyType.Major),
+        );
 
       default:
         throw new Error(`Unknown chord progression type: ${chordProgEnum}`);

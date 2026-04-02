@@ -15,8 +15,6 @@ import {
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
-import { ChordProgressionKeyTypeInferer } from "@/utils/resolvers/ChordProgressionKeyTypeInferer";
-import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 export const ChordProgressionSelector = () => {
   const { selectedProgression, setSelectedProgression } = useAudio();
@@ -31,17 +29,8 @@ export const ChordProgressionSelector = () => {
 
   useEffect(() => {
     if (progression == null) return;
-
-    const romanChords = progression.progression.map((e) => e.value);
-    const inferredMode = ChordProgressionKeyTypeInferer.inferKeyType(romanChords);
-
-    if (inferredMode === selectedMusicalKey.classicalMode) return;
-
-    // Keep the user's current tonic (transpose still works), only switch how degrees map to pitches.
-    setSelectedMusicalKey(
-      MusicalKey.fromClassicalMode(selectedMusicalKey.tonicString, inferredMode),
-    );
-  }, [progression, selectedMusicalKey, setSelectedMusicalKey]);
+    setSelectedMusicalKey(progression.suggestedMusicalKey);
+  }, [progression, setSelectedMusicalKey]);
 
   const romanBars = useMemo(() => {
     return progression != null
