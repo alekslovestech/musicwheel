@@ -142,3 +142,10 @@ describe("Chord progression derives correct chords for C major key", () => {
     });
   });
 });
+
+describe("ChordProgression suggestedMusicalKey default", () => {
+  it("defaults to DEFAULT_MUSICAL_KEY when omitted", () => {
+    const p = new ChordProgression(["I", "V"], "Test");
+    expect(p.suggestedMusicalKey).toBe(DEFAULT_MUSICAL_KEY);
+  });
+});

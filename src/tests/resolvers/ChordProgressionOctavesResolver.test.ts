@@ -17,7 +17,9 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
       romanChords,
       musicalKey,
     );
-    expect(resolved.map((chord) => chord[0])).toEqual(toNoteIndices(expectedRoots));
+    expect(resolved.map((chord) => chord[0])).toEqual(
+      toNoteIndices(expectedRoots),
+    );
   }
 
   it("returns empty array for empty progression", () => {
@@ -40,39 +42,37 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
   describe("two-chord voice leading direction", () => {
     it("I→V: shortest circular path is descending, so high C (12) → low G (7) wins", () => {
       // seq1 totalMovement=5 beats seq0 totalMovement=7
-      expectRoots(
-        ["I", "V"],
-        DEFAULT_MUSICAL_KEY,
-        [12, 7],
-      );
+      expectRoots(["I", "V"], DEFAULT_MUSICAL_KEY, [12, 7]);
     });
 
     it("V→I: shortest circular path is ascending, so low G (7) → high C (12) wins", () => {
       // seq0 totalMovement=5 beats seq1 totalMovement=5 (tie, seq0 wins)
-      expectRoots(
-        ["V", "I"],
-        DEFAULT_MUSICAL_KEY,
-        [7, 12],
-      );
+      expectRoots(["V", "I"], DEFAULT_MUSICAL_KEY, [7, 12]);
     });
   });
 
   it("I→IV→V: ascending steps throughout, low-octave start (seq0) wins", () => {
     // seq0 totalMovement=7, seq1 totalMovement=9
+    expectRoots(["I", "IV", "V"], DEFAULT_MUSICAL_KEY, [0, 5, 7]);
+  });
+
+  it("I→V→V: repeated chord should not jump octaves", () => {
+    // Desired: once a concrete V is chosen, repeating V should keep the same root (movement 0).
+    // Current behavior is prone to jumping to the high-octave variant on repetition.
+    expectRoots(["I", "V", "V"], DEFAULT_MUSICAL_KEY, [12, 7, 7]);
+  });
+
+  it("I→V→vi→IV→I→I→V: repeated chords should not jump octaves", () => {
     expectRoots(
-      ["I", "IV", "V"],
+      ["I", "V", "vi", "IV", "I", "I", "V"],
       DEFAULT_MUSICAL_KEY,
-      [0, 5, 7],
+      [12, 7, 9, 5, 0, 0, 7],
     );
   });
 
   it("I→vi→IV→V (50s progression): descending preference picks high-octave start (seq1 wins)", () => {
     // seq1: C(12)→Am(9)→F(5)→G(7), totalMovement=9 vs seq0 totalMovement=15
-    expectRoots(
-      ["I", "vi", "IV", "V"],
-      DEFAULT_MUSICAL_KEY,
-      [12, 9, 5, 7],
-    );
+    expectRoots(["I", "vi", "IV", "V"], DEFAULT_MUSICAL_KEY, [12, 9, 5, 7]);
   });
 
   describe("non-default keys", () => {

@@ -1,12 +1,13 @@
 import type { RomanChord } from "@/types/RomanChord";
 import { makeTimed, type Timed, type NoteLength } from "@/types/Timed";
+import { DEFAULT_MUSICAL_KEY, type MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
 /** Default step length when no `:denominator` is given on the first token (quarter). */
 export const DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH: NoteLength = 4;
 
-/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length (initially {@link DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH}). */
+/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length. */
 export function applyCarriedProgressionDurations(
   entries: Timed<RomanChord>[],
 ): Timed<RomanChord>[] {
@@ -28,6 +29,8 @@ export class ChordProgression {
   name: string;
   /** Whole progression tempo in beats per minute (beat = quarter note). */
   tempo: number;
+  /** Optional metadata: recommended key to use when selecting this progression. */
+  suggestedMusicalKey: MusicalKey;
 
   get length(): number {
     return this.progression.length;
@@ -37,6 +40,7 @@ export class ChordProgression {
     progression_as_strings: string[],
     name: string | undefined,
     tempo: number = DEFAULT_CHORD_PROGRESSION_BPM,
+    suggestedMusicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
   ) {
     this.progression = applyCarriedProgressionDurations(
       progression_as_strings.map((roman) =>
@@ -45,5 +49,6 @@ export class ChordProgression {
     );
     this.name = name || "Unknown";
     this.tempo = tempo;
+    this.suggestedMusicalKey = suggestedMusicalKey;
   }
 }

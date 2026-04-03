@@ -3,13 +3,14 @@ import React from "react";
 
 import { LAYOUT_PATTERNS } from "@/lib/design";
 import { useBorder } from "@/lib/hooks";
+import { useMusical } from "@/contexts/MusicalContext";
 
 import { ChordProgressionSelector } from "../ChordProgressionSelector";
-import { MusicalKeySelector } from "../MusicalKeySelector";
 import { TransposeWidget } from "../TransposeWidget";
 import { PlaybackWidget } from "../PlaybackWidget";
 
 export const SettingsPanelChordProgressions = () => {
+  const { selectedMusicalKey } = useMusical();
   const settingsGap = "gap-tight";
   const outerGapVertical = "gap-tight";
   const outerGapHorizontal = "gap-normal";
@@ -25,8 +26,20 @@ export const SettingsPanelChordProgressions = () => {
         <div
           className={`${LAYOUT_PATTERNS.centerFlexCol} rounded p-2 flex-1 ${settingsGap} ${border}`}
         >
-          <MusicalKeySelector useDropdownSelector={false} />
-          <ChordProgressionSelector />
+          <PlaybackWidget />
+          <TransposeWidget target="key" />
+          <div
+            id="chord-progressions-inferred-key"
+            className="text-sm font-medium text-center max-w-xs"
+          >
+            <div className="text-muted-foreground text-xs font-normal mb-0.5">
+              Musical Key
+            </div>
+            <div aria-live="polite" className="text-base font-semibold">
+              {selectedMusicalKey.tonicString}{" "}
+              {selectedMusicalKey.classicalMode}
+            </div>
+          </div>
         </div>
 
         {/* Right Column - Playback Settings */}
@@ -36,8 +49,7 @@ export const SettingsPanelChordProgressions = () => {
           <div
             className={`${LAYOUT_PATTERNS.centerFlexCol} max-w-xs self-center gap-2`}
           >
-            <TransposeWidget target="key" />
-            <PlaybackWidget />
+            <ChordProgressionSelector />
           </div>
         </div>
       </div>

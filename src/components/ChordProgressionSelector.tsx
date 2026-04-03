@@ -1,22 +1,97 @@
 "use client";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { Select } from "./Common/Select";
 import { ChordProgressionDisplay } from "./ChordProgressionDisplay";
 import { useAudio } from "@/contexts/AudioContext";
+import { useMusical } from "@/contexts/MusicalContext";
+import { useDisplay } from "@/contexts/DisplayContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import {
+  COLUMNS_PER_BAR,
+  type BarRow,
+} from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
+import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 
 export const ChordProgressionSelector = () => {
   const { selectedProgression, setSelectedProgression } = useAudio();
+  const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
+  const { chordDisplayMode } = useDisplay();
 
-  const chordSequenceBars =
-    selectedProgression != null
-      ? ChordProgressionFormatter.formatForDisplay(
-          ChordProgressionLibrary.getProgression(selectedProgression),
-        )
+  const progression = useMemo(() => {
+    return selectedProgression != null
+      ? ChordProgressionLibrary.getProgression(selectedProgression)
       : null;
+  }, [selectedProgression]);
+
+  useEffect(() => {
+    if (progression == null) return;
+    setSelectedMusicalKey(progression.suggestedMusicalKey);
+  }, [progression, setSelectedMusicalKey]);
+
+  const romanBars = useMemo(() => {
+    return progression != null
+      ? ChordProgressionFormatter.formatForDisplay(progression)
+      : null;
+  }, [progression]);
+
+  const absoluteBars = useMemo(() => {
+    if (progression == null) return null;
+
+    const entries = progression.progression;
+    const romanChords = entries.map((e) => e.value);
+
+    const resolvedNoteArrays = ChordProgressionResolver.computeProgressionOctaves(
+      romanChords,
+      selectedMusicalKey,
+    );
+
+    const bars: BarRow[] = [];
+
+    let colsInBar = 0;
+    let barTokens: BarRow = [];
+
+    for (let i = 0; i < entries.length; i++) {
+      const entry = entries[i];
+      if (entry.noteLength === undefined) {
+        throw new Error(
+          "ChordProgression entries are expected to have carried noteLength applied",
+        );
+      }
+
+      const colSpan = COLUMNS_PER_BAR / entry.noteLength;
+      const indices = resolvedNoteArrays[i] ?? [];
+      const label = MusicalDisplayFormatter.getDisplayInfoFromIndices(
+        indices,
+        chordDisplayMode,
+        selectedMusicalKey,
+      ).chordName;
+
+      if (colsInBar > 0 && colsInBar + colSpan > 16) {
+        bars.push(barTokens);
+        barTokens = [];
+        colsInBar = 0;
+      }
+
+      barTokens.push({ label, colSpan });
+      colsInBar += colSpan;
+
+      if (colsInBar === COLUMNS_PER_BAR) {
+        bars.push(barTokens);
+        barTokens = [];
+        colsInBar = 0;
+      }
+    }
+
+    if (barTokens.length > 0) {
+      bars.push(barTokens);
+    }
+
+    return bars;
+  }, [progression, selectedMusicalKey, chordDisplayMode]);
 
   const handleChordProgressionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -53,8 +128,15 @@ export const ChordProgressionSelector = () => {
             </option>
           ))}
         </Select>
-        {chordSequenceBars != null ? (
-          <ChordProgressionDisplay bars={chordSequenceBars} />
+        {romanBars != null && absoluteBars != null ? (
+          <div className="flex gap-4">
+            <div className="flex-1 min-w-0">
+              <ChordProgressionDisplay bars={romanBars} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <ChordProgressionDisplay bars={absoluteBars} />
+            </div>
+          </div>
         ) : null}
       </div>
     </div>
