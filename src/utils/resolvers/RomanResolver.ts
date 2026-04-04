@@ -6,10 +6,10 @@ import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import {
   isNoteLength,
-  makeTimed,
-  type Timed,
+  makeDurated,
+  type Durated,
   type NoteLength,
-} from "@/types/Timed";
+} from "@/types/Durated";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
@@ -88,16 +88,16 @@ export class RomanResolver {
   }
 
   static resolveRomanChordWithDuration(
-    entry: Timed<RomanChord>,
+    entry: Durated<RomanChord>,
     musicalKey: MusicalKey,
-  ): Timed<AbsoluteChord> {
+  ): Durated<AbsoluteChord> {
     if (entry.noteLength === undefined) {
       throw new Error(
         "Expected carried note length to be applied before resolving RomanChordWithDuration",
       );
     }
 
-    return makeTimed(
+    return makeDurated(
       this.resolveRomanChord(entry.value, musicalKey),
       entry.noteLength,
     );
@@ -135,8 +135,8 @@ export class RomanResolver {
     return new RomanChord(ordinal!, chordType, accidental, bassDegree);
   }
 
-  static parseRomanChordWithDuration(input: string): Timed<RomanChord> {
+  static parseRomanChordWithDuration(input: string): Durated<RomanChord> {
     const { romanPart, noteLength } = splitProgressionToken(input.trim());
-    return makeTimed(this.createRomanChordFromString(romanPart), noteLength);
+    return makeDurated(this.createRomanChordFromString(romanPart), noteLength);
   }
 }

@@ -14,7 +14,7 @@ import {
   DEFAULT_CHORD_PROGRESSION_BPM,
   DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
 } from "@/types/ChordProgressions/ChordProgression";
-import type { NoteLength } from "@/types/Timed";
+import type { NoteLength } from "@/types/Durated";
 import {
   computeScalePlaybackStep,
   prepareChordProgressionSequence,

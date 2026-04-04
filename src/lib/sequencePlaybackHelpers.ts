@@ -1,4 +1,4 @@
-import type { NoteLength } from "@/types/Timed";
+import type { NoteLength } from "@/types/Durated";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { NoteIndices } from "@/types/IndexTypes";
