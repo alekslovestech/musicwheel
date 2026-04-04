@@ -64,6 +64,10 @@ export const useSequencePlayback = ({
   const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
   const chordStepNoteLengthsRef = useRef<NoteLength[] | null>(null);
   const chordProgressionTempoRef = useRef<number | null>(null);
+  /** Index into progression steps for grid highlight; null when not in chord playback context. */
+  const [activeProgressionStepIndex, setActiveProgressionStepIndex] = useState<
+    number | null
+  >(null);
 
   // Helper functions - define these first
   const stopCurrentPlayback = useCallback(() => {
@@ -117,6 +121,7 @@ export const useSequencePlayback = ({
       return;
 
     const i = chordIndexRef.current;
+    setActiveProgressionStepIndex(i);
     setNotesDirectly(precomputed[i]);
 
     const isLastChord = i === precomputed.length - 1;
@@ -185,6 +190,7 @@ export const useSequencePlayback = ({
     if (!selectedMusicalKey || !isAudioInitialized) return;
 
     stopCurrentPlayback();
+    setActiveProgressionStepIndex(null);
     scaleIndexRef.current = 0;
     playScaleStep();
     const playbackDuration = getPlaybackDuration(scalePlaybackMode);
@@ -269,8 +275,21 @@ export const useSequencePlayback = ({
 
   const stopSequencePlayback = useCallback(() => {
     stopCurrentPlayback();
+    setActiveProgressionStepIndex(null);
     setPlaybackState(PlaybackState.SequenceComplete);
   }, [stopCurrentPlayback, setPlaybackState]);
+
+  useEffect(() => {
+    if (selectedProgression == null) {
+      setActiveProgressionStepIndex(null);
+    }
+  }, [selectedProgression]);
+
+  useEffect(() => {
+    if (globalMode !== GlobalMode.ChordProgressions) {
+      setActiveProgressionStepIndex(null);
+    }
+  }, [globalMode]);
 
   return {
     // Unified interface
@@ -286,6 +305,7 @@ export const useSequencePlayback = ({
     // Chord progression-specific
     selectedProgression,
     setSelectedProgression,
+    activeProgressionStepIndex,
 
     // Legacy aliases for backward compatibility during transition
     startScalePlayback,

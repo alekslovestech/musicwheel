@@ -17,7 +17,11 @@ import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionReso
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 
 export const ChordProgressionSelector = () => {
-  const { selectedProgression, setSelectedProgression } = useAudio();
+  const {
+    selectedProgression,
+    setSelectedProgression,
+    activeProgressionStepIndex,
+  } = useAudio();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
   const { chordDisplayMode } = useDisplay();
 
@@ -76,7 +80,7 @@ export const ChordProgressionSelector = () => {
         colsInBar = 0;
       }
 
-      barTokens.push({ label, colSpan });
+      barTokens.push({ label, colSpan, progressionEntryIndex: i });
       colsInBar += colSpan;
 
       if (colsInBar === COLUMNS_PER_BAR) {
@@ -131,10 +135,16 @@ export const ChordProgressionSelector = () => {
         {romanBars != null && absoluteBars != null ? (
           <div className="flex gap-4">
             <div className="flex-1 min-w-0">
-              <ChordProgressionDisplay bars={romanBars} />
+              <ChordProgressionDisplay
+                bars={romanBars}
+                activeProgressionStepIndex={activeProgressionStepIndex}
+              />
             </div>
             <div className="flex-1 min-w-0">
-              <ChordProgressionDisplay bars={absoluteBars} />
+              <ChordProgressionDisplay
+                bars={absoluteBars}
+                activeProgressionStepIndex={activeProgressionStepIndex}
+              />
             </div>
           </div>
         ) : null}

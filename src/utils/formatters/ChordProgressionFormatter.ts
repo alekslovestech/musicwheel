@@ -17,7 +17,12 @@ export class ChordProgressionFormatter {
     let colsInBar = 0;
     let barTokens: BarRow = [];
 
-    for (const entry of progression.progression) {
+    for (
+      let progressionEntryIndex = 0;
+      progressionEntryIndex < progression.progression.length;
+      progressionEntryIndex++
+    ) {
+      const entry = progression.progression[progressionEntryIndex];
       if (entry.noteLength === undefined) {
         throw new Error(
           "ChordProgression entries are expected to have carried noteLength applied",
@@ -33,7 +38,7 @@ export class ChordProgressionFormatter {
         colsInBar = 0;
       }
 
-      barTokens.push({ label, colSpan });
+      barTokens.push({ label, colSpan, progressionEntryIndex });
       colsInBar += colSpan;
 
       if (colsInBar === COLUMNS_PER_BAR) {
