@@ -44,3 +44,27 @@ describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () 
     expect(bars[1][0].progressionEntryIndex).toBe(1);
   });
 });
+
+describe("ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars", () => {
+  it("matches formatForDisplay bar boundaries", () => {
+    const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
+    const fromDisplay = ChordProgressionFormatter.formatForDisplay(p).map(
+      (row) => row.map((t) => t.progressionEntryIndex),
+    );
+    expect(ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars(p)).toEqual(
+      fromDisplay,
+    );
+  });
+
+  it("finds the bar containing a progression step", () => {
+    const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
+    const bars =
+      ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars(p);
+    expect(
+      ChordProgressionFormatter.findBarIndexContainingStep(bars, 0),
+    ).toBe(0);
+    expect(
+      ChordProgressionFormatter.findBarIndexContainingStep(bars, 1),
+    ).toBe(1);
+  });
+});
