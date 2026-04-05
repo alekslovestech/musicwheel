@@ -1,8 +1,9 @@
 import { Factory, StaveNote } from "vexflow";
 
+import { DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH } from "@/types/ChordProgressions/ChordProgression";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { isMajor } from "@/types/enums/KeyType";
-import type { NoteLength } from "@/types/Durated";
+import { type DuratedNoteChord, type NoteLength } from "@/types/Durated";
 
 import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
@@ -33,12 +34,14 @@ export class VexFlowFormatter {
     }
   }
 
-  static createStaveChordNote(
-    notesWithOctaves: NoteWithOctave[],
+  private static createStaveChordNote(
+    step: DuratedNoteChord,
     factory: Factory,
-    duration: string,
   ): StaveNote {
-    const keys = notesWithOctaves.map((noteWithOctave, index) => ({
+    const duration = VexFlowFormatter.noteLengthToVexDuration(
+      step.noteLength ?? DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
+    );
+    const keys = step.value.map((noteWithOctave, index) => ({
       key: VexFlowFormatter.formatNote(noteWithOctave),
       accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(
         noteWithOctave.accidental,
@@ -63,31 +66,14 @@ export class VexFlowFormatter {
     return chordNote;
   }
 
-  static createVexFlowChordNotesForBar(
-    steps: Array<{ notesWithOctaves: NoteWithOctave[]; noteLength: NoteLength }>,
+  static createStaveChordNotes(
+    steps: DuratedNoteChord[],
     factory: Factory,
   ): StaveNote[] {
     return steps.map((step) =>
-      VexFlowFormatter.createStaveChordNote(
-        step.notesWithOctaves,
-        factory,
-        VexFlowFormatter.noteLengthToVexDuration(step.noteLength),
-      ),
+      VexFlowFormatter.createStaveChordNote(step, factory),
     );
   }
-
-  static createVexFlowNotesFromNoteWithOctaves = (
-    notesWithOctaves: NoteWithOctave[],
-    factory: Factory,
-  ): StaveNote[] => {
-    return [
-      VexFlowFormatter.createStaveChordNote(
-        notesWithOctaves,
-        factory,
-        "w",
-      ),
-    ];
-  };
 
   static getKeySignatureForVex(musicalKey: MusicalKey) {
     const pureKey = musicalKey.tonicString;

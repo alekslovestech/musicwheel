@@ -137,6 +137,9 @@ export class RomanResolver {
 
   static parseRomanChordWithDuration(input: string): Durated<RomanChord> {
     const { romanPart, noteLength } = splitProgressionToken(input.trim());
-    return makeDurated(this.createRomanChordFromString(romanPart), noteLength);
+    return makeDurated(
+      this.createRomanChordFromString(romanPart),
+      noteLength,
+    );
   }
 }

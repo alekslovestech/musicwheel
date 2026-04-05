@@ -8,6 +8,7 @@ import { useBorder } from "@/lib/hooks";
 import { useMusical } from "@/contexts/MusicalContext";
 import { prepareChordProgressionSequence } from "@/lib/sequencePlaybackHelpers";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import { makeDurated } from "@/types/Durated";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
@@ -107,21 +108,18 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
           return [];
         }
         return [
-          {
-            notesWithOctaves: SpellingUtils.computeNotesFromMusicalKey(
+          makeDurated(
+            SpellingUtils.computeNotesFromMusicalKey(
               noteIndices,
               canonicalIonianKey,
             ),
             noteLength,
-          },
+          ),
         ];
       });
 
       if (steps.length > 0) {
-        const notes = VexFlowFormatter.createVexFlowChordNotesForBar(
-          steps,
-          factory,
-        );
+        const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
         drawVoice(notes);
       }
       return;
@@ -135,8 +133,8 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
       currentChordRef,
     );
 
-    const notes = VexFlowFormatter.createVexFlowNotesFromNoteWithOctaves(
-      notesWithOctaves,
+    const notes = VexFlowFormatter.createStaveChordNotes(
+      [makeDurated(notesWithOctaves, 1)],
       factory,
     );
 
