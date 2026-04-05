@@ -15,6 +15,7 @@ import {
   DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
 } from "@/types/ChordProgressions/ChordProgression";
 import type { NoteLength } from "@/types/Durated";
+import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
 import {
   computeScalePlaybackStep,
   prepareChordProgressionSequence,
@@ -64,6 +65,8 @@ export const useSequencePlayback = ({
   const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
   const chordStepNoteLengthsRef = useRef<NoteLength[] | null>(null);
   const chordProgressionTempoRef = useRef<number | null>(null);
+  /** Bumped when starting/stopping chord playback so stale setTimeouts no-op. */
+  const chordPlaybackGenerationRef = useRef(0);
   /** Index into progression steps for grid highlight; null when not in chord playback context. */
   const [activeProgressionStepIndex, setActiveProgressionStepIndex] = useState<
     number | null
@@ -136,7 +139,13 @@ export const useSequencePlayback = ({
       tempo,
       stepNoteLengths[i],
     );
+    if (sequenceTimerRef.current !== null) {
+      clearTimeout(sequenceTimerRef.current);
+      sequenceTimerRef.current = null;
+    }
+    const generationWhenScheduled = chordPlaybackGenerationRef.current;
     sequenceTimerRef.current = setTimeout(() => {
+      if (chordPlaybackGenerationRef.current !== generationWhenScheduled) return;
       playProgressionStep();
     }, delayAfterThisChord);
   }, [setNotesDirectly, setPlaybackState, stopCurrentPlayback]);
@@ -171,7 +180,10 @@ export const useSequencePlayback = ({
               stepNoteLengths[nextIndex - 1],
             )
           : 0;
+      const generationWhenScheduled = chordPlaybackGenerationRef.current;
       sequenceTimerRef.current = setTimeout(() => {
+        if (chordPlaybackGenerationRef.current !== generationWhenScheduled)
+          return;
         playProgressionStep();
       }, delayBeforeNextChord);
     }
@@ -211,6 +223,9 @@ export const useSequencePlayback = ({
 
   const startChordProgressionPlayback = useCallback(() => {
     if (!selectedProgression || !selectedMusicalKey) return;
+
+    chordPlaybackGenerationRef.current += 1;
+    releasePolySynthVoicesNow();
 
     const prepared = prepareChordProgressionSequence(
       selectedProgression,
@@ -274,6 +289,8 @@ export const useSequencePlayback = ({
   }, [playbackState, resumeCurrentPlayback]);
 
   const stopSequencePlayback = useCallback(() => {
+    chordPlaybackGenerationRef.current += 1;
+    releasePolySynthVoicesNow();
     stopCurrentPlayback();
     setActiveProgressionStepIndex(null);
     setPlaybackState(PlaybackState.SequenceComplete);
