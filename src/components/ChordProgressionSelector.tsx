@@ -9,7 +9,9 @@ import { useDisplay } from "@/contexts/DisplayContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import {
+  ChordProgressionGridLane,
   COLUMNS_PER_BAR,
+  type AllBars,
   type BarRow,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
@@ -48,12 +50,13 @@ export const ChordProgressionSelector = () => {
     const entries = progression.progression;
     const romanChords = entries.map((e) => e.value);
 
-    const resolvedNoteArrays = ChordProgressionResolver.computeProgressionOctaves(
-      romanChords,
-      selectedMusicalKey,
-    );
+    const resolvedNoteArrays =
+      ChordProgressionResolver.computeProgressionOctaves(
+        romanChords,
+        selectedMusicalKey,
+      );
 
-    const bars: BarRow[] = [];
+    const bars: AllBars = [];
 
     let colsInBar = 0;
     let barTokens: BarRow = [];
@@ -74,7 +77,7 @@ export const ChordProgressionSelector = () => {
         selectedMusicalKey,
       ).chordName;
 
-      if (colsInBar > 0 && colsInBar + colSpan > 16) {
+      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) {
         bars.push(barTokens);
         barTokens = [];
         colsInBar = 0;
@@ -96,6 +99,19 @@ export const ChordProgressionSelector = () => {
 
     return bars;
   }, [progression, selectedMusicalKey, chordDisplayMode]);
+
+  const romanLane = useMemo(() => {
+    if (romanBars == null) return null;
+    return new ChordProgressionGridLane(romanBars, activeProgressionStepIndex);
+  }, [romanBars, activeProgressionStepIndex]);
+
+  const absoluteLane = useMemo(() => {
+    if (absoluteBars == null) return null;
+    return new ChordProgressionGridLane(
+      absoluteBars,
+      activeProgressionStepIndex,
+    );
+  }, [absoluteBars, activeProgressionStepIndex]);
 
   const handleChordProgressionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -132,19 +148,13 @@ export const ChordProgressionSelector = () => {
             </option>
           ))}
         </Select>
-        {romanBars != null && absoluteBars != null ? (
+        {romanLane != null && absoluteLane != null ? (
           <div className="flex gap-4">
             <div className="flex-1 min-w-0">
-              <ChordProgressionDisplay
-                bars={romanBars}
-                activeProgressionStepIndex={activeProgressionStepIndex}
-              />
+              <ChordProgressionDisplay lane={romanLane} />
             </div>
             <div className="flex-1 min-w-0">
-              <ChordProgressionDisplay
-                bars={absoluteBars}
-                activeProgressionStepIndex={activeProgressionStepIndex}
-              />
+              <ChordProgressionDisplay lane={absoluteLane} />
             </div>
           </div>
         ) : null}

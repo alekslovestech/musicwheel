@@ -10,3 +10,16 @@ export type FormattedBarToken = {
 };
 
 export type BarRow = FormattedBarToken[];
+export type AllBars = BarRow[];
+
+/** One grid lane (e.g. roman or absolute): bar rows plus that lane’s read head. */
+export class ChordProgressionGridLane {
+  constructor(
+    readonly rows: AllBars,
+    readonly readHeadStepIndex: number | null,
+  ) {}
+
+  withReadHead(index: number | null): ChordProgressionGridLane {
+    return new ChordProgressionGridLane(this.rows, index);
+  }
+}
