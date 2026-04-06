@@ -81,21 +81,17 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
       activeProgressionStepIndex != null;
 
     if (progressionBarMode) {
-      const progression = ChordProgressionLibrary.getProgression(
-        selectedProgression,
-      );
+      const progression =
+        ChordProgressionLibrary.getProgression(selectedProgression);
       const prepared = prepareChordProgressionSequence(
         selectedProgression,
         selectedMusicalKey,
       );
-      const bars = ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars(
-        progression,
-      );
-      const barIndex = ChordProgressionFormatter.findBarIndexContainingStep(
-        bars,
+      const cpf = new ChordProgressionFormatter(progression);
+      const barIndex = cpf.findBarIndexContainingStep(
         activeProgressionStepIndex,
       );
-      const stepIndicesInBar = bars[barIndex] ?? [];
+      const stepIndicesInBar = cpf.progressionEntryIndicesByBar[barIndex] ?? [];
 
       const steps = stepIndicesInBar.flatMap((entryIndex) => {
         const noteIndices = prepared.precomputedProgression[entryIndex];

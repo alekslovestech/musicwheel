@@ -1,41 +1,35 @@
+import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { ChordDisplayMode } from "@/types/SettingModes";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import {
-  BarRow,
   COLUMNS_PER_BAR,
+  type FormattedBarToken,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
+import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
+import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
+type ProgressionEntry = ChordProgression["progression"][number];
+
 export class ChordProgressionFormatter {
-  /** Progression entry indices grouped into 4/4 bars (same boundaries as the display grid). */
-  static groupProgressionEntryIndicesIntoBars(
-    progression: ChordProgression,
-  ): number[][] {
-    return ChordProgressionFormatter.formatForDisplay(progression).map((row) =>
-      row.map((t) => t.progressionEntryIndex),
-    );
+  readonly progressionEntryIndicesByBar: number[][];
+
+  constructor(private readonly progression: ChordProgression) {
+    this.progressionEntryIndicesByBar = this.buildBarRowsForDisplay(
+      () => "",
+    ).map((row) => row.map((t) => t.progressionEntryIndex));
   }
 
-  /** Bar index whose grouped row contains this progression step; `0` if none (should not happen for valid indices). */
-  static findBarIndexContainingStep(
-    bars: number[][],
-    progressionEntryIndex: number,
-  ): number {
-    for (let b = 0; b < bars.length; b++) {
-      if (bars[b].includes(progressionEntryIndex)) return b;
-    }
-    return 0;
-  }
-
-  /** Progression-style roman labels formatted as bar tokens for UI rendering. */
-  static formatForDisplay(progression: ChordProgression): BarRow[] {
-    const bars: BarRow[] = [];
-
-    // 4/4 bars: 4 quarter-note beats per bar.
-    // `noteLength` is LilyPond-style denominator: 4=quarter (1 beat), 2=half (2 beats), 1=whole (4 beats), 8=eighth (0.5 beat), etc.
-    // Render grid at 16th-note resolution: 16 columns per bar.
-    // colSpan = 16 / noteLength (e.g. :4 => 4 cols, :2 => 8 cols, :1 => 16 cols, :8 => 2 cols, :16 => 1 col)
+  private buildBarRowsForDisplay(
+    labelAtIndex: (
+      entry: ProgressionEntry,
+      progressionEntryIndex: number,
+    ) => string,
+  ): FormattedBarToken[][] {
+    const { progression } = this;
+    const bars: FormattedBarToken[][] = [];
     let colsInBar = 0;
-    let barTokens: BarRow = [];
+    let barTokens: FormattedBarToken[] = [];
 
     for (
       let progressionEntryIndex = 0;
@@ -50,7 +44,7 @@ export class ChordProgressionFormatter {
       }
 
       const colSpan = COLUMNS_PER_BAR / entry.noteLength;
-      const label = RomanChordFormatter.formatRomanChord(entry.value);
+      const label = labelAtIndex(entry, progressionEntryIndex);
 
       if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) {
         bars.push(barTokens);
@@ -73,5 +67,43 @@ export class ChordProgressionFormatter {
     }
 
     return bars;
+  }
+
+  /** Resolved chord names in the given key, as bar tokens for the progression grid. */
+  formatAbsoluteForDisplay(
+    musicalKey: MusicalKey,
+    chordDisplayMode: ChordDisplayMode,
+  ): FormattedBarToken[][] {
+    const { progression } = this;
+    const romanChords = progression.progression.map((e) => e.value);
+    const resolvedNoteArrays =
+      ChordProgressionResolver.computeProgressionOctaves(
+        romanChords,
+        musicalKey,
+      );
+    return this.buildBarRowsForDisplay((_entry, i) => {
+      const indices = resolvedNoteArrays[i] ?? [];
+      return MusicalDisplayFormatter.getDisplayInfoFromIndices(
+        indices,
+        chordDisplayMode,
+        musicalKey,
+      ).chordName;
+    });
+  }
+
+  /** Bar index whose grouped row contains this progression step; `0` if none (should not happen for valid indices). */
+  findBarIndexContainingStep(progressionEntryIndex: number): number {
+    const bars = this.progressionEntryIndicesByBar;
+    for (let b = 0; b < bars.length; b++) {
+      if (bars[b].includes(progressionEntryIndex)) return b;
+    }
+    return 0;
+  }
+
+  /** Progression-style roman labels formatted as bar tokens for UI rendering. */
+  formatForDisplay(): FormattedBarToken[][] {
+    return this.buildBarRowsForDisplay((entry) =>
+      RomanChordFormatter.formatRomanChord(entry.value),
+    );
   }
 }

@@ -9,13 +9,10 @@ export type FormattedBarToken = {
   progressionEntryIndex: number;
 };
 
-export type BarRow = FormattedBarToken[];
-export type AllBars = BarRow[];
-
 /** One grid lane (e.g. roman or absolute): bar rows plus that lane’s read head. */
 export class ChordProgressionGridLane {
   constructor(
-    readonly rows: AllBars,
+    readonly rows: readonly FormattedBarToken[][],
     readonly readHeadStepIndex: number | null,
   ) {}
 

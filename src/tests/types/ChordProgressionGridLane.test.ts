@@ -1,9 +1,9 @@
 import {
   ChordProgressionGridLane,
-  type AllBars,
+  type FormattedBarToken,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 
-const sampleRows: AllBars = [
+const sampleRows: FormattedBarToken[][] = [
   [
     { label: "I", colSpan: 4, progressionEntryIndex: 0 },
     { label: "V", colSpan: 4, progressionEntryIndex: 1 },

@@ -18,27 +18,25 @@ describe("prepareChordProgressionSequence and progressionEntryIndex alignment", 
   it("formatter emits one token per entry with indices matching step order", () => {
     const type = ChordProgressionType.Blues;
     const progression = ChordProgressionLibrary.getProgression(type);
-    const bars = ChordProgressionFormatter.formatForDisplay(progression);
+    const bars = new ChordProgressionFormatter(progression).formatForDisplay();
     const indices = bars.flatMap((row) =>
       row.map((t) => t.progressionEntryIndex),
     );
-    expect(indices).toEqual(
-      progression.progression.map((_, i) => i),
-    );
+    expect(indices).toEqual(progression.progression.map((_, i) => i));
   });
 });
 
 describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () => {
   it("assigns indices 0..n-1 for one bar of quarter chords", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
-    const bars = ChordProgressionFormatter.formatForDisplay(p);
+    const bars = new ChordProgressionFormatter(p).formatForDisplay();
     expect(bars).toHaveLength(1);
     expect(bars[0].map((t) => t.progressionEntryIndex)).toEqual([0, 1, 2, 3]);
   });
 
   it("preserves progressionEntryIndex across bar lines", () => {
     const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
-    const bars = ChordProgressionFormatter.formatForDisplay(p);
+    const bars = new ChordProgressionFormatter(p).formatForDisplay();
     expect(bars).toHaveLength(2);
     expect(bars[0][0].progressionEntryIndex).toBe(0);
     expect(bars[1][0].progressionEntryIndex).toBe(1);
@@ -48,23 +46,17 @@ describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () 
 describe("ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars", () => {
   it("matches formatForDisplay bar boundaries", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
-    const fromDisplay = ChordProgressionFormatter.formatForDisplay(p).map(
-      (row) => row.map((t) => t.progressionEntryIndex),
-    );
-    expect(ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars(p)).toEqual(
-      fromDisplay,
-    );
+    const fmt = new ChordProgressionFormatter(p);
+    const fromDisplay = fmt
+      .formatForDisplay()
+      .map((row) => row.map((t) => t.progressionEntryIndex));
+    expect(fmt.progressionEntryIndicesByBar).toEqual(fromDisplay);
   });
 
   it("finds the bar containing a progression step", () => {
     const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
-    const bars =
-      ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars(p);
-    expect(
-      ChordProgressionFormatter.findBarIndexContainingStep(bars, 0),
-    ).toBe(0);
-    expect(
-      ChordProgressionFormatter.findBarIndexContainingStep(bars, 1),
-    ).toBe(1);
+    const fmt = new ChordProgressionFormatter(p);
+    expect(fmt.findBarIndexContainingStep(0)).toBe(0);
+    expect(fmt.findBarIndexContainingStep(1)).toBe(1);
   });
 });

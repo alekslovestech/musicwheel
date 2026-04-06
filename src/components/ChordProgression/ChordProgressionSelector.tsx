@@ -1,22 +1,15 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 
-import { Select } from "./Common/Select";
+import { Select } from "../Common/Select";
 import { ChordProgressionDisplay } from "./ChordProgressionDisplay";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import {
-  ChordProgressionGridLane,
-  COLUMNS_PER_BAR,
-  type AllBars,
-  type BarRow,
-} from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
+import { ChordProgressionGridLane } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
-import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
-import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 
 export const ChordProgressionSelector = () => {
   const {
@@ -38,80 +31,35 @@ export const ChordProgressionSelector = () => {
     setSelectedMusicalKey(progression.suggestedMusicalKey);
   }, [progression, setSelectedMusicalKey]);
 
-  const romanBars = useMemo(() => {
-    return progression != null
-      ? ChordProgressionFormatter.formatForDisplay(progression)
-      : null;
-  }, [progression]);
-
-  const absoluteBars = useMemo(() => {
-    if (progression == null) return null;
-
-    const entries = progression.progression;
-    const romanChords = entries.map((e) => e.value);
-
-    const resolvedNoteArrays =
-      ChordProgressionResolver.computeProgressionOctaves(
-        romanChords,
-        selectedMusicalKey,
-      );
-
-    const bars: AllBars = [];
-
-    let colsInBar = 0;
-    let barTokens: BarRow = [];
-
-    for (let i = 0; i < entries.length; i++) {
-      const entry = entries[i];
-      if (entry.noteLength === undefined) {
-        throw new Error(
-          "ChordProgression entries are expected to have carried noteLength applied",
-        );
-      }
-
-      const colSpan = COLUMNS_PER_BAR / entry.noteLength;
-      const indices = resolvedNoteArrays[i] ?? [];
-      const label = MusicalDisplayFormatter.getDisplayInfoFromIndices(
-        indices,
-        chordDisplayMode,
-        selectedMusicalKey,
-      ).chordName;
-
-      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) {
-        bars.push(barTokens);
-        barTokens = [];
-        colsInBar = 0;
-      }
-
-      barTokens.push({ label, colSpan, progressionEntryIndex: i });
-      colsInBar += colSpan;
-
-      if (colsInBar === COLUMNS_PER_BAR) {
-        bars.push(barTokens);
-        barTokens = [];
-        colsInBar = 0;
-      }
-    }
-
-    if (barTokens.length > 0) {
-      bars.push(barTokens);
-    }
-
-    return bars;
-  }, [progression, selectedMusicalKey, chordDisplayMode]);
+  const formatter = useMemo(
+    () =>
+      progression != null ? new ChordProgressionFormatter(progression) : null,
+    [progression],
+  );
 
   const romanLane = useMemo(() => {
-    if (romanBars == null) return null;
-    return new ChordProgressionGridLane(romanBars, activeProgressionStepIndex);
-  }, [romanBars, activeProgressionStepIndex]);
-
-  const absoluteLane = useMemo(() => {
-    if (absoluteBars == null) return null;
+    if (formatter == null) return null;
     return new ChordProgressionGridLane(
-      absoluteBars,
+      formatter.formatForDisplay(),
       activeProgressionStepIndex,
     );
-  }, [absoluteBars, activeProgressionStepIndex]);
+  }, [formatter, activeProgressionStepIndex]);
+
+  const absoluteLane = useMemo(() => {
+    if (formatter == null) return null;
+    return new ChordProgressionGridLane(
+      formatter.formatAbsoluteForDisplay(
+        selectedMusicalKey,
+        chordDisplayMode,
+      ),
+      activeProgressionStepIndex,
+    );
+  }, [
+    formatter,
+    selectedMusicalKey,
+    chordDisplayMode,
+    activeProgressionStepIndex,
+  ]);
 
   const handleChordProgressionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,

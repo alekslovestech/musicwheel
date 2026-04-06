@@ -1,5 +1,6 @@
 "use client";
 
+import { ChordProgressionTokenCell } from "./ChordProgressionTokenCell";
 import {
   COLUMNS_PER_BAR,
   ChordProgressionGridLane,
@@ -25,22 +26,14 @@ export function ChordProgressionDisplay({
         >
           {bar.map((tok, tokIndex) => {
             const isActive =
-              readHeadStepIndex !== null &&
-              readHeadStepIndex !== undefined &&
+              readHeadStepIndex != null &&
               tok.progressionEntryIndex === readHeadStepIndex;
             return (
-              <div
+              <ChordProgressionTokenCell
                 key={`${barIndex}-${tokIndex}`}
-                data-active={isActive ? "true" : undefined}
-                className={`flex items-center justify-center border-x border-neutral-600/40 px-2 ${
-                  isActive
-                    ? "bg-amber-500/15 ring-1 ring-inset ring-amber-500/40"
-                    : ""
-                }`}
-                style={{ gridColumn: `span ${tok.colSpan}` }}
-              >
-                {tok.label}
-              </div>
+                token={tok}
+                isActive={isActive}
+              />
             );
           })}
         </div>
