@@ -73,7 +73,6 @@ export class ChordProgressionFormatter {
   /** Resolved chord names in the given key, as bar tokens for the progression grid. */
   formatAbsoluteForDisplay(
     musicalKey: MusicalKey,
-    chordDisplayMode: ChordDisplayMode,
   ): FormattedBarToken[][] {
     const { progression } = this;
     const romanChords = progression.progression.map((e) => e.value);
@@ -86,7 +85,7 @@ export class ChordProgressionFormatter {
       const indices = resolvedNoteArrays[i] ?? [];
       return MusicalDisplayFormatter.getDisplayInfoFromIndices(
         indices,
-        chordDisplayMode,
+        ChordDisplayMode.Symbols,
         musicalKey,
       ).chordName;
     });

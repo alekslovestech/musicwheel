@@ -5,7 +5,6 @@ import { Select } from "../Common/Select";
 import { ChordProgressionDisplay } from "./ChordProgressionDisplay";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
-import { useDisplay } from "@/contexts/DisplayContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionGridLane } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
@@ -18,7 +17,6 @@ export const ChordProgressionSelector = () => {
     activeProgressionStepIndex,
   } = useAudio();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
-  const { chordDisplayMode } = useDisplay();
 
   const progression = useMemo(() => {
     return selectedProgression != null
@@ -48,18 +46,10 @@ export const ChordProgressionSelector = () => {
   const absoluteLane = useMemo(() => {
     if (formatter == null) return null;
     return new ChordProgressionGridLane(
-      formatter.formatAbsoluteForDisplay(
-        selectedMusicalKey,
-        chordDisplayMode,
-      ),
+      formatter.formatAbsoluteForDisplay(selectedMusicalKey),
       activeProgressionStepIndex,
     );
-  }, [
-    formatter,
-    selectedMusicalKey,
-    chordDisplayMode,
-    activeProgressionStepIndex,
-  ]);
+  }, [formatter, selectedMusicalKey, activeProgressionStepIndex]);
 
   const handleChordProgressionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
