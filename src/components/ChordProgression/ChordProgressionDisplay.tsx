@@ -3,20 +3,21 @@
 import { ChordProgressionTokenCell } from "./ChordProgressionTokenCell";
 import {
   COLUMNS_PER_BAR,
-  ChordProgressionGridLane,
+  ChordProgressionBarGrid,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 
 export function ChordProgressionDisplay({
-  lane,
+  grid,
+  readHeadStepIndex,
 }: {
-  lane: ChordProgressionGridLane;
+  grid: ChordProgressionBarGrid;
+  readHeadStepIndex: number | null;
 }) {
-  const { rows, readHeadStepIndex } = lane;
-  if (rows.length === 0) return null;
+  if (grid.length === 0) return null;
 
   return (
     <div className="flex flex-col">
-      {rows.map((bar, barIndex) => (
+      {grid.map((bar, barIndex) => (
         <div
           key={barIndex}
           className="grid items-stretch border-b border-neutral-600/40 py-1 first:border-t"
