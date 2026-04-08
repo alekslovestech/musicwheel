@@ -1,5 +1,8 @@
-import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { RomanChord } from "@/types/RomanChord";
+import { type Durated } from "@/types/Durated";
 import { ChordDisplayMode } from "@/types/SettingModes";
+
+import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import {
   COLUMNS_PER_BAR,
@@ -8,8 +11,6 @@ import {
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanChordFormatter } from "./RomanChordFormatter";
-
-type ProgressionEntry = ChordProgression["progression"][number];
 
 export class ChordProgressionFormatter {
   readonly progressionEntryIndicesByBar: number[][];
@@ -22,7 +23,7 @@ export class ChordProgressionFormatter {
 
   private buildBarRowsForDisplay(
     labelAtIndex: (
-      entry: ProgressionEntry,
+      entry: Durated<RomanChord>,
       progressionEntryIndex: number,
     ) => string,
   ): FormattedBarToken[][] {
