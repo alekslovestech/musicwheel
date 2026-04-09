@@ -53,7 +53,6 @@ export const ChordProgressionSelector = () => {
       return;
     }
     setSelectedProgression(value as ChordProgressionType);
-    console.log(`handling chord progression change`);
   };
 
   return (

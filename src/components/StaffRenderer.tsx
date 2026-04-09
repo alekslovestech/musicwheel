@@ -13,6 +13,7 @@ import { makeDurated } from "@/types/Durated";
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
+import { StaffUtils } from "@/utils/StaffUtils";
 import {
   useIsChordProgressionsMode,
   useIsScalePreviewMode,
@@ -93,26 +94,11 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
       );
       const stepIndicesInBar = cpf.progressionEntryIndicesByBar[barIndex] ?? [];
 
-      const steps = stepIndicesInBar.flatMap((entryIndex) => {
-        const noteIndices = prepared.precomputedProgression[entryIndex];
-        const noteLength = prepared.chordStepNoteLengths[entryIndex];
-        if (
-          noteIndices == null ||
-          noteIndices.length === 0 ||
-          noteLength === undefined
-        ) {
-          return [];
-        }
-        return [
-          makeDurated(
-            SpellingUtils.computeNotesFromMusicalKey(
-              noteIndices,
-              canonicalIonianKey,
-            ),
-            noteLength,
-          ),
-        ];
-      });
+      const steps = StaffUtils.buildDuratedChordStepsForBar(
+        prepared,
+        stepIndicesInBar,
+        canonicalIonianKey,
+      );
 
       if (steps.length > 0) {
         const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);

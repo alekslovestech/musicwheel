@@ -1,4 +1,4 @@
-import type { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
+import type { NoteWithOctaveArray } from "@/types/interfaces/NoteWithOctave";
 
 export type NoteLength = 1 | 2 | 4 | 8 | 16 | 32;
 
@@ -12,7 +12,7 @@ export type Durated<T> = {
 };
 
 /** Simultaneous pitches (e.g. a chord) sharing one rhythmic value. */
-export type DuratedNoteChord = Durated<NoteWithOctave[]>;
+export type DuratedNoteChord = Durated<NoteWithOctaveArray>;
 
 export function makeDurated<T>(value: T, noteLength?: NoteLength): Durated<T> {
   return { value, noteLength };
