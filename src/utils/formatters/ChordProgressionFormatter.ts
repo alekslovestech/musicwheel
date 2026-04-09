@@ -1,23 +1,81 @@
+import { ChordDisplayMode } from "@/types/SettingModes";
+
+import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import {
-  BarRow,
+  ChordProgressionBar,
   COLUMNS_PER_BAR,
+  type ChordProgressionBarGrid,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
+import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
+import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
 export class ChordProgressionFormatter {
+  readonly progressionEntryIndicesByBar: number[][];
+
+  constructor(private readonly progression: ChordProgression) {
+    this.progressionEntryIndicesByBar = this.buildEntryIndicesByBar();
+  }
+
+  /** Resolved chord names in the given key, as bar tokens for the progression grid. */
+  formatAbsoluteForDisplay(musicalKey: MusicalKey): ChordProgressionBarGrid {
+    const romanChords = this.progression.progression.map((e) => e.value);
+    const noteIndices = ChordProgressionResolver.computeProgressionOctaves(
+      romanChords,
+      musicalKey,
+    );
+
+    const labels = noteIndices.map((indices) => {
+      return MusicalDisplayFormatter.getDisplayInfoFromIndices(
+        indices,
+        ChordDisplayMode.Symbols,
+        musicalKey,
+      ).chordName;
+    });
+
+    return this.buildBarRowsForDisplay(labels);
+  }
+
+  /** Bar index whose grouped row contains this progression step; `0` if none (should not happen for valid indices). */
+  findBarIndexContainingStep(progressionEntryIndex: number): number {
+    const bars = this.progressionEntryIndicesByBar;
+    for (let b = 0; b < bars.length; b++) {
+      if (bars[b].includes(progressionEntryIndex)) return b;
+    }
+    return 0;
+  }
+
   /** Progression-style roman labels formatted as bar tokens for UI rendering. */
-  static formatForDisplay(progression: ChordProgression): BarRow[] {
-    const bars: BarRow[] = [];
+  formatForDisplay(): ChordProgressionBarGrid {
+    const labels = this.progression.progression.map((entry) =>
+      RomanChordFormatter.formatRomanChord(entry.value),
+    );
+    return this.buildBarRowsForDisplay(labels);
+  }
 
-    // 4/4 bars: 4 quarter-note beats per bar.
-    // `noteLength` is LilyPond-style denominator: 4=quarter (1 beat), 2=half (2 beats), 1=whole (4 beats), 8=eighth (0.5 beat), etc.
-    // Render grid at 16th-note resolution: 16 columns per bar.
-    // colSpan = 16 / noteLength (e.g. :4 => 4 cols, :2 => 8 cols, :1 => 16 cols, :8 => 2 cols, :16 => 1 col)
+  /** Static grid lane (no read head): progression-style roman labels. */
+  private buildEntryIndicesByBar(): number[][] {
+    const labels = Array(this.progression.progression.length).fill("");
+    return this.buildBarRowsForDisplay(labels).map((row) =>
+      row.map((t) => t.progressionEntryIndex),
+    );
+  }
+
+  private buildBarRowsForDisplay(
+    labelsByIndex: ReadonlyArray<string>,
+  ): ChordProgressionBarGrid {
+    const { progression } = this;
+    let bars: ChordProgressionBarGrid = [];
     let colsInBar = 0;
-    let barTokens: BarRow = [];
+    let barTokens: ChordProgressionBar = [];
 
-    for (const entry of progression.progression) {
+    for (
+      let progressionEntryIndex = 0;
+      progressionEntryIndex < progression.progression.length;
+      progressionEntryIndex++
+    ) {
+      const entry = progression.progression[progressionEntryIndex];
       if (entry.noteLength === undefined) {
         throw new Error(
           "ChordProgression entries are expected to have carried noteLength applied",
@@ -25,26 +83,26 @@ export class ChordProgressionFormatter {
       }
 
       const colSpan = COLUMNS_PER_BAR / entry.noteLength;
-      const label = RomanChordFormatter.formatRomanChord(entry.value);
+      const label = labelsByIndex[progressionEntryIndex];
 
       if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) {
-        bars.push(barTokens);
+        bars = [...bars, [...barTokens]];
         barTokens = [];
         colsInBar = 0;
       }
 
-      barTokens.push({ label, colSpan });
+      barTokens = [...barTokens, { label, colSpan, progressionEntryIndex }];
       colsInBar += colSpan;
 
       if (colsInBar === COLUMNS_PER_BAR) {
-        bars.push(barTokens);
+        bars = [...bars, [...barTokens]];
         barTokens = [];
         colsInBar = 0;
       }
     }
 
     if (barTokens.length > 0) {
-      bars.push(barTokens);
+      bars = [...bars, [...barTokens]];
     }
 
     return bars;

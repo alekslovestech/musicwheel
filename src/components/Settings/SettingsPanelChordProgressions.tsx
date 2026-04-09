@@ -5,7 +5,7 @@ import { LAYOUT_PATTERNS } from "@/lib/design";
 import { useBorder } from "@/lib/hooks";
 import { useMusical } from "@/contexts/MusicalContext";
 
-import { ChordProgressionSelector } from "../ChordProgressionSelector";
+import { ChordProgressionSelector } from "../ChordProgression/ChordProgressionSelector";
 import { TransposeWidget } from "../TransposeWidget";
 import { PlaybackWidget } from "../PlaybackWidget";
 

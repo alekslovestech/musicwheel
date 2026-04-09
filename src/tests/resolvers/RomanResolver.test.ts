@@ -4,18 +4,18 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { NoteConverter } from "@/utils/NoteConverter";
-import { makeTimed, type NoteLength } from "@/types/Timed";
+import { makeDurated, type NoteLength } from "@/types/Durated";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
 
-// Local helper to shorten creation of timed RomanChords in test cases:
-function timedRoman(
+// Local helper to shorten creation of durated RomanChords in test cases:
+function duratedRoman(
   degree: number,
   type: ChordType,
   accidental: AccidentalType = AccidentalType.None,
   bass?: number,
   noteLength?: NoteLength,
 ) {
-  return makeTimed(
+  return makeDurated(
     RomanChord.fromScaleDegree(degree, type, accidental, bass),
     noteLength,
   );
@@ -46,12 +46,12 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses bare numeral with no duration suffix",
       input: "IV",
-      expected: timedRoman(4, ChordType.Major),
+      expected: duratedRoman(4, ChordType.Major),
     },
     {
       desc: "parses IV:2 as degree IV with LilyPond denominator 2",
       input: "IV:2",
-      expected: timedRoman(
+      expected: duratedRoman(
         4,
         ChordType.Major,
         AccidentalType.None,
@@ -62,7 +62,7 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses chord suffix before duration (ii7:8)",
       input: "ii7:8",
-      expected: timedRoman(
+      expected: duratedRoman(
         2,
         ChordType.Minor7,
         AccidentalType.None,
@@ -73,7 +73,7 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses accidental and duration (♭III:4)",
       input: "♭III:4",
-      expected: timedRoman(
+      expected: duratedRoman(
         3,
         ChordType.Major,
         AccidentalType.Flat,
@@ -84,12 +84,12 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses slash chord with duration (I/v:2)",
       input: "I/v:2",
-      expected: timedRoman(1, ChordType.Major, AccidentalType.None, 5, 2),
+      expected: duratedRoman(1, ChordType.Major, AccidentalType.None, 5, 2),
     },
     {
       desc: "trims whitespace around token",
       input: "  V:1  ",
-      expected: timedRoman(
+      expected: duratedRoman(
         5,
         ChordType.Major,
         AccidentalType.None,
