@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* VexFlow StaffRenderer: consumed via getComputedStyle in StaffRenderer */
+:root {
+  --staff-stave-stroke: rgba(245, 158, 11, 0.4);
+  /* Progression: rectangle behind the active chord (drawn before the note) */
+  --staff-active-chord-bg: rgba(11, 31, 245, 0.15);
+}
+
 /* Ensure Next.js root and parents have full height */
 html,
 body,
