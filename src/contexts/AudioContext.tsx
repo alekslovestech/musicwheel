@@ -30,6 +30,8 @@ interface AudioContextType {
   // Chord progression-specific
   selectedProgression: ChordProgressionType | null;
   setSelectedProgression: (progression: ChordProgressionType | null) => void;
+  /** Current chord step for progression UI highlight; null when not applicable. */
+  activeProgressionStepIndex: number | null;
 
   // Legacy aliases (to be removed after full migration)
   startScalePlayback: () => void;

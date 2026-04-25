@@ -1,4 +1,4 @@
-import type { NoteLength } from "@/types/Timed";
+import type { NoteLength } from "@/types/Durated";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { NoteIndices } from "@/types/IndexTypes";
@@ -65,33 +65,10 @@ export function computeScalePlaybackStep(
   };
 }
 
-export class PreparedChordProgressionSequence {
+export interface PreparedChordProgressionSequence {
   precomputedProgression: NoteIndices[];
-  /** Note length (LilyPond-style denominator) per step; convert to ms with `chordDurationMsFromTempo(tempo, d)`. */
   chordStepNoteLengths: NoteLength[];
   tempo: number;
-
-  constructor(args: {
-    precomputedProgression: NoteIndices[];
-    chordStepNoteLengths: NoteLength[];
-    tempo: number;
-  }) {
-    this.precomputedProgression = args.precomputedProgression;
-    this.chordStepNoteLengths = args.chordStepNoteLengths;
-    this.tempo = args.tempo;
-  }
-
-  getNotes(): NoteIndices[] {
-    return this.precomputedProgression;
-  }
-
-  getNoteLengths(): NoteLength[] {
-    return this.chordStepNoteLengths;
-  }
-
-  get length(): number {
-    return this.precomputedProgression.length;
-  }
 }
 
 export function prepareChordProgressionSequence(
@@ -108,9 +85,9 @@ export function prepareChordProgressionSequence(
       musicalKey,
     );
   const chordStepNoteLengths = resolved.map((e) => e.noteLength!);
-  return new PreparedChordProgressionSequence({
+  return {
     precomputedProgression,
     chordStepNoteLengths,
     tempo: progression.tempo,
-  });
+  };
 }

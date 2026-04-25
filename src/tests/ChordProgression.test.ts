@@ -135,8 +135,8 @@ describe("Chord progression derives correct chords for C major key", () => {
 
   testCases.forEach(({ desc, progression, key, expected }) => {
     it(desc, () => {
-      const resolved = progression.progression.map(
-        ({ value }) => RomanResolver.resolveRomanChord(value, key),
+      const resolved = progression.progression.map(({ value }) =>
+        RomanResolver.resolveRomanChord(value, key),
       );
       expect(resolved).toEqual(expected);
     });

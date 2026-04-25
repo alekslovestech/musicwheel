@@ -1,9 +1,9 @@
-import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
+import { NoteWithOctaveArray } from "@/types/interfaces/NoteWithOctave";
 
 export class SpellingTestUtils {
   static verifyNoteWithOctaveArray(
-    actual: NoteWithOctave[],
-    expected: NoteWithOctave[]
+    actual: NoteWithOctaveArray,
+    expected: NoteWithOctaveArray,
   ): void {
     expect(actual).toHaveLength(expected.length);
     for (let i = 0; i < actual.length; i++) {

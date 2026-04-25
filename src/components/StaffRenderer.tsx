@@ -2,16 +2,38 @@
 import React, { useEffect, useRef } from "react";
 import { Factory } from "vexflow";
 
+import { useAudio } from "@/contexts/AudioContext";
 import { COMMON_STYLES } from "@/lib/design";
 import { useBorder } from "@/lib/hooks";
 import { useMusical } from "@/contexts/MusicalContext";
+import { prepareChordProgressionSequence } from "@/lib/sequencePlaybackHelpers";
+import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import { makeDurated } from "@/types/Durated";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
+import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { StaffUtils } from "@/utils/StaffUtils";
+import { VexFlowUtils } from "@/utils/VexFlowUtils";
+import {
+  useIsChordProgressionsMode,
+  useIsScalePreviewMode,
+} from "@/lib/hooks/useGlobalMode";
 
 interface StaffRendererProps {
   style?: React.CSSProperties;
+}
+
+/** Optional CSS vars; match `globals.css` :root */
+const STAFF_CSS_VARS = {
+  staveStroke: "--staff-stave-stroke",
+  activeChordBg: "--staff-active-chord-bg",
+} as const;
+
+function readStaffCssVar(name: keyof typeof STAFF_CSS_VARS): string {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(STAFF_CSS_VARS[name])
+    .trim();
 }
 
 export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
@@ -19,6 +41,8 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } =
     useMusical();
+  const { selectedProgression, activeProgressionStepIndex } = useAudio();
+  const isChordProgressionsMode = useIsChordProgressionsMode();
   const isScalesMode = useIsScalePreviewMode();
   const border = useBorder();
 
@@ -41,44 +65,88 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
 
     const context = factory.getContext();
 
-    const stave = factory.Stave({
-      x: 5,
-      y: -20,
-      width: containerWidth - 10,
-    });
+    const stave = VexFlowUtils.createStaveForContainer(factory, containerWidth);
 
     const canonicalIonianKey = selectedMusicalKey.getCanonicalIonianKey();
     const keySignature =
       VexFlowFormatter.getKeySignatureForVex(canonicalIonianKey);
     stave.addClef("treble").addKeySignature(keySignature);
-    stave.setStyle({ strokeStyle: "black" });
+    const staveStroke =
+      readStaffCssVar("staveStroke") || "rgb(0, 0, 0)";
+    stave.setStyle({ strokeStyle: staveStroke });
     stave.setContext(context).draw();
+
+    const progressionBarMode =
+      isChordProgressionsMode &&
+      selectedProgression != null &&
+      activeProgressionStepIndex != null;
+
+    if (progressionBarMode) {
+      const progression =
+        ChordProgressionLibrary.getProgression(selectedProgression);
+      const prepared = prepareChordProgressionSequence(
+        selectedProgression,
+        selectedMusicalKey,
+      );
+      const cpf = new ChordProgressionFormatter(progression);
+      const barIndex = cpf.findBarIndexContainingStep(
+        activeProgressionStepIndex,
+      );
+      const stepIndicesInBar = cpf.progressionEntryIndicesByBar[barIndex] ?? [];
+
+      const steps = StaffUtils.buildDuratedChordStepsForBar(
+        prepared,
+        stepIndicesInBar,
+        canonicalIonianKey,
+      );
+
+      if (steps.length === 0) return;
+      const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
+      const highlightIndex = stepIndicesInBar.indexOf(
+        activeProgressionStepIndex,
+      );
+      if (highlightIndex >= 0) {
+        VexFlowUtils.drawVoiceWithHighlights(
+          factory,
+          stave,
+          notes,
+          containerWidth,
+          {
+            backgroundNoteIndex: highlightIndex,
+            backgroundFill:
+              readStaffCssVar("activeChordBg") || "rgba(11, 31, 245, 0.15)",
+          },
+        );
+      } else {
+        VexFlowUtils.drawVoice(factory, stave, notes, containerWidth);
+      }
+
+      return;
+    }
 
     if (selectedNoteIndices.length === 0) return;
 
-    // Step 1: Compute NoteWithOctave[] - all context values passed as parameters
     const notesWithOctaves = SpellingUtils.computeNotesWithOptimalStrategy(
       selectedNoteIndices,
       canonicalIonianKey,
-      currentChordRef
+      currentChordRef,
     );
 
-    // Step 2: Render NoteWithOctave[] to VexFlow - pure rendering logic
-    const notes = VexFlowFormatter.createVexFlowNotesFromNoteWithOctaves(
-      notesWithOctaves,
-      factory
+    const notes = VexFlowFormatter.createStaveChordNotes(
+      [makeDurated(notesWithOctaves, 1)],
+      factory,
     );
 
-    const voice = factory.Voice({ time: "4/4" });
-    voice.setStrict(false);
-    voice.addTickables(notes);
-
-    factory
-      .Formatter()
-      .joinVoices([voice])
-      .format([voice], containerWidth - 20);
-    voice.draw(context, stave);
-  }, [selectedNoteIndices, selectedMusicalKey, currentChordRef, isScalesMode]);
+    VexFlowUtils.drawVoice(factory, stave, notes, containerWidth);
+  }, [
+    selectedNoteIndices,
+    selectedMusicalKey,
+    currentChordRef,
+    isScalesMode,
+    isChordProgressionsMode,
+    selectedProgression,
+    activeProgressionStepIndex,
+  ]);
 
   return (
     <div
