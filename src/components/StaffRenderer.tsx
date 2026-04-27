@@ -137,10 +137,10 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       style={style}
       ref={containerRef}
     >
-      {/* Tailwind color probe (used to read `colors.chordprogression.active` via getComputedStyle). */}
+      {/* Tailwind color probe (used to read `colors.cp.highlight` via getComputedStyle). */}
       <div
         ref={chordProgressionActiveColorProbeRef}
-        className="pointer-events-none absolute -z-10 h-0 w-0 overflow-hidden bg-chordprogression-active/15"
+        className="pointer-events-none absolute -z-10 h-0 w-0 overflow-hidden bg-cp-highlight/15"
         aria-hidden="true"
       />
       <div

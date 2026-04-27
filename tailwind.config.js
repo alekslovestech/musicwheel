@@ -32,8 +32,8 @@ module.exports = {
       colors: {
         test: "red",
 
-        chordprogression: {
-          active: "rgb(245, 158, 66)", // Amber 500
+        cp: {
+          highlight: "rgb(245, 158, 66)", // Amber 500
         },
 
         buttons: {
