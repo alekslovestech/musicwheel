@@ -20,29 +20,10 @@ import {
   useIsScalePreviewMode,
 } from "@/lib/hooks/useGlobalMode";
 
-interface StaffRendererProps {
-  style?: React.CSSProperties;
-}
-
-/** CSS vars defined in `src/app/globals.css` `:root` */
-const STAFF_CSS_VARS = {
-  staveStroke: "--staff-stave-stroke",
-  activeChordBg: "--staff-active-chord-bg",
-} as const;
-
-function readStaffCssVar(name: keyof typeof STAFF_CSS_VARS): string {
-  const v = getComputedStyle(document.documentElement)
-    .getPropertyValue(STAFF_CSS_VARS[name])
-    .trim();
-  if (!v) 
-    throw new Error(`Missing required CSS var: ${STAFF_CSS_VARS[name]}`);
-  
-  return v;
-}
-
-export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
+export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const chordProgressionActiveColorProbeRef = useRef<HTMLDivElement>(null);
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } =
     useMusical();
   const { selectedProgression, activeProgressionStepIndex } = useAudio();
@@ -75,8 +56,6 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
     const keySignature =
       VexFlowFormatter.getKeySignatureForVex(canonicalIonianKey);
     stave.addClef("treble").addKeySignature(keySignature);
-    const staveStroke = readStaffCssVar("staveStroke");
-    stave.setStyle({ strokeStyle: staveStroke });
     stave.setContext(context).draw();
 
     const progressionBarMode =
@@ -85,6 +64,10 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
       activeProgressionStepIndex != null;
 
     if (progressionBarMode) {
+      const probe = chordProgressionActiveColorProbeRef.current;
+      const activeChordBg =
+        probe != null ? getComputedStyle(probe).backgroundColor : undefined;
+
       const progression =
         ChordProgressionLibrary.getProgression(selectedProgression);
       const prepared = prepareChordProgressionSequence(
@@ -115,7 +98,7 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
           notes,
           containerWidth,
           highlightIndex,
-          readStaffCssVar("activeChordBg"),
+          activeChordBg,
         );
       } else {
         VexFlowUtils.drawVoice(factory, stave, notes, containerWidth);
@@ -154,6 +137,12 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
       style={style}
       ref={containerRef}
     >
+      {/* Tailwind color probe (used to read `colors.chordprogression.active` via getComputedStyle). */}
+      <div
+        ref={chordProgressionActiveColorProbeRef}
+        className="pointer-events-none absolute -z-10 h-0 w-0 overflow-hidden bg-chordprogression-active/15"
+        aria-hidden="true"
+      />
       <div
         className="staff-canvas"
         id="staff"

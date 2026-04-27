@@ -32,6 +32,10 @@ module.exports = {
       colors: {
         test: "red",
 
+        chordprogression: {
+          active: "rgb(245, 158, 66)", // Amber 500
+        },
+
         buttons: {
           // Slightly warmer grays (less blue) for a softer UI; inactive ~6% lighter
           bgDefault: "rgb(235, 233, 229)",
