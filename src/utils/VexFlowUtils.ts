@@ -18,11 +18,6 @@ export const STAVE_Y = -20;
 /** Total horizontal inset (container width minus stave width). */
 export const STAVE_WIDTH_INSET = 10;
 
-export interface DrawVoiceOptions {
-  backgroundNoteIndex?: number;
-  backgroundFill?: string;
-}
-
 export class VexFlowUtils {
   static createStaveForContainer(
     factory: Factory,
@@ -57,7 +52,8 @@ export class VexFlowUtils {
     stave: Stave,
     tickables: StaveNote[],
     containerWidth: number,
-    options?: DrawVoiceOptions,
+    backgroundNoteIndex?: number,
+    backgroundFill?: string,
   ) {
     const context = factory.getContext();
     if (!context) {
@@ -72,11 +68,9 @@ export class VexFlowUtils {
       .joinVoices([voice])
       .format([voice], justifyWidth, { context, stave });
 
-    const bg = options?.backgroundFill;
-    const i = options?.backgroundNoteIndex;
-    if (bg && i != null && i >= 0) {
-      const n = tickables[i];
-      if (n) VexFlowUtils.drawActiveChordBackground(context, n, bg);
+    if (backgroundFill && backgroundNoteIndex != null && backgroundNoteIndex >= 0) {
+      const n = tickables[backgroundNoteIndex];
+      if (n) VexFlowUtils.drawActiveChordBackground(context, n, backgroundFill);
     }
 
     voice.draw(context, stave);
@@ -84,16 +78,15 @@ export class VexFlowUtils {
 
   private static getStaveNoteHighlightBoundingBox(note: StaveNote): BoundingBox | null {
     const m = note.getMetrics();
-    const x0 = note.getAbsoluteX() - m.modLeftPx - m.leftDisplacedHeadPx;
-    const x1 = note.getAbsoluteX() + m.notePx + m.rightDisplacedHeadPx + m.modRightPx;
-    const w = x1 - x0;
+    const x0 = note.getAbsoluteX() - (m.modLeftPx + m.leftDisplacedHeadPx);
+    const w = m.notePx + m.rightDisplacedHeadPx + m.modRightPx + m.modLeftPx + m.leftDisplacedHeadPx;
     const box = note.getBoundingBox();
     if (!box) return null;
     return new BoundingBox(
       x0 - CHORD_HIGHLIGHT_PAD_X,
-      box.getY() - CHORD_HIGHLIGHT_PAD_Y,
+      box.y - CHORD_HIGHLIGHT_PAD_Y,
       w + 2 * CHORD_HIGHLIGHT_PAD_X,
-      box.getH() + 2 * CHORD_HIGHLIGHT_PAD_Y,
+      box.h + 2 * CHORD_HIGHLIGHT_PAD_Y,
     );
   }
 

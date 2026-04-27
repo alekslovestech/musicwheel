@@ -24,16 +24,20 @@ interface StaffRendererProps {
   style?: React.CSSProperties;
 }
 
-/** Optional CSS vars; match `globals.css` :root */
+/** CSS vars defined in `src/app/globals.css` `:root` */
 const STAFF_CSS_VARS = {
   staveStroke: "--staff-stave-stroke",
   activeChordBg: "--staff-active-chord-bg",
 } as const;
 
 function readStaffCssVar(name: keyof typeof STAFF_CSS_VARS): string {
-  return getComputedStyle(document.documentElement)
+  const v = getComputedStyle(document.documentElement)
     .getPropertyValue(STAFF_CSS_VARS[name])
     .trim();
+  if (!v) 
+    throw new Error(`Missing required CSS var: ${STAFF_CSS_VARS[name]}`);
+  
+  return v;
 }
 
 export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
@@ -71,8 +75,7 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
     const keySignature =
       VexFlowFormatter.getKeySignatureForVex(canonicalIonianKey);
     stave.addClef("treble").addKeySignature(keySignature);
-    const staveStroke =
-      readStaffCssVar("staveStroke") || "rgb(0, 0, 0)";
+    const staveStroke = readStaffCssVar("staveStroke");
     stave.setStyle({ strokeStyle: staveStroke });
     stave.setContext(context).draw();
 
@@ -111,11 +114,8 @@ export const StaffRenderer: React.FC<StaffRendererProps> = ({ style }) => {
           stave,
           notes,
           containerWidth,
-          {
-            backgroundNoteIndex: highlightIndex,
-            backgroundFill:
-              readStaffCssVar("activeChordBg") || "rgba(11, 31, 245, 0.15)",
-          },
+          highlightIndex,
+          readStaffCssVar("activeChordBg"),
         );
       } else {
         VexFlowUtils.drawVoice(factory, stave, notes, containerWidth);
