@@ -8,6 +8,7 @@ import { useIsMinimalMode } from "@/lib/hooks/useGlobalMode";
 
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
+import { setPolySynthVoiceReleaser } from "@/lib/audio/polySynthVoiceBridge";
 
 // Base frequency for A4 (440Hz)
 const BASE_FREQUENCY = 440;
@@ -62,6 +63,11 @@ export const useAudioPlayer = () => {
 
     checkExistingAudio();
   }, [setAudioInitialized]);
+
+  useEffect(() => {
+    setPolySynthVoiceReleaser(() => synthRef.current?.releaseAll());
+    return () => setPolySynthVoiceReleaser(null);
+  }, []);
 
   // Initialize Tone.js synth
   useEffect(() => {
@@ -138,13 +144,16 @@ export const useAudioPlayer = () => {
         console.error("Failed to play note:", error);
       }
     },
-    [getFrequencyFromIndex, isAudioInitialized, noteDuration]
+    [getFrequencyFromIndex, isAudioInitialized, noteDuration],
   );
 
   // Play all selected notes (for manual triggering)
   const playSelectedNotes = useCallback(() => {
     if (!synthRef.current || !isAudioInitialized) return;
 
+    // Stop any still-sounding voices (e.g. last chord of a progression) before
+    // playing the new selection; otherwise PolySynth stacks releases.
+    synthRef.current.releaseAll();
     selectedNoteIndices.forEach((index) => {
       playNote(index);
     });

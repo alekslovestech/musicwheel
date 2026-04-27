@@ -5,6 +5,10 @@ export type FormattedBarToken = {
   label: string;
   /** Number of 16th-note columns to span (4/4 bar = 16 columns). */
   colSpan: number;
+  /** Index into `ChordProgression.progression` for this chord step (playback / highlight). */
+  progressionEntryIndex: number;
 };
 
-export type BarRow = FormattedBarToken[];
+export type ChordProgressionBar = readonly FormattedBarToken[];
+
+export type ChordProgressionBarGrid = readonly FormattedBarToken[][];

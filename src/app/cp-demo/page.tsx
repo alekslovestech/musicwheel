@@ -7,7 +7,6 @@ import { StaffRenderer } from "@/components/StaffRenderer";
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
 import { SettingsPanelChordProgressions } from "@/components/Settings/SettingsPanelChordProgressions";
-import { ChordNameDisplay } from "@/components/ChordNameDisplay";
 
 export default function ChordProgressionsPage() {
   const { gridRows, gridAreas, gridColumns } = usePageLayout();
@@ -31,10 +30,10 @@ export default function ChordProgressionsPage() {
           style={{
             gridArea: "staff",
             ...NOTATION_LAYOUT,
+            gridTemplateColumns: "1fr",
           }}
         >
           <StaffRenderer />
-          <ChordNameDisplay />
         </div>
         <div
           className={`ChordProgressionsPage-circular ${COMMON_STYLES.circularContainer} ${border}`}

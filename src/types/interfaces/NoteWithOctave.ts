@@ -8,11 +8,13 @@ export interface NoteWithOctave {
   readonly octaveOffset: OctaveOffset;
 }
 
+export type NoteWithOctaveArray = readonly NoteWithOctave[];
+
 // Factory function for convenient creation
 export function createNoteWithOctave(
   noteName: string,
   accidental: AccidentalType,
-  octaveOffset: number = 0
+  octaveOffset: number = 0,
 ): NoteWithOctave {
   return {
     noteName,

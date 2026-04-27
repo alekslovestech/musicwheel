@@ -6,14 +6,12 @@ export const useGlobalMode = () => {
   const pathname = usePathname();
   switch (pathname) {
     case "/harmony":
-      return GlobalMode.Harmony;
     case "/harmony-demo":
       return GlobalMode.Harmony;
     case "/scales":
-      return GlobalMode.Scales;
     case "/scales-demo":
       return GlobalMode.Scales;
-    case "/chordprogressions-demo":
+    case "/cp-demo":
       return GlobalMode.ChordProgressions;
     case "/minimal":
       return GlobalMode.Minimal;
