@@ -48,10 +48,8 @@ export const ChordProgressionSelector = () => {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const value = event.target.value;
-    if (value === "") {
-      setSelectedProgression(null);
-      return;
-    }
+    // Placeholder option is disabled; ignore just in case.
+    if (value === "") return;
     setSelectedProgression(value as ChordProgressionType);
   };
 

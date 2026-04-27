@@ -3,13 +3,16 @@ import { ChordDisplayMode } from "@/types/SettingModes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import {
-  ChordProgressionBar,
   COLUMNS_PER_BAR,
   type ChordProgressionBarGrid,
+  type FormattedBarToken,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanChordFormatter } from "./RomanChordFormatter";
+
+type MutableChordProgressionBar = FormattedBarToken[];
+type MutableChordProgressionBarGrid = FormattedBarToken[][];
 
 export class ChordProgressionFormatter {
   readonly progressionEntryIndicesByBar: number[][];
@@ -62,13 +65,25 @@ export class ChordProgressionFormatter {
     );
   }
 
+  /**
+   * Converts the progression's durated steps into a bar/column grid for UI rendering.
+   * Each step becomes a token spanning `colSpan` sixteenth-note columns inside a 4/4 bar (16 columns),
+   * and carries `progressionEntryIndex` so playback can highlight the currently-active step.
+   */
   private buildBarRowsForDisplay(
     labelsByIndex: ReadonlyArray<string>,
   ): ChordProgressionBarGrid {
     const { progression } = this;
-    let bars: ChordProgressionBarGrid = [];
+    let bars: MutableChordProgressionBarGrid = [];
     let colsInBar = 0;
-    let barTokens: ChordProgressionBar = [];
+    let barTokens: MutableChordProgressionBar = [];
+
+    const flushBar = () => {
+      if (barTokens.length === 0) return;
+      bars.push(barTokens);
+      barTokens = [];
+      colsInBar = 0;
+    };
 
     for (
       let progressionEntryIndex = 0;
@@ -85,25 +100,17 @@ export class ChordProgressionFormatter {
       const colSpan = COLUMNS_PER_BAR / entry.noteLength;
       const label = labelsByIndex[progressionEntryIndex];
 
-      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) {
-        bars = [...bars, [...barTokens]];
-        barTokens = [];
-        colsInBar = 0;
-      }
+      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) 
+        flushBar();
 
-      barTokens = [...barTokens, { label, colSpan, progressionEntryIndex }];
+      barTokens.push({ label, colSpan, progressionEntryIndex });
       colsInBar += colSpan;
 
-      if (colsInBar === COLUMNS_PER_BAR) {
-        bars = [...bars, [...barTokens]];
-        barTokens = [];
-        colsInBar = 0;
-      }
+      if (colsInBar === COLUMNS_PER_BAR) 
+        flushBar();
     }
 
-    if (barTokens.length > 0) {
-      bars = [...bars, [...barTokens]];
-    }
+    flushBar();
 
     return bars;
   }

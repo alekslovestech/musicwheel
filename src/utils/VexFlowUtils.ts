@@ -6,17 +6,17 @@ import {
   type StaveNote,
 } from "vexflow";
 
-export const CHORD_HIGHLIGHT_PAD_X = 6;
-export const CHORD_HIGHLIGHT_PAD_Y = 5;
+const CHORD_HIGHLIGHT_PAD_X = 6;
+const CHORD_HIGHLIGHT_PAD_Y = 5;
 
 /** Pixels subtracted from container width when justifying a voice. */
-export const STAFF_JUSTIFY_INSET = 20;
+const STAFF_JUSTIFY_INSET = 20;
 
 /** Stave position and width relative to the staff canvas container. */
-export const STAVE_X = 5;
-export const STAVE_Y = -20;
+const STAVE_X = 5;
+const STAVE_Y = -20;
 /** Total horizontal inset (container width minus stave width). */
-export const STAVE_WIDTH_INSET = 10;
+const STAVE_WIDTH_INSET = 10;
 
 export class VexFlowUtils {
   static createStaveForContainer(
