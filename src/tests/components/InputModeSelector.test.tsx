@@ -13,7 +13,7 @@ describe("ModeSelector with preset buttons", () => {
       <RootProvider>
         <InputModeSelector />
         <ChordPresetSelector />
-      </RootProvider>
+      </RootProvider>,
     );
 
   describe("Default Behavior", () => {
@@ -64,9 +64,7 @@ describe("ModeSelector with preset buttons", () => {
 
       test("displays correct preset buttons", () => {
         ReactTestUtils.expectElementByIdToBeInTheDocument("preset-Chord_Sus2");
-        ReactTestUtils.expectElementByIdNotToBeInTheDocument(
-          "preset-Interval_Tritone"
-        );
+        ReactTestUtils.expectElementByIdNotToBeInTheDocument("preset-Interval_Tritone");
         ReactTestUtils.expectElementByIdToBeInTheDocument("inversion-0");
       });
 

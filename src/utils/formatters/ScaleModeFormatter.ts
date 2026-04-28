@@ -9,27 +9,18 @@ import { ScaleDegreeFormatter } from "./ScaleDegreeFormatter";
 export class ScaleModeFormatter {
   static formatAllScaleDegreesForDisplay(
     scaleModeInfo: ScaleModeInfo,
-    keyTextMode: KeyDisplayMode
+    keyTextMode: KeyDisplayMode,
   ): string[] {
-    return Array.from(
-      { length: scaleModeInfo.getScalePatternLength() },
-      (_, i) => {
-        const scaleDegreeInfo = scaleModeInfo.getScaleDegreeInfoFromPosition(
-          ixScaleDegreeIndex(i)
-        );
-        return this.formatScaleDegreeForDisplay(
-          scaleModeInfo,
-          scaleDegreeInfo,
-          keyTextMode
-        );
-      }
-    );
+    return Array.from({ length: scaleModeInfo.getScalePatternLength() }, (_, i) => {
+      const scaleDegreeInfo = scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
+      return this.formatScaleDegreeForDisplay(scaleModeInfo, scaleDegreeInfo, keyTextMode);
+    });
   }
 
   static formatScaleDegreeForDisplay(
     scaleModeInfo: ScaleModeInfo,
     scaleDegreeInfo: ScaleDegreeInfo,
-    keyTextMode: KeyDisplayMode
+    keyTextMode: KeyDisplayMode,
   ): string {
     switch (keyTextMode) {
       case KeyDisplayMode.ScaleDegree:

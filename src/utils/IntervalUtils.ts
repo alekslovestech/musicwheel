@@ -1,22 +1,14 @@
-import {
-  ChromaticIndex,
-  makeChromaticIndex,
-  subChromatic,
-} from "@/types/ChromaticIndex";
+import { ChromaticIndex, makeChromaticIndex, subChromatic } from "@/types/ChromaticIndex";
 import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalDistance, ixIntervalDistance } from "@/types/IntervalClass";
 export class IntervalUtils {
-  static cyclicIntervalsFromActualIndices(
-    indices: NoteIndices,
-  ): IntervalDistance[] {
+  static cyclicIntervalsFromActualIndices(indices: NoteIndices): IntervalDistance[] {
     const pcs = indices.map((index) => makeChromaticIndex(index));
     const sortedPcs = pcs.sort((a, b) => a - b);
     return this.cyclicIntervals(sortedPcs);
   }
 
-  private static cyclicIntervals(
-    sortedPcs: ChromaticIndex[],
-  ): IntervalDistance[] {
+  private static cyclicIntervals(sortedPcs: ChromaticIndex[]): IntervalDistance[] {
     if (sortedPcs.length <= 1) return [];
 
     const intervals: IntervalDistance[] = [];

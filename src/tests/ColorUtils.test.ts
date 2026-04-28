@@ -36,9 +36,7 @@ describe("ColorUtils.getChordColor", () => {
     it("color(major) = color(major 2nd inversion), e.g. color(C) = color(C/G)", () => {
       // Root [0, 4, 7] and 2nd inversion [7, 0, 4] (G C E) both yield cyclic intervals [4, 3, 5]
       const colorRoot = ColorUtils.getChordColor(toNoteIndices([0, 4, 7]));
-      const colorSecondInv = ColorUtils.getChordColor(
-        toNoteIndices([7, 12, 16]),
-      );
+      const colorSecondInv = ColorUtils.getChordColor(toNoteIndices([7, 12, 16]));
       expect(colorRoot).toBe(colorSecondInv);
     });
 
@@ -54,9 +52,7 @@ describe("ColorUtils.getChordColor", () => {
     it("color(ø7)=color(min6)", () => {
       // [0, 3, 6, 10] (ø7, half-diminished 7th): cyclic intervals [2, 3, 3, 4]
       // [0, 3, 7, 9] (min6): cyclic intervals [2, 3, 3, 4]
-      const colorHalfDiminished7 = ColorUtils.getChordColor(
-        toNoteIndices([0, 3, 6, 10]),
-      );
+      const colorHalfDiminished7 = ColorUtils.getChordColor(toNoteIndices([0, 3, 6, 10]));
       const colorMin6 = ColorUtils.getChordColor(toNoteIndices([0, 3, 7, 9]));
       expect(colorHalfDiminished7).toBe(colorMin6);
     });
@@ -71,9 +67,7 @@ describe("ColorUtils.getChordColor", () => {
       // [0, 4, 7, 11] (Maj7): cyclic intervals [1, 4, 3, 4]
       // [0, 4, 8, 11] (+Maj7, augmented major seventh): cyclic intervals [1, 4, 4, 3]
       const colorMaj7 = ColorUtils.getChordColor(toNoteIndices([0, 4, 7, 11]));
-      const colorPlusMaj7 = ColorUtils.getChordColor(
-        toNoteIndices([0, 4, 8, 11]),
-      );
+      const colorPlusMaj7 = ColorUtils.getChordColor(toNoteIndices([0, 4, 8, 11]));
       expect(colorMaj7).not.toBe(colorPlusMaj7);
     });
   });

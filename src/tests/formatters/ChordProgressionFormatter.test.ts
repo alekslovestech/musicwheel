@@ -10,18 +10,14 @@ describe("prepareChordProgressionSequence and progressionEntryIndex alignment", 
     const type = ChordProgressionType.Blues;
     const prepared = prepareChordProgressionSequence(type, DEFAULT_MUSICAL_KEY);
     const progression = ChordProgressionLibrary.getProgression(type);
-    expect(prepared.precomputedProgression.length).toBe(
-      progression.progression.length,
-    );
+    expect(prepared.precomputedProgression.length).toBe(progression.progression.length);
   });
 
   it("formatter emits one token per entry with indices matching step order", () => {
     const type = ChordProgressionType.Blues;
     const progression = ChordProgressionLibrary.getProgression(type);
     const bars = new ChordProgressionFormatter(progression).formatForDisplay();
-    const indices = bars.flatMap((row) =>
-      row.map((t) => t.progressionEntryIndex),
-    );
+    const indices = bars.flatMap((row) => row.map((t) => t.progressionEntryIndex));
     expect(indices).toEqual(progression.progression.map((_, i) => i));
   });
 });

@@ -4,10 +4,7 @@ import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
-import {
-  ScaleDegreeIndex,
-  ixScaleDegreeIndex,
-} from "@/types/ScaleModes/ScaleDegreeType";
+import { ScaleDegreeIndex, ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
@@ -39,10 +36,7 @@ export function computeScalePlaybackStep(
       ixScaleDegreeIndex(0),
       scalePlaybackMode,
     );
-    const fittedOctaveIndices = IndexUtils.transposeNotes(
-      octaveNoteIndices,
-      TWELVE,
-    );
+    const fittedOctaveIndices = IndexUtils.transposeNotes(octaveNoteIndices, TWELVE);
     return {
       ...defaultScalePlaybackStepOutput,
       notesToPlay: fittedOctaveIndices,
@@ -54,10 +48,7 @@ export function computeScalePlaybackStep(
     return { ...defaultScalePlaybackStepOutput };
   }
 
-  const noteIndices = key.getNoteIndicesForScaleDegree(
-    currentScaleDegreeIndex,
-    scalePlaybackMode,
-  );
+  const noteIndices = key.getNoteIndicesForScaleDegree(currentScaleDegreeIndex, scalePlaybackMode);
   return {
     ...defaultScalePlaybackStepOutput,
     notesToPlay: noteIndices,
@@ -68,6 +59,8 @@ export function computeScalePlaybackStep(
 export interface PreparedChordProgressionSequence {
   precomputedProgression: NoteIndices[];
   chordStepNoteLengths: NoteLength[];
+  /** Per step; 0 = undotted. Each dot multiplies that step's playback length by 1.5. */
+  chordStepRhythmDots: number[];
   tempo: number;
 }
 
@@ -79,15 +72,16 @@ export function prepareChordProgressionSequence(
   const resolved = progression.progression.map((entry) =>
     RomanResolver.resolveRomanChordWithDuration(entry, musicalKey),
   );
-  const precomputedProgression =
-    ChordProgressionResolver.computeProgressionOctaves(
-      progression.progression.map((e) => e.value),
-      musicalKey,
-    );
+  const precomputedProgression = ChordProgressionResolver.computeProgressionOctaves(
+    progression.progression.map((e) => e.value),
+    musicalKey,
+  );
   const chordStepNoteLengths = resolved.map((e) => e.noteLength!);
+  const chordStepRhythmDots = resolved.map((e) => e.rhythmDots ?? 0);
   return {
     precomputedProgression,
     chordStepNoteLengths,
+    chordStepRhythmDots,
     tempo: progression.tempo,
   };
 }

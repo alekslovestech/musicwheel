@@ -7,9 +7,7 @@ export class IndexUtils {
   //everything relative to root note
   static normalizeIndices(indices: number[]): number[] {
     const rootNote = indices[0];
-    return indices.map((note) =>
-      subChromatic(note as ChromaticIndex, rootNote)
-    );
+    return indices.map((note) => subChromatic(note as ChromaticIndex, rootNote));
   }
 
   static fitChordToAbsoluteRange(indices: number[]): number[] {
@@ -63,10 +61,7 @@ export class IndexUtils {
   }
 
   //if the new index is already selected, remove it, otherwise add it
-  static ToggleNewIndex(
-    selectedNoteIndices: NoteIndices,
-    newIndex: ActualIndex
-  ): NoteIndices {
+  static ToggleNewIndex(selectedNoteIndices: NoteIndices, newIndex: ActualIndex): NoteIndices {
     let updatedIndices = selectedNoteIndices.includes(newIndex)
       ? selectedNoteIndices.filter((index) => index !== newIndex)
       : [...selectedNoteIndices, newIndex];
@@ -78,16 +73,12 @@ export class IndexUtils {
     return note >= 0 && note < TWENTY4;
   }
 
-  private static shiftToRange(
-    indices: number[],
-    min: number,
-    max: number
-  ): number[] {
+  private static shiftToRange(indices: number[], min: number, max: number): number[] {
     const shift = indices.some((note) => note >= max)
       ? -TWELVE
       : indices.some((note) => note < min)
-      ? TWELVE
-      : 0;
+        ? TWELVE
+        : 0;
     return indices.map((note) => note + shift);
   }
 }

@@ -9,11 +9,17 @@ export function isNoteLength(n: number): n is NoteLength {
 export type Durated<T> = {
   value: T;
   noteLength?: NoteLength;
+  /** LilyPond-style dots after `:denominator`; each dot multiplies duration by 1.5. */
+  rhythmDots?: number;
 };
 
 /** Simultaneous pitches (e.g. a chord) sharing one rhythmic value. */
 export type DuratedNoteChord = Durated<NoteWithOctaveArray>;
 
-export function makeDurated<T>(value: T, noteLength?: NoteLength): Durated<T> {
-  return { value, noteLength };
+export function makeDurated<T>(value: T, noteLength?: NoteLength, rhythmDots?: number): Durated<T> {
+  const d: Durated<T> = { value, noteLength };
+  if (rhythmDots !== undefined && rhythmDots > 0) {
+    d.rhythmDots = rhythmDots;
+  }
+  return d;
 }

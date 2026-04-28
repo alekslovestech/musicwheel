@@ -20,7 +20,7 @@ export const KeyboardLinear = () => {
     if (!isScales) return null;
 
     const { x1, x2 } = LinearKeyboardUtils.calculateScaleBoundaryPercentages(
-      selectedMusicalKey.tonicIndex
+      selectedMusicalKey.tonicIndex,
     );
 
     const startY = 90;
@@ -70,11 +70,7 @@ export const KeyboardLinear = () => {
   };
 
   const keys = [];
-  for (
-    let actualIndex = 0 as ActualIndex;
-    actualIndex < TWENTY4;
-    actualIndex++
-  ) {
+  for (let actualIndex = 0 as ActualIndex; actualIndex < TWENTY4; actualIndex++) {
     //TODO: consider highlighting the ROOT note for the linear keyboard, and the BASS note for the circular keyboard
     //complication: that might be confusing for the user, and it's less important on the linear keyboard.
     const isBassNote = checkIsBassNote(actualIndex);
@@ -85,7 +81,7 @@ export const KeyboardLinear = () => {
         actualIndex={actualIndex}
         isBassNote={isBassNote}
         onClick={handleKeyClick}
-      />
+      />,
     );
   }
 

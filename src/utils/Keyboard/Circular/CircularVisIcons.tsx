@@ -19,23 +19,14 @@ export class CircularVisIcons {
   }
 
   render = (mode: CircularVisMode) =>
-    mode === CircularVisMode.None
-      ? this.renderCircle()
-      : this.renderPoints(mode);
+    mode === CircularVisMode.None ? this.renderCircle() : this.renderPoints(mode);
 
   private renderCircle = (): JSX.Element => (
-    <circle
-      cx={this.circleRadius}
-      cy={this.circleRadius}
-      r={this.innerRadius}
-    />
+    <circle cx={this.circleRadius} cy={this.circleRadius} r={this.innerRadius} />
   );
 
   private renderPoints = (mode: CircularVisMode): JSX.Element => {
-    const points = this.visualizer.getVisualization(
-      toNoteIndices([11, 3, 7]),
-      mode
-    );
+    const points = this.visualizer.getVisualization(toNoteIndices([11, 3, 7]), mode);
     const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
     return <polygon points={pointsString} />;
   };

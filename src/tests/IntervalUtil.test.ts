@@ -28,9 +28,9 @@ describe("IntervalUtils.cyclicIntervals", () => {
     ];
 
     test.each(testCases)("$name", ({ input, expected }) => {
-      expect(
-        IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices),
-      ).toEqual(expected);
+      expect(IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices)).toEqual(
+        expected,
+      );
     });
   });
 
@@ -58,9 +58,9 @@ describe("IntervalUtils.cyclicIntervals", () => {
     ];
 
     test.each(testCases)("$name", ({ input, expected }) => {
-      expect(
-        IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices),
-      ).toEqual(expected);
+      expect(IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices)).toEqual(
+        expected,
+      );
     });
   });
 
@@ -126,9 +126,9 @@ describe("IntervalUtils.cyclicIntervals", () => {
     ];
 
     test.each(testCases)("$name", ({ input, expected }) => {
-      expect(
-        IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices),
-      ).toEqual(expected);
+      expect(IntervalUtils.cyclicIntervalsFromActualIndices(input as NoteIndices)).toEqual(
+        expected,
+      );
     });
   });
 });

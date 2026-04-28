@@ -16,11 +16,10 @@ export class MusicalKeyNoteFormatter {
     chromaticIndex: ChromaticIndex,
     keyTextMode: KeyDisplayMode,
   ): string {
-    const scaleDegreeInfo =
-      musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(
-        chromaticIndex,
-        musicalKey.tonicIndex,
-      );
+    const scaleDegreeInfo = musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(
+      chromaticIndex,
+      musicalKey.tonicIndex,
+    );
     if (keyTextMode === KeyDisplayMode.NoteNames) {
       const noteInfo = ChromaticNoteResolver.resolveAbsoluteNote(
         chromaticIndex,
@@ -37,10 +36,7 @@ export class MusicalKeyNoteFormatter {
     );
   }
 
-  static formatAllNotesForDisplay(
-    musicalKey: MusicalKey,
-    keyTextMode: KeyDisplayMode,
-  ): string[] {
+  static formatAllNotesForDisplay(musicalKey: MusicalKey, keyTextMode: KeyDisplayMode): string[] {
     return Array.from({ length: TWELVE }, (_, i) =>
       this.formatNoteForDisplay(musicalKey, ixChromatic(i), keyTextMode),
     );

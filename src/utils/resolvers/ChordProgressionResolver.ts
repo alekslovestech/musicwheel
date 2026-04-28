@@ -29,19 +29,11 @@ export class ChordProgressionResolver {
 
     const seq0 = this.buildSequence(chords, 0);
     const seq1 = this.buildSequence(chords, 1);
-    return seq0.totalMovement <= seq1.totalMovement
-      ? seq0.noteArrays
-      : seq1.noteArrays;
+    return seq0.totalMovement <= seq1.totalMovement ? seq0.noteArrays : seq1.noteArrays;
   }
 
-  private static buildSequence(
-    chords: AbsoluteChord[],
-    startOctave: number,
-  ): SequenceResult {
-    const firstNotes = ChordUtils.noteIndicesFromAbsoluteChord(
-      chords[0],
-      startOctave,
-    );
+  private static buildSequence(chords: AbsoluteChord[], startOctave: number): SequenceResult {
+    const firstNotes = ChordUtils.noteIndicesFromAbsoluteChord(chords[0], startOctave);
 
     const noteArrays: NoteIndices[] = [firstNotes];
     let prevRoot = firstNotes[0];

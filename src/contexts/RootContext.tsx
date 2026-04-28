@@ -10,9 +10,7 @@ import { MusicalProvider } from "./MusicalContext";
 import { ChordPresetProvider } from "./ChordPresetContext";
 import { AudioProvider } from "./AudioContext";
 
-export const RootProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const RootProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const globalMode = useGlobalMode();
   const pathname = usePathname();
 
@@ -37,9 +35,7 @@ export const RootProvider: React.FC<{ children: ReactNode }> = ({
       <DisplayProvider key={`display-${globalMode}`}>
         <AudioProvider>
           {/* Remove the key - don't reset audio */}
-          <ChordPresetProvider key={`chord-preset-${globalMode}`}>
-            {children}
-          </ChordPresetProvider>
+          <ChordPresetProvider key={`chord-preset-${globalMode}`}>{children}</ChordPresetProvider>
         </AudioProvider>
       </DisplayProvider>
     </MusicalProvider>

@@ -1,10 +1,4 @@
-import {
-  BoundingBox,
-  type Factory,
-  type RenderContext,
-  type Stave,
-  type StaveNote,
-} from "vexflow";
+import { BoundingBox, type Factory, type RenderContext, type Stave, type StaveNote } from "vexflow";
 
 const CHORD_HIGHLIGHT_PAD_X = 6;
 const CHORD_HIGHLIGHT_PAD_Y = 5;
@@ -19,10 +13,7 @@ const STAVE_Y = -20;
 const STAVE_WIDTH_INSET = 10;
 
 export class VexFlowUtils {
-  static createStaveForContainer(
-    factory: Factory,
-    containerWidth: number,
-  ): Stave {
+  static createStaveForContainer(factory: Factory, containerWidth: number): Stave {
     return factory.Stave({
       x: STAVE_X,
       y: STAVE_Y,
@@ -34,12 +25,7 @@ export class VexFlowUtils {
    * Formats and draws a single voice.
    * @param containerWidth staff canvas width (same basis as {@link createStaveForContainer}).
    */
-  static drawVoice(
-    factory: Factory,
-    stave: Stave,
-    tickables: StaveNote[],
-    containerWidth: number,
-  ) {
+  static drawVoice(factory: Factory, stave: Stave, tickables: StaveNote[], containerWidth: number) {
     VexFlowUtils.drawVoiceWithHighlights(factory, stave, tickables, containerWidth);
   }
 
@@ -63,10 +49,7 @@ export class VexFlowUtils {
     const voice = factory.Voice({ time: "4/4" });
     voice.setStrict(false);
     voice.addTickables(tickables);
-    factory
-      .Formatter()
-      .joinVoices([voice])
-      .format([voice], justifyWidth, { context, stave });
+    factory.Formatter().joinVoices([voice]).format([voice], justifyWidth, { context, stave });
 
     if (backgroundFill && backgroundNoteIndex != null && backgroundNoteIndex >= 0) {
       const n = tickables[backgroundNoteIndex];
@@ -79,7 +62,8 @@ export class VexFlowUtils {
   private static getStaveNoteHighlightBoundingBox(note: StaveNote): BoundingBox | null {
     const m = note.getMetrics();
     const x0 = note.getAbsoluteX() - (m.modLeftPx + m.leftDisplacedHeadPx);
-    const w = m.notePx + m.rightDisplacedHeadPx + m.modRightPx + m.modLeftPx + m.leftDisplacedHeadPx;
+    const w =
+      m.notePx + m.rightDisplacedHeadPx + m.modRightPx + m.modLeftPx + m.leftDisplacedHeadPx;
     const box = note.getBoundingBox();
     if (!box) return null;
     return new BoundingBox(
@@ -90,11 +74,7 @@ export class VexFlowUtils {
     );
   }
 
-  private static drawActiveChordBackground(
-    context: RenderContext,
-    note: StaveNote,
-    fill: string,
-  ) {
+  private static drawActiveChordBackground(context: RenderContext, note: StaveNote, fill: string) {
     const rect = this.getStaveNoteHighlightBoundingBox(note);
     if (!rect) return;
     context.save();

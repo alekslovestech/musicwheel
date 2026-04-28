@@ -18,7 +18,7 @@ describe("KeyboardLinear", () => {
         <KeyboardLinear />
         <InputModeSelector />
         <ChordPresetSelector />
-      </RootProvider>
+      </RootProvider>,
     );
 
   beforeEach(() => {

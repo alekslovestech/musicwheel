@@ -34,8 +34,7 @@ const SCALE_PLAYBACK_MODE_OPTIONS: PlaybackModeOption[] = [
 ];
 
 export const ScalePlaybackModeSelect: React.FC = () => {
-  const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } =
-    useAudio();
+  const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } = useAudio();
 
   const handleModeChange = (newMode: ScalePlaybackMode) => {
     setScalePlaybackMode(newMode);

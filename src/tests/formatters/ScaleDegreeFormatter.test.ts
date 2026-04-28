@@ -35,13 +35,8 @@ describe("Scale Degree Info", () => {
 
   testCases.forEach(({ desc, degree, accidental, expected }) => {
     test(desc, () => {
-      const scaleDegreeInfo = new ScaleDegreeInfo(
-        ixScaleDegree(degree),
-        accidental
-      );
-      expect(ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo)).toEqual(
-        expected
-      );
+      const scaleDegreeInfo = new ScaleDegreeInfo(ixScaleDegree(degree), accidental);
+      expect(ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo)).toEqual(expected);
     });
   });
 });

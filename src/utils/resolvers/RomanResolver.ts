@@ -4,12 +4,7 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
-import {
-  isNoteLength,
-  makeDurated,
-  type Durated,
-  type NoteLength,
-} from "@/types/Durated";
+import { isNoteLength, makeDurated, type Durated, type NoteLength } from "@/types/Durated";
 import { addChromatic } from "@/types/ChromaticIndex";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
@@ -23,17 +18,22 @@ interface ParsedRomanLexeme {
 
 const accidentalRegex: RegExp = /#|♯|b|♭/;
 const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
-const chordTypeRegex: RegExp = /\+|7|maj7|o|o7|dim|dim7|aug|ø7/;
+/** Longer tokens first so e.g. `dim7` is not consumed as `dim`. */
+const chordTypeRegex: RegExp = /\+|maj7|dim7|o7|ø7|7|6|dim|o|aug/;
 const romanRegex: RegExp = new RegExp(
   `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${chordTypeRegex.source})?(\/(${pureRomanRegex.source}))?$`,
 );
 
-/** Trailing `:denominator` for LilyPond-style length (e.g. `IV:2` → half note). */
-const progressionDurationSuffixRegex = /^(.+):(\d+)$/;
+/**
+ * Trailing `:denominator` with optional dot(s) for LilyPond-style length
+ * (e.g. `IV:2` half, `IV:4.` dotted quarter). Each `.` multiplies duration by 1.5.
+ */
+const progressionDurationSuffixRegex = /^(.+):(\d+)(\.+)?$/;
 
 function splitProgressionToken(token: string): {
   romanPart: string;
   noteLength: NoteLength | undefined;
+  rhythmDots: number | undefined;
 } {
   const match = token.match(progressionDurationSuffixRegex);
   if (match) {
@@ -41,9 +41,15 @@ function splitProgressionToken(token: string): {
     if (!isNoteLength(parsed)) {
       throw new Error(`Unsupported note length: ${match[2]}`);
     }
-    return { romanPart: match[1], noteLength: parsed };
+    const dotStr = match[3];
+    const rhythmDots = dotStr !== undefined && dotStr.length > 0 ? dotStr.length : 0;
+    return {
+      romanPart: match[1],
+      noteLength: parsed,
+      rhythmDots: rhythmDots > 0 ? rhythmDots : undefined,
+    };
   }
-  return { romanPart: token, noteLength: undefined };
+  return { romanPart: token, noteLength: undefined, rhythmDots: undefined };
 }
 
 function splitRomanString(romanString: string): ParsedRomanLexeme {
@@ -61,13 +67,8 @@ function splitRomanString(romanString: string): ParsedRomanLexeme {
 }
 
 export class RomanResolver {
-  static resolveRomanChord(
-    romanChord: RomanChord,
-    musicalKey: MusicalKey,
-  ): AbsoluteChord {
-    const scale = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(
-      musicalKey.tonicIndex,
-    );
+  static resolveRomanChord(romanChord: RomanChord, musicalKey: MusicalKey): AbsoluteChord {
+    const scale = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
 
     let chromaticIndex = scale[romanChord.scaleDegreeIndex];
 
@@ -100,6 +101,7 @@ export class RomanResolver {
     return makeDurated(
       this.resolveRomanChord(entry.value, musicalKey),
       entry.noteLength,
+      entry.rhythmDots,
     );
   }
 
@@ -117,13 +119,8 @@ export class RomanResolver {
     );
 
     const ordinal = RomanChord.fromRoman(parsedRoman.pureRoman);
-    const isLowercase = RomanChord.isLowercaseRomanNumeral(
-      parsedRoman.pureRoman,
-    );
-    const chordType = RomanChord.determineChordType(
-      isLowercase,
-      parsedRoman.chordSuffix,
-    );
+    const isLowercase = RomanChord.isLowercaseRomanNumeral(parsedRoman.pureRoman);
+    const chordType = RomanChord.determineChordType(isLowercase, parsedRoman.chordSuffix);
     const bassDegree = parsedRoman.bassRoman
       ? RomanChord.fromRoman(parsedRoman.bassRoman)
       : undefined;
@@ -136,10 +133,7 @@ export class RomanResolver {
   }
 
   static parseRomanChordWithDuration(input: string): Durated<RomanChord> {
-    const { romanPart, noteLength } = splitProgressionToken(input.trim());
-    return makeDurated(
-      this.createRomanChordFromString(romanPart),
-      noteLength,
-    );
+    const { romanPart, noteLength, rhythmDots } = splitProgressionToken(input.trim());
+    return makeDurated(this.createRomanChordFromString(romanPart), noteLength, rhythmDots);
   }
 }

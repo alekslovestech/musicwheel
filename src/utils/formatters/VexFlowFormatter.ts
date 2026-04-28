@@ -34,18 +34,13 @@ export class VexFlowFormatter {
     }
   }
 
-  private static createStaveChordNote(
-    step: DuratedNoteChord,
-    factory: Factory,
-  ): StaveNote {
+  private static createStaveChordNote(step: DuratedNoteChord, factory: Factory): StaveNote {
     const duration = VexFlowFormatter.noteLengthToVexDuration(
       step.noteLength ?? DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
     );
     const keys = step.value.map((noteWithOctave, index) => ({
       key: VexFlowFormatter.formatNote(noteWithOctave),
-      accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(
-        noteWithOctave.accidental,
-      ),
+      accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(noteWithOctave.accidental),
       index,
     }));
 
@@ -56,23 +51,15 @@ export class VexFlowFormatter {
 
     keys.forEach(({ accidentalSign, index }) => {
       if (accidentalSign) {
-        chordNote.addModifier(
-          factory.Accidental({ type: accidentalSign }),
-          index,
-        );
+        chordNote.addModifier(factory.Accidental({ type: accidentalSign }), index);
       }
     });
 
     return chordNote;
   }
 
-  static createStaveChordNotes(
-    steps: DuratedNoteChord[],
-    factory: Factory,
-  ): StaveNote[] {
-    return steps.map((step) =>
-      VexFlowFormatter.createStaveChordNote(step, factory),
-    );
+  static createStaveChordNotes(steps: DuratedNoteChord[], factory: Factory): StaveNote[] {
+    return steps.map((step) => VexFlowFormatter.createStaveChordNote(step, factory));
   }
 
   static getKeySignatureForVex(musicalKey: MusicalKey) {

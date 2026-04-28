@@ -20,7 +20,7 @@ describe("KeyboardGeneral", () => {
         <KeyboardCircular />
         <InputModeSelector />
         <ChordPresetSelector />
-      </RootProvider>
+      </RootProvider>,
     );
 
   beforeEach(() => {
@@ -90,7 +90,7 @@ describe("Keyboards in Advanced Mode", () => {
         <KeyboardCircular />
         <InputModeSelector />
         <ChordPresetSelector />
-      </RootProvider>
+      </RootProvider>,
     );
 
   beforeEach(() => {

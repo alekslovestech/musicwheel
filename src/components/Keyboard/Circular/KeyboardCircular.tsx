@@ -3,10 +3,7 @@ import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
 
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
-import {
-  CartesianPoint,
-  CartesianPointPair,
-} from "@/types/interfaces/CartesianPoint";
+import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
 import { useMusical } from "@/contexts/MusicalContext";
 
@@ -31,38 +28,32 @@ export const KeyboardCircular = () => {
     numNotes > 2
       ? CircularVisMode.Polygon
       : numNotes === 2
-      ? CircularVisMode.Radial
-      : CircularVisMode.None;
+        ? CircularVisMode.Radial
+        : CircularVisMode.None;
   const isScales = useIsScalePreviewMode();
 
   const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + CIRCLE_RADIUS * 2;
   const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
-  const coords = [
-    -VIEWPORT_RADIUS,
-    -VIEWPORT_RADIUS,
-    VIEWPORT_RADIUS * 2,
-    VIEWPORT_RADIUS * 2,
-  ];
+  const coords = [-VIEWPORT_RADIUS, -VIEWPORT_RADIUS, VIEWPORT_RADIUS * 2, VIEWPORT_RADIUS * 2];
   const chordColor = ColorUtils.getChordColor(selectedNoteIndices);
 
   const getLineCartesianPoints = (
     tonicIndex: ChromaticIndex,
     innerRadius: number,
-    outerRadius: number
+    outerRadius: number,
   ): CartesianPointPair => {
     const COEFF = 1.05;
-    const { startAngle: startOfTonicAngle } =
-      PolarMath.NoteIndexToAngleRange(tonicIndex);
+    const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(tonicIndex);
     const start: CartesianPoint = PolarMath.getCartesianFromPolar(
       innerRadius / COEFF,
       startOfTonicAngle,
-      true
+      true,
     );
 
     const end: CartesianPoint = PolarMath.getCartesianFromPolar(
       outerRadius * COEFF,
       startOfTonicAngle,
-      true
+      true,
     );
 
     return { start, end };
@@ -73,35 +64,22 @@ export const KeyboardCircular = () => {
     const line = getLineCartesianPoints(
       selectedMusicalKey.tonicIndex,
       INNER_RADIUS,
-      OUTER_RADIUS * 0.95
+      OUTER_RADIUS * 0.95,
     );
 
     const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(
-      selectedMusicalKey.tonicIndex
+      selectedMusicalKey.tonicIndex,
     );
     const point_end_circle = PolarMath.getCartesianFromPolar(
       OUTER_RADIUS + CIRCLE_RADIUS,
       startOfTonicAngle,
-      true
+      true,
     );
 
     return [
-      <g
-        className="stroke-keys-scaleBoundaryColor stroke-2"
-        key="scale-boundrary-circular"
-      >
-        <line
-          x1={line.start.x}
-          y1={line.start.y}
-          x2={line.end.x}
-          y2={line.end.y}
-        />
-        <circle
-          cx={point_end_circle.x}
-          cy={point_end_circle.y}
-          r={CIRCLE_RADIUS}
-          fill="none"
-        />
+      <g className="stroke-keys-scaleBoundaryColor stroke-2" key="scale-boundrary-circular">
+        <line x1={line.start.x} y1={line.start.y} x2={line.end.x} y2={line.end.y} />
+        <circle cx={point_end_circle.x} cy={point_end_circle.y} r={CIRCLE_RADIUS} fill="none" />
       </g>,
     ];
   };
@@ -127,12 +105,7 @@ export const KeyboardCircular = () => {
           />
         );
       })}
-      {CircularVisualizations.draw(
-        selectedNoteIndices,
-        circularVisMode,
-        INNER_RADIUS,
-        chordColor
-      )}
+      {CircularVisualizations.draw(selectedNoteIndices, circularVisMode, INNER_RADIUS, chordColor)}
       {renderScaleBoundary()}
     </svg>
   );

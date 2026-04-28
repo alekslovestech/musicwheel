@@ -3,11 +3,7 @@ import { CHORD_OFFSET_PATTERNS } from "@/types/constants/ChordOffsetPatterns";
 import { ChordType } from "@/types/enums/ChordType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
-import {
-  addChromatic,
-  ChromaticIndex,
-  subChromatic,
-} from "@/types/ChromaticIndex";
+import { addChromatic, ChromaticIndex, subChromatic } from "@/types/ChromaticIndex";
 
 import { ScalePattern } from "./ScalePattern";
 import { ScaleDegreeInfo } from "./ScaleDegreeInfo";
@@ -25,7 +21,7 @@ export class ScaleModeInfo {
   constructor(
     public readonly type: ScaleModeType,
     pattern: number[], // The pattern of the mode, typically 7 notes. e.g. [0, 2, 4, 5, 7, 9, 10] for Mixolydian
-    public readonly modeNumber: number // The number of the mode, typically 1-7. e.g. 1 for Ionian, 2 for Dorian, etc.
+    public readonly modeNumber: number, // The number of the mode, typically 1-7. e.g. 1 for Ionian, 2 for Dorian, etc.
   ) {
     this.scalePattern = new ScalePattern(pattern);
   }
@@ -42,7 +38,7 @@ export class ScaleModeInfo {
    */
   public getScaleDegreeInfoFromChromatic(
     chromaticIndex: ChromaticIndex,
-    tonicIndex: ChromaticIndex
+    tonicIndex: ChromaticIndex,
   ): ScaleDegreeInfo | null {
     const relativeOffset = subChromatic(chromaticIndex, tonicIndex); // Normalize to 0-11
     const scaleDegreePosition = this.scalePattern.findPositionInScale(relativeOffset);
@@ -66,17 +62,14 @@ export class ScaleModeInfo {
 
     const scaleLength = this.scalePattern.getLength();
     const ionianOffset = this.scalePattern.getOffsetAtIndex(
-      ixScaleDegreeIndex((scaleLength - offset) % scaleLength)
+      ixScaleDegreeIndex((scaleLength - offset) % scaleLength),
     );
 
     // Apply the offset to the tonic to get the Ionian tonic
     return addChromatic(tonicIndex, ionianOffset);
   }
 
-  public isDiatonicNote(
-    chromaticIndex: ChromaticIndex,
-    tonicIndex: ChromaticIndex
-  ): boolean {
+  public isDiatonicNote(chromaticIndex: ChromaticIndex, tonicIndex: ChromaticIndex): boolean {
     const scaleNotes = this.getAbsoluteScaleNotes(tonicIndex);
     return scaleNotes.includes(chromaticIndex);
   }
@@ -92,17 +85,13 @@ export class ScaleModeInfo {
 
     // Find matching chord pattern
     const matchingPattern = Object.entries(patterns).find(([, pattern]) => {
-      return offsetsFromRoot.every(
-        (offset, index) => offset === pattern[index]
-      );
+      return offsetsFromRoot.every((offset, index) => offset === pattern[index]);
     });
 
     return (matchingPattern?.[0] as ChordType) || ChordType.Unknown;
   }
 
-  public getScaleDegreeInfoFromPosition(
-    scaleDegreeIndex: ScaleDegreeIndex
-  ): ScaleDegreeInfo {
+  public getScaleDegreeInfoFromPosition(scaleDegreeIndex: ScaleDegreeIndex): ScaleDegreeInfo {
     return this.scalePattern.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
   }
 

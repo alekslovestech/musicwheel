@@ -30,22 +30,12 @@ export const useKeyboardHandlers = () => {
         }
       }
     },
-    [
-      toggleNote,
-      currentChordRef,
-      setChordRootNote,
-      setChordBassNote,
-      isFreeformMode,
-    ],
+    [toggleNote, currentChordRef, setChordRootNote, setChordBassNote, isFreeformMode],
   );
 
   const checkIsBassNote = useCallback(
     (index: ActualIndex) => {
-      if (
-        isFreeformMode ||
-        !currentChordRef ||
-        !ChordUtils.hasInversions(currentChordRef.id)
-      ) {
+      if (isFreeformMode || !currentChordRef || !ChordUtils.hasInversions(currentChordRef.id)) {
         return false;
       }
       return index === currentChordRef.rootNote;

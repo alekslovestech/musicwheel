@@ -11,42 +11,18 @@ describe("RomanChordFormatter.formatRomanChord", () => {
 
   it("formats triads and sevenths like progression input", () => {
     expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Major), "I");
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(6, ChordType.Minor),
-      "vi",
-    );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(1, ChordType.Dominant7),
-      "I7",
-    );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(2, ChordType.Minor7),
-      "iimin7",
-    );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(1, ChordType.Major7),
-      "Imaj7",
-    );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(2, ChordType.Diminished),
-      "ii°",
-    );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(7, ChordType.HalfDiminished),
-      "viiø7",
-    );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(7, ChordType.Diminished7),
-      "vii°7",
-    );
+    expectProgressionLabel(RomanChord.fromScaleDegree(6, ChordType.Minor), "vi");
+    expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Dominant7), "I7");
+    expectProgressionLabel(RomanChord.fromScaleDegree(2, ChordType.Minor7), "iimin7");
+    expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Major7), "Imaj7");
+    expectProgressionLabel(RomanChord.fromScaleDegree(2, ChordType.Diminished), "ii°");
+    expectProgressionLabel(RomanChord.fromScaleDegree(7, ChordType.HalfDiminished), "viiø7");
+    expectProgressionLabel(RomanChord.fromScaleDegree(7, ChordType.Diminished7), "vii°7");
     expectProgressionLabel(
       RomanChord.fromScaleDegree(7, ChordType.Major, AccidentalType.Flat),
       "♭VII",
     );
-    expectProgressionLabel(
-      RomanChord.fromScaleDegree(1, ChordType.Augmented),
-      "I+",
-    );
+    expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Augmented), "I+");
   });
 
   it("formats slash chords (bass numeral uppercase)", () => {

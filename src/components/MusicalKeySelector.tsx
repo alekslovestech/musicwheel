@@ -11,37 +11,23 @@ import { useMusical } from "@/contexts/MusicalContext";
 import { Button } from "./Common/Button";
 import { Select } from "./Common/Select";
 
-export const MusicalKeySelector = ({
-  useDropdownSelector,
-}: {
-  useDropdownSelector: boolean;
-}) => {
+export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelector: boolean }) => {
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
 
   //C / C# / Db / D / D# / Eb / E / F / F# / Gb / G / G# / Ab / A / A# / Bb / B
-  const handleTonicNameChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleTonicNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const tonicName = event.target.value as string;
 
     const newKey = useDropdownSelector
       ? MusicalKey.fromGreekMode(tonicName, selectedMusicalKey.scaleMode)
-      : MusicalKey.fromClassicalMode(
-          tonicName,
-          selectedMusicalKey.classicalMode
-        );
+      : MusicalKey.fromClassicalMode(tonicName, selectedMusicalKey.classicalMode);
     setSelectedMusicalKey(newKey);
   };
 
   //Ionian / Dorian / Phrygian / Lydian / Mixolydian / Aeolian / Locrian
-  const handleGreekModeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleGreekModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const greekMode = event.target.value as ScaleModeType;
-    const newKey = MusicalKey.fromGreekMode(
-      selectedMusicalKey.tonicString,
-      greekMode
-    );
+    const newKey = MusicalKey.fromGreekMode(selectedMusicalKey.tonicString, greekMode);
     setSelectedMusicalKey(newKey);
   };
 

@@ -4,10 +4,7 @@ import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
 export class RomanFormatter {
-  static formatForDisplay(
-    scaleDegreeInfo: ScaleDegreeInfo,
-    scaleModeInfo: ScaleModeInfo,
-  ): string {
+  static formatForDisplay(scaleDegreeInfo: ScaleDegreeInfo, scaleModeInfo: ScaleModeInfo): string {
     const romanChord = this.fromScaleDegreeInfo(scaleDegreeInfo, scaleModeInfo);
     return RomanChordFormatter.formatRomanChord(romanChord);
   }
@@ -19,10 +16,6 @@ export class RomanFormatter {
     const offsets = scaleModeInfo.getTriadOffsets(scaleDegreeInfo);
     const chordType = scaleModeInfo.determineChordType(offsets);
 
-    return new RomanChord(
-      scaleDegreeInfo.scaleDegree,
-      chordType,
-      scaleDegreeInfo.accidentalPrefix,
-    );
+    return new RomanChord(scaleDegreeInfo.scaleDegree, chordType, scaleDegreeInfo.accidentalPrefix);
   }
 }

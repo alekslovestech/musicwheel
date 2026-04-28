@@ -34,10 +34,7 @@ export class NoteConverter {
 
   static sanitizeNoteString(noteString: string): string {
     // Convert display symbols to text format
-    return noteString
-      .replace(/[♯#]/g, "#")
-      .replace(/[♭b]/g, "b")
-      .replace(/[♮n]/g, "n");
+    return noteString.replace(/[♯#]/g, "#").replace(/[♭b]/g, "b").replace(/[♮n]/g, "n");
   }
 
   static stripAccidentals(note: string): string {
@@ -45,10 +42,7 @@ export class NoteConverter {
   }
 
   // For display - converts index to text
-  static fromChromaticIndex(
-    index: ChromaticIndex,
-    preferSharps: boolean = true
-  ): string {
+  static fromChromaticIndex(index: ChromaticIndex, preferSharps: boolean = true): string {
     const sharpMap: { [key: number]: string } = {
       0: "C",
       1: "C#",
@@ -87,11 +81,11 @@ export class NoteConverter {
 
   static getNoteTextFromActualIndex(
     actualIndex: ActualIndex,
-    accidentalPreference: AccidentalType
+    accidentalPreference: AccidentalType,
   ): string {
     const noteInfo = ActualNoteResolver.resolveAbsoluteNoteWithOctave(
       actualIndex,
-      accidentalPreference
+      accidentalPreference,
     );
     return NoteFormatter.formatForDisplay(noteInfo);
   }

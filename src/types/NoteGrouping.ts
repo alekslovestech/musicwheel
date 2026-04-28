@@ -16,7 +16,7 @@ export class NoteGrouping {
     public readonly orderId: number,
     public readonly offsets: OffsetIndex[],
     public readonly hasInversions: boolean = false,
-    public readonly isVisiblePreset: boolean = true //is this in the presets list?
+    public readonly isVisiblePreset: boolean = true, //is this in the presets list?
   ) {
     // Calculate all possible inversions if this grouping supports them
     this.inversions = this.calculateInversions();
@@ -26,9 +26,7 @@ export class NoteGrouping {
     const inversions: OffsetIndex[][] = [this.offsets];
     let currentInversion = [...this.offsets];
     for (let i = 1; i < this.offsets.length; i++) {
-      let newInversion = ixOffsetArray(
-        IndexUtils.firstNoteToLast(currentInversion)
-      );
+      let newInversion = ixOffsetArray(IndexUtils.firstNoteToLast(currentInversion));
 
       inversions.push(newInversion);
       currentInversion = newInversion;
@@ -56,7 +54,7 @@ export class NoteGrouping {
     orderId: number,
     shortForm: string,
     longForm: string,
-    semitones: number
+    semitones: number,
   ): NoteGrouping {
     return new NoteGrouping(
       id,
@@ -64,7 +62,7 @@ export class NoteGrouping {
       shortForm, // symbolForm same as shortForm for intervals
       longForm,
       orderId,
-      ixOffsetArray([0, semitones])
+      ixOffsetArray([0, semitones]),
     );
   }
 
@@ -76,7 +74,7 @@ export class NoteGrouping {
     longForm: string,
     offsets: number[],
     hasInversions: boolean = true,
-    isVisiblePreset: boolean = true
+    isVisiblePreset: boolean = true,
   ): NoteGrouping {
     return new NoteGrouping(
       id,
@@ -86,17 +84,14 @@ export class NoteGrouping {
       orderId,
       ixOffsetArray(offsets),
       hasInversions,
-      isVisiblePreset
+      isVisiblePreset,
     );
   }
 
   /**
    * Gets the chord type name for a specific context and display mode.
    */
-  getChordTypeName(
-    context: ChordTypeContext,
-    displayMode: ChordDisplayMode
-  ): string {
+  getChordTypeName(context: ChordTypeContext, displayMode: ChordDisplayMode): string {
     switch (context) {
       case ChordTypeContext.PresetButton:
         // For intervals, show long form; for chords, show short form

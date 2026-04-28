@@ -9,17 +9,13 @@ import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormat
 import { ScaleModeFormatter } from "@/utils/formatters/ScaleModeFormatter";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
 
-function verifyRomanDisplayStrings(
-  greekMode: ScaleModeType,
-  expectedNotes: string[],
-) {
+function verifyRomanDisplayStrings(greekMode: ScaleModeType, expectedNotes: string[]) {
   expect(expectedNotes.length).toBe(SEVEN);
   const scaleModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
-  const romanDisplayStrings =
-    ScaleModeFormatter.formatAllScaleDegreesForDisplay(
-      scaleModeInfo,
-      KeyDisplayMode.Roman,
-    );
+  const romanDisplayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+    scaleModeInfo,
+    KeyDisplayMode.Roman,
+  );
 
   expect(romanDisplayStrings).toEqual(expectedNotes);
 }
@@ -93,38 +89,12 @@ describe("getScaleDegreeDisplayString", () => {
         {
           key: "C Ionian",
           musicalKey: constants.C_IONIAN_KEY,
-          expected: [
-            "I",
-            "",
-            "ii",
-            "",
-            "iii",
-            "IV",
-            "",
-            "V",
-            "",
-            "vi",
-            "",
-            "vii°",
-          ],
+          expected: ["I", "", "ii", "", "iii", "IV", "", "V", "", "vi", "", "vii°"],
         },
         {
           key: "D Ionian",
           musicalKey: constants.D_IONIAN_KEY,
-          expected: [
-            "",
-            "vii°",
-            "I",
-            "",
-            "ii",
-            "",
-            "iii",
-            "IV",
-            "",
-            "V",
-            "",
-            "vi",
-          ],
+          expected: ["", "vii°", "I", "", "ii", "", "iii", "IV", "", "V", "", "vi"],
         },
       ],
     },
@@ -134,38 +104,12 @@ describe("getScaleDegreeDisplayString", () => {
         {
           key: "C Dorian",
           musicalKey: constants.C_DORIAN_KEY,
-          expected: [
-            "i",
-            "",
-            "ii",
-            "♭III",
-            "",
-            "IV",
-            "",
-            "v",
-            "",
-            "vi°",
-            "♭VII",
-            "",
-          ],
+          expected: ["i", "", "ii", "♭III", "", "IV", "", "v", "", "vi°", "♭VII", ""],
         },
         {
           key: "D Dorian",
           musicalKey: constants.D_DORIAN_KEY,
-          expected: [
-            "♭VII",
-            "",
-            "i",
-            "",
-            "ii",
-            "♭III",
-            "",
-            "IV",
-            "",
-            "v",
-            "",
-            "vi°",
-          ],
+          expected: ["♭VII", "", "i", "", "ii", "♭III", "", "IV", "", "v", "", "vi°"],
         },
       ],
     },

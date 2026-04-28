@@ -16,10 +16,7 @@ describe("Chord progression derives correct chords for C major key", () => {
   const testCases = [
     {
       desc: "50s progression for C major",
-      progression: new ChordProgression(
-        ["I", "vi", "IV", "V"],
-        "50s progression",
-      ),
+      progression: new ChordProgression(["I", "vi", "IV", "V"], "50s progression"),
       key: cMajor,
       expected: [
         new AbsoluteChord("C", ChordType.Major),
@@ -30,10 +27,7 @@ describe("Chord progression derives correct chords for C major key", () => {
     },
     {
       desc: "Something progression for C major",
-      progression: new ChordProgression(
-        ["I", "Imaj7", "I7", "IV"],
-        "Something",
-      ),
+      progression: new ChordProgression(["I", "Imaj7", "I7", "IV"], "Something"),
       key: cMajor,
       expected: [
         new AbsoluteChord("C", ChordType.Major),
@@ -44,10 +38,7 @@ describe("Chord progression derives correct chords for C major key", () => {
     },
     {
       desc: "Something progression for F major",
-      progression: new ChordProgression(
-        ["I", "Imaj7", "I7", "IV"],
-        "Something",
-      ),
+      progression: new ChordProgression(["I", "Imaj7", "I7", "IV"], "Something"),
       key: fMajor,
       expected: [
         new AbsoluteChord("F", ChordType.Major),
@@ -91,10 +82,7 @@ describe("Chord progression derives correct chords for C major key", () => {
     },
     {
       desc: "Let it be: progression for C major",
-      progression: new ChordProgression(
-        ["I", "V", "vi", "IV"],
-        "Axis of Awesome",
-      ),
+      progression: new ChordProgression(["I", "V", "vi", "IV"], "Axis of Awesome"),
       key: cMajor,
       expected: [
         new AbsoluteChord("C", ChordType.Major),
@@ -105,10 +93,7 @@ describe("Chord progression derives correct chords for C major key", () => {
     },
     {
       desc: "With or without you: Axis of Awesome progression for D major",
-      progression: new ChordProgression(
-        ["I", "V", "vi", "IV"],
-        "Axis of Awesome",
-      ),
+      progression: new ChordProgression(["I", "V", "vi", "IV"], "Axis of Awesome"),
       key: dMajor,
       expected: [
         new AbsoluteChord("D", ChordType.Major),
@@ -119,10 +104,7 @@ describe("Chord progression derives correct chords for C major key", () => {
     },
     {
       desc: "I → ♭VI → IV → I",
-      progression: new ChordProgression(
-        ["I", "♭VI", "IV", "I"],
-        "Black Hole Sun",
-      ),
+      progression: new ChordProgression(["I", "♭VI", "IV", "I"], "Black Hole Sun"),
       key: gMajor,
       expected: [
         new AbsoluteChord("G", ChordType.Major),

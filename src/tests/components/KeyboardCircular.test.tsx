@@ -17,7 +17,7 @@ describe("KeyboardCircular", () => {
         <KeyboardCircular />
         <InputModeSelector />
         <ChordPresetSelector />
-      </RootProvider>
+      </RootProvider>,
     );
 
   beforeEach(() => {

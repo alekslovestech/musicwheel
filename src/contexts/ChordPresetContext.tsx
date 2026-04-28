@@ -31,9 +31,7 @@ function getDefaultChordTypeForInputMode(newMode: InputMode): NoteGroupingId {
 
 const ChordPresetContext = createContext<ChordPresetSettings | null>(null);
 
-export const ChordPresetProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const ChordPresetProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [inputMode, setInputMode] = useState<InputMode>(InputMode.ChordPresets);
   const { selectedNoteIndices, setCurrentChordRef } = useMusical();
 
@@ -55,19 +53,12 @@ export const ChordPresetProvider: React.FC<{ children: ReactNode }> = ({
     setInputMode: handleInputModeChange,
   };
 
-  return (
-    <ChordPresetContext.Provider value={value}>
-      {children}
-    </ChordPresetContext.Provider>
-  );
+  return <ChordPresetContext.Provider value={value}>{children}</ChordPresetContext.Provider>;
 };
 
 export const useIsChordsOrIntervals = () => {
   const { inputMode } = useChordPresets();
-  return (
-    inputMode === InputMode.ChordPresets ||
-    inputMode === InputMode.IntervalPresets
-  );
+  return inputMode === InputMode.ChordPresets || inputMode === InputMode.IntervalPresets;
 };
 
 export const useIsFreeformMode = () => {

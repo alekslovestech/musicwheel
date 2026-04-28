@@ -10,11 +10,7 @@ import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgress
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 
 export const ChordProgressionSelector = () => {
-  const {
-    selectedProgression,
-    setSelectedProgression,
-    activeProgressionStepIndex,
-  } = useAudio();
+  const { selectedProgression, setSelectedProgression, activeProgressionStepIndex } = useAudio();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
 
   const progression = useMemo(() => {
@@ -29,8 +25,7 @@ export const ChordProgressionSelector = () => {
   }, [progression, setSelectedMusicalKey]);
 
   const formatter = useMemo(
-    () =>
-      progression != null ? new ChordProgressionFormatter(progression) : null,
+    () => (progression != null ? new ChordProgressionFormatter(progression) : null),
     [progression],
   );
 
@@ -44,9 +39,7 @@ export const ChordProgressionSelector = () => {
     return formatter.formatAbsoluteForDisplay(selectedMusicalKey);
   }, [formatter, selectedMusicalKey]);
 
-  const handleChordProgressionChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleChordProgressionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     // Placeholder option is disabled; ignore just in case.
     if (value === "") return;
@@ -67,11 +60,7 @@ export const ChordProgressionSelector = () => {
             Select chord progression
           </option>
           {Object.values(ChordProgressionType).map((mode) => (
-            <option
-              id={`chord-progression-option-${mode}`}
-              key={mode}
-              value={mode}
-            >
+            <option id={`chord-progression-option-${mode}`} key={mode} value={mode}>
               {mode}
             </option>
           ))}

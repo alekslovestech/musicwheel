@@ -16,12 +16,12 @@ export class VisualStateUtils {
     isRootNote: boolean,
     isBlack: boolean,
     isSelected: boolean,
-    isSvg: boolean
+    isSvg: boolean,
   ): KeyColors {
     // Determine state color based on context
     const isDiatonic = musicalKey.scaleModeInfo.isDiatonicNote(
       chromaticIndex,
-      musicalKey.tonicIndex
+      musicalKey.tonicIndex,
     );
 
     const stateColor = isScales
@@ -29,8 +29,8 @@ export class VisualStateUtils {
         ? "Highlighted"
         : "Muted"
       : isBlack && !monochromeMode
-      ? "Black"
-      : "White";
+        ? "Black"
+        : "White";
 
     const selectedString = isSelected ? "Selected" : "";
 
@@ -39,9 +39,7 @@ export class VisualStateUtils {
     const textPrefix = this.getTextPrefix(isSvg);
 
     const primary = `${primaryPrefix}-keys-bg${stateColor}${selectedString}`;
-    const border = `border-${
-      isRootNote ? "keys-borderRootNote" : "keys-borderColor"
-    }`;
+    const border = `border-${isRootNote ? "keys-borderRootNote" : "keys-borderColor"}`;
 
     // Determine text color - always use Selected or Faded variants
     // For scale mode, use Highlighted/Muted colors (no Selected/Faded variants)
@@ -53,11 +51,7 @@ export class VisualStateUtils {
     } else {
       // Non-scale mode: always use Selected or Faded variant
       const effectiveIsBlack = isBlack && !monochromeMode;
-      text = this.getTextColorClassForNonScaleMode(
-        isSelected,
-        effectiveIsBlack,
-        isSvg
-      );
+      text = this.getTextColorClassForNonScaleMode(isSelected, effectiveIsBlack, isSvg);
     }
 
     return { primary, text, border };
@@ -68,7 +62,7 @@ export class VisualStateUtils {
   static getTextColorClassForNonScaleMode(
     isSelected: boolean,
     isBlack: boolean,
-    isSvg: boolean
+    isSvg: boolean,
   ): string {
     const prefix = this.getTextPrefix(isSvg);
     const state = isSelected ? "Selected" : "Faded";

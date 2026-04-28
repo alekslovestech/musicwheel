@@ -16,15 +16,8 @@ export class StaffUtils {
     return stepIndicesInBar.flatMap((entryIndex) => {
       const noteIndices = prepared.precomputedProgression[entryIndex];
       const noteLength = prepared.chordStepNoteLengths[entryIndex];
-      const notes = SpellingUtils.computeNotesFromMusicalKey(
-        noteIndices,
-        spellingKey,
-      );
-      if (
-        noteIndices == null ||
-        noteIndices.length === 0 ||
-        noteLength === undefined
-      ) {
+      const notes = SpellingUtils.computeNotesFromMusicalKey(noteIndices, spellingKey);
+      if (noteIndices == null || noteIndices.length === 0 || noteLength === undefined) {
         return [];
       }
       return [makeDurated(notes, noteLength)];

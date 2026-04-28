@@ -36,43 +36,23 @@ describe("RomanNumeral chord tests", () => {
       cases: [
         {
           numeral: "♯I",
-          expected: RomanChord.fromScaleDegree(
-            1,
-            ChordType.Major,
-            AccidentalType.Sharp,
-          ),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major, AccidentalType.Sharp),
         },
         {
           numeral: "♭I",
-          expected: RomanChord.fromScaleDegree(
-            1,
-            ChordType.Major,
-            AccidentalType.Flat,
-          ),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major, AccidentalType.Flat),
         },
         {
           numeral: "♭iii",
-          expected: RomanChord.fromScaleDegree(
-            3,
-            ChordType.Minor,
-            AccidentalType.Flat,
-          ),
+          expected: RomanChord.fromScaleDegree(3, ChordType.Minor, AccidentalType.Flat),
         },
         {
           numeral: "♯iii",
-          expected: RomanChord.fromScaleDegree(
-            3,
-            ChordType.Minor,
-            AccidentalType.Sharp,
-          ),
+          expected: RomanChord.fromScaleDegree(3, ChordType.Minor, AccidentalType.Sharp),
         },
         {
           numeral: "♭VI",
-          expected: RomanChord.fromScaleDegree(
-            6,
-            ChordType.Major,
-            AccidentalType.Flat,
-          ),
+          expected: RomanChord.fromScaleDegree(6, ChordType.Major, AccidentalType.Flat),
         },
       ],
     },
@@ -122,38 +102,19 @@ describe("RomanNumeral chord tests", () => {
       cases: [
         {
           numeral: "♯Imaj7",
-          expected: RomanChord.fromScaleDegree(
-            1,
-            ChordType.Major7,
-            AccidentalType.Sharp,
-          ),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major7, AccidentalType.Sharp),
         },
         {
           numeral: "I/V",
-          expected: RomanChord.fromScaleDegree(
-            1,
-            ChordType.Major,
-            AccidentalType.None,
-            5,
-          ),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major, AccidentalType.None, 5),
         },
         {
           numeral: "I/v",
-          expected: RomanChord.fromScaleDegree(
-            1,
-            ChordType.Major,
-            AccidentalType.None,
-            5,
-          ),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Major, AccidentalType.None, 5),
         },
         {
           numeral: "i/V",
-          expected: RomanChord.fromScaleDegree(
-            1,
-            ChordType.Minor,
-            AccidentalType.None,
-            5,
-          ),
+          expected: RomanChord.fromScaleDegree(1, ChordType.Minor, AccidentalType.None, 5),
         },
       ],
     },

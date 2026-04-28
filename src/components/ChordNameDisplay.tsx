@@ -20,19 +20,14 @@ import { useBorder } from "@/lib/hooks";
 const MAX_CHORD_NAME_LENGTH = 7;
 const BREAK_CHARACTER = "\u200B";
 export const ChordNameDisplay: React.FC = () => {
-  const { selectedNoteIndices, selectedMusicalKey, currentChordRef } =
-    useMusical();
+  const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const { chordDisplayMode, setChordDisplayMode } = useDisplay();
   const isChordsOrIntervals = useIsChordsOrIntervals();
   const border = useBorder();
 
-  const getOppositeDisplayMode = (
-    prevDisplayMode: ChordDisplayMode
-  ): ChordDisplayMode => {
-    if (prevDisplayMode === ChordDisplayMode.Letters)
-      return ChordDisplayMode.Symbols;
-    if (prevDisplayMode === ChordDisplayMode.Symbols)
-      return ChordDisplayMode.Letters;
+  const getOppositeDisplayMode = (prevDisplayMode: ChordDisplayMode): ChordDisplayMode => {
+    if (prevDisplayMode === ChordDisplayMode.Letters) return ChordDisplayMode.Symbols;
+    if (prevDisplayMode === ChordDisplayMode.Symbols) return ChordDisplayMode.Letters;
     return prevDisplayMode; //no change
   };
 
@@ -52,21 +47,19 @@ export const ChordNameDisplay: React.FC = () => {
     if (shouldUseChordPresetSpelling && selectedNoteIndices.length > 0) {
       const chordRef =
         currentChordRef ||
-        MusicalDisplayFormatter.getChordReferenceFromIndices(
-          selectedNoteIndices
-        );
+        MusicalDisplayFormatter.getChordReferenceFromIndices(selectedNoteIndices);
 
       return MusicalDisplayFormatter.getChordPresetDisplayInfo(
         selectedNoteIndices,
         chordRef!,
-        chordDisplayMode
+        chordDisplayMode,
         //ChordDisplayMode.Symbols
       );
     } else {
       return MusicalDisplayFormatter.getDisplayInfoFromIndices(
         selectedNoteIndices,
         chordDisplayMode,
-        selectedMusicalKey
+        selectedMusicalKey,
       );
     }
   }, [
@@ -88,10 +81,7 @@ export const ChordNameDisplay: React.FC = () => {
         id="chord-name-description"
         className={`chord-name-description ${LAYOUT_PATTERNS.centerFlexCol} ${LAYOUT_PATTERNS.fullSize}`}
       >
-        <div
-          id="chord-name-note-grouping"
-          className={`${TYPOGRAPHY.controlLabel}`}
-        >
+        <div id="chord-name-note-grouping" className={`${TYPOGRAPHY.controlLabel}`}>
           {`${noteGroupingString}:`}
         </div>
         <div
@@ -105,10 +95,7 @@ export const ChordNameDisplay: React.FC = () => {
   };
 
   return (
-    <div
-      id="chord-name-display"
-      className={`${LAYOUT_PATTERNS.fullSize} ${border}`}
-    >
+    <div id="chord-name-display" className={`${LAYOUT_PATTERNS.fullSize} ${border}`}>
       <div
         onClick={toggleChordDisplayMode}
         className={`cursor-pointer hover:text-buttons-textSelected transition-colors duration-200 ${LAYOUT_PATTERNS.fullSize}`}

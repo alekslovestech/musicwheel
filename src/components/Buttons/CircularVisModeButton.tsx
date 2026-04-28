@@ -17,8 +17,7 @@ export const CircularVisModeButton: React.FC<{
   const isDisabled =
     (inputMode === InputMode.SingleNote &&
       (mode === CircularVisMode.Radial || mode === CircularVisMode.Polygon)) ||
-    (inputMode === InputMode.IntervalPresets &&
-      mode === CircularVisMode.Polygon);
+    (inputMode === InputMode.IntervalPresets && mode === CircularVisMode.Polygon);
 
   const isSelected = circularVisMode === mode;
   return (

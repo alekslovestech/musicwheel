@@ -6,16 +6,9 @@ import { KeyType } from "@/types/enums/KeyType";
 import { NoteConverter } from "@/utils/NoteConverter";
 import { ChromaticNoteResolver } from "@/utils/resolvers/ChromaticNoteResolver";
 
-function verifyResolvedNote(
-  musicalKey: MusicalKey,
-  noteText: string,
-  expectedNote: NoteInfo
-) {
+function verifyResolvedNote(musicalKey: MusicalKey, noteText: string, expectedNote: NoteInfo) {
   const chromaticIndex = NoteConverter.toChromaticIndex(noteText);
-  const note = ChromaticNoteResolver.resolveNoteInKey(
-    musicalKey,
-    chromaticIndex
-  );
+  const note = ChromaticNoteResolver.resolveNoteInKey(musicalKey, chromaticIndex);
   expect(note).toEqual(expectedNote);
 }
 

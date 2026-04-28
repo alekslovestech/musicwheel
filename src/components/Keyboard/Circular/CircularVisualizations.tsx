@@ -10,17 +10,14 @@ export class CircularVisualizations {
     selectedNoteIndices: NoteIndices,
     circularVisMode: CircularVisMode,
     innerRadius: number,
-    color: string
+    color: string,
   ): JSX.Element[] {
     if (selectedNoteIndices.length <= 1) return [];
 
     const visualizer = new NoteIndexVisualizer(innerRadius);
 
     const baseNoteDot = this.drawBaseNoteDot(selectedNoteIndices, innerRadius);
-    const polyPoints = visualizer.getVisualization(
-      selectedNoteIndices,
-      circularVisMode
-    );
+    const polyPoints = visualizer.getVisualization(selectedNoteIndices, circularVisMode);
 
     return [
       <polygon
@@ -36,15 +33,11 @@ export class CircularVisualizations {
 
   private static drawBaseNoteDot(
     selectedNoteIndices: NoteIndices,
-    innerRadius: number
+    innerRadius: number,
   ): JSX.Element {
     const baseIndex = selectedNoteIndices[0];
     const middleAngle = PolarMath.NoteIndexToMiddleAngle(baseIndex);
-    const innerPoint = PolarMath.getCartesianFromPolar(
-      innerRadius,
-      middleAngle,
-      true
-    );
+    const innerPoint = PolarMath.getCartesianFromPolar(innerRadius, middleAngle, true);
     return (
       <circle
         className={`base-note-dot fill-keys-bgRootNote`}

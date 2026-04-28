@@ -21,24 +21,21 @@ export class KeyboardUtils {
 
   static isSelectedEitherOctave(
     chromaticIndex: ChromaticIndex,
-    selectedNoteIndices: NoteIndices
+    selectedNoteIndices: NoteIndices,
   ): boolean {
     const actualIndex0 = chromaticToActual(chromaticIndex, 0);
     const actualIndex1 = chromaticToActual(chromaticIndex, 1);
-    return (
-      selectedNoteIndices.includes(actualIndex0) ||
-      selectedNoteIndices.includes(actualIndex1)
-    );
+    return selectedNoteIndices.includes(actualIndex0) || selectedNoteIndices.includes(actualIndex1);
   }
 
   static computeNoteTextForScalesMode(
     chromaticIndex: ChromaticIndex,
     selectedMusicalKey: MusicalKey,
-    keyDisplayMode: KeyDisplayMode
+    keyDisplayMode: KeyDisplayMode,
   ): string {
     const isDiatonic = selectedMusicalKey.scaleModeInfo.isDiatonicNote(
       chromaticIndex,
-      selectedMusicalKey.tonicIndex
+      selectedMusicalKey.tonicIndex,
     );
 
     return !isDiatonic
@@ -46,7 +43,7 @@ export class KeyboardUtils {
       : MusicalKeyNoteFormatter.formatNoteForDisplay(
           selectedMusicalKey,
           chromaticIndex,
-          keyDisplayMode
+          keyDisplayMode,
         );
   }
 
@@ -54,7 +51,7 @@ export class KeyboardUtils {
     if (BlackKeyUtils.isBlackKey(chromaticIndex)) return "";
     const resolvedNote = ChromaticNoteResolver.resolveAbsoluteNote(
       chromaticIndex,
-      AccidentalType.Sharp // Use sharp as default
+      AccidentalType.Sharp, // Use sharp as default
     );
     return NoteFormatter.formatForDisplay(resolvedNote);
   }
@@ -62,7 +59,7 @@ export class KeyboardUtils {
   // Unified function: returns adjacent key state (black status and selection status)
   static getAdjacentKeyState(
     chromaticIndex: ChromaticIndex,
-    selectedNoteIndices: NoteIndices
+    selectedNoteIndices: NoteIndices,
   ): {
     prevAccidentalExists: boolean;
     nextAccidentalExists: boolean;
@@ -86,11 +83,9 @@ export class KeyboardUtils {
       prevAccidentalExists: prevIsBlack,
       nextAccidentalExists: nextIsBlack,
       prevAccidentalSelected:
-        prevIsBlack &&
-        this.isSelectedEitherOctave(prevChromaticIndex, selectedNoteIndices),
+        prevIsBlack && this.isSelectedEitherOctave(prevChromaticIndex, selectedNoteIndices),
       nextAccidentalSelected:
-        nextIsBlack &&
-        this.isSelectedEitherOctave(nextChromaticIndex, selectedNoteIndices),
+        nextIsBlack && this.isSelectedEitherOctave(nextChromaticIndex, selectedNoteIndices),
     };
   }
 
@@ -99,7 +94,7 @@ export class KeyboardUtils {
     isSelected: boolean,
     isShortKey: boolean,
     isScales: boolean,
-    isBassNote: boolean
+    isBassNote: boolean,
   ): string {
     const classes = [...baseClasses];
     if (isSelected) classes.push("selected");
@@ -113,13 +108,13 @@ export class KeyboardUtils {
     isLinearKeyboard: boolean,
     chromaticIndex: ChromaticIndex,
     isScales: boolean,
-    selectedMusicalKey: MusicalKey
+    selectedMusicalKey: MusicalKey,
   ): string {
     return isScales && !isLinearKeyboard
       ? KeyboardUtils.computeNoteTextForScalesMode(
           chromaticIndex,
           selectedMusicalKey,
-          KeyDisplayMode.ScaleDegree
+          KeyDisplayMode.ScaleDegree,
         )
       : KeyboardUtils.computeNoteTextForDefaultMode(chromaticIndex);
   }
@@ -129,7 +124,7 @@ export class KeyboardUtils {
     inputMode: InputMode,
     keyboardType: KeyboardUIType,
     onClick: (index: ActualIndex) => void,
-    index: ActualIndex
+    index: ActualIndex,
   ) {
     return () => {
       track("keyboard_interacted", {

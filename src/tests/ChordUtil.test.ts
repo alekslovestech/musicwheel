@@ -1,11 +1,6 @@
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { ChordType } from "@/types/enums/ChordType";
-import {
-  InversionIndex,
-  ixActual,
-  toNoteIndices,
-  ixInversion,
-} from "@/types/IndexTypes";
+import { InversionIndex, ixActual, toNoteIndices, ixInversion } from "@/types/IndexTypes";
 import { NoteConverter } from "@/utils/NoteConverter";
 import { KeyType } from "@/types/enums/KeyType";
 import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
@@ -24,12 +19,10 @@ function verifyChordNameWithMode(
   musicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
 ) {
   const actualIndices = toNoteIndices(indices);
-  const chordRef =
-    MusicalDisplayFormatter.getChordReferenceFromIndices(actualIndices);
+  const chordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(actualIndices);
 
   // For inversions, pass the bass note (lowest note) to the derivation function
-  const bassNote =
-    actualIndices.length > 0 ? Math.min(...actualIndices) : undefined;
+  const bassNote = actualIndices.length > 0 ? Math.min(...actualIndices) : undefined;
 
   const actual = chordRef
     ? MusicalDisplayFormatter.deriveChordNameFromReference(
@@ -151,9 +144,7 @@ describe("ChordUtils", () => {
     ];
 
     testCases.forEach(({ expected, type, inversion }) => {
-      it(`should handle ${type}${
-        inversion ? ` inversion ${inversion}` : ""
-      }`, () => {
+      it(`should handle ${type}${inversion ? ` inversion ${inversion}` : ""}`, () => {
         verifyOffsetsFromIdAndInversion(expected, type, inversion);
       });
     });
@@ -214,9 +205,7 @@ describe("ChordUtils", () => {
   describe("noteIndicesFromAbsoluteChord", () => {
     it("uses root position when bass equals root", () => {
       const chord = new AbsoluteChord("C", ChordType.Major);
-      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(
-        toNoteIndices([0, 4, 7]),
-      );
+      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(toNoteIndices([0, 4, 7]));
     });
 
     it("uses inversion when bass differs (C major / G bass)", () => {
@@ -225,9 +214,7 @@ describe("ChordUtils", () => {
         ChordType.Major,
         NoteConverter.toChromaticIndex("G"),
       );
-      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(
-        toNoteIndices([7, 12, 16]),
-      );
+      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(toNoteIndices([7, 12, 16]));
     });
   });
 });

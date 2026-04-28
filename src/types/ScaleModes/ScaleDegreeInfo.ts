@@ -10,10 +10,7 @@ export class ScaleDegreeInfo {
   private readonly _scaleDegree: ScaleDegree;
   public readonly accidentalPrefix: AccidentalType;
 
-  public constructor(
-    scaleDegree: ScaleDegree,
-    accidental: AccidentalType = AccidentalType.None
-  ) {
+  public constructor(scaleDegree: ScaleDegree, accidental: AccidentalType = AccidentalType.None) {
     this._scaleDegree = scaleDegree;
     this.accidentalPrefix = accidental;
   }
@@ -28,7 +25,7 @@ export class ScaleDegreeInfo {
 
   static fromScaleDegreeIndex(
     scaleDegreeIndex: ScaleDegreeIndex,
-    accidental: AccidentalType = AccidentalType.None
+    accidental: AccidentalType = AccidentalType.None,
   ): ScaleDegreeInfo {
     return new ScaleDegreeInfo(ixScaleDegree(scaleDegreeIndex + 1), accidental);
   }

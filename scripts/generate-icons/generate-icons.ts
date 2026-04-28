@@ -17,14 +17,8 @@ async function checkFileExists(filePath: string): Promise<void> {
 async function generateIcons(): Promise<void> {
   console.log("🎨 Starting icon generation...");
 
-  const smallSvgPath: string = path.join(
-    __dirname,
-    "../../src/assets/icons/icon_small.svg"
-  );
-  const largeSvgPath: string = path.join(
-    __dirname,
-    "../../src/assets/icons/icon.svg"
-  );
+  const smallSvgPath: string = path.join(__dirname, "../../src/assets/icons/icon_small.svg");
+  const largeSvgPath: string = path.join(__dirname, "../../src/assets/icons/icon.svg");
   const publicDir: string = path.join(__dirname, "../../public");
 
   // Validate source files

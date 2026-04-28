@@ -10,10 +10,7 @@ export class NoteIndexVisualizer {
     private readonly center: CartesianPoint = { x: 0, y: 0 },
   ) {}
 
-  getVisualization(
-    indices: NoteIndices,
-    mode: CircularVisMode,
-  ): CartesianPoint[] {
+  getVisualization(indices: NoteIndices, mode: CircularVisMode): CartesianPoint[] {
     switch (mode) {
       case CircularVisMode.Radial:
         return indices.flatMap((index) => {
@@ -27,15 +24,9 @@ export class NoteIndexVisualizer {
     }
   }
 
-  private getCartesianFromIndex(
-    index: ChromaticIndex | ActualIndex,
-  ): CartesianPoint {
+  private getCartesianFromIndex(index: ChromaticIndex | ActualIndex): CartesianPoint {
     const middleAngle = PolarMath.NoteIndexToMiddleAngle(index);
-    const cartPoint = PolarMath.getCartesianFromPolar(
-      this.radius,
-      middleAngle,
-      true,
-    );
+    const cartPoint = PolarMath.getCartesianFromPolar(this.radius, middleAngle, true);
     return { x: cartPoint.x + this.center.x, y: cartPoint.y + this.center.y };
   }
 }

@@ -2,10 +2,7 @@
 
 import { IndexUtils } from "@/utils/IndexUtils";
 import { useMusical } from "@/contexts/MusicalContext";
-import {
-  useChordPresets,
-  useIsFreeformMode,
-} from "@/contexts/ChordPresetContext";
+import { useChordPresets, useIsFreeformMode } from "@/contexts/ChordPresetContext";
 
 import { Button } from "./Common/Button";
 import { TYPOGRAPHY } from "@/lib/design";
@@ -20,10 +17,7 @@ interface TransposeButtonProps {
   target: TransposeTarget;
 }
 
-const TransposeButton: React.FC<TransposeButtonProps> = ({
-  direction,
-  target,
-}) => {
+const TransposeButton: React.FC<TransposeButtonProps> = ({ direction, target }) => {
   const arrow = direction === "up" ? "↑" : "↓";
   const amount = direction === "up" ? 1 : -1;
   const symbol = target === "notes" ? "♫" : "𝄞";
@@ -46,10 +40,7 @@ const TransposeButton: React.FC<TransposeButtonProps> = ({
     });
     if (target === "notes") {
       // Transpose selected notes
-      const transposedIndices = IndexUtils.transposeNotes(
-        selectedNoteIndices,
-        amount
-      );
+      const transposedIndices = IndexUtils.transposeNotes(selectedNoteIndices, amount);
 
       console.log("transposedIndices", transposedIndices);
 
@@ -58,10 +49,7 @@ const TransposeButton: React.FC<TransposeButtonProps> = ({
 
       // In preset mode, update chord reference from the transposed notes
       if (!isFreeformMode && currentChordRef && transposedIndices.length > 0) {
-        const newChordRef =
-          MusicalDisplayFormatter.getChordReferenceFromIndices(
-            transposedIndices
-          );
+        const newChordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(transposedIndices);
         if (newChordRef) {
           setCurrentChordRef(newChordRef);
         }
@@ -95,9 +83,7 @@ export const TransposeWidget: React.FC<{
   return (
     <div>
       {label && <div className={`${TYPOGRAPHY.chordNameText}`}>{label}</div>}
-      <div
-        className={`transpose-buttons-container flex ${flexDirection} gap-2`}
-      >
+      <div className={`transpose-buttons-container flex ${flexDirection} gap-2`}>
         <TransposeButton direction="up" target={target} />
         <TransposeButton direction="down" target={target} />
       </div>

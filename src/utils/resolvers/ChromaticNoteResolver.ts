@@ -1,25 +1,16 @@
-import {
-  NOTES_WITH_SHARP,
-  NOTES_WITH_FLAT,
-} from "@/types/constants/NoteConstants";
+import { NOTES_WITH_SHARP, NOTES_WITH_FLAT } from "@/types/constants/NoteConstants";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { NoteInfo } from "@/types/interfaces/NoteInfo";
 
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 export class ChromaticNoteResolver {
-  static resolveNoteInKey(
-    musicalKey: MusicalKey,
-    chromaticIndex: ChromaticIndex
-  ): NoteInfo {
+  static resolveNoteInKey(musicalKey: MusicalKey, chromaticIndex: ChromaticIndex): NoteInfo {
     const defaultAccidental = musicalKey.getDefaultAccidental();
-    const absoluteNote = this.resolveAbsoluteNote(
-      chromaticIndex,
-      defaultAccidental
-    );
+    const absoluteNote = this.resolveAbsoluteNote(chromaticIndex, defaultAccidental);
     const resolvedAccidental = musicalKey.keySignature.applyToNote(
       absoluteNote.noteName,
-      absoluteNote.accidental
+      absoluteNote.accidental,
     );
     return {
       noteName: absoluteNote.noteName,
@@ -29,7 +20,7 @@ export class ChromaticNoteResolver {
 
   static resolveAbsoluteNote(
     chromaticIndex: ChromaticIndex,
-    accidentalPreference: AccidentalType
+    accidentalPreference: AccidentalType,
   ): NoteInfo {
     const notesArray = this.getNotesArray(accidentalPreference);
     return notesArray[chromaticIndex];

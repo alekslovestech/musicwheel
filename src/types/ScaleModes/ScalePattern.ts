@@ -5,10 +5,7 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
-import {
-  ixScaleDegreeIndex,
-  ScaleDegreeIndex,
-} from "@/types/ScaleModes/ScaleDegreeType";
+import { ixScaleDegreeIndex, ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 
 export class ScalePattern {
   private readonly pattern: number[];
@@ -16,24 +13,20 @@ export class ScalePattern {
 
   constructor(pattern: number[]) {
     if (pattern.length !== this.SCALE_LENGTH) {
-      throw new Error(
-        `Scale pattern must have exactly ${this.SCALE_LENGTH} notes`
-      );
+      throw new Error(`Scale pattern must have exactly ${this.SCALE_LENGTH} notes`);
     }
     this.pattern = [...pattern];
   }
 
-  public getScaleDegreeInfoFromPosition(
-    scaleDegreeIndex: ScaleDegreeIndex
-  ): ScaleDegreeInfo {
+  public getScaleDegreeInfoFromPosition(scaleDegreeIndex: ScaleDegreeIndex): ScaleDegreeInfo {
     const currentNote = this.pattern[scaleDegreeIndex];
     const ionianNote = SCALE_MODE_PATTERNS.IONIAN[scaleDegreeIndex];
     const accidental =
       currentNote > ionianNote
         ? AccidentalType.Sharp
         : currentNote < ionianNote
-        ? AccidentalType.Flat
-        : AccidentalType.None;
+          ? AccidentalType.Flat
+          : AccidentalType.None;
     return ScaleDegreeInfo.fromScaleDegreeIndex(scaleDegreeIndex, accidental);
   }
 
@@ -41,9 +34,7 @@ export class ScalePattern {
     return [this.pattern[scaleDegreeIndex]];
   }
 
-  public getTonicDroneWithRootOffset(
-    scaleDegreeIndex: ScaleDegreeIndex
-  ): number[] {
+  public getTonicDroneWithRootOffset(scaleDegreeIndex: ScaleDegreeIndex): number[] {
     return [this.pattern[0], this.pattern[scaleDegreeIndex]];
   }
 
@@ -59,10 +50,8 @@ export class ScalePattern {
   }
 
   public getOffsets1357(scaleDegreeIndex: ScaleDegreeIndex): number[] {
-    const [rootOffset, thirdOffset, fifthOffset] =
-      this.getOffsets135(scaleDegreeIndex);
-    let seventhOffset =
-      this.pattern[(scaleDegreeIndex + 6) % this.SCALE_LENGTH];
+    const [rootOffset, thirdOffset, fifthOffset] = this.getOffsets135(scaleDegreeIndex);
+    let seventhOffset = this.pattern[(scaleDegreeIndex + 6) % this.SCALE_LENGTH];
     seventhOffset += seventhOffset < rootOffset ? TWELVE : 0;
     return [rootOffset, thirdOffset, fifthOffset, seventhOffset];
   }

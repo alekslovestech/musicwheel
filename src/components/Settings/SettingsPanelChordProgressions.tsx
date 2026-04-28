@@ -32,12 +32,9 @@ export const SettingsPanelChordProgressions = () => {
             id="chord-progressions-inferred-key"
             className="text-sm font-medium text-center max-w-xs"
           >
-            <div className="text-muted-foreground text-xs font-normal mb-0.5">
-              Musical Key
-            </div>
+            <div className="text-muted-foreground text-xs font-normal mb-0.5">Musical Key</div>
             <div aria-live="polite" className="text-base font-semibold">
-              {selectedMusicalKey.tonicString}{" "}
-              {selectedMusicalKey.classicalMode}
+              {selectedMusicalKey.tonicString} {selectedMusicalKey.classicalMode}
             </div>
           </div>
         </div>
@@ -46,9 +43,7 @@ export const SettingsPanelChordProgressions = () => {
         <div
           className={`${LAYOUT_PATTERNS.centerFlexCol} ${settingsGap} rounded p-2 flex-1 ${border}`}
         >
-          <div
-            className={`${LAYOUT_PATTERNS.centerFlexCol} max-w-xs self-center gap-2`}
-          >
+          <div className={`${LAYOUT_PATTERNS.centerFlexCol} max-w-xs self-center gap-2`}>
             <ChordProgressionSelector />
           </div>
         </div>

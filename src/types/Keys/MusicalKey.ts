@@ -21,11 +21,7 @@ export class MusicalKey {
   public readonly tonicIndex: ChromaticIndex;
   public readonly scaleModeInfo: ScaleModeInfo;
 
-  private constructor(
-    tonicAsString: string,
-    classicalMode: KeyType,
-    greekMode: ScaleModeType
-  ) {
+  private constructor(tonicAsString: string, classicalMode: KeyType, greekMode: ScaleModeType) {
     this.tonicString = NoteConverter.sanitizeNoteString(tonicAsString);
     this.classicalMode = classicalMode;
     this.scaleMode = greekMode;
@@ -46,7 +42,7 @@ export class MusicalKey {
    */
   public getOffsets(
     scaleDegreeIndex: ScaleDegreeIndex,
-    scalePlaybackMode: ScalePlaybackMode
+    scalePlaybackMode: ScalePlaybackMode,
   ): number[] {
     switch (scalePlaybackMode) {
       case ScalePlaybackMode.Triad:
@@ -54,9 +50,7 @@ export class MusicalKey {
       case ScalePlaybackMode.Seventh:
         return this.scaleModeInfo.scalePattern.getOffsets1357(scaleDegreeIndex);
       case ScalePlaybackMode.DronedSingleNote:
-        return this.scaleModeInfo.scalePattern.getTonicDroneWithRootOffset(
-          scaleDegreeIndex
-        );
+        return this.scaleModeInfo.scalePattern.getTonicDroneWithRootOffset(scaleDegreeIndex);
       default:
         return this.scaleModeInfo.scalePattern.getRootOffset(scaleDegreeIndex);
     }
@@ -64,7 +58,7 @@ export class MusicalKey {
 
   public getNoteIndicesForScaleDegree(
     scaleDegreeIndex: ScaleDegreeIndex,
-    scalePlaybackMode: ScalePlaybackMode
+    scalePlaybackMode: ScalePlaybackMode,
   ): NoteIndices {
     const offsets = this.getOffsets(scaleDegreeIndex, scalePlaybackMode);
     const noteIndices = offsets.map((offset) => offset + this.tonicIndex);
@@ -75,20 +69,12 @@ export class MusicalKey {
     return `${this.tonicString} (${this.classicalMode} | ${this.scaleMode})`;
   }
 
-  static fromClassicalMode(
-    tonicAsString: string,
-    classicalMode: KeyType
-  ): MusicalKey {
-    const greekMode = isMajor(classicalMode)
-      ? ScaleModeType.Ionian
-      : ScaleModeType.Aeolian;
+  static fromClassicalMode(tonicAsString: string, classicalMode: KeyType): MusicalKey {
+    const greekMode = isMajor(classicalMode) ? ScaleModeType.Ionian : ScaleModeType.Aeolian;
     return new MusicalKey(tonicAsString, classicalMode, greekMode);
   }
 
-  static fromGreekMode(
-    tonicAsString: string,
-    greekMode: ScaleModeType
-  ): MusicalKey {
+  static fromGreekMode(tonicAsString: string, greekMode: ScaleModeType): MusicalKey {
     const classicalMode = [
       ScaleModeType.Ionian,
       ScaleModeType.Lydian,
@@ -101,30 +87,19 @@ export class MusicalKey {
 
   getOppositeKey(): MusicalKey {
     const newMode = isMajor(this.classicalMode) ? KeyType.Minor : KeyType.Major;
-    const newTonicAsString = this.findKeyWithTonicIndex(
-      this.tonicIndex,
-      newMode
-    );
+    const newTonicAsString = this.findKeyWithTonicIndex(this.tonicIndex, newMode);
     return MusicalKey.fromClassicalMode(newTonicAsString, newMode);
   }
 
   getTransposedKey(amount: number): MusicalKey {
     const newTonicIndex = addChromatic(this.tonicIndex, amount);
-    const newTonicAsString = this.findKeyWithTonicIndex(
-      newTonicIndex,
-      this.classicalMode
-    );
+    const newTonicAsString = this.findKeyWithTonicIndex(newTonicIndex, this.classicalMode);
     return MusicalKey.fromGreekMode(newTonicAsString, this.scaleMode);
   }
 
   getCanonicalIonianKey(): MusicalKey {
-    const ionianTonicIndex = this.scaleModeInfo.getIonianTonicIndex(
-      this.tonicIndex
-    );
-    const ionianTonicString = this.findKeyWithTonicIndex(
-      ionianTonicIndex,
-      KeyType.Major
-    );
+    const ionianTonicIndex = this.scaleModeInfo.getIonianTonicIndex(this.tonicIndex);
+    const ionianTonicString = this.findKeyWithTonicIndex(ionianTonicIndex, KeyType.Major);
     return MusicalKey.fromGreekMode(ionianTonicString, ScaleModeType.Ionian);
   }
 
@@ -132,19 +107,11 @@ export class MusicalKey {
     return this.keySignature.getDefaultAccidental();
   }
 
-  private findKeyWithTonicIndex(
-    tonicIndex: ChromaticIndex,
-    mode: KeyType
-  ): string {
+  private findKeyWithTonicIndex(tonicIndex: ChromaticIndex, mode: KeyType): string {
     const keyList = KeySignature.getKeyList(mode);
-    const tonicAsString = keyList.find(
-      (key) => NoteConverter.toChromaticIndex(key) === tonicIndex
-    );
+    const tonicAsString = keyList.find((key) => NoteConverter.toChromaticIndex(key) === tonicIndex);
     return tonicAsString!;
   }
 }
 
-export const DEFAULT_MUSICAL_KEY = MusicalKey.fromClassicalMode(
-  "C",
-  KeyType.Major
-);
+export const DEFAULT_MUSICAL_KEY = MusicalKey.fromClassicalMode("C", KeyType.Major);
