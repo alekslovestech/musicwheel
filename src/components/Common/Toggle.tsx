@@ -7,12 +7,7 @@ interface ToggleProps {
   label: string;
 }
 
-export const Toggle: React.FC<ToggleProps> = ({
-  id,
-  checked,
-  onChange,
-  label,
-}) => {
+export const Toggle: React.FC<ToggleProps> = ({ id, checked, onChange, label }) => {
   const paddingClass = `gap-tight`;
 
   const checkboxStyles = [

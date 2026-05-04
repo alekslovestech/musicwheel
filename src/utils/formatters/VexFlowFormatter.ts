@@ -1,4 +1,4 @@
-import { Factory, StaveNote } from "vexflow";
+import { Dot, Factory, StaveNote } from "vexflow";
 
 import { DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH } from "@/types/ChordProgressions/ChordProgression";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -13,6 +13,7 @@ export class VexFlowFormatter {
     return `${note.noteName}/${baseOctave + note.octaveOffset}`;
   }
 
+  /** Undotted VexFlow duration; rhythm dots are passed via `dots` on `factory.StaveNote`. */
   static noteLengthToVexDuration(noteLength: NoteLength): string {
     switch (noteLength) {
       case 1:
@@ -34,45 +35,40 @@ export class VexFlowFormatter {
     }
   }
 
-  private static createStaveChordNote(
-    step: DuratedNoteChord,
-    factory: Factory,
-  ): StaveNote {
+  private static createStaveChordNote(step: DuratedNoteChord, factory: Factory): StaveNote {
     const duration = VexFlowFormatter.noteLengthToVexDuration(
       step.noteLength ?? DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
     );
+    const dots = step.rhythmDots ?? 0;
     const keys = step.value.map((noteWithOctave, index) => ({
       key: VexFlowFormatter.formatNote(noteWithOctave),
-      accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(
-        noteWithOctave.accidental,
-      ),
+      accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(noteWithOctave.accidental),
       index,
     }));
 
     const chordNote = factory.StaveNote({
       keys: keys.map((k) => k.key),
       duration,
+      ...(dots > 0 ? { dots } : {}),
     });
+
+    if (dots > 0) {
+      for (let d = 0; d < dots; d++) {
+        Dot.buildAndAttach([chordNote], { all: true });
+      }
+    }
 
     keys.forEach(({ accidentalSign, index }) => {
       if (accidentalSign) {
-        chordNote.addModifier(
-          factory.Accidental({ type: accidentalSign }),
-          index,
-        );
+        chordNote.addModifier(factory.Accidental({ type: accidentalSign }), index);
       }
     });
 
     return chordNote;
   }
 
-  static createStaveChordNotes(
-    steps: DuratedNoteChord[],
-    factory: Factory,
-  ): StaveNote[] {
-    return steps.map((step) =>
-      VexFlowFormatter.createStaveChordNote(step, factory),
-    );
+  static createStaveChordNotes(steps: DuratedNoteChord[], factory: Factory): StaveNote[] {
+    return steps.map((step) => VexFlowFormatter.createStaveChordNote(step, factory));
   }
 
   static getKeySignatureForVex(musicalKey: MusicalKey) {

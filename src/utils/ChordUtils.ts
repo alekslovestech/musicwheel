@@ -13,16 +13,10 @@ import { NoteGroupingLibrary } from "../types/NoteGroupingLibrary";
 import { NoteGroupingId } from "../types/NoteGroupingId";
 
 import { IndexUtils } from "./IndexUtils";
-import {
-  ChordReference,
-  makeChordReference,
-} from "@/types/interfaces/ChordReference";
+import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 
 export class ChordUtils {
-  static noteIndicesFromAbsoluteChord(
-    chord: AbsoluteChord,
-    rootOctaveOffset: number,
-  ): NoteIndices {
+  static noteIndicesFromAbsoluteChord(chord: AbsoluteChord, rootOctaveOffset: number): NoteIndices {
     return this.calculateChordNotesFromChordReference(
       this.chordReferenceFromAbsoluteChord(chord, rootOctaveOffset),
     );
@@ -37,8 +31,7 @@ export class ChordUtils {
     inversionIndex: InversionIndex,
   ): ActualIndex {
     const reverseIndex = ixInversion(
-      (originalChordIndices.length - inversionIndex) %
-        originalChordIndices.length,
+      (originalChordIndices.length - inversionIndex) % originalChordIndices.length,
     );
     return originalChordIndices[reverseIndex] as ActualIndex;
   }
@@ -62,9 +55,7 @@ export class ChordUtils {
     return definition.inversions[inversionIndex];
   }
 
-  static calculateChordNotesFromChordReference(
-    chordReference: ChordReference,
-  ): NoteIndices {
+  static calculateChordNotesFromChordReference(chordReference: ChordReference): NoteIndices {
     const chordOffsets = ChordUtils.getOffsetsFromIdAndInversion(
       chordReference.id,
       chordReference.inversionIndex,
@@ -88,10 +79,7 @@ export class ChordUtils {
 
     const def = NoteGroupingLibrary.getGroupingById(chordType);
     for (let i = 0; i < def.inversions.length; i++) {
-      const offsets = this.getOffsetsFromIdAndInversion(
-        chordType,
-        ixInversion(i),
-      );
+      const offsets = this.getOffsetsFromIdAndInversion(chordType, ixInversion(i));
       // Working with numbers, don't double up on type conversions
       const invBassPc = makeChromaticIndex(rootPc + offsets[0]);
       if (invBassPc === bassPc) return ixInversion(i);

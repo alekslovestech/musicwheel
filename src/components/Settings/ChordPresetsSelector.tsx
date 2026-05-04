@@ -22,15 +22,10 @@ import { track } from "@/lib/track";
 export const ChordPresetSelector: React.FC = () => {
   const { inputMode } = useChordPresets();
 
-  const { selectedNoteIndices, currentChordRef, setCurrentChordRef } =
-    useMusical();
+  const { selectedNoteIndices, currentChordRef, setCurrentChordRef } = useMusical();
   const border = useBorder();
   const globalMode = useGlobalMode();
-  if (
-    inputMode !== InputMode.ChordPresets &&
-    inputMode !== InputMode.IntervalPresets
-  )
-    return null;
+  if (inputMode !== InputMode.ChordPresets && inputMode !== InputMode.IntervalPresets) return null;
 
   const handlePresetChange = (newPresetId: NoteGroupingId) => {
     track("chord_preset_changed", {
@@ -41,9 +36,7 @@ export const ChordPresetSelector: React.FC = () => {
     const rootNote =
       currentChordRef?.rootNote ??
       (selectedNoteIndices.length > 0
-        ? MusicalDisplayFormatter.getChordReferenceFromIndices(
-            selectedNoteIndices,
-          )?.rootNote
+        ? MusicalDisplayFormatter.getChordReferenceFromIndices(selectedNoteIndices)?.rootNote
         : ixActual(7));
 
     // Create new chord reference with inversion 0
@@ -60,10 +53,7 @@ export const ChordPresetSelector: React.FC = () => {
         style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
       >
         {presets
-          .filter(
-            (preset) =>
-              NoteGroupingLibrary.getGroupingById(preset).isVisiblePreset,
-          )
+          .filter((preset) => NoteGroupingLibrary.getGroupingById(preset).isVisiblePreset)
           .map((presetId) => (
             <ChordPresetButton
               key={presetId}
@@ -84,10 +74,7 @@ export const ChordPresetSelector: React.FC = () => {
         style={{ gridTemplateColumns: "repeat(4, 1fr)" }}
       >
         {presets
-          .filter(
-            (preset) =>
-              NoteGroupingLibrary.getGroupingById(preset).isVisiblePreset,
-          )
+          .filter((preset) => NoteGroupingLibrary.getGroupingById(preset).isVisiblePreset)
           .map((presetId) => (
             <ChordPresetButton
               key={presetId}
@@ -103,17 +90,13 @@ export const ChordPresetSelector: React.FC = () => {
   const renderInversionButtons = () => {
     if (!currentChordRef) return null;
 
-    const presetDefinition = NoteGroupingLibrary.getGroupingById(
-      currentChordRef.id,
-    );
+    const presetDefinition = NoteGroupingLibrary.getGroupingById(currentChordRef.id);
     if (presetDefinition && presetDefinition.hasInversions) {
       const inversionCount = presetDefinition.inversions.length;
       return (
         <div className="inversion-controls flex flex-col gap-tight border-t border-containers-divider">
           <SectionTitle centered={true}>Inversion</SectionTitle>
-          <div
-            className={`inversion-button-container flex flex-row gap-snug justify-center`}
-          >
+          <div className={`inversion-button-container flex flex-row gap-snug justify-center`}>
             {Array.from({ length: inversionCount }, (_, i) => (
               <InversionButton key={i} inversionIndex={ixInversion(i)} />
             ))}

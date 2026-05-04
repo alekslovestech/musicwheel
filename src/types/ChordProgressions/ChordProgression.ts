@@ -7,17 +7,22 @@ export const DEFAULT_CHORD_PROGRESSION_BPM = 120;
 /** Default step length when no `:denominator` is given on the first token (quarter). */
 export const DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH: NoteLength = 4;
 
-/** LilyPond-style carry: each step uses its explicit `:denominator` if present, otherwise the previous step's length. */
+/**
+ * LilyPond-style carry: each step uses its explicit `:denominator` if present,
+ * otherwise the previous step's length and dot count.
+ */
 export function applyCarriedProgressionDurations(
   entries: Durated<RomanChord>[],
 ): Durated<RomanChord>[] {
   let lastNoteLength = DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH;
+  let lastRhythmDots = 0;
   const result: Durated<RomanChord>[] = [];
   for (const entry of entries) {
     if (entry.noteLength !== undefined) {
       lastNoteLength = entry.noteLength;
+      lastRhythmDots = entry.rhythmDots;
     }
-    result.push(makeDurated(entry.value, lastNoteLength));
+    result.push(makeDurated(entry.value, lastNoteLength, lastRhythmDots));
   }
   return result;
 }
@@ -43,9 +48,7 @@ export class ChordProgression {
     suggestedMusicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
   ) {
     this.progression = applyCarriedProgressionDurations(
-      progression_as_strings.map((roman) =>
-        RomanResolver.parseRomanChordWithDuration(roman),
-      ),
+      progression_as_strings.map((roman) => RomanResolver.parseRomanChordWithDuration(roman)),
     );
     this.name = name || "Unknown";
     this.tempo = tempo;

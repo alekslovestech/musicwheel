@@ -10,8 +10,7 @@ import {
 
 export class ColorUtils {
   static getChordColor(indices: NoteIndices): string {
-    const cyclicIntervals =
-      IntervalUtils.cyclicIntervalsFromActualIndices(indices);
+    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
     const mixcolor = this.mixChordColor(cyclicIntervals, "lch");
     return mixcolor.css();
   }
@@ -38,8 +37,7 @@ export class ColorUtils {
       colors.push(INTERVAL_CLASS_COLORS[ic]);
       const dissonance = INTERVAL_CLASS_DISSONANCE[ic];
       const dissonanceWeight = 1 + dissonance;
-      const orderWeight =
-        dissonance === 0 ? this.orderWeightForPosition(i, len) : 0;
+      const orderWeight = dissonance === 0 ? this.orderWeightForPosition(i, len) : 0;
       weights.push(dissonanceWeight + orderWeight);
     });
 
@@ -65,10 +63,7 @@ export class ColorUtils {
       : this.mixColorsRGB(colors, weights);
   }
 
-  private static mixColorsRGB(
-    colors: chroma.Color[],
-    weights: number[],
-  ): chroma.Color {
+  private static mixColorsRGB(colors: chroma.Color[], weights: number[]): chroma.Color {
     let rgbSum: [number, number, number] = [0, 0, 0];
     let totalWeight = 0;
     colors.forEach((color, i) => {
@@ -79,17 +74,10 @@ export class ColorUtils {
       rgbSum[2] += b * w;
       totalWeight += w;
     });
-    return chroma.rgb(
-      rgbSum[0] / totalWeight,
-      rgbSum[1] / totalWeight,
-      rgbSum[2] / totalWeight,
-    );
+    return chroma.rgb(rgbSum[0] / totalWeight, rgbSum[1] / totalWeight, rgbSum[2] / totalWeight);
   }
 
-  private static mixColorsLCH(
-    colors: chroma.Color[],
-    weights: number[],
-  ): chroma.Color {
+  private static mixColorsLCH(colors: chroma.Color[], weights: number[]): chroma.Color {
     let lSum = 0;
     let cSum = 0;
     let hxSum = 0;

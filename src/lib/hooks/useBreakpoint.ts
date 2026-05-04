@@ -9,8 +9,10 @@ export function useBreakpoint(): Breakpoint {
   useEffect(() => {
     const checkBreakpoint = () => {
       const width = window.innerWidth;
-      if (width >= 1024) setBreakpoint("desktop"); // lg
-      else if (width >= 768) setBreakpoint("tablet"); // md
+      if (width >= 1024)
+        setBreakpoint("desktop"); // lg
+      else if (width >= 768)
+        setBreakpoint("tablet"); // md
       else setBreakpoint("mobile"); // sm
     };
 

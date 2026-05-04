@@ -1,8 +1,4 @@
-import {
-  ChromaticIndex,
-  addChromatic,
-  subChromatic,
-} from "@/types/ChromaticIndex";
+import { ChromaticIndex, addChromatic, subChromatic } from "@/types/ChromaticIndex";
 
 export class BlackKeyUtils {
   static isBlackKey(chromaticIndex: ChromaticIndex): boolean {

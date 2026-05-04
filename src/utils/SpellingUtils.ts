@@ -1,20 +1,9 @@
-import {
-  ChordReference,
-  makeChordReference,
-} from "@/types/interfaces/ChordReference";
-import {
-  NoteWithOctave,
-  NoteWithOctaveArray,
-} from "@/types/interfaces/NoteWithOctave";
+import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
+import { NoteWithOctave, NoteWithOctaveArray } from "@/types/interfaces/NoteWithOctave";
 
 import { NoteGroupingId } from "@/types/NoteGroupingId";
 
-import {
-  ActualIndex,
-  actualToChromatic,
-  InversionIndex,
-  NoteIndices,
-} from "@/types/IndexTypes";
+import { ActualIndex, actualToChromatic, InversionIndex, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { ChordUtils } from "@/utils/ChordUtils";
@@ -28,15 +17,11 @@ export class SpellingUtils {
   ): NoteWithOctave {
     const rootIndex = chordRef.rootNote;
     const rootChromaticIndex = actualToChromatic(rootIndex);
-    const accidentalPreference =
-      AccidentalPreferenceResolver.getChordPresetSpellingPreference(
-        chordRef.id,
-        rootChromaticIndex,
-      );
-    return ActualNoteResolver.resolveAbsoluteNoteWithOctave(
-      targetNoteIndex,
-      accidentalPreference,
+    const accidentalPreference = AccidentalPreferenceResolver.getChordPresetSpellingPreference(
+      chordRef.id,
+      rootChromaticIndex,
     );
+    return ActualNoteResolver.resolveAbsoluteNoteWithOctave(targetNoteIndex, accidentalPreference);
   }
 
   static computeFirstNoteFromChordPreset(
@@ -44,14 +29,9 @@ export class SpellingUtils {
     selectedChordType: NoteGroupingId,
     selectedInversionIndex: InversionIndex,
   ): NoteWithOctave {
-    const chordRef = makeChordReference(
-      baseIndex,
-      selectedChordType,
-      selectedInversionIndex,
-    );
+    const chordRef = makeChordReference(baseIndex, selectedChordType, selectedInversionIndex);
 
-    const chordIndices =
-      ChordUtils.calculateChordNotesFromChordReference(chordRef);
+    const chordIndices = ChordUtils.calculateChordNotesFromChordReference(chordRef);
 
     return this.computeSingleNoteFromChordPreset(chordIndices[0], chordRef);
   }
@@ -61,10 +41,7 @@ export class SpellingUtils {
     selectedMusicalKey: MusicalKey,
   ): NoteWithOctaveArray {
     return actualIndices.map((actualIndex) =>
-      ActualNoteResolver.resolveNoteInKeyWithOctave(
-        selectedMusicalKey,
-        actualIndex,
-      ),
+      ActualNoteResolver.resolveNoteInKeyWithOctave(selectedMusicalKey, actualIndex),
     );
   }
 
@@ -84,9 +61,6 @@ export class SpellingUtils {
   ): NoteWithOctaveArray {
     return currentChordRef
       ? this.computeNotesFromChordPreset(selectedNoteIndices, currentChordRef)
-      : this.computeNotesFromMusicalKey(
-          selectedNoteIndices,
-          selectedMusicalKey,
-        );
+      : this.computeNotesFromMusicalKey(selectedNoteIndices, selectedMusicalKey);
   }
 }

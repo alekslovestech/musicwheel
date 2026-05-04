@@ -13,7 +13,7 @@ export class PolarMath {
   static getCartesianFromPolar(
     radius: number,
     angle: number,
-    isRounded: boolean = false
+    isRounded: boolean = false,
   ): CartesianPoint {
     const x = radius * Math.cos(angle);
     const y = radius * Math.sin(angle);

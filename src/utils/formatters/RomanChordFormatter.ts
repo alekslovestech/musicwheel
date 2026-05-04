@@ -13,9 +13,7 @@ export class RomanChordFormatter {
    * and stable labels. Scale-mode UI continues to use {@link formatRomanChord}.
    */
   static formatRomanChord(romanChord: RomanChord, includesBass = true): string {
-    const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(
-      romanChord.accidental,
-    );
+    const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
     const romanNumeralString = this.getProgressionRootNumeral(romanChord);
     const chordPostfix = this.getProgressionChordSuffix(romanChord.chordType);
     const bass =
@@ -25,9 +23,7 @@ export class RomanChordFormatter {
     return `${accidentalString}${romanNumeralString}${chordPostfix}${bass}`;
   }
 
-  private static getProgressionRootNumeral(
-    romanChord: RomanChord,
-  ): RomanNumeralString {
+  private static getProgressionRootNumeral(romanChord: RomanChord): RomanNumeralString {
     const scaleDegreeIndex = romanChord.scaleDegreeIndex;
     const isLowercase = this.progressionRootIsLowercase(romanChord.chordType);
     return isLowercase

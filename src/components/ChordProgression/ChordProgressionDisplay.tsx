@@ -27,8 +27,7 @@ export function ChordProgressionDisplay({
         >
           {bar.map((tok, tokIndex) => {
             const isActive =
-              readHeadStepIndex != null &&
-              tok.progressionEntryIndex === readHeadStepIndex;
+              readHeadStepIndex != null && tok.progressionEntryIndex === readHeadStepIndex;
             return (
               <ChordProgressionTokenCell
                 key={`${barIndex}-${tokIndex}`}

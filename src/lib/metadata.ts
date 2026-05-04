@@ -19,15 +19,13 @@ export const baseMetadata: Metadata = {
     "color coding chords",
     "circle of fifths",
   ],
-  description:
-    "Interactive music theory application for exploring the chromatic circle",
+  description: "Interactive music theory application for exploring the chromatic circle",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
     title: "Music Wheel",
-    description:
-      "Interactive music theory application for exploring the chromatic circle",
+    description: "Interactive music theory application for exploring the chromatic circle",
     type: "website",
     url: "https://chromatic-circle-next.vercel.app",
     images: [
@@ -42,8 +40,7 @@ export const baseMetadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Music Wheel",
-    description:
-      "Interactive music theory application for exploring the chromatic circle",
+    description: "Interactive music theory application for exploring the chromatic circle",
   },
 };
 
@@ -61,8 +58,7 @@ export const harmonyViewMetadata: Metadata = {
   twitter: {
     ...baseMetadata.twitter,
     title: "Music Wheel - Harmony View",
-    description:
-      "Basic features for exploring music theory with the chromatic circle",
+    description: "Basic features for exploring music theory with the chromatic circle",
   },
 };
 

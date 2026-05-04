@@ -10,14 +10,12 @@ export type ScaleDegree = Branded<number, "ScaleDegree">;
 
 // Conversion functions
 export function ixScaleDegreeIndex(n: number): ScaleDegreeIndex {
-  if (n < 0 || n >= SEVEN || !Number.isInteger(n))
-    throw new Error("Invalid ScaleDegreeIndex=" + n);
+  if (n < 0 || n >= SEVEN || !Number.isInteger(n)) throw new Error("Invalid ScaleDegreeIndex=" + n);
   return n as ScaleDegreeIndex;
 }
 
 export function ixScaleDegree(n: number): ScaleDegree {
-  if (n < 1 || n > SEVEN || !Number.isInteger(n))
-    throw new Error("Invalid ScaleDegree=" + n);
+  if (n < 1 || n > SEVEN || !Number.isInteger(n)) throw new Error("Invalid ScaleDegree=" + n);
   return n as ScaleDegree;
 }
 

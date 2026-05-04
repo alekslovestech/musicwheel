@@ -22,5 +22,4 @@ export const SIZES: Record<ButtonSize, string> = {
 export const SELECTED_STYLES =
   "!bg-buttons-bgSelected !border-buttons-borderSelected !text-buttons-textSelected fill-none stroke-[3px] stroke-white pointer-events-none shadow-inner"; // Added shadow-inner for "pressed in" look
 
-export const DISABLED_STYLES =
-  "opacity-50 cursor-not-allowed bg-buttons-bgDisabled !shadow-none";
+export const DISABLED_STYLES = "opacity-50 cursor-not-allowed bg-buttons-bgDisabled !shadow-none";

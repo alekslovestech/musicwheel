@@ -50,13 +50,9 @@ export const useAudio = () => {
   return context;
 };
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAudioInitialized, setIsAudioInitialized] = useState(false);
-  const [playbackState, setPlaybackState] = useState<PlaybackState>(
-    PlaybackState.SequenceComplete
-  );
+  const [playbackState, setPlaybackState] = useState<PlaybackState>(PlaybackState.SequenceComplete);
 
   const sequencePlayback = useSequencePlayback({
     isAudioInitialized,
@@ -71,7 +67,5 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     ...sequencePlayback,
   };
 
-  return (
-    <AudioContext.Provider value={value}>{children}</AudioContext.Provider>
-  );
+  return <AudioContext.Provider value={value}>{children}</AudioContext.Provider>;
 };

@@ -65,9 +65,7 @@ export default function ScalesPage() {
             </div>
           )}
 
-          <div
-            className={`ScalesPage-circular-inner ${COMMON_STYLES.circularInner} ${border}`}
-          >
+          <div className={`ScalesPage-circular-inner ${COMMON_STYLES.circularInner} ${border}`}>
             <KeyboardCircular />
           </div>
         </div>

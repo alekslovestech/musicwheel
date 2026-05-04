@@ -39,23 +39,17 @@ export class MusicalDisplayFormatter {
   static getDisplayInfoFromIndices(
     indices: NoteIndices,
     chordDisplayMode: ChordDisplayMode,
-    musicalKey: MusicalKey
+    musicalKey: MusicalKey,
   ): ChordDisplayInfo {
     const chordRef = this.getChordReferenceFromIndices(indices);
-    const noteGrouping = NoteGrouping.getNoteGroupingTypeFromNumNotes(
-      indices.length
-    );
+    const noteGrouping = NoteGrouping.getNoteGroupingTypeFromNumNotes(indices.length);
 
     let chordName = "";
     if (chordRef) {
       chordName =
         chordRef.id === ChordType.Unknown
           ? this.formatUnknownChordName(chordRef, musicalKey)
-          : this.deriveChordNameFromReference(
-              chordRef,
-              chordDisplayMode,
-              musicalKey
-            );
+          : this.deriveChordNameFromReference(chordRef, chordDisplayMode, musicalKey);
     }
 
     return {
@@ -67,7 +61,7 @@ export class MusicalDisplayFormatter {
   static getChordPresetDisplayInfo(
     selectedNoteIndices: NoteIndices,
     chordRef: ChordReference,
-    chordDisplayMode: ChordDisplayMode
+    chordDisplayMode: ChordDisplayMode,
   ): ChordDisplayInfo {
     if (selectedNoteIndices.length === 0) {
       return { noteGroupingString: "None", chordName: "Ø" };
@@ -76,19 +70,14 @@ export class MusicalDisplayFormatter {
     if (selectedNoteIndices.length === 2) {
       const chordTypeName = NoteGroupingLibrary.getChordTypeName(
         chordRef.id,
-        ChordTypeContext.ChordName
+        ChordTypeContext.ChordName,
       );
       return { noteGroupingString: "Interval", chordName: chordTypeName };
     }
 
-    const chordName = this.buildChordNameFromReference(
-      chordRef,
-      chordDisplayMode
-    );
+    const chordName = this.buildChordNameFromReference(chordRef, chordDisplayMode);
 
-    const noteGrouping = NoteGrouping.getNoteGroupingTypeFromNumNotes(
-      selectedNoteIndices.length
-    );
+    const noteGrouping = NoteGrouping.getNoteGroupingTypeFromNumNotes(selectedNoteIndices.length);
 
     return {
       noteGroupingString: noteGrouping.toString(),
@@ -101,23 +90,20 @@ export class MusicalDisplayFormatter {
    * For chord names, uses standard notation: Major="", Minor="m", etc.
    * For preset buttons, uses full names: Major="Maj", Minor="min", etc.
    */
-  private static getChordTypeName(
-    chordId: NoteGroupingId,
-    displayMode: ChordDisplayMode
-  ): string {
+  private static getChordTypeName(chordId: NoteGroupingId, displayMode: ChordDisplayMode): string {
     // Use the new method instead of the old getId
     return NoteGroupingLibrary.getChordNameSuffix(chordId, displayMode);
   }
 
   private static buildChordNameFromReference(
     chordRef: ChordReference,
-    chordDisplayMode: ChordDisplayMode
+    chordDisplayMode: ChordDisplayMode,
   ): string {
     // Get root spelling using the existing method
     const rootNoteWithOctave = SpellingUtils.computeFirstNoteFromChordPreset(
       chordRef.rootNote,
       chordRef.id,
-      ixInversion(0) // Root position
+      ixInversion(0), // Root position
     );
     const rootSpelling = NoteFormatter.formatForDisplay(rootNoteWithOctave);
 
@@ -134,14 +120,13 @@ export class MusicalDisplayFormatter {
 
     // For bass note spelling, we need to use the chord's accidental preference
     const rootChromaticIndex = actualToChromatic(chordRef.rootNote);
-    const accidentalPreference =
-      AccidentalPreferenceResolver.getChordPresetSpellingPreference(
-        chordRef.id,
-        rootChromaticIndex
-      );
+    const accidentalPreference = AccidentalPreferenceResolver.getChordPresetSpellingPreference(
+      chordRef.id,
+      rootChromaticIndex,
+    );
     const bassNoteWithOctave = ActualNoteResolver.resolveAbsoluteNoteWithOctave(
       bassNote,
-      accidentalPreference
+      accidentalPreference,
     );
     const bassSpelling = NoteFormatter.formatForDisplay(bassNoteWithOctave);
 
@@ -149,18 +134,13 @@ export class MusicalDisplayFormatter {
   }
 
   // We need to modify getChordReferenceFromIndices to preserve the bass note information
-  static getChordReferenceFromIndices(
-    indices: NoteIndices
-  ): ChordReference | null {
+  static getChordReferenceFromIndices(indices: NoteIndices): ChordReference | null {
     if (indices.length === 0) return makeEmptyChordReference();
 
     const normalizedIndices = IndexUtils.normalizeIndices(indices);
 
     // Try to find in root position first (most common case)
-    const rootPositionMatch = this.findRootPositionMatch(
-      normalizedIndices,
-      indices
-    );
+    const rootPositionMatch = this.findRootPositionMatch(normalizedIndices, indices);
     if (rootPositionMatch) return rootPositionMatch;
 
     // Then try inversions
@@ -184,7 +164,7 @@ export class MusicalDisplayFormatter {
 
   private static findRootPositionMatch(
     normalizedIndices: number[],
-    originalIndices: NoteIndices
+    originalIndices: NoteIndices,
   ): ChordReference | null {
     const allIds = NoteGroupingLibrary.getAllIds();
 
@@ -195,11 +175,7 @@ export class MusicalDisplayFormatter {
       const inversionIndices = IndexUtils.normalizeIndices(definition.offsets);
 
       if (IndexUtils.areIndicesEqual(inversionIndices, normalizedIndices)) {
-        return this.createChordReferenceIndices(
-          originalIndices,
-          id,
-          ixInversion(0)
-        );
+        return this.createChordReferenceIndices(originalIndices, id, ixInversion(0));
       }
     }
 
@@ -208,7 +184,7 @@ export class MusicalDisplayFormatter {
 
   private static findInversionMatch(
     normalizedIndices: number[],
-    originalIndices: NoteIndices
+    originalIndices: NoteIndices,
   ): ChordReference | null {
     const allIds = NoteGroupingLibrary.getAllIds();
 
@@ -217,9 +193,7 @@ export class MusicalDisplayFormatter {
       if (!definition) continue;
 
       for (let i = 1 as InversionIndex; i < definition.inversions.length; i++) {
-        const inversionIndices = IndexUtils.normalizeIndices(
-          definition.inversions[i]
-        );
+        const inversionIndices = IndexUtils.normalizeIndices(definition.inversions[i]);
 
         if (IndexUtils.areIndicesEqual(inversionIndices, normalizedIndices)) {
           return this.createChordReferenceIndices(originalIndices, id, i);
@@ -233,7 +207,7 @@ export class MusicalDisplayFormatter {
   private static createChordReferenceIndices(
     indices: NoteIndices,
     id: NoteGroupingId,
-    inversionIndex: InversionIndex
+    inversionIndex: InversionIndex,
   ): ChordReference {
     // In chord recognition context, we need to calculate the root note differently
     // than in chord preset context. Here, indices are raw user input that matched
@@ -246,10 +220,7 @@ export class MusicalDisplayFormatter {
     } else {
       // Inversion - calculate root note and normalize to chromatic (0-11)
       // This is because inversions represent the same chord regardless of octave
-      const chordOffsets = ChordUtils.getOffsetsFromIdAndInversion(
-        id,
-        inversionIndex
-      );
+      const chordOffsets = ChordUtils.getOffsetsFromIdAndInversion(id, inversionIndex);
       const bassOffset = chordOffsets[0]; // First offset in inversion
       const bassNote = indices[0]; // First note in user input (bass note)
 
@@ -266,22 +237,19 @@ export class MusicalDisplayFormatter {
     chordRef: ChordReference,
     displayMode: ChordDisplayMode,
     selectedMusicalKey: MusicalKey,
-    bassNote?: ActualIndex // Optional bass note override
+    bassNote?: ActualIndex, // Optional bass note override
   ): string {
     const selectedAccidental = selectedMusicalKey.getDefaultAccidental();
     const rootNoteName = NoteConverter.getNoteTextFromActualIndex(
       chordRef.rootNote,
-      selectedAccidental
+      selectedAccidental,
     );
 
     if (chordRef.id === SpecialType.None) return "Ø";
     if (chordRef.id === ChordType.Unknown) return `${rootNoteName}(?)`;
 
     // Clean, semantic chord name generation
-    const chordTypeSuffix = NoteGroupingLibrary.getChordNameSuffix(
-      chordRef.id,
-      displayMode
-    );
+    const chordTypeSuffix = NoteGroupingLibrary.getChordNameSuffix(chordRef.id, displayMode);
 
     if (isIntervalType(chordRef.id)) {
       return chordTypeSuffix;
@@ -293,19 +261,16 @@ export class MusicalDisplayFormatter {
     }
 
     // Inversion case
-    const actualBassNote =
-      bassNote ?? this.calculateBassNoteFromReference(chordRef);
+    const actualBassNote = bassNote ?? this.calculateBassNoteFromReference(chordRef);
     const bassNoteName = NoteConverter.getNoteTextFromActualIndex(
       ixActual(actualBassNote % TWELVE),
-      selectedAccidental
+      selectedAccidental,
     );
 
     return `${rootNoteName}${chordTypeSuffix}/${bassNoteName}`;
   }
 
-  private static calculateBassNoteFromReference(
-    chordRef: ChordReference
-  ): ActualIndex {
+  private static calculateBassNoteFromReference(chordRef: ChordReference): ActualIndex {
     const definition = NoteGroupingLibrary.getGroupingById(chordRef.id);
     const inversionOffsets = definition?.inversions?.[chordRef.inversionIndex];
     if (
@@ -325,12 +290,12 @@ export class MusicalDisplayFormatter {
   // Enhanced method for deriving chord names that handles unknown chords better
   private static formatUnknownChordName(
     chordRef: ChordReference,
-    selectedMusicalKey: MusicalKey
+    selectedMusicalKey: MusicalKey,
   ): string {
     const selectedAccidental = selectedMusicalKey.getDefaultAccidental();
     const rootNoteName = NoteConverter.getNoteTextFromActualIndex(
       chordRef.rootNote,
-      selectedAccidental
+      selectedAccidental,
     );
 
     return `${rootNoteName}(?)`;

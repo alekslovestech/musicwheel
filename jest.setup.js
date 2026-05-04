@@ -1,6 +1,11 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 
+// jsdom does not implement structuredClone; polyfill for libraries (e.g. VexFlow) that use it.
+if (typeof globalThis.structuredClone === "undefined") {
+  globalThis.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
+}
+
 // Mock Tone.js to prevent ES module issues in Jest
 jest.mock("tone", () => ({
   PolySynth: jest.fn().mockImplementation(() => ({

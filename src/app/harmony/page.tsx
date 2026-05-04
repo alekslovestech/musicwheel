@@ -17,8 +17,7 @@ export default function Home() {
   const { gridRows, gridAreas, gridColumns } = usePageLayout();
   const border = useBorder();
   const isDemoRoute = useIsDemoRoute();
-  const SHOW_STAFF_RENDERER =
-    process.env.NEXT_PUBLIC_SHOW_STAFF_RENDERER !== "false";
+  const SHOW_STAFF_RENDERER = process.env.NEXT_PUBLIC_SHOW_STAFF_RENDERER !== "false";
   return (
     <div
       className={`DefaultPage-container ${COMMON_STYLES.pageContainer} bg-canvas-bgDefault ${border}`}
@@ -63,9 +62,7 @@ export default function Home() {
             </div>
           )}
 
-          <div
-            className={`DefaultPage-circular-inner ${COMMON_STYLES.circularInner} ${border}`}
-          >
+          <div className={`DefaultPage-circular-inner ${COMMON_STYLES.circularInner} ${border}`}>
             <KeyboardCircular />
             <div className="flex-1 h-full">
               <SettingsPanelDefault />
@@ -88,4 +85,3 @@ export default function Home() {
     </div>
   );
 }
-

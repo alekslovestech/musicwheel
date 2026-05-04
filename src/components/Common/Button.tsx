@@ -29,9 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   // Action buttons should never show selected state
   const shouldShowSelected = selected && variant !== "action";
-  const selectedStyles = shouldShowSelected
-    ? `${SELECTED_STYLES} selected`
-    : "";
+  const selectedStyles = shouldShowSelected ? `${SELECTED_STYLES} selected` : "";
   const disabledStyles = disabled ? `${DISABLED_STYLES} disabled` : "";
 
   const propsId = props.id;

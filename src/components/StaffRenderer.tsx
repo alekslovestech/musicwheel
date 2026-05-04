@@ -15,17 +15,13 @@ import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFo
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { StaffUtils } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
-import {
-  useIsChordProgressionsMode,
-  useIsScalePreviewMode,
-} from "@/lib/hooks/useGlobalMode";
+import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const chordProgressionActiveColorProbeRef = useRef<HTMLDivElement>(null);
-  const { selectedNoteIndices, selectedMusicalKey, currentChordRef } =
-    useMusical();
+  const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const { selectedProgression, activeProgressionStepIndex } = useAudio();
   const isChordProgressionsMode = useIsChordProgressionsMode();
   const isScalesMode = useIsScalePreviewMode();
@@ -53,31 +49,21 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     const stave = VexFlowUtils.createStaveForContainer(factory, containerWidth);
 
     const canonicalIonianKey = selectedMusicalKey.getCanonicalIonianKey();
-    const keySignature =
-      VexFlowFormatter.getKeySignatureForVex(canonicalIonianKey);
+    const keySignature = VexFlowFormatter.getKeySignatureForVex(canonicalIonianKey);
     stave.addClef("treble").addKeySignature(keySignature);
     stave.setContext(context).draw();
 
     const progressionBarMode =
-      isChordProgressionsMode &&
-      selectedProgression != null &&
-      activeProgressionStepIndex != null;
+      isChordProgressionsMode && selectedProgression != null && activeProgressionStepIndex != null;
 
     if (progressionBarMode) {
       const probe = chordProgressionActiveColorProbeRef.current;
-      const activeChordBg =
-        probe != null ? getComputedStyle(probe).backgroundColor : undefined;
+      const activeChordBg = probe != null ? getComputedStyle(probe).backgroundColor : undefined;
 
-      const progression =
-        ChordProgressionLibrary.getProgression(selectedProgression);
-      const prepared = prepareChordProgressionSequence(
-        selectedProgression,
-        selectedMusicalKey,
-      );
+      const progression = ChordProgressionLibrary.getProgression(selectedProgression);
+      const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const cpf = new ChordProgressionFormatter(progression);
-      const barIndex = cpf.findBarIndexContainingStep(
-        activeProgressionStepIndex,
-      );
+      const barIndex = cpf.findBarIndexContainingStep(activeProgressionStepIndex);
       const stepIndicesInBar = cpf.progressionEntryIndicesByBar[barIndex] ?? [];
 
       const steps = StaffUtils.buildDuratedChordStepsForBar(
@@ -88,9 +74,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
 
       if (steps.length === 0) return;
       const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
-      const highlightIndex = stepIndicesInBar.indexOf(
-        activeProgressionStepIndex,
-      );
+      const highlightIndex = stepIndicesInBar.indexOf(activeProgressionStepIndex);
       if (highlightIndex >= 0) {
         VexFlowUtils.drawVoiceWithHighlights(
           factory,

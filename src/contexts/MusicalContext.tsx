@@ -19,10 +19,7 @@ import {
 } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
-import {
-  ChordReference,
-  makeChordReference,
-} from "@/types/interfaces/ChordReference";
+import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 
 import { ChordUtils } from "@/utils/ChordUtils";
 import { NoteGroupingId } from "@/types/NoteGroupingId";
@@ -47,20 +44,15 @@ export interface MusicalSettings {
 
 const MusicalContext = createContext<MusicalSettings | null>(null);
 
-export const MusicalProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const MusicalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isScales = useIsScalePreviewMode();
   const [selectedNoteIndices, setSelectedNoteIndices] = useState<NoteIndices>(
-    isScales ? [] : toNoteIndices([7, 11, 14])
+    isScales ? [] : toNoteIndices([7, 11, 14]),
   );
-  const [selectedMusicalKey, setSelectedMusicalKey] =
-    useState<MusicalKey>(DEFAULT_MUSICAL_KEY);
-  const [currentChordRef, setCurrentChordRef] = useState<
-    ChordReference | undefined
-  >(
+  const [selectedMusicalKey, setSelectedMusicalKey] = useState<MusicalKey>(DEFAULT_MUSICAL_KEY);
+  const [currentChordRef, setCurrentChordRef] = useState<ChordReference | undefined>(
     // Create initial chord reference to match the initial notes [7, 11, 14] = G major
-    isScales ? undefined : makeChordReference(7, ChordType.Major, 0) // G major root position
+    isScales ? undefined : makeChordReference(7, ChordType.Major, 0), // G major root position
   );
 
   const setChordRootNote = (rootNote: ActualIndex) => {
@@ -93,7 +85,7 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({
     // Calculate what the root note should be for this bass note
     const chordOffsets = ChordUtils.getOffsetsFromIdAndInversion(
       currentChordRef.id,
-      currentChordRef.inversionIndex
+      currentChordRef.inversionIndex,
     );
     const bassOffset = chordOffsets[0];
     const newRootNote = ixActual(bassNote - bassOffset);
@@ -137,14 +129,11 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     if (!currentChordRef) return;
 
-    const updatedIndices =
-      ChordUtils.calculateChordNotesFromChordReference(currentChordRef);
+    const updatedIndices = ChordUtils.calculateChordNotesFromChordReference(currentChordRef);
     setSelectedNoteIndices(updatedIndices);
   }, [currentChordRef]);
 
-  return (
-    <MusicalContext.Provider value={value}>{children}</MusicalContext.Provider>
-  );
+  return <MusicalContext.Provider value={value}>{children}</MusicalContext.Provider>;
 };
 
 export const useMusical = () => {

@@ -14,9 +14,7 @@ export default function Home() {
   const border = useBorder();
 
   return (
-    <div
-      className={`DemoPage-container ${COMMON_STYLES.pageContainer} bg-canvas-bgDefault`}
-    >
+    <div className={`DemoPage-container ${COMMON_STYLES.pageContainer} bg-canvas-bgDefault`}>
       <div
         className={`DemoPage-grid ${COMMON_STYLES.pageGrid} ${border}`}
         style={{
@@ -41,9 +39,7 @@ export default function Home() {
           className={`DemoPage-circular-container ${COMMON_STYLES.circularContainer} ${border}`}
           style={{ gridArea: "circular" }}
         >
-          <div
-            className={`DemoPage-circular-inner ${COMMON_STYLES.circularInner}`}
-          >
+          <div className={`DemoPage-circular-inner ${COMMON_STYLES.circularInner}`}>
             <div className="w-[70%]">
               <KeyboardCircular />
             </div>

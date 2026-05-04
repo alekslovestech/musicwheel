@@ -10,8 +10,7 @@ class ChordProgressionLibrarySingleton {
 
   public static getInstance(): ChordProgressionLibrarySingleton {
     if (!ChordProgressionLibrarySingleton.instance) {
-      ChordProgressionLibrarySingleton.instance =
-        new ChordProgressionLibrarySingleton();
+      ChordProgressionLibrarySingleton.instance = new ChordProgressionLibrarySingleton();
     }
     return ChordProgressionLibrarySingleton.instance;
   }
@@ -27,12 +26,20 @@ class ChordProgressionLibrarySingleton {
       case ChordProgressionType.Line_Cliche:
         return new ChordProgression(["I:1", "I+", "vi/I"], chordProgEnum);
 
+      case ChordProgressionType.Gypsy_Woman:
+        return new ChordProgression(
+          ["Imaj7:4", "Imaj7:8.", "I6:8.", "I6", "I6"],
+          chordProgEnum,
+          120,
+          MusicalKey.fromClassicalMode("F", KeyType.Major),
+        );
+
       //correct but plays weird if a Major is specified - investigate
       case ChordProgressionType.Around_The_World:
         return new ChordProgression(
-          ["i:2", "v", "VI", "VII"],
+          ["i:4", "i:8.", "v", "v", "v", "VI:4", "VI:8.", "VII", "VII", "VII"],
           chordProgEnum,
-          132,
+          120,
           MusicalKey.fromClassicalMode("A", KeyType.Minor),
         );
 
@@ -63,17 +70,7 @@ class ChordProgressionLibrarySingleton {
 
       case ChordProgressionType.LetItBe_Intermission:
         return new ChordProgression(
-          [
-            "IV/I:2",
-            "I:4",
-            "viio:4",
-            "I/V:2",
-            "V:4",
-            "IV:4",
-            "V/II:2",
-            "IV/I:2",
-            "I:1",
-          ],
+          ["IV/I:2", "I:4", "viio:4", "I/V:2", "V:4", "IV:4", "V/II:2", "IV/I:2", "I:1"],
           chordProgEnum,
           102,
           MusicalKey.fromClassicalMode("C", KeyType.Major),
@@ -115,5 +112,4 @@ class ChordProgressionLibrarySingleton {
   }
 }
 
-export const ChordProgressionLibrary =
-  ChordProgressionLibrarySingleton.getInstance();
+export const ChordProgressionLibrary = ChordProgressionLibrarySingleton.getInstance();

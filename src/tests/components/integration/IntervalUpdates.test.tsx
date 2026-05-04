@@ -14,9 +14,7 @@ import { ReactTestUtils } from "@/tests/reactutils/ReactTestUtils";
 import { keyVerificationUtils } from "@/tests/reactutils/KeyboardVerificationUtils";
 
 function verifyIntervalName(expectedIntervalName: string) {
-  const chordNameNoteGrouping = document.getElementById(
-    "chord-name-note-grouping"
-  );
+  const chordNameNoteGrouping = document.getElementById("chord-name-note-grouping");
   const chordNameValue = document.getElementById("chord-name-value");
   expect(chordNameNoteGrouping).toBeInTheDocument();
   expect(chordNameValue).toBeInTheDocument();
@@ -34,7 +32,7 @@ describe("IntervalUpdates", () => {
         <ChordPresetSelector />
         <ChordNameDisplay />
         <SettingsPanelDefault />
-      </RootProvider>
+      </RootProvider>,
     );
 
   beforeEach(() => {

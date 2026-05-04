@@ -10,11 +10,7 @@ interface PresetButtonProps {
   onClick: (presetId: NoteGroupingId) => void;
 }
 
-export const ChordPresetButton: React.FC<PresetButtonProps> = ({
-  presetId,
-  selected,
-  onClick,
-}) => {
+export const ChordPresetButton: React.FC<PresetButtonProps> = ({ presetId, selected, onClick }) => {
   const elementId = NoteGroupingLibrary.getElementId(presetId);
   const displayName = NoteGroupingLibrary.getDisplayName(presetId);
   const buttonText = NoteGroupingLibrary.getPresetButtonName(presetId);

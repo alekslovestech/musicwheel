@@ -10,10 +10,7 @@ import { useBorder } from "@/lib/hooks";
 import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";
 
-import {
-  useChordPresets,
-  useIsChordsOrIntervals,
-} from "@/contexts/ChordPresetContext";
+import { useChordPresets, useIsChordsOrIntervals } from "@/contexts/ChordPresetContext";
 
 interface ModeSelectorButton {
   id: string;
@@ -60,9 +57,7 @@ export const InputModeSelector: React.FC = () => {
       className={`input-mode-selector text-center space-y-2 ${border} ${LAYOUT_PATTERNS.fullSize}`}
     >
       <SectionTitle>Input Mode</SectionTitle>
-      <div
-        className={`mode-selector-buttons ${LAYOUT_PATTERNS.centerFlexCol} ${gapSize}`}
-      >
+      <div className={`mode-selector-buttons ${LAYOUT_PATTERNS.centerFlexCol} ${gapSize}`}>
         {AVAILABLE_MODES.map(({ id, mode, description }) => {
           const isHidden = isScalesMode && isChordsOrIntervals; // Use the variable instead of calling the hook
 

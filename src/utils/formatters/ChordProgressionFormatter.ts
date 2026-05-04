@@ -9,6 +9,7 @@ import {
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { RhythmUtils } from "@/utils/RhythmUtils";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
 type MutableChordProgressionBar = FormattedBarToken[];
@@ -24,10 +25,7 @@ export class ChordProgressionFormatter {
   /** Resolved chord names in the given key, as bar tokens for the progression grid. */
   formatAbsoluteForDisplay(musicalKey: MusicalKey): ChordProgressionBarGrid {
     const romanChords = this.progression.progression.map((e) => e.value);
-    const noteIndices = ChordProgressionResolver.computeProgressionOctaves(
-      romanChords,
-      musicalKey,
-    );
+    const noteIndices = ChordProgressionResolver.computeProgressionOctaves(romanChords, musicalKey);
 
     const labels = noteIndices.map((indices) => {
       return MusicalDisplayFormatter.getDisplayInfoFromIndices(
@@ -70,9 +68,7 @@ export class ChordProgressionFormatter {
    * Each step becomes a token spanning `colSpan` sixteenth-note columns inside a 4/4 bar (16 columns),
    * and carries `progressionEntryIndex` so playback can highlight the currently-active step.
    */
-  private buildBarRowsForDisplay(
-    labelsByIndex: ReadonlyArray<string>,
-  ): ChordProgressionBarGrid {
+  private buildBarRowsForDisplay(labelsByIndex: ReadonlyArray<string>): ChordProgressionBarGrid {
     const { progression } = this;
     let bars: MutableChordProgressionBarGrid = [];
     let colsInBar = 0;
@@ -92,22 +88,18 @@ export class ChordProgressionFormatter {
     ) {
       const entry = progression.progression[progressionEntryIndex];
       if (entry.noteLength === undefined) {
-        throw new Error(
-          "ChordProgression entries are expected to have carried noteLength applied",
-        );
+        throw new Error("ChordProgression entries are expected to have carried noteLength applied");
       }
 
-      const colSpan = COLUMNS_PER_BAR / entry.noteLength;
+      const colSpan = RhythmUtils.colSpan(entry.noteLength, entry.rhythmDots, COLUMNS_PER_BAR);
       const label = labelsByIndex[progressionEntryIndex];
 
-      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) 
-        flushBar();
+      if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) flushBar();
 
       barTokens.push({ label, colSpan, progressionEntryIndex });
       colsInBar += colSpan;
 
-      if (colsInBar === COLUMNS_PER_BAR) 
-        flushBar();
+      if (colsInBar === COLUMNS_PER_BAR) flushBar();
     }
 
     flushBar();

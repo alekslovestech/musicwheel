@@ -4,8 +4,7 @@ import { PlayIcon, StopIcon } from "../Icons";
 import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 
 export const PlaySequenceButton: React.FC = () => {
-  const { playbackState, startSequencePlayback, stopSequencePlayback } =
-    useAudio();
+  const { playbackState, startSequencePlayback, stopSequencePlayback } = useAudio();
 
   const isPlayingOrPaused = () =>
     playbackState === PlaybackState.SequencePlaying ||

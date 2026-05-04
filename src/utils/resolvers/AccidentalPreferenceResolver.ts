@@ -11,7 +11,7 @@ import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 export class AccidentalPreferenceResolver {
   static getChordPresetSpellingPreference(
     chordType: NoteGroupingId,
-    rootChromaticIndex: ChromaticIndex
+    rootChromaticIndex: ChromaticIndex,
   ): AccidentalType {
     const chordQuality = this.getChordQuality(chordType);
 
@@ -20,7 +20,7 @@ export class AccidentalPreferenceResolver {
 
   private static getChordAccidentalPreference(
     chordQuality: ChordQuality,
-    rootChromaticIndex: ChromaticIndex
+    rootChromaticIndex: ChromaticIndex,
   ): AccidentalType {
     switch (chordQuality) {
       case ChordQuality.Minor_Interval:

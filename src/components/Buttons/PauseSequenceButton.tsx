@@ -4,8 +4,7 @@ import { PauseIcon, ResumeIcon } from "../Icons";
 import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 
 export const PauseSequenceButton: React.FC = () => {
-  const { playbackState, pauseSequencePlayback, resumeSequencePlayback } =
-    useAudio();
+  const { playbackState, pauseSequencePlayback, resumeSequencePlayback } = useAudio();
 
   const handleClick = () => {
     if (playbackState === PlaybackState.SequencePlaying) {

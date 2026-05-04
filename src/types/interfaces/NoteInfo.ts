@@ -5,9 +5,6 @@ export interface NoteInfo {
   readonly accidental: AccidentalType;
 }
 
-export function createNoteInfo(
-  noteName: string,
-  accidental: AccidentalType
-): NoteInfo {
+export function createNoteInfo(noteName: string, accidental: AccidentalType): NoteInfo {
   return { noteName, accidental };
 }

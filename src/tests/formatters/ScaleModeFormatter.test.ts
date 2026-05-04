@@ -4,10 +4,7 @@ import { ScaleModeLibrary } from "@/types/ScaleModes/ScaleModeLibrary";
 
 import { ScaleModeFormatter } from "@/utils/formatters/ScaleModeFormatter";
 
-function verifyModeScaleDegreeDisplayStrings(
-  greekMode: ScaleModeType,
-  expectedNotes: string[],
-) {
+function verifyModeScaleDegreeDisplayStrings(greekMode: ScaleModeType, expectedNotes: string[]) {
   const greekModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
   const displayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
     greekModeInfo,

@@ -14,7 +14,7 @@ describe("ChordPresetsSelector", () => {
       <RootProvider>
         <InputModeSelector />
         <ChordPresetSelector />
-      </RootProvider>
+      </RootProvider>,
     );
 
   test("selecting a new chord resets inversion to 0", () => {

@@ -9,11 +9,9 @@ function verifyChordRef(
   rootNote: number,
   type: ChordType | IntervalType | SpecialType,
   inversionIndex: number,
-  indices: number[]
+  indices: number[],
 ) {
-  const actualRef = MusicalDisplayFormatter.getChordReferenceFromIndices(
-    toNoteIndices(indices)
-  );
+  const actualRef = MusicalDisplayFormatter.getChordReferenceFromIndices(toNoteIndices(indices));
   expect(actualRef?.rootNote).toBe(rootNote);
   expect(actualRef?.id).toBe(type);
   expect(actualRef?.inversionIndex).toBe(inversionIndex);

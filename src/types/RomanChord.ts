@@ -32,16 +32,8 @@ export class RomanChord {
     accidental: AccidentalType = AccidentalType.None,
     bassScaleDegree: number | undefined = undefined,
   ): RomanChord {
-    const bass =
-      bassScaleDegree !== undefined
-        ? ixScaleDegree(bassScaleDegree)
-        : undefined;
-    return new RomanChord(
-      ixScaleDegree(scaleDegree),
-      chordType,
-      accidental,
-      bass,
-    );
+    const bass = bassScaleDegree !== undefined ? ixScaleDegree(bassScaleDegree) : undefined;
+    return new RomanChord(ixScaleDegree(scaleDegree), chordType, accidental, bass);
   }
 
   get scaleDegreeIndex(): ScaleDegreeIndex {
@@ -93,6 +85,9 @@ export class RomanChord {
         break;
       case "7":
         chordType = isLowercase ? ChordType.Minor7 : ChordType.Dominant7;
+        break;
+      case "6":
+        chordType = isLowercase ? ChordType.Minor6 : ChordType.Six;
         break;
       case "maj7":
         chordType = isLowercase ? ChordType.Unknown : ChordType.Major7;

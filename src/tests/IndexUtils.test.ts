@@ -40,10 +40,7 @@ describe("IndexUtils", () => {
     cases.forEach(({ desc, indices, inv, expected }) => {
       it(desc, () => {
         expect(
-          ChordUtils.getBassNoteFromOriginalChord(
-            toNoteIndices(indices),
-            ixInversion(inv)
-          )
+          ChordUtils.getBassNoteFromOriginalChord(toNoteIndices(indices), ixInversion(inv)),
         ).toEqual(expected);
       });
     });
@@ -100,9 +97,7 @@ describe("IndexUtils", () => {
 
     cases.forEach(({ chromatic, octave, expected }) => {
       it(`${chromatic},${octave} -> ${expected}`, () => {
-        expect(chromaticToActual(ixChromatic(chromatic), octave)).toBe(
-          expected
-        );
+        expect(chromaticToActual(ixChromatic(chromatic), octave)).toBe(expected);
       });
     });
   });
@@ -117,9 +112,7 @@ describe("IndexUtils", () => {
 
     cases.forEach(({ actual, expected }) => {
       it(`${actual} -> chromatic:${expected.chromaticIndex},octave:${expected.octaveOffset}`, () => {
-        expect(actualIndexToChromaticAndOctave(ixActual(actual))).toEqual(
-          expected
-        );
+        expect(actualIndexToChromaticAndOctave(ixActual(actual))).toEqual(expected);
       });
     });
   });

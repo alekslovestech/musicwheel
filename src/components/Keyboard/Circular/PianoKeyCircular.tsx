@@ -6,10 +6,7 @@ import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 
-import {
-  CartesianPoint,
-  CartesianPointPair,
-} from "@/types/interfaces/CartesianPoint";
+import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
@@ -44,22 +41,11 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
   const { monochromeMode } = useDisplay();
   const globalMode = useGlobalMode();
   const { inputMode } = useChordPresets();
-  const pathData = ArcPathVisualizer.getArcPathData(
-    chromaticIndex,
-    outerRadius,
-    innerRadius
-  );
-  const textPoint = ArcPathVisualizer.getTextPoint(
-    chromaticIndex,
-    outerRadius,
-    innerRadius
-  );
+  const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
+  const textPoint = ArcPathVisualizer.getTextPoint(chromaticIndex, outerRadius, innerRadius);
 
   const baseClasses = ["key-base"];
-  const isSelected = KeyboardUtils.isSelectedEitherOctave(
-    chromaticIndex,
-    selectedNoteIndices
-  );
+  const isSelected = KeyboardUtils.isSelectedEitherOctave(chromaticIndex, selectedNoteIndices);
   const isScales = useIsScalePreviewMode();
   const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
 
@@ -72,7 +58,7 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
     false,
     isBlack,
     isSelected,
-    true
+    true,
   );
 
   const allBaseClasses = KeyboardUtils.buildKeyClasses(
@@ -80,36 +66,31 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
     isSelected,
     isBlack,
     isScales,
-    isBassNote
+    isBassNote,
   );
 
   const id = KeyboardUtils.StringWithPaddedIndex("circularKey", chromaticIndex);
-  const noteText = KeyboardUtils.getNoteText(
-    false,
-    chromaticIndex,
-    isScales,
-    selectedMusicalKey
-  );
+  const noteText = KeyboardUtils.getNoteText(false, chromaticIndex, isScales, selectedMusicalKey);
 
   const handleClick = KeyboardUtils.createKeyboardClickHandler(
     globalMode,
     inputMode,
     KeyboardUIType.Circular,
     onClick,
-    chromaticToActual(chromaticIndex)
+    chromaticToActual(chromaticIndex),
   );
 
   const renderAccidental = (
     accidental: AccidentalType,
     textPoint: CartesianPoint,
-    isSelected: boolean
+    isSelected: boolean,
   ) => {
     // Account for monochrome mode: in monochrome mode, black keys are treated as white
     const effectiveIsBlack = isBlack && !monochromeMode;
     const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(
       isSelected,
       effectiveIsBlack,
-      true // isSvg
+      true, // isSvg
     );
     return (
       <text
@@ -124,12 +105,11 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
     );
   };
 
-  const textPointAccidentals: CartesianPointPair =
-    ArcPathVisualizer.getAccidentalPositions(
-      chromaticIndex,
-      outerRadius,
-      innerRadius
-    );
+  const textPointAccidentals: CartesianPointPair = ArcPathVisualizer.getAccidentalPositions(
+    chromaticIndex,
+    outerRadius,
+    innerRadius,
+  );
 
   return (
     <g
@@ -137,10 +117,7 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
       className={`${allBaseClasses} !${keyColors.border} hover:[&_path]:opacity-80`}
       onClick={handleClick}
     >
-      <path
-        d={pathData}
-        className={`${keyColors.primary} stroke-gray-400 stroke-1`}
-      />
+      <path d={pathData} className={`${keyColors.primary} stroke-gray-400 stroke-1`} />
       <text
         x={textPoint.x}
         y={textPoint.y}
@@ -152,16 +129,8 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
       </text>
       {!isScales && isBlack && (
         <>
-          {renderAccidental(
-            AccidentalType.Sharp,
-            textPointAccidentals.start,
-            isSelected
-          )}
-          {renderAccidental(
-            AccidentalType.Flat,
-            textPointAccidentals.end,
-            isSelected
-          )}
+          {renderAccidental(AccidentalType.Sharp, textPointAccidentals.start, isSelected)}
+          {renderAccidental(AccidentalType.Flat, textPointAccidentals.end, isSelected)}
         </>
       )}
     </g>

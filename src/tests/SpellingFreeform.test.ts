@@ -14,7 +14,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("converts single note (white key) index to NoteWithOctave in C major", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([7]), // G note
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(result).toHaveLength(1);
@@ -26,7 +26,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("converts single note (black key) index to NoteWithOctave in C major", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([8]), // G# note
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(result).toHaveLength(1);
@@ -38,7 +38,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("converts single note (black, next octave) index to NoteWithOctave in C major", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([13]), // C# note
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(result).toHaveLength(1);
@@ -50,7 +50,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("converts multiple note indices to NoteWithOctaves in C major", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([7, 11, 14]), // G, B, D (G major triad)
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(result).toHaveLength(3);
@@ -65,7 +65,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
       const dMajor = MusicalKey.fromClassicalMode("D", KeyType.Major);
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([9, 13]), // A, C# in D major
-        dMajor
+        dMajor,
       );
 
       expect(result).toHaveLength(2);
@@ -78,7 +78,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("returns empty array for empty input", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([]),
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(result).toEqual([]);
@@ -88,10 +88,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
   describe("computeNotesFromChordPreset and computeNotesFromMusicalKey", () => {
     test("uses computeNotesFromMusicalKey for freeform notes", () => {
       const indices = toNoteIndices([7, 8]); // G, G#
-      const result = SpellingUtils.computeNotesFromMusicalKey(
-        indices,
-        DEFAULT_MUSICAL_KEY
-      );
+      const result = SpellingUtils.computeNotesFromMusicalKey(indices, DEFAULT_MUSICAL_KEY);
 
       expect(result).toHaveLength(2);
       SpellingTestUtils.verifyNoteWithOctaveArray(result, [
@@ -102,10 +99,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
 
     test("uses computeNotesFromMusicalKey when not in chord mode", () => {
       const indices = toNoteIndices([7]); // G
-      const result = SpellingUtils.computeNotesFromMusicalKey(
-        indices,
-        DEFAULT_MUSICAL_KEY
-      );
+      const result = SpellingUtils.computeNotesFromMusicalKey(indices, DEFAULT_MUSICAL_KEY);
 
       expect(result).toHaveLength(1);
       SpellingTestUtils.verifyNoteWithOctaveArray(result, [
@@ -116,7 +110,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("returns empty array for empty input", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([]),
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(result).toEqual([]);
@@ -127,7 +121,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("NoteWithOctave formats correctly for VexFlow", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([7]), // G
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(VexFlowFormatter.formatNote(result[0])).toBe("G/4");
@@ -136,7 +130,7 @@ describe("SpellingFreeform - Key-based note spelling", () => {
     test("NoteWithOctave with accidental formats correctly", () => {
       const result = SpellingUtils.computeNotesFromMusicalKey(
         toNoteIndices([8]), // G#
-        DEFAULT_MUSICAL_KEY
+        DEFAULT_MUSICAL_KEY,
       );
 
       expect(VexFlowFormatter.formatNote(result[0])).toBe("G/4");

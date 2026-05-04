@@ -5,30 +5,14 @@ import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionReso
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 describe("ChordProgressionResolver.computeProgressionOctaves", () => {
-  function expectRoots(
-    roman: string[],
-    musicalKey: MusicalKey,
-    expectedRoots: number[],
-  ) {
-    const romanChords = roman.map((r) =>
-      RomanResolver.createRomanChordFromString(r),
-    );
-    const resolved = ChordProgressionResolver.computeProgressionOctaves(
-      romanChords,
-      musicalKey,
-    );
-    expect(resolved.map((chord) => chord[0])).toEqual(
-      toNoteIndices(expectedRoots),
-    );
+  function expectRoots(roman: string[], musicalKey: MusicalKey, expectedRoots: number[]) {
+    const romanChords = roman.map((r) => RomanResolver.createRomanChordFromString(r));
+    const resolved = ChordProgressionResolver.computeProgressionOctaves(romanChords, musicalKey);
+    expect(resolved.map((chord) => chord[0])).toEqual(toNoteIndices(expectedRoots));
   }
 
   it("returns empty array for empty progression", () => {
-    expect(
-      ChordProgressionResolver.computeProgressionOctaves(
-        [],
-        DEFAULT_MUSICAL_KEY,
-      ),
-    ).toEqual([]);
+    expect(ChordProgressionResolver.computeProgressionOctaves([], DEFAULT_MUSICAL_KEY)).toEqual([]);
   });
 
   it("single chord returns the octave-0 variant when both sequences tie on movement", () => {
@@ -63,11 +47,7 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
   });
 
   it("I→V→vi→IV→I→I→V: repeated chords should not jump octaves", () => {
-    expectRoots(
-      ["I", "V", "vi", "IV", "I", "I", "V"],
-      DEFAULT_MUSICAL_KEY,
-      [12, 7, 9, 5, 0, 0, 7],
-    );
+    expectRoots(["I", "V", "vi", "IV", "I", "I", "V"], DEFAULT_MUSICAL_KEY, [12, 7, 9, 5, 0, 0, 7]);
   });
 
   it("I→vi→IV→V (50s progression): descending preference picks high-octave start (seq1 wins)", () => {
@@ -78,20 +58,12 @@ describe("ChordProgressionResolver.computeProgressionOctaves", () => {
   describe("non-default keys", () => {
     it("D major: I→V chooses high D (14) → low A (9)", () => {
       // D=2, A=9. Descending preference makes seq1: 14→9 (5) beat seq0: 2→9 (7).
-      expectRoots(
-        ["I", "V"],
-        MusicalKey.fromClassicalMode("D", KeyType.Major),
-        [14, 9],
-      );
+      expectRoots(["I", "V"], MusicalKey.fromClassicalMode("D", KeyType.Major), [14, 9]);
     });
 
     it("F major: I→IV resolves to F→Bb in octave 0", () => {
       // F=5, Bb=10. Ascending preference; seq0 wins tie on movement.
-      expectRoots(
-        ["I", "IV"],
-        MusicalKey.fromClassicalMode("F", KeyType.Major),
-        [5, 10],
-      );
+      expectRoots(["I", "IV"], MusicalKey.fromClassicalMode("F", KeyType.Major), [5, 10]);
     });
   });
 });

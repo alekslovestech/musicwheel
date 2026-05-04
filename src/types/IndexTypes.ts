@@ -10,14 +10,12 @@ export type OctaveOffset = Branded<number, "OctaveOffset">;
 export type InversionIndex = Branded<number, "InversionIndex">;
 
 export function ixInversion(n: number): InversionIndex {
-  if (n < 0 || n > 4 || !Number.isInteger(n))
-    throw new Error("Invalid InversionIndex");
+  if (n < 0 || n > 4 || !Number.isInteger(n)) throw new Error("Invalid InversionIndex");
   return n as InversionIndex;
 }
 
 export function ixActual(n: number): ActualIndex {
-  if (n < 0 || n > TWENTY4 || !Number.isInteger(n))
-    throw new Error("Invalid ActualIndex=" + n);
+  if (n < 0 || n > TWENTY4 || !Number.isInteger(n)) throw new Error("Invalid ActualIndex=" + n);
   return n as ActualIndex;
 }
 
@@ -28,8 +26,7 @@ export function toNoteIndices(numbers: number[]): NoteIndices {
 }
 
 export function ixOffset(n: number): OffsetIndex {
-  if (n < -TWELVE || n > 22 || !Number.isInteger(n))
-    throw new Error("Invalid OffsetIndex=" + n);
+  if (n < -TWELVE || n > 22 || !Number.isInteger(n)) throw new Error("Invalid OffsetIndex=" + n);
   return n as OffsetIndex;
 }
 
@@ -38,14 +35,13 @@ export function ixOffsetArray(numbers: number[]): OffsetIndex[] {
 }
 
 export function ixOctaveOffset(n: number): OctaveOffset {
-  if (n < 0 || n > 1 || !Number.isInteger(n))
-    throw new Error("Invalid OctaveOffset");
+  if (n < 0 || n > 1 || !Number.isInteger(n)) throw new Error("Invalid OctaveOffset");
   return n as OctaveOffset;
 }
 
 export function chromaticToActual(
   chromaticIndex: ChromaticIndex,
-  octaveOffset: number = 0
+  octaveOffset: number = 0,
 ): ActualIndex {
   const validatedOctaveOffset = ixOctaveOffset(octaveOffset);
   const result = validatedOctaveOffset * TWELVE + chromaticIndex;

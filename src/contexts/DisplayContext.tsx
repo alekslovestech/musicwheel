@@ -23,20 +23,18 @@ export interface DisplaySettings {
 
 const DisplayContext = createContext<DisplaySettings | null>(null);
 
-export const DisplayProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const DisplayProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isScales = useIsScalePreviewMode();
 
   const [circularVisMode, setCircularVisMode] = useState<CircularVisMode>(
-    isScales ? CircularVisMode.Polygon : CircularVisMode.None
+    isScales ? CircularVisMode.Polygon : CircularVisMode.None,
   );
   const [scalePreviewMode, setScalePreviewMode] = useState<boolean>(isScales);
   const [keyTextMode, setKeyTextMode] = useState<KeyDisplayMode>(
-    isScales ? KeyDisplayMode.ScaleDegree : KeyDisplayMode.NoteNames
+    isScales ? KeyDisplayMode.ScaleDegree : KeyDisplayMode.NoteNames,
   );
   const [chordDisplayMode, setChordDisplayMode] = useState<ChordDisplayMode>(
-    ChordDisplayMode.Symbols
+    ChordDisplayMode.Symbols,
   );
 
   const [monochromeMode, setMonochromeMode] = useState<boolean>(isScales);
@@ -54,9 +52,7 @@ export const DisplayProvider: React.FC<{ children: ReactNode }> = ({
     setChordDisplayMode,
   };
 
-  return (
-    <DisplayContext.Provider value={value}>{children}</DisplayContext.Provider>
-  );
+  return <DisplayContext.Provider value={value}>{children}</DisplayContext.Provider>;
 };
 
 export const useDisplay = () => {

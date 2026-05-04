@@ -5,10 +5,7 @@ import { TWELVE } from "@/types/constants/NoteConstants";
 import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormatter";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
-function verifyScaleDegreesArray(
-  musicalKey: MusicalKey,
-  expectedArray: string[],
-) {
+function verifyScaleDegreesArray(musicalKey: MusicalKey, expectedArray: string[]) {
   expect(expectedArray.length).toBe(TWELVE);
 
   const displayStrings = MusicalKeyNoteFormatter.formatAllNotesForDisplay(
