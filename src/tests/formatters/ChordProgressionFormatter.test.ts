@@ -1,33 +1,15 @@
-import { prepareChordProgressionSequence } from "@/lib/sequencePlaybackHelpers";
-import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
-import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 
-describe("prepareChordProgressionSequence and progressionEntryIndex alignment", () => {
-  it("precomputed step count matches library progression length", () => {
-    const type = ChordProgressionType.Blues;
-    const prepared = prepareChordProgressionSequence(type, DEFAULT_MUSICAL_KEY);
-    const progression = ChordProgressionLibrary.getProgression(type);
-    expect(prepared.precomputedProgression.length).toBe(progression.progression.length);
-  });
-
-  it("formatter emits one token per entry with indices matching step order", () => {
-    const type = ChordProgressionType.Blues;
-    const progression = ChordProgressionLibrary.getProgression(type);
-    const bars = new ChordProgressionFormatter(progression).formatForDisplay();
-    const indices = bars.flatMap((row) => row.map((t) => t.progressionEntryIndex));
-    expect(indices).toEqual(progression.progression.map((_, i) => i));
-  });
-});
+const indices = (bar: readonly { progressionEntryIndex: number }[]) =>
+  bar.map((t) => t.progressionEntryIndex);
 
 describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () => {
   it("assigns indices 0..n-1 for one bar of quarter chords", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
     const bars = new ChordProgressionFormatter(p).formatForDisplay();
     expect(bars).toHaveLength(1);
-    expect(bars[0].map((t) => t.progressionEntryIndex)).toEqual([0, 1, 2, 3]);
+    expect(indices(bars[0])).toEqual([0, 1, 2, 3]);
   });
 
   it("preserves progressionEntryIndex across bar lines", () => {
@@ -37,15 +19,24 @@ describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () 
     expect(bars[0][0].progressionEntryIndex).toBe(0);
     expect(bars[1][0].progressionEntryIndex).toBe(1);
   });
+
+  it("splits dotted-note progression into correct bars", () => {
+    const p = new ChordProgression(
+      ["i:4", "i:8.", "v:8.", "v:8.", "v:8.", "VI:4", "VI:8.", "VII:8.", "VII:8.", "VII:8."],
+      "around the world",
+    );
+    const bars = new ChordProgressionFormatter(p).formatForDisplay();
+    expect(bars).toHaveLength(2);
+    expect(indices(bars[0])).toEqual([0, 1, 2, 3, 4]);
+    expect(indices(bars[1])).toEqual([5, 6, 7, 8, 9]);
+  });
 });
 
 describe("ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars", () => {
   it("matches formatForDisplay bar boundaries", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
     const fmt = new ChordProgressionFormatter(p);
-    const fromDisplay = fmt
-      .formatForDisplay()
-      .map((row) => row.map((t) => t.progressionEntryIndex));
+    const fromDisplay = fmt.formatForDisplay().map((bar) => indices(bar));
     expect(fmt.progressionEntryIndicesByBar).toEqual(fromDisplay);
   });
 

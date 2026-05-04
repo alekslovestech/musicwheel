@@ -20,7 +20,8 @@ export class StaffUtils {
       if (noteIndices == null || noteIndices.length === 0 || noteLength === undefined) {
         return [];
       }
-      return [makeDurated(notes, noteLength)];
+      const rhythmDots = prepared.chordStepRhythmDots[entryIndex] ?? 0;
+      return [makeDurated(notes, noteLength, rhythmDots)];
     });
   }
 }

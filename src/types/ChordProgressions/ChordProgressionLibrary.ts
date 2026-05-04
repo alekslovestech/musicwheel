@@ -28,7 +28,7 @@ class ChordProgressionLibrarySingleton {
 
       case ChordProgressionType.Gypsy_Woman:
         return new ChordProgression(
-          ["Imaj7:4", "Imaj7:4.", "I6:4.", "I6", "I6"],
+          ["Imaj7:4", "Imaj7:8.", "I6:8.", "I6", "I6"],
           chordProgEnum,
           120,
           MusicalKey.fromClassicalMode("F", KeyType.Major),
@@ -37,9 +37,9 @@ class ChordProgressionLibrarySingleton {
       //correct but plays weird if a Major is specified - investigate
       case ChordProgressionType.Around_The_World:
         return new ChordProgression(
-          ["i:2", "v", "VI", "VII"],
+          ["i:4", "i:8.", "v", "v", "v", "VI:4", "VI:8.", "VII", "VII", "VII"],
           chordProgEnum,
-          132,
+          120,
           MusicalKey.fromClassicalMode("A", KeyType.Minor),
         );
 

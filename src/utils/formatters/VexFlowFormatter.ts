@@ -1,4 +1,4 @@
-import { Factory, StaveNote } from "vexflow";
+import { Dot, Factory, StaveNote } from "vexflow";
 
 import { DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH } from "@/types/ChordProgressions/ChordProgression";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -13,6 +13,7 @@ export class VexFlowFormatter {
     return `${note.noteName}/${baseOctave + note.octaveOffset}`;
   }
 
+  /** Undotted VexFlow duration; rhythm dots are passed via `dots` on `factory.StaveNote`. */
   static noteLengthToVexDuration(noteLength: NoteLength): string {
     switch (noteLength) {
       case 1:
@@ -38,6 +39,7 @@ export class VexFlowFormatter {
     const duration = VexFlowFormatter.noteLengthToVexDuration(
       step.noteLength ?? DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
     );
+    const dots = step.rhythmDots ?? 0;
     const keys = step.value.map((noteWithOctave, index) => ({
       key: VexFlowFormatter.formatNote(noteWithOctave),
       accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(noteWithOctave.accidental),
@@ -47,7 +49,14 @@ export class VexFlowFormatter {
     const chordNote = factory.StaveNote({
       keys: keys.map((k) => k.key),
       duration,
+      ...(dots > 0 ? { dots } : {}),
     });
+
+    if (dots > 0) {
+      for (let d = 0; d < dots; d++) {
+        Dot.buildAndAttach([chordNote], { all: true });
+      }
+    }
 
     keys.forEach(({ accidentalSign, index }) => {
       if (accidentalSign) {

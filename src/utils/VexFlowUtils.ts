@@ -46,6 +46,7 @@ export class VexFlowUtils {
       throw new Error("VexFlowUtils.drawVoice: Factory has no render context");
     }
     const justifyWidth = containerWidth - STAFF_JUSTIFY_INSET;
+    /** Common time; each {@link StaveNote} carries duration and optional `dots` for rhythm. */
     const voice = factory.Voice({ time: "4/4" });
     voice.setStrict(false);
     voice.addTickables(tickables);

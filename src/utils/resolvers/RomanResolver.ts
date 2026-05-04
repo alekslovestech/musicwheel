@@ -33,7 +33,7 @@ const progressionDurationSuffixRegex = /^(.+):(\d+)(\.+)?$/;
 function splitProgressionToken(token: string): {
   romanPart: string;
   noteLength: NoteLength | undefined;
-  rhythmDots: number | undefined;
+  rhythmDots: number;
 } {
   const match = token.match(progressionDurationSuffixRegex);
   if (match) {
@@ -42,14 +42,13 @@ function splitProgressionToken(token: string): {
       throw new Error(`Unsupported note length: ${match[2]}`);
     }
     const dotStr = match[3];
-    const rhythmDots = dotStr !== undefined && dotStr.length > 0 ? dotStr.length : 0;
     return {
       romanPart: match[1],
       noteLength: parsed,
-      rhythmDots: rhythmDots > 0 ? rhythmDots : undefined,
+      rhythmDots: dotStr !== undefined ? dotStr.length : 0,
     };
   }
-  return { romanPart: token, noteLength: undefined, rhythmDots: undefined };
+  return { romanPart: token, noteLength: undefined, rhythmDots: 0 };
 }
 
 function splitRomanString(romanString: string): ParsedRomanLexeme {

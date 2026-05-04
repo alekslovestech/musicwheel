@@ -16,7 +16,7 @@ function duratedRoman(
   accidental: AccidentalType = AccidentalType.None,
   bass?: number,
   noteLength?: NoteLength,
-  rhythmDots?: number,
+  rhythmDots = 0,
 ) {
   return makeDurated(
     RomanChord.fromScaleDegree(degree, type, accidental, bass),

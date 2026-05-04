@@ -10,16 +10,13 @@ import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
-import {
-  DEFAULT_CHORD_PROGRESSION_BPM,
-  DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
-} from "@/types/ChordProgressions/ChordProgression";
 import type { NoteLength } from "@/types/Durated";
 import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
 import {
   computeScalePlaybackStep,
   prepareChordProgressionSequence,
 } from "@/lib/sequencePlaybackHelpers";
+import { RhythmUtils } from "@/utils/RhythmUtils";
 
 const PLAYBACK_DURATION_SCALE_SINGLE_NOTE = 300;
 const PLAYBACK_DURATION_SCALE_TRIAD = 500;
@@ -30,23 +27,6 @@ interface UseSequencePlaybackProps {
   setPlaybackState: (state: PlaybackState) => void;
 }
 
-/**
- * Milliseconds one chord should sound for, given BPM (beat = quarter) and a
- * LilyPond-style note-length denominator (1 = whole, 4 = quarter, 8 = eighth).
- * Each `rhythmDot` multiplies that duration by 1.5 (LilyPond-style dotted rhythm).
- */
-export function chordDurationMsFromTempo(
-  tempoBpm: number = DEFAULT_CHORD_PROGRESSION_BPM,
-  noteLength: NoteLength = DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
-  rhythmDots: number = 0,
-): number {
-  const msPerQuarter = 60000 / tempoBpm;
-  let lengthInQuarters = 4 / noteLength;
-  for (let d = 0; d < rhythmDots; d++) {
-    lengthInQuarters *= 1.5;
-  }
-  return msPerQuarter * lengthInQuarters;
-}
 
 export const useSequencePlayback = ({
   isAudioInitialized,
@@ -144,7 +124,7 @@ export const useSequencePlayback = ({
     }
 
     chordIndexRef.current = i + 1;
-    const delayAfterThisChord = chordDurationMsFromTempo(
+    const delayAfterThisChord = RhythmUtils.chordDurationMs(
       tempo,
       stepNoteLengths[i],
       stepRhythmDots[i],
@@ -182,7 +162,7 @@ export const useSequencePlayback = ({
         stepRhythmDots != null &&
         stepRhythmDots.length > 0 &&
         tempo != null
-          ? chordDurationMsFromTempo(
+          ? RhythmUtils.chordDurationMs(
               tempo,
               stepNoteLengths[nextIndex - 1],
               stepRhythmDots[nextIndex - 1],

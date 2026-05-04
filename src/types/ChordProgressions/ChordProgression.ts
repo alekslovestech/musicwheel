@@ -20,7 +20,7 @@ export function applyCarriedProgressionDurations(
   for (const entry of entries) {
     if (entry.noteLength !== undefined) {
       lastNoteLength = entry.noteLength;
-      lastRhythmDots = entry.rhythmDots ?? 0;
+      lastRhythmDots = entry.rhythmDots;
     }
     result.push(makeDurated(entry.value, lastNoteLength, lastRhythmDots));
   }

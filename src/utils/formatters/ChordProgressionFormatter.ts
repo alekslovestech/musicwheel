@@ -9,6 +9,7 @@ import {
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { RhythmUtils } from "@/utils/RhythmUtils";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
 type MutableChordProgressionBar = FormattedBarToken[];
@@ -90,7 +91,7 @@ export class ChordProgressionFormatter {
         throw new Error("ChordProgression entries are expected to have carried noteLength applied");
       }
 
-      const colSpan = COLUMNS_PER_BAR / entry.noteLength;
+      const colSpan = RhythmUtils.colSpan(entry.noteLength, entry.rhythmDots, COLUMNS_PER_BAR);
       const label = labelsByIndex[progressionEntryIndex];
 
       if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) flushBar();
