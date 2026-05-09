@@ -80,6 +80,10 @@ describe("RomanNumeral chord tests", () => {
           expected: RomanChord.fromScaleDegree(7, ChordType.Diminished7),
         },
         {
+          numeral: "iidim7",
+          expected: RomanChord.fromScaleDegree(2, ChordType.Diminished7),
+        },
+        {
           numeral: "IV7",
           expected: RomanChord.fromScaleDegree(4, ChordType.Dominant7),
         },
