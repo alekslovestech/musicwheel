@@ -14,7 +14,7 @@ import {
   SomethingChords,
   BluesChords,
   CreepChords,
-} from "./progressions";
+} from "./songs";
 
 class ChordProgressionLibrarySingleton {
   private static instance: ChordProgressionLibrarySingleton;
