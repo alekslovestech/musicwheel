@@ -49,9 +49,9 @@ export class RomanChordFormatter {
       case ChordType.Dominant7:
         return "7";
       case ChordType.Minor7:
-        return "min7";
+        return "7";
       case ChordType.Major7:
-        return "maj7";
+        return "Δ7";
       case ChordType.Diminished:
         return "°";
       case ChordType.Diminished7:
