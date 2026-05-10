@@ -22,18 +22,31 @@ export class ChordProgression {
   }
 
   constructor(
-    progressionFile: string,
-    name: string | undefined,
+    chords: string[],
+    name: string | undefined = undefined,
     tempo: number = DEFAULT_CHORD_PROGRESSION_BPM,
     suggestedMusicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
   ) {
-    const chordList = progressionFile.trim().split(/\s+/);
     this.progression = this.applyCarriedProgressionDurations(
-      chordList.map((roman) => RomanResolver.parseRomanChordWithDuration(roman)),
+      chords.map((roman) => RomanResolver.parseRomanChordWithDuration(roman)),
     );
-    this.name = name || "Unknown";
+    this.name = name ?? "Unknown";
     this.tempo = tempo;
     this.suggestedMusicalKey = suggestedMusicalKey;
+  }
+
+  static fromFile(
+    progressionFile: string,
+    name: string,
+    tempo?: number,
+    suggestedMusicalKey?: MusicalKey,
+  ): ChordProgression {
+    return new ChordProgression(
+      progressionFile.trim().split(/\s+/),
+      name,
+      tempo,
+      suggestedMusicalKey,
+    );
   }
 
   /**

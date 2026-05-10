@@ -31,38 +31,38 @@ class ChordProgressionLibrarySingleton {
   public getProgression(chordProgEnum: ChordProgressionType): ChordProgression {
     switch (chordProgEnum) {
       case ChordProgressionType.Perfect_Cadence:
-        return new ChordProgression(PerfectCadenceChords, chordProgEnum);
+        return ChordProgression.fromFile(PerfectCadenceChords, chordProgEnum);
 
       case ChordProgressionType.Plagal_Cadence:
-        return new ChordProgression(PlagalCadenceChords, chordProgEnum);
+        return ChordProgression.fromFile(PlagalCadenceChords, chordProgEnum);
 
       case ChordProgressionType.Line_Cliche:
-        return new ChordProgression(LineClicheChords, chordProgEnum);
+        return ChordProgression.fromFile(LineClicheChords, chordProgEnum);
 
       case ChordProgressionType.Gypsy_Woman:
-        return new ChordProgression(GypsyWomanChords, chordProgEnum, 120, MusicalKey.fromClassicalMode("F", KeyType.Major));
+        return ChordProgression.fromFile(GypsyWomanChords, chordProgEnum, 120, MusicalKey.fromClassicalMode("F", KeyType.Major));
 
       //correct but plays weird if a Major is specified - investigate
       case ChordProgressionType.Around_The_World:
-        return new ChordProgression(AroundTheWorldChords, chordProgEnum, 120, MusicalKey.fromClassicalMode("A", KeyType.Minor));
+        return ChordProgression.fromFile(AroundTheWorldChords, chordProgEnum, 120, MusicalKey.fromClassicalMode("A", KeyType.Minor));
 
       case ChordProgressionType.LetItBe:
-        return new ChordProgression(LetItBeChords, chordProgEnum, 102, MusicalKey.fromClassicalMode("C", KeyType.Major));
+        return ChordProgression.fromFile(LetItBeChords, chordProgEnum, 102, MusicalKey.fromClassicalMode("C", KeyType.Major));
 
       case ChordProgressionType.LetItBe_Intermission:
-        return new ChordProgression(LetItBeIntermissionChords, chordProgEnum, 102, MusicalKey.fromClassicalMode("C", KeyType.Major));
+        return ChordProgression.fromFile(LetItBeIntermissionChords, chordProgEnum, 102, MusicalKey.fromClassicalMode("C", KeyType.Major));
 
       case ChordProgressionType.WithOrWithoutYou:
-        return new ChordProgression(WithOrWithoutYouChords, chordProgEnum, 110, MusicalKey.fromClassicalMode("D", KeyType.Major));
+        return ChordProgression.fromFile(WithOrWithoutYouChords, chordProgEnum, 110, MusicalKey.fromClassicalMode("D", KeyType.Major));
 
       case ChordProgressionType.Something:
-        return new ChordProgression(SomethingChords, chordProgEnum, 133, MusicalKey.fromClassicalMode("C", KeyType.Major));
+        return ChordProgression.fromFile(SomethingChords, chordProgEnum, 133, MusicalKey.fromClassicalMode("C", KeyType.Major));
 
       case ChordProgressionType.Blues:
-        return new ChordProgression(BluesChords, chordProgEnum);
+        return ChordProgression.fromFile(BluesChords, chordProgEnum);
 
       case ChordProgressionType.Creep:
-        return new ChordProgression(CreepChords, chordProgEnum, 92, MusicalKey.fromClassicalMode("G", KeyType.Major));
+        return ChordProgression.fromFile(CreepChords, chordProgEnum, 92, MusicalKey.fromClassicalMode("G", KeyType.Major));
 
       default:
         throw new Error(`Unknown chord progression type: ${chordProgEnum}`);

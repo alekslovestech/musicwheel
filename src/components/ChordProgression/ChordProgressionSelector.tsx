@@ -47,8 +47,8 @@ export const ChordProgressionSelector = () => {
   };
 
   return (
-    <div className="chord-progression-selector text-sm font-medium max-w-[80%]">
-      <div className="flex flex-col gap-2">
+    <div className="chord-progression-selector text-sm font-medium">
+      <div className="flex flex-col gap-2 max-full">
         <Select
           id="chord-progression-select"
           value={selectedProgression ?? ""}
@@ -65,22 +65,23 @@ export const ChordProgressionSelector = () => {
             </option>
           ))}
         </Select>
-        {romanGrid != null && absoluteGrid != null ? (
-          <div className="flex gap-4">
-            <div className="flex-1 min-w-0">
-              <ChordProgressionDisplay
-                grid={romanGrid}
-                readHeadStepIndex={activeProgressionStepIndex}
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <ChordProgressionDisplay
-                grid={absoluteGrid}
-                readHeadStepIndex={activeProgressionStepIndex}
-              />
-            </div>
+        <div
+          className="flex gap-4"
+          style={{ visibility: romanGrid != null && absoluteGrid != null ? "visible" : "hidden" }}
+        >
+          <div className="flex-1 min-w-0">
+            <ChordProgressionDisplay
+              grid={romanGrid ?? []}
+              readHeadStepIndex={activeProgressionStepIndex}
+            />
           </div>
-        ) : null}
+          <div className="flex-1 min-w-0">
+            <ChordProgressionDisplay
+              grid={absoluteGrid ?? []}
+              readHeadStepIndex={activeProgressionStepIndex}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

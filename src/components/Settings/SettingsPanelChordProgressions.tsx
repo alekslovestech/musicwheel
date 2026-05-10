@@ -24,7 +24,8 @@ export const SettingsPanelChordProgressions = () => {
       <div className={`flex justify-between ${outerGapHorizontal} flex-1`}>
         {/* Left Column - Musical Context */}
         <div
-          className={`${LAYOUT_PATTERNS.centerFlexCol} rounded p-2 flex-1 ${settingsGap} ${border}`}
+          className={`${LAYOUT_PATTERNS.centerFlexCol} rounded p-2 ${settingsGap} ${border}`}
+          style={{ flexBasis: "30%", flexShrink: 0 }}
         >
           <PlaybackWidget />
           <TransposeWidget target="key" />
@@ -39,9 +40,10 @@ export const SettingsPanelChordProgressions = () => {
           </div>
         </div>
 
-        {/* Right Column - Playback Settings */}
+        {/* Right Column - Chord Progression display */}
         <div
-          className={`${LAYOUT_PATTERNS.centerFlexCol} ${settingsGap} rounded p-2 flex-1 ${border}`}
+          className={`${LAYOUT_PATTERNS.centerFlexCol} ${settingsGap} rounded p-2 ${border}`}
+          style={{ flexBasis: "70%", flexShrink: 0 }}
         >
           <div className={`${LAYOUT_PATTERNS.centerFlexCol} max-w-xs self-center gap-2`}>
             <ChordProgressionSelector />

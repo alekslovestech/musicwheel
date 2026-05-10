@@ -37,6 +37,17 @@ const SCALES_GRID_AREAS: GridAreaConfig = {
               'circular linear'`,
 };
 
+const CP_GRID_AREAS: GridAreaConfig = {
+  portrait: `'staff staff'
+             'progression progression'
+             'circular circular'
+             'linear linear'`,
+
+  landscape: `'circular staff'
+              'circular progression'
+              'linear progression'`,
+};
+
 const DEFAULT_ROWS: GridRowsConfig = {
   portrait: `${STAFF_HEIGHT_PX} minmax(${MIN_SETTINGS_HEIGHT_DEFAULT}, 0.5fr) 2fr auto`,
   landscape: `${STAFF_HEIGHT_PX} 1.8fr 1.2fr`, // More balanced: 60% vs 40%
@@ -45,6 +56,11 @@ const DEFAULT_ROWS: GridRowsConfig = {
 const SCALES_ROWS: GridRowsConfig = {
   portrait: `${STAFF_HEIGHT_PX} minmax(${MIN_SETTINGS_HEIGHT_SCALES}, 0.5fr) 2fr auto`,
   landscape: `${STAFF_HEIGHT_PX} 1.8fr 1.2fr`, // Same ratio for consistency
+};
+
+const CP_ROWS: GridRowsConfig = {
+  portrait: `${STAFF_HEIGHT_PX} minmax(${MIN_SETTINGS_HEIGHT_SCALES}, 0.5fr) 2fr auto`,
+  landscape: `${STAFF_HEIGHT_PX} 1.8fr 1.2fr`,
 };
 
 export const LAYOUT_CONFIGS = {
@@ -80,12 +96,12 @@ export const LAYOUT_CONFIGS = {
   },
   [GlobalMode.ChordProgressions]: {
     portrait: {
-      gridRows: SCALES_ROWS.portrait,
-      gridAreas: SCALES_GRID_AREAS.portrait,
+      gridRows: CP_ROWS.portrait,
+      gridAreas: CP_GRID_AREAS.portrait,
     },
     landscape: {
-      gridRows: SCALES_ROWS.landscape,
-      gridAreas: SCALES_GRID_AREAS.landscape,
+      gridRows: CP_ROWS.landscape,
+      gridAreas: CP_GRID_AREAS.landscape,
     },
   },
 } as const;
