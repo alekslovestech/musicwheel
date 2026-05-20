@@ -201,6 +201,12 @@ describe("planned progression notation (I6, I7, dotted LilyPond lengths)", () =>
     );
   });
 
+  test("iii7/ii:8. parses as minor-seventh slash chord with dotted-eighth duration", () => {
+    expect(RomanResolver.parseRomanChordWithDuration("iii7/ii:8.")).toEqual(
+      duratedRoman(3, ChordType.Minor7, AccidentalType.None, 2, 8, 1),
+    );
+  });
+
   test("ChordProgressionLibrary Gypsy Woman tokens parse as a progression", () => {
     expect(() =>
       ChordProgressionLibrary.getProgression(ChordProgressionType.Gypsy_Woman),
