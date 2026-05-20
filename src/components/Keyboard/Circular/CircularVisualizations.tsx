@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type JSX } from "react";
 import { NoteIndices } from "@/types/IndexTypes";
 import { CircularVisMode } from "@/types/SettingModes";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
