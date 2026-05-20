@@ -55,7 +55,7 @@ export default function ChordProgressionsPage() {
 
         <div
           className={`ChordProgressionsPage-settings-container ${COMMON_STYLES.settingsPanel} ${border}`}
-          style={{ gridArea: "sidebar" }}
+          style={{ gridArea: "progression" }}
         >
           <SettingsPanelChordProgressions />
         </div>

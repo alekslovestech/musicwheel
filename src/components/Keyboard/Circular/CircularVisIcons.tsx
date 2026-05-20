@@ -4,6 +4,8 @@ import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
 
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
 
+import type { JSX } from "react";
+
 export class CircularVisIcons {
   readonly innerRadius: number;
   readonly circleDiameter: number;

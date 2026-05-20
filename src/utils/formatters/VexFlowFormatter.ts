@@ -1,4 +1,4 @@
-import { Dot, Factory, StaveNote } from "vexflow";
+import { Dot, Factory, StaveNote, Stem } from "vexflow";
 
 import { DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH } from "@/types/ChordProgressions/ChordProgression";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -7,6 +7,10 @@ import { type DuratedNoteChord, type NoteLength } from "@/types/Durated";
 
 import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
+import { NoteConverter } from "@/utils/NoteConverter";
+
+/** Semitones above C4 for B4 (the middle line of the treble clef). */
+const TREBLE_MIDDLE_LINE_SEMITONES = 11; // B4
 
 export class VexFlowFormatter {
   static formatNote(note: NoteWithOctave, baseOctave: number = 4): string {
@@ -35,6 +39,18 @@ export class VexFlowFormatter {
     }
   }
 
+  /** Returns the stem direction for a chord based on the average pitch of its notes
+      relative to B4, the middle line of the treble clef. */
+  private static stemDirectionForChord(notes: readonly NoteWithOctave[]): number {
+    if (notes.length === 0) return Stem.UP;
+    const totalSemitones = notes.reduce(
+      (sum, note) => sum + NoteConverter.noteWithOctaveToActual(note),
+      0,
+    );
+    const avg = totalSemitones / notes.length;
+    return avg > TREBLE_MIDDLE_LINE_SEMITONES ? Stem.DOWN : Stem.UP;
+  }
+
   private static createStaveChordNote(step: DuratedNoteChord, factory: Factory): StaveNote {
     const duration = VexFlowFormatter.noteLengthToVexDuration(
       step.noteLength ?? DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
@@ -46,9 +62,11 @@ export class VexFlowFormatter {
       index,
     }));
 
+    const stemDirection = VexFlowFormatter.stemDirectionForChord(step.value);
     const chordNote = factory.StaveNote({
       keys: keys.map((k) => k.key),
       duration,
+      stemDirection,
       ...(dots > 0 ? { dots } : {}),
     });
 

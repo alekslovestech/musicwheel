@@ -13,8 +13,8 @@ describe("RomanChordFormatter.formatRomanChord", () => {
     expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Major), "I");
     expectProgressionLabel(RomanChord.fromScaleDegree(6, ChordType.Minor), "vi");
     expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Dominant7), "I7");
-    expectProgressionLabel(RomanChord.fromScaleDegree(2, ChordType.Minor7), "iimin7");
-    expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Major7), "Imaj7");
+    expectProgressionLabel(RomanChord.fromScaleDegree(2, ChordType.Minor7), "ii7");
+    expectProgressionLabel(RomanChord.fromScaleDegree(1, ChordType.Major7), "IΔ7");
     expectProgressionLabel(RomanChord.fromScaleDegree(2, ChordType.Diminished), "ii°");
     expectProgressionLabel(RomanChord.fromScaleDegree(7, ChordType.HalfDiminished), "viiø7");
     expectProgressionLabel(RomanChord.fromScaleDegree(7, ChordType.Diminished7), "vii°7");
