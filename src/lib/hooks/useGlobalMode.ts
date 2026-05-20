@@ -16,6 +16,7 @@ export const useGlobalMode = () => {
     case "/minimal":
       return GlobalMode.Minimal;
     default:
+      if (pathname?.startsWith("/scales/")) return GlobalMode.Scales;
       return GlobalMode.Harmony;
   }
 };

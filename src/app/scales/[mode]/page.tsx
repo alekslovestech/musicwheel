@@ -1,9 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { COMMON_STYLES, NOTATION_LAYOUT } from "@/lib/design";
 import { usePageLayout, useBorder, useIsDemoRoute } from "@/lib/hooks";
+import { useScaleModeUrlSync } from "@/lib/hooks/useScaleModeUrlSync";
 
 import { StaffRenderer } from "@/components/StaffRenderer";
 import { ChordNameDisplay } from "@/components/ChordNameDisplay";
@@ -14,17 +17,25 @@ import { GlobalModeButton } from "@/components/Buttons/GlobalModeButton";
 
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
-import { useScaleModeUrlSync } from "@/lib/hooks/useScaleModeUrlSync";
+import { slugToScaleType } from "@/utils/scaleSlug";
 
-export default function ScalesPage() {
+export default function ScaleModePage() {
+  const params = useParams();
+  const mode = params.mode as string;
+
   const { gridRows, gridAreas, gridColumns } = usePageLayout();
   const border = useBorder();
   const isDemoRoute = useIsDemoRoute();
   const { isAudioInitialized, startSequencePlayback } = useAudio();
   const { selectedMusicalKey } = useMusical();
 
-  // Redirect /scales → /scales/<current-mode> and keep URL in sync
-  useScaleModeUrlSync();
+  // Validate slug — 404 if unknown
+  if (!slugToScaleType(mode)) {
+    notFound();
+  }
+
+  // Seed state from URL on mount, then keep URL in sync with state changes
+  useScaleModeUrlSync(mode);
 
   // Autoplay when entering scales mode and audio is initialized
   useEffect(() => {
@@ -60,7 +71,6 @@ export default function ScalesPage() {
           className={`ScalesPage-circular ${COMMON_STYLES.circularContainer} ${border}`}
           style={{ gridArea: "circular" }}
         >
-          {/* Add GlobalModeButton positioned in top-left corner */}
           {!isDemoRoute && (
             <div className="absolute top-2 left-2 z-10">
               <Link href="/harmony">
