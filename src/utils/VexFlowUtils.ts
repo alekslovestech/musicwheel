@@ -50,7 +50,8 @@ export class VexFlowUtils {
     const voice = factory.Voice({ time: "4/4" });
     voice.setStrict(false);
     voice.addTickables(tickables);
-    factory.Formatter().joinVoices([voice]).format([voice], justifyWidth, { context, stave });
+    const softmaxFactor = Math.max(2, 100 / tickables.length);
+    factory.Formatter({ softmaxFactor }).joinVoices([voice]).format([voice], justifyWidth, { context, stave });
 
     if (backgroundFill && backgroundNoteIndex != null && backgroundNoteIndex >= 0) {
       const n = tickables[backgroundNoteIndex];

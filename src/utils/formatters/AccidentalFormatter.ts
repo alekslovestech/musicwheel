@@ -64,6 +64,12 @@ export class AccidentalFormatter {
         return AccidentalType.None;
     }
   }
+
+  static toSemitoneOffset(accidental: AccidentalType): number {
+    if (accidental === AccidentalType.Sharp) return 1;
+    if (accidental === AccidentalType.Flat) return -1;
+    return 0;
+  }
 }
 
 export const getOppositeAccidental = (prevAccidental: AccidentalType): AccidentalType => {

@@ -1,7 +1,8 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 
 import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
-import { ActualIndex } from "@/types/IndexTypes";
+import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
+import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";
 import { ActualNoteResolver } from "@/utils/resolvers/ActualNoteResolver";
@@ -77,6 +78,18 @@ export class NoteConverter {
   // Helper for testing - converts array of note names to indices
   static noteArrayToIndices(notes: string[]): ChromaticIndex[] {
     return notes.map((note) => this.toChromaticIndex(note));
+  }
+
+  static noteWithOctaveToActual(note: NoteWithOctave): ActualIndex {
+    // Natural is chromatically identical to None; only Sharp/Flat change the pitch.
+    const suffix =
+      note.accidental === AccidentalType.Sharp
+        ? "#"
+        : note.accidental === AccidentalType.Flat
+          ? "b"
+          : "";
+    const chromatic = NoteConverter.toChromaticIndex(note.noteName + suffix);
+    return chromaticToActual(chromatic, note.octaveOffset);
   }
 
   static getNoteTextFromActualIndex(

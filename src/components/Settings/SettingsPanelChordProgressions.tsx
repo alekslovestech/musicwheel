@@ -45,7 +45,7 @@ export const SettingsPanelChordProgressions = () => {
           className={`${LAYOUT_PATTERNS.centerFlexCol} ${settingsGap} rounded p-2 ${border}`}
           style={{ flexBasis: "70%", flexShrink: 0 }}
         >
-          <div className={`${LAYOUT_PATTERNS.centerFlexCol} max-w-xs self-center gap-2`}>
+          <div className="flex flex-col w-full gap-2">
             <ChordProgressionSelector />
           </div>
         </div>
