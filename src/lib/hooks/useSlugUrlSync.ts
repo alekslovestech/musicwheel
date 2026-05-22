@@ -6,8 +6,9 @@ import { notFound, useParams, useRouter } from "next/navigation";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { progressionTypeToSlug, slugToProgressionType } from "@/utils/chordProgressionSlug";
-import { scaleTypeToSlug, slugToScaleType } from "@/utils/scaleSlug";
+import { progressionTypeToSlug, slugToProgressionType } from "@/utils/slug/progressions";
+import { scalePath, progressionPath } from "@/utils/slug/paths";
+import { scaleTypeToSlug, slugToScaleType } from "@/utils/slug/scales";
 
 function useSlugParam(): string {
   const params = useParams();
@@ -18,28 +19,6 @@ function useSlugParam(): string {
   }
 
   return slug;
-}
-
-/** Redirect /scales → /scales/<slug> and keep URL in sync with the selected scale mode. */
-export function useScaleUrlSync() {
-  const router = useRouter();
-  const { selectedMusicalKey } = useMusical();
-  const slug = scaleTypeToSlug(selectedMusicalKey.scaleMode);
-
-  useEffect(() => {
-    router.replace(`/scales/${slug}`);
-  }, [router, slug]);
-}
-
-/** Redirect /progressions → /progressions/<slug> and keep URL in sync with the selection. */
-export function useProgressionUrlSync() {
-  const router = useRouter();
-  const { selectedProgression } = useAudio();
-  const slug = progressionTypeToSlug(selectedProgression);
-
-  useEffect(() => {
-    router.replace(`/progressions/${slug}`);
-  }, [router, slug]);
 }
 
 /** Validates slug, syncs URL, and starts slug-gated autoplay for scales. */
@@ -64,7 +43,7 @@ export function useScaleSlugPage() {
   }, []);
 
   useEffect(() => {
-    router.replace(`/scales/${stateSlug}`);
+    router.replace(scalePath(stateSlug));
   }, [router, stateSlug]);
 
   useEffect(() => {
@@ -103,7 +82,7 @@ export function useProgressionSlugPage() {
   }, []);
 
   useEffect(() => {
-    router.replace(`/progressions/${stateSlug}`);
+    router.replace(progressionPath(stateSlug));
   }, [router, stateSlug]);
 
   useEffect(() => {

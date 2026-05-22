@@ -1,8 +1,8 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { useScaleUrlSync } from "@/lib/hooks/useSlugUrlSync";
+import { scalePath } from "@/utils/slug/paths";
+import { DEFAULT_SCALE_SLUG } from "@/utils/slug/scales";
 
 export default function ScalesPage() {
-  useScaleUrlSync();
-  return null;
+  redirect(scalePath(DEFAULT_SCALE_SLUG));
 }

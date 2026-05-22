@@ -1,8 +1,8 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { useProgressionUrlSync } from "@/lib/hooks/useSlugUrlSync";
+import { progressionPath } from "@/utils/slug/paths";
+import { DEFAULT_PROGRESSION_SLUG } from "@/utils/slug/progressions";
 
 export default function ProgressionsPage() {
-  useProgressionUrlSync();
-  return null;
+  redirect(progressionPath(DEFAULT_PROGRESSION_SLUG));
 }
