@@ -1,28 +1,32 @@
 import { useIsLandscape } from "./useIsLandscape";
 import { useGlobalMode } from "./useGlobalMode";
 import { LAYOUT_CONFIGS } from "@/lib/design/LayoutConstants";
+import { GlobalMode } from "@/types/enums/GlobalMode";
 
-type OrientationType = "landscape" | "portrait";
 interface PageLayout {
   gridRows: string;
   gridAreas: string;
   gridColumns: string;
-  orientation: OrientationType;
 }
 
 const GRID_COLUMNS = "1fr 1fr";
+/** Narrower circular column in CP landscape so progression + staff get more width. */
+const CP_GRID_COLUMNS_LANDSCAPE = "1fr 2fr";
 
 export function usePageLayout(): PageLayout {
   const mode = useGlobalMode();
   const isLandscape = useIsLandscape();
 
-  const orientation: OrientationType = isLandscape ? "landscape" : "portrait";
-  const config = LAYOUT_CONFIGS[mode][orientation];
+  const config = LAYOUT_CONFIGS[mode][isLandscape ? "landscape" : "portrait"];
+
+  const gridColumns =
+    mode === GlobalMode.ChordProgressions && isLandscape
+      ? CP_GRID_COLUMNS_LANDSCAPE
+      : GRID_COLUMNS;
 
   return {
     gridRows: config.gridRows,
     gridAreas: config.gridAreas,
-    gridColumns: GRID_COLUMNS,
-    orientation,
+    gridColumns,
   };
 }

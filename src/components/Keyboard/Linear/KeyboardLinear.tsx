@@ -4,6 +4,7 @@ import { TWENTY4 } from "@/types/constants/NoteConstants";
 import { ActualIndex } from "@/types/IndexTypes";
 import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { useLinearKeyboardDoDisplayText } from "@/lib/hooks/useLinearKeyboardDoDisplayText";
 
 import { useKeyboardHandlers } from "@/components/Keyboard/KeyboardBase";
 import { PianoKeyLinear } from "@/components/Keyboard/Linear/PianoKeyLinear";
@@ -13,6 +14,7 @@ export const KeyboardLinear = () => {
   const { handleKeyClick, checkIsBassNote } = useKeyboardHandlers();
   const { selectedMusicalKey } = useMusical();
   const containerRef = useRef<HTMLDivElement>(null);
+  const doDisplayText = useLinearKeyboardDoDisplayText(containerRef);
 
   const isScales = useIsScalePreviewMode();
   /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -80,6 +82,7 @@ export const KeyboardLinear = () => {
         key={actualIndex}
         actualIndex={actualIndex}
         isBassNote={isBassNote}
+        doDisplayText={doDisplayText}
         onClick={handleKeyClick}
       />,
     );
@@ -88,7 +91,7 @@ export const KeyboardLinear = () => {
   return (
     <div
       ref={containerRef}
-      className="relative flex box-border w-full max-h-full aspect-[4/1] p-[5px] [container-type:inline-size]"
+      className="relative flex box-border w-full max-h-full aspect-[4/1] p-[5px]"
     >
       {/*renderScaleBoundary()}*/}
       <div className="relative w-full h-full">{keys}</div>

@@ -43,7 +43,7 @@ const CP_GRID_AREAS: GridAreaConfig = {
              'circular circular'
              'linear linear'`,
 
-  landscape: `'circular staff'
+  landscape: `'staff staff'
               'circular progression'
               'linear progression'`,
 };
