@@ -22,10 +22,16 @@ import { useChordPresets } from "@/contexts/ChordPresetContext";
 interface PianoKeyProps {
   actualIndex: ActualIndex;
   isBassNote: boolean;
+  doDisplayText: boolean;
   onClick: (index: ActualIndex) => void;
 }
 
-export const PianoKeyLinear: React.FC<PianoKeyProps> = ({ actualIndex, isBassNote, onClick }) => {
+export const PianoKeyLinear: React.FC<PianoKeyProps> = ({
+  actualIndex,
+  isBassNote,
+  doDisplayText,
+  onClick,
+}) => {
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
   const { monochromeMode } = useDisplay();
   const globalMode = useGlobalMode();
@@ -108,15 +114,19 @@ export const PianoKeyLinear: React.FC<PianoKeyProps> = ({ actualIndex, isBassNot
       style={{ left, width: keyWidthAsPercent }}
       onClick={handleClick}
     >
-      {!isShortKey && (
-        <div
-          className={`${TYPOGRAPHY.linearNoteText} text-center w-full leading-none mb-0.5 ${keyColors.text}`}
-        >
-          {noteText}
-        </div>
+      {doDisplayText && (
+        <>
+          {!isShortKey && (
+            <div
+              className={`${TYPOGRAPHY.linearNoteText} text-center w-full leading-none mb-0.5 ${keyColors.text}`}
+            >
+              {noteText}
+            </div>
+          )}
+          {prevAccidentalExists && renderAccidental(AccidentalType.Flat, prevAccidentalSelected)}
+          {nextAccidentalExists && renderAccidental(AccidentalType.Sharp, nextAccidentalSelected)}
+        </>
       )}
-      {prevAccidentalExists && renderAccidental(AccidentalType.Flat, prevAccidentalSelected)}
-      {nextAccidentalExists && renderAccidental(AccidentalType.Sharp, nextAccidentalSelected)}
     </div>
   );
 };
