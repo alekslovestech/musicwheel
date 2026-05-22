@@ -3,22 +3,13 @@ import { GlobalMode } from "@/types/enums/GlobalMode";
 import { usePathname } from "next/navigation";
 
 export const useGlobalMode = () => {
-  const pathname = usePathname();
-  switch (pathname) {
-    case "/harmony":
-    case "/harmony-demo":
-      return GlobalMode.Harmony;
-    case "/scales":
-    case "/scales-demo":
-      return GlobalMode.Scales;
-    case "/cp-demo":
-      return GlobalMode.ChordProgressions;
-    case "/minimal":
-      return GlobalMode.Minimal;
-    default:
-      if (pathname?.startsWith("/scales/")) return GlobalMode.Scales;
-      return GlobalMode.Harmony;
-  }
+  const pathname = usePathname() ?? "";
+
+  if (pathname.startsWith("/scales")) return GlobalMode.Scales;
+  if (pathname.startsWith("/progressions")) return GlobalMode.ChordProgressions;
+  if (pathname.startsWith("/minimal")) return GlobalMode.Minimal;
+
+  return GlobalMode.Harmony;
 };
 
 export const useIsDemoRoute = () => {
