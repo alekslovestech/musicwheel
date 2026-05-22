@@ -4,17 +4,17 @@ import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFo
 const indices = (bar: readonly { progressionEntryIndex: number }[]) =>
   bar.map((t) => t.progressionEntryIndex);
 
-describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () => {
+describe("ChordProgressionFormatter.formatCombinedForDisplay", () => {
   it("assigns indices 0..n-1 for one bar of quarter chords", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
-    const bars = new ChordProgressionFormatter(p).formatForDisplay();
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
     expect(bars).toHaveLength(1);
     expect(indices(bars[0])).toEqual([0, 1, 2, 3]);
   });
 
   it("preserves progressionEntryIndex across bar lines", () => {
     const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
-    const bars = new ChordProgressionFormatter(p).formatForDisplay();
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
     expect(bars).toHaveLength(2);
     expect(bars[0][0].progressionEntryIndex).toBe(0);
     expect(bars[1][0].progressionEntryIndex).toBe(1);
@@ -25,18 +25,30 @@ describe("ChordProgressionFormatter.formatForDisplay progressionEntryIndex", () 
       ["i:4", "i:8.", "v:8.", "v:8.", "v:8.", "VI:4", "VI:8.", "VII:8.", "VII:8.", "VII:8."],
       "around the world",
     );
-    const bars = new ChordProgressionFormatter(p).formatForDisplay();
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
     expect(bars).toHaveLength(2);
     expect(indices(bars[0])).toEqual([0, 1, 2, 3, 4]);
     expect(indices(bars[1])).toEqual([5, 6, 7, 8, 9]);
   });
+
+  it("stacks roman and absolute labels on each token", () => {
+    const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
+    expect(bars[0]).toHaveLength(4);
+    expect(bars[0][0].label).toBe("I");
+    expect(bars[0][0].absoluteLabel).toBeTruthy();
+    expect(bars[0][1].label).toBe("vi");
+    expect(bars[0][1].absoluteLabel).toBeTruthy();
+  });
 });
 
 describe("ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars", () => {
-  it("matches formatForDisplay bar boundaries", () => {
+  it("matches formatCombinedForDisplay bar boundaries", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
     const fmt = new ChordProgressionFormatter(p);
-    const fromDisplay = fmt.formatForDisplay().map((bar) => indices(bar));
+    const fromDisplay = fmt
+      .formatCombinedForDisplay(p.suggestedMusicalKey)
+      .map((bar) => indices(bar));
     expect(fmt.progressionEntryIndicesByBar).toEqual(fromDisplay);
   });
 

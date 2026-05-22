@@ -22,20 +22,12 @@ export class ChordProgressionFormatter {
     this.progressionEntryIndicesByBar = this.buildEntryIndicesByBar();
   }
 
-  /** Resolved chord names in the given key, as bar tokens for the progression grid. */
-  formatAbsoluteForDisplay(musicalKey: MusicalKey): ChordProgressionBarGrid {
-    const romanChords = this.progression.progression.map((e) => e.value);
-    const noteIndices = ChordProgressionResolver.computeProgressionOctaves(romanChords, musicalKey);
-
-    const labels = noteIndices.map((indices) => {
-      return MusicalDisplayFormatter.getDisplayInfoFromIndices(
-        indices,
-        ChordDisplayMode.Symbols,
-        musicalKey,
-      ).chordName;
-    });
-
-    return this.buildBarRowsForDisplay(labels);
+  /** Roman numerals with resolved chord names stacked in each cell. */
+  formatCombinedForDisplay(musicalKey: MusicalKey): ChordProgressionBarGrid {
+    const romanLabels = this.progression.progression.map((entry) =>
+      RomanChordFormatter.formatRomanChord(entry.value),
+    );
+    return this.buildBarRowsForDisplay(romanLabels, this.getAbsoluteLabels(musicalKey));
   }
 
   /** Bar index whose grouped row contains this progression step; `0` if none (should not happen for valid indices). */
@@ -47,15 +39,6 @@ export class ChordProgressionFormatter {
     return 0;
   }
 
-  /** Progression-style roman labels formatted as bar tokens for UI rendering. */
-  formatForDisplay(): ChordProgressionBarGrid {
-    const labels = this.progression.progression.map((entry) =>
-      RomanChordFormatter.formatRomanChord(entry.value),
-    );
-    return this.buildBarRowsForDisplay(labels);
-  }
-
-  /** Static grid lane (no read head): progression-style roman labels. */
   private buildEntryIndicesByBar(): number[][] {
     const labels = Array(this.progression.progression.length).fill("");
     return this.buildBarRowsForDisplay(labels).map((row) =>
@@ -63,12 +46,23 @@ export class ChordProgressionFormatter {
     );
   }
 
-  /**
-   * Converts the progression's durated steps into a bar/column grid for UI rendering.
-   * Each step becomes a token spanning `colSpan` sixteenth-note columns inside a 4/4 bar (16 columns),
-   * and carries `progressionEntryIndex` so playback can highlight the currently-active step.
-   */
-  private buildBarRowsForDisplay(labelsByIndex: ReadonlyArray<string>): ChordProgressionBarGrid {
+  private getAbsoluteLabels(musicalKey: MusicalKey): string[] {
+    const romanChords = this.progression.progression.map((e) => e.value);
+    const noteIndices = ChordProgressionResolver.computeProgressionOctaves(romanChords, musicalKey);
+
+    return noteIndices.map((indices) =>
+      MusicalDisplayFormatter.getDisplayInfoFromIndices(
+        indices,
+        ChordDisplayMode.Symbols,
+        musicalKey,
+      ).chordName,
+    );
+  }
+
+  private buildBarRowsForDisplay(
+    labelsByIndex: ReadonlyArray<string>,
+    absoluteLabelsByIndex?: ReadonlyArray<string>,
+  ): ChordProgressionBarGrid {
     const { progression } = this;
     let bars: MutableChordProgressionBarGrid = [];
     let colsInBar = 0;
@@ -96,7 +90,12 @@ export class ChordProgressionFormatter {
 
       if (colsInBar > 0 && colsInBar + colSpan > COLUMNS_PER_BAR) flushBar();
 
-      barTokens.push({ label, colSpan, progressionEntryIndex });
+      barTokens.push({
+        label,
+        absoluteLabel: absoluteLabelsByIndex?.[progressionEntryIndex],
+        colSpan,
+        progressionEntryIndex,
+      });
       colsInBar += colSpan;
 
       if (colsInBar === COLUMNS_PER_BAR) flushBar();

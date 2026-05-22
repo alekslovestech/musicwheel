@@ -29,14 +29,9 @@ export const ChordProgressionSelector = () => {
     [progression],
   );
 
-  const romanGrid = useMemo(() => {
+  const displayGrid = useMemo(() => {
     if (formatter == null) return null;
-    return formatter.formatForDisplay();
-  }, [formatter]);
-
-  const absoluteGrid = useMemo(() => {
-    if (formatter == null) return null;
-    return formatter.formatAbsoluteForDisplay(selectedMusicalKey);
+    return formatter.formatCombinedForDisplay(selectedMusicalKey);
   }, [formatter, selectedMusicalKey]);
 
   const handleChordProgressionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -66,21 +61,13 @@ export const ChordProgressionSelector = () => {
           ))}
         </Select>
         <div
-          className="flex gap-4"
-          style={{ visibility: romanGrid != null && absoluteGrid != null ? "visible" : "hidden" }}
+          className="w-full min-w-0"
+          style={{ visibility: displayGrid != null ? "visible" : "hidden" }}
         >
-          <div className="flex-1 min-w-0">
-            <ChordProgressionDisplay
-              grid={romanGrid ?? []}
-              readHeadStepIndex={activeProgressionStepIndex}
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <ChordProgressionDisplay
-              grid={absoluteGrid ?? []}
-              readHeadStepIndex={activeProgressionStepIndex}
-            />
-          </div>
+          <ChordProgressionDisplay
+            grid={displayGrid ?? []}
+            readHeadStepIndex={activeProgressionStepIndex}
+          />
         </div>
       </div>
     </div>
