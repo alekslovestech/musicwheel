@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { harmonyViewMetadata } from "@/lib/metadata";
 
 export const metadata = harmonyViewMetadata;
@@ -7,5 +9,5 @@ export default function HarmonyLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return <Suspense fallback={null}>{children}</Suspense>;
 }
