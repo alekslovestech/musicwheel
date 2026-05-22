@@ -1,8 +1,8 @@
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
-export const DEFAULT_PROGRESSION_SLUG = "perfect-cadence";
+import { createSlugCodec } from "./slugCodec";
 
-export const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
+const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
   "perfect-cadence": ChordProgressionType.Perfect_Cadence,
   "plagal-cadence": ChordProgressionType.Plagal_Cadence,
   "line-cliche": ChordProgressionType.Line_Cliche,
@@ -16,11 +16,9 @@ export const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
   creep: ChordProgressionType.Creep,
 };
 
-export const slugToProgressionType = (slug: string): ChordProgressionType | undefined =>
-  PROGRESSION_SLUG_MAP[slug.toLowerCase()];
+const progressionSlugCodec = createSlugCodec(PROGRESSION_SLUG_MAP, "perfect-cadence");
 
+export const DEFAULT_PROGRESSION_SLUG = progressionSlugCodec.defaultSlug;
+export const slugToProgressionType = progressionSlugCodec.slugToValue;
 export const progressionTypeToSlug = (type: ChordProgressionType | null): string =>
-  type != null
-    ? (Object.entries(PROGRESSION_SLUG_MAP).find(([, v]) => v === type)?.[0] ??
-      DEFAULT_PROGRESSION_SLUG)
-    : DEFAULT_PROGRESSION_SLUG;
+  type != null ? progressionSlugCodec.valueToSlug(type) : DEFAULT_PROGRESSION_SLUG;

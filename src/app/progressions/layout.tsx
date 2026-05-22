@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { chordProgressionViewMetadata } from "@/lib/metadata";
 
 export const metadata = chordProgressionViewMetadata;
@@ -7,5 +9,5 @@ export default function ProgressionsLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return <Suspense fallback={null}>{children}</Suspense>;
 }

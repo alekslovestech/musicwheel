@@ -1,6 +1,6 @@
 "use client";
 import { GlobalMode } from "@/types/enums/GlobalMode";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export const useGlobalMode = () => {
   const pathname = usePathname() ?? "";
@@ -13,8 +13,8 @@ export const useGlobalMode = () => {
 };
 
 export const useIsDemoRoute = () => {
-  const pathname = usePathname();
-  return pathname?.endsWith("-demo") ?? false;
+  const searchParams = useSearchParams();
+  return searchParams.has("isDemo");
 };
 
 export const useIsMinimalMode = () => {

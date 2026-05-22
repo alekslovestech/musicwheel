@@ -1,6 +1,8 @@
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
-export const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
+import { createSlugCodec } from "./slugCodec";
+
+const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
   ionian: ScaleModeType.Ionian,
   dorian: ScaleModeType.Dorian,
   "ukrainian-dorian": ScaleModeType.UkrainianDorian,
@@ -15,8 +17,8 @@ export const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
   locrian: ScaleModeType.Locrian,
 };
 
-export const slugToScaleType = (slug: string): ScaleModeType | undefined =>
-  SCALE_SLUG_MAP[slug.toLowerCase()];
+const scaleSlugCodec = createSlugCodec(SCALE_SLUG_MAP, "ionian");
 
-export const scaleTypeToSlug = (mode: ScaleModeType): string =>
-  Object.entries(SCALE_SLUG_MAP).find(([, v]) => v === mode)?.[0] ?? "ionian";
+export const DEFAULT_SCALE_SLUG = scaleSlugCodec.defaultSlug;
+export const slugToScaleType = scaleSlugCodec.slugToValue;
+export const scaleTypeToSlug = scaleSlugCodec.valueToSlug;
