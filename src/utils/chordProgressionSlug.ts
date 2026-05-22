@@ -1,8 +1,8 @@
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
-export const DEFAULT_PROGRESSION_SLUG = "perfect-cadence";
+const DEFAULT_PROGRESSION_SLUG = "perfect-cadence";
 
-export const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
+const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
   "perfect-cadence": ChordProgressionType.Perfect_Cadence,
   "plagal-cadence": ChordProgressionType.Plagal_Cadence,
   "line-cliche": ChordProgressionType.Line_Cliche,

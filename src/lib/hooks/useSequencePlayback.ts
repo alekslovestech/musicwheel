@@ -229,20 +229,6 @@ export const useSequencePlayback = ({
     stopCurrentPlayback,
   ]);
 
-  // Chord progressions: auto-start playback when any menu selection changes
-  useEffect(() => {
-    if (!isAudioInitialized) return;
-    if (globalMode !== GlobalMode.ChordProgressions) return;
-    if (!selectedProgression || !selectedMusicalKey) return;
-    startChordProgressionPlayback();
-  }, [
-    globalMode,
-    isAudioInitialized,
-    selectedProgression,
-    selectedMusicalKey,
-    startChordProgressionPlayback,
-  ]);
-
   // Unified playback functions - define these last
   const startSequencePlayback = useCallback(() => {
     stopCurrentPlayback();
@@ -300,11 +286,5 @@ export const useSequencePlayback = ({
     selectedProgression,
     setSelectedProgression,
     activeProgressionStepIndex,
-
-    // Legacy aliases for backward compatibility during transition
-    startScalePlayback,
-    pauseScalePlayback: pauseSequencePlayback,
-    resumeScalePlayback: resumeSequencePlayback,
-    stopScalePlayback: stopSequencePlayback,
   };
 };
