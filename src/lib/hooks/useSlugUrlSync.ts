@@ -5,26 +5,25 @@ import { notFound, useParams, useRouter } from "next/navigation";
 
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
+import { useIsDemoRoute } from "@/lib/hooks/useGlobalMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { progressionTypeToSlug, slugToProgressionType } from "@/utils/slug/progressions";
 import { scalePath, progressionPath } from "@/utils/slug/paths";
 import { scaleTypeToSlug, slugToScaleType } from "@/utils/slug/scales";
 
 function useSlugParam(): string {
-  const params = useParams();
-  const slug = params.slug;
+  const { slug } = useParams();
 
-  if (typeof slug !== "string") {
-    notFound();
-  }
+  if (typeof slug === "string") return slug;
 
-  return slug;
+  notFound();
 }
 
 /** Validates slug, syncs URL, and starts slug-gated autoplay for scales. */
 export function useScaleSlugPage() {
   const slug = useSlugParam();
   const router = useRouter();
+  const isDemoMode = useIsDemoRoute();
   const { isAudioInitialized, startSequencePlayback } = useAudio();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
 
@@ -43,26 +42,21 @@ export function useScaleSlugPage() {
   }, []);
 
   useEffect(() => {
-    router.replace(scalePath(stateSlug));
-  }, [router, stateSlug]);
+    router.replace(scalePath(stateSlug, isDemoMode));
+  }, [router, stateSlug, isDemoMode]);
 
   useEffect(() => {
     if (!isAudioInitialized || !selectedMusicalKey) return;
     if (slug !== stateSlug) return;
     startSequencePlayback();
-  }, [
-    isAudioInitialized,
-    slug,
-    stateSlug,
-    selectedMusicalKey,
-    startSequencePlayback,
-  ]);
+  }, [isAudioInitialized, slug, stateSlug, selectedMusicalKey, startSequencePlayback]);
 }
 
 /** Validates slug, syncs URL, and starts slug-gated autoplay for progressions. */
 export function useProgressionSlugPage() {
   const slug = useSlugParam();
   const router = useRouter();
+  const isDemoMode = useIsDemoRoute();
   const { isAudioInitialized, selectedProgression, setSelectedProgression, startSequencePlayback } =
     useAudio();
   const { selectedMusicalKey } = useMusical();
@@ -82,18 +76,12 @@ export function useProgressionSlugPage() {
   }, []);
 
   useEffect(() => {
-    router.replace(progressionPath(stateSlug));
-  }, [router, stateSlug]);
+    router.replace(progressionPath(stateSlug, isDemoMode));
+  }, [router, stateSlug, isDemoMode]);
 
   useEffect(() => {
     if (!isAudioInitialized || !selectedMusicalKey) return;
     if (slug !== stateSlug) return;
     startSequencePlayback();
-  }, [
-    isAudioInitialized,
-    slug,
-    stateSlug,
-    selectedMusicalKey,
-    startSequencePlayback,
-  ]);
+  }, [isAudioInitialized, slug, stateSlug, selectedMusicalKey, startSequencePlayback]);
 }
