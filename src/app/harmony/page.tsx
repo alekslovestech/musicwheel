@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 
 import { COMMON_STYLES, NOTATION_LAYOUT } from "@/lib/design";
@@ -15,10 +16,22 @@ import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
 import { GlobalModeButton } from "@/components/Buttons/GlobalModeButton";
 
+function ScalesModeLink() {
+  const isDemoRoute = useIsDemoRoute();
+  if (isDemoRoute) return null;
+
+  return (
+    <div className="absolute top-1 left-1 z-10">
+      <Link href={getPath(GlobalMode.Scales, undefined, isDemoRoute)}>
+        <GlobalModeButton text="Scales Mode" />
+      </Link>
+    </div>
+  );
+}
+
 export default function Home() {
   const { gridRows, gridAreas, gridColumns } = usePageLayout();
   const border = useBorder();
-  const isDemoRoute = useIsDemoRoute();
   const SHOW_STAFF_RENDERER = process.env.NEXT_PUBLIC_SHOW_STAFF_RENDERER !== "false";
   return (
     <div
@@ -55,14 +68,9 @@ export default function Home() {
           className={`DefaultPage-circular-container ${COMMON_STYLES.circularContainer} ${border}`}
           style={{ gridArea: "circular" }}
         >
-          {/* Add GlobalModeButton positioned in top-left corner */}
-          {!isDemoRoute && (
-            <div className="absolute top-1 left-1 z-10">
-              <Link href={getPath(GlobalMode.Scales, undefined, isDemoRoute)}>
-                <GlobalModeButton text="Scales Mode" />
-              </Link>
-            </div>
-          )}
+          <Suspense fallback={null}>
+            <ScalesModeLink />
+          </Suspense>
 
           <div className={`DefaultPage-circular-inner ${COMMON_STYLES.circularInner} ${border}`}>
             <KeyboardCircular />

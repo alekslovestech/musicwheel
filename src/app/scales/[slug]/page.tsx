@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 
 import { SequenceViewPage } from "@/components/SequenceView/SequenceViewPage";
@@ -13,34 +14,49 @@ import { useIsDemoRoute } from "@/lib/hooks";
 import { useScaleSlugPage } from "@/lib/hooks/useSlugUrlSync";
 import { harmonyPath } from "@/utils/slug/paths";
 
-export default function ScalesSlugPage() {
+function BasicModeLink() {
   const isDemoRoute = useIsDemoRoute();
-
-  useScaleSlugPage();
+  if (isDemoRoute) return null;
 
   return (
-    <SequenceViewPage
-      pageId="ScalesPage"
-      backgroundClass="bg-canvas-bgScales"
-      settingsGridArea="sidebar"
-      staff={
-        <>
-          <StaffRenderer />
-          <ChordNameDisplay />
-        </>
-      }
-      circularOverlay={
-        !isDemoRoute ? (
-          <div className="absolute top-2 left-2 z-10">
-            <Link href={harmonyPath(isDemoRoute)}>
-              <GlobalModeButton text="Basic Mode" />
-            </Link>
-          </div>
-        ) : undefined
-      }
-      circular={<KeyboardCircular />}
-      linear={<KeyboardLinear />}
-      settings={<SettingsPanelScales />}
-    />
+    <div className="absolute top-2 left-2 z-10">
+      <Link href={harmonyPath(isDemoRoute)}>
+        <GlobalModeButton text="Basic Mode" />
+      </Link>
+    </div>
+  );
+}
+
+function ScaleSlugPageSync() {
+  useScaleSlugPage();
+  return null;
+}
+
+export default function ScalesSlugPage() {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <ScaleSlugPageSync />
+      </Suspense>
+      <SequenceViewPage
+        pageId="ScalesPage"
+        backgroundClass="bg-canvas-bgScales"
+        settingsGridArea="sidebar"
+        staff={
+          <>
+            <StaffRenderer />
+            <ChordNameDisplay />
+          </>
+        }
+        circularOverlay={
+          <Suspense fallback={null}>
+            <BasicModeLink />
+          </Suspense>
+        }
+        circular={<KeyboardCircular />}
+        linear={<KeyboardLinear />}
+        settings={<SettingsPanelScales />}
+      />
+    </>
   );
 }

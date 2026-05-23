@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { Suspense, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 
 import { TWELVE } from "@/types/constants/NoteConstants";
@@ -180,8 +180,14 @@ export const useAudioPlayer = () => {
   };
 };
 
-// Minimal component just for auto-playback - no UI
-export const AudioPlayer: React.FC = () => {
-  useAudioPlayer(); // This ensures auto-playback happens
+const AudioPlayerContent: React.FC = () => {
+  useAudioPlayer();
   return null;
 };
+
+// Minimal component just for auto-playback - no UI
+export const AudioPlayer: React.FC = () => (
+  <Suspense fallback={null}>
+    <AudioPlayerContent />
+  </Suspense>
+);
