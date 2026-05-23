@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { COMMON_STYLES, NOTATION_LAYOUT } from "@/lib/design";
 import { usePageLayout, useBorder, useIsDemoRoute } from "@/lib/hooks";
+import { GlobalMode } from "@/types/enums/GlobalMode";
+import { getPath } from "@/utils/slug/paths";
 
 import { ChordNameDisplay } from "@/components/ChordNameDisplay";
 import { StaffRenderer } from "@/components/StaffRenderer";
@@ -56,7 +58,7 @@ export default function Home() {
           {/* Add GlobalModeButton positioned in top-left corner */}
           {!isDemoRoute && (
             <div className="absolute top-1 left-1 z-10">
-              <Link href="/scales">
+              <Link href={getPath(GlobalMode.Scales, undefined, isDemoRoute)}>
                 <GlobalModeButton text="Scales Mode" />
               </Link>
             </div>

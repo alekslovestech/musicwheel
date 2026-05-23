@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { scalePath } from "@/utils/slug/paths";
+import { GlobalMode } from "@/types/enums/GlobalMode";
+import { getPath } from "@/utils/slug/paths";
 import { scaleTypeToSlug } from "@/utils/slug/scales";
 
 export default async function ScalesPage({
@@ -9,5 +10,5 @@ export default async function ScalesPage({
   searchParams: Promise<{ isDemo?: string }>;
 }) {
   const isDemo = (await searchParams).isDemo !== undefined;
-  redirect(scalePath(scaleTypeToSlug(null), isDemo));
+  redirect(getPath(GlobalMode.Scales, scaleTypeToSlug(null), isDemo));
 }

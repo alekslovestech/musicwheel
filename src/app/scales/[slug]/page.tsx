@@ -11,6 +11,7 @@ import { SettingsPanelScales } from "@/components/Settings/SettingsPanelScales";
 import { StaffRenderer } from "@/components/StaffRenderer";
 import { useIsDemoRoute } from "@/lib/hooks";
 import { useScaleSlugPage } from "@/lib/hooks/useSlugUrlSync";
+import { harmonyPath } from "@/utils/slug/paths";
 
 export default function ScalesSlugPage() {
   const isDemoRoute = useIsDemoRoute();
@@ -31,7 +32,7 @@ export default function ScalesSlugPage() {
       circularOverlay={
         !isDemoRoute ? (
           <div className="absolute top-2 left-2 z-10">
-            <Link href="/harmony">
+            <Link href={harmonyPath(isDemoRoute)}>
               <GlobalModeButton text="Basic Mode" />
             </Link>
           </div>

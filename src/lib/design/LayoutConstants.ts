@@ -84,16 +84,6 @@ export const LAYOUT_CONFIGS = {
       gridAreas: SCALES_GRID_AREAS.landscape,
     },
   },
-  [GlobalMode.Minimal]: {
-    portrait: {
-      gridRows: DEFAULT_ROWS.portrait,
-      gridAreas: DEFAULT_GRID_AREAS.portrait,
-    },
-    landscape: {
-      gridRows: DEFAULT_ROWS.landscape,
-      gridAreas: DEFAULT_GRID_AREAS.landscape,
-    },
-  },
   [GlobalMode.ChordProgressions]: {
     portrait: {
       gridRows: CP_ROWS.portrait,
