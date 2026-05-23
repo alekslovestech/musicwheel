@@ -16,9 +16,7 @@ const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
   creep: ChordProgressionType.Creep,
 };
 
-const progressionSlugCodec = createSlugCodec(PROGRESSION_SLUG_MAP, "perfect-cadence");
+const progressionSlugCodec = createSlugCodec(PROGRESSION_SLUG_MAP);
 
-export const DEFAULT_PROGRESSION_SLUG = progressionSlugCodec.defaultSlug;
 export const slugToProgressionType = progressionSlugCodec.slugToValue;
-export const progressionTypeToSlug = (type: ChordProgressionType | null): string =>
-  type != null ? progressionSlugCodec.valueToSlug(type) : DEFAULT_PROGRESSION_SLUG;
+export const progressionTypeToSlug = progressionSlugCodec.valueToSlug;

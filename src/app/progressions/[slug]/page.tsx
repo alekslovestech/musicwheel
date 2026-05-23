@@ -1,5 +1,7 @@
 "use client";
 
+import { Suspense } from "react";
+
 import { SequenceViewPage } from "@/components/SequenceView/SequenceViewPage";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
@@ -7,19 +9,27 @@ import { SettingsPanelChordProgressions } from "@/components/Settings/SettingsPa
 import { StaffRenderer } from "@/components/StaffRenderer";
 import { useProgressionSlugPage } from "@/lib/hooks/useSlugUrlSync";
 
-export default function ProgressionSlugPage() {
+function ProgressionSlugPageSync() {
   useProgressionSlugPage();
+  return null;
+}
 
+export default function ProgressionSlugPage() {
   return (
-    <SequenceViewPage
-      pageId="ProgressionsPage"
-      backgroundClass="bg-canvas-bgDefault"
-      settingsGridArea="progression"
-      staff={<StaffRenderer />}
-      staffStyle={{ gridTemplateColumns: "1fr" }}
-      circular={<KeyboardCircular />}
-      linear={<KeyboardLinear />}
-      settings={<SettingsPanelChordProgressions />}
-    />
+    <>
+      <Suspense fallback={null}>
+        <ProgressionSlugPageSync />
+      </Suspense>
+      <SequenceViewPage
+        pageId="ProgressionsPage"
+        backgroundClass="bg-canvas-bgDefault"
+        settingsGridArea="progression"
+        staff={<StaffRenderer />}
+        staffStyle={{ gridTemplateColumns: "1fr" }}
+        circular={<KeyboardCircular />}
+        linear={<KeyboardLinear />}
+        settings={<SettingsPanelChordProgressions />}
+      />
+    </>
   );
 }

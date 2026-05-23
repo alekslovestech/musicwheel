@@ -8,7 +8,8 @@ import { useMusical } from "@/contexts/MusicalContext";
 import { useIsDemoRoute } from "@/lib/hooks/useGlobalMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { progressionTypeToSlug, slugToProgressionType } from "@/utils/slug/progressions";
-import { scalePath, progressionPath } from "@/utils/slug/paths";
+import { GlobalMode } from "@/types/enums/GlobalMode";
+import { getPath } from "@/utils/slug/paths";
 import { scaleTypeToSlug, slugToScaleType } from "@/utils/slug/scales";
 
 function useSlugParam(): string {
@@ -42,7 +43,7 @@ export function useScaleSlugPage() {
   }, []);
 
   useEffect(() => {
-    router.replace(scalePath(stateSlug, isDemoMode));
+    router.replace(getPath(GlobalMode.Scales, stateSlug, isDemoMode));
   }, [router, stateSlug, isDemoMode]);
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export function useProgressionSlugPage() {
   }, []);
 
   useEffect(() => {
-    router.replace(progressionPath(stateSlug, isDemoMode));
+    router.replace(getPath(GlobalMode.ChordProgressions, stateSlug, isDemoMode));
   }, [router, stateSlug, isDemoMode]);
 
   useEffect(() => {

@@ -17,8 +17,7 @@ const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
   locrian: ScaleModeType.Locrian,
 };
 
-const scaleSlugCodec = createSlugCodec(SCALE_SLUG_MAP, "ionian");
+const scaleSlugCodec = createSlugCodec(SCALE_SLUG_MAP);
 
-export const DEFAULT_SCALE_SLUG = scaleSlugCodec.defaultSlug;
 export const slugToScaleType = scaleSlugCodec.slugToValue;
 export const scaleTypeToSlug = scaleSlugCodec.valueToSlug;

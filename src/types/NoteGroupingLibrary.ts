@@ -178,7 +178,7 @@ class NoteGroupingLibrarySingleton {
       CHORD_OFFSET_PATTERNS.DIMINISHED7,
     ),
     NoteGrouping.createChord(
-      ChordType.Six,
+      ChordType.Major6,
       26,
       "6",
       "6",

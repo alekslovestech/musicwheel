@@ -6,6 +6,15 @@ if (typeof globalThis.structuredClone === "undefined") {
   globalThis.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
 }
 
+// jsdom does not implement ResizeObserver; used by useLinearKeyboardDoDisplayText.
+if (typeof globalThis.ResizeObserver === "undefined") {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 // Mock Tone.js to prevent ES module issues in Jest
 jest.mock("tone", () => ({
   PolySynth: jest.fn().mockImplementation(() => ({
@@ -31,4 +40,13 @@ jest.mock("tone", () => ({
     },
   }),
   start: jest.fn().mockResolvedValue(undefined),
+}));
+
+// Mock PostHog to avoid init/capture warnings in component integration tests.
+jest.mock("@/lib/ph", () => ({
+  initPH: jest.fn(),
+  ph: {
+    __loaded: true,
+    capture: jest.fn(),
+  },
 }));

@@ -34,6 +34,7 @@ export class RomanChordFormatter {
   private static progressionRootIsLowercase(chordType: ChordType): boolean {
     return (
       chordType === ChordType.Minor ||
+      chordType === ChordType.Minor6 ||
       chordType === ChordType.Minor7 ||
       chordType === ChordType.Diminished ||
       chordType === ChordType.Diminished7 ||
@@ -60,6 +61,9 @@ export class RomanChordFormatter {
         return "ø7";
       case ChordType.Augmented:
         return "+";
+      case ChordType.Major6:
+      case ChordType.Minor6:
+        return "6";
       default:
         return "";
     }

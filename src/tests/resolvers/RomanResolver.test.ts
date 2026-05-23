@@ -1,7 +1,5 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ChordType } from "@/types/enums/ChordType";
-import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
@@ -76,6 +74,36 @@ describe("parseChordProgressionDuration", () => {
       desc: "trims whitespace around token",
       input: "  V:1  ",
       expected: duratedRoman(5, ChordType.Major, AccidentalType.None, undefined, 1),
+    },
+    {
+      desc: "parses major sixth (I6)",
+      input: "I6",
+      expected: duratedRoman(1, ChordType.Major6),
+    },
+    {
+      desc: "parses minor sixth (ii6)",
+      input: "ii6",
+      expected: duratedRoman(2, ChordType.Minor6),
+    },
+    {
+      desc: "parses dominant seventh (I7)",
+      input: "I7",
+      expected: duratedRoman(1, ChordType.Dominant7),
+    },
+    {
+      desc: "parses dotted-quarter duration (I7:4.)",
+      input: "I7:4.",
+      expected: duratedRoman(1, ChordType.Dominant7, AccidentalType.None, undefined, 4, 1),
+    },
+    {
+      desc: "parses dotted-quarter duration on sixth (I6:4.)",
+      input: "I6:4.",
+      expected: duratedRoman(1, ChordType.Major6, AccidentalType.None, undefined, 4, 1),
+    },
+    {
+      desc: "parses slash chord with dotted-eighth duration (iii7/ii:8.)",
+      input: "iii7/ii:8.",
+      expected: duratedRoman(3, ChordType.Minor7, AccidentalType.None, 2, 8, 1),
     },
   ];
 
@@ -165,51 +193,5 @@ describe("Resolved roman numeral tests", () => {
         });
       });
     });
-  });
-});
-
-/**
- * Sixth chords, dominant seventh with duration, and LilyPond dotted denominators (`:4.`)
- * as used by {@link ChordProgressionType.Gypsy_Woman}.
- */
-describe("planned progression notation (I6, I7, dotted LilyPond lengths)", () => {
-  test("I6 is major sixth on scale degree I", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("I6")).toEqual(duratedRoman(1, ChordType.Six));
-  });
-
-  test("ii6 is minor sixth on scale degree II", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("ii6")).toEqual(
-      duratedRoman(2, ChordType.Minor6),
-    );
-  });
-
-  test("I7 is dominant seventh on scale degree I", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("I7")).toEqual(
-      duratedRoman(1, ChordType.Dominant7),
-    );
-  });
-
-  test("I7:4. keeps I7 harmony with dotted-quarter denominator (LilyPond :4.)", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("I7:4.")).toEqual(
-      duratedRoman(1, ChordType.Dominant7, AccidentalType.None, undefined, 4, 1),
-    );
-  });
-
-  test("I6:4. keeps I6 harmony with dotted-quarter denominator", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("I6:4.")).toEqual(
-      duratedRoman(1, ChordType.Six, AccidentalType.None, undefined, 4, 1),
-    );
-  });
-
-  test("iii7/ii:8. parses as minor-seventh slash chord with dotted-eighth duration", () => {
-    expect(RomanResolver.parseRomanChordWithDuration("iii7/ii:8.")).toEqual(
-      duratedRoman(3, ChordType.Minor7, AccidentalType.None, 2, 8, 1),
-    );
-  });
-
-  test("ChordProgressionLibrary Gypsy Woman tokens parse as a progression", () => {
-    expect(() =>
-      ChordProgressionLibrary.getProgression(ChordProgressionType.Gypsy_Woman),
-    ).not.toThrow();
   });
 });

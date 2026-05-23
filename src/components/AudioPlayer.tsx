@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { Suspense, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { ActualIndex } from "@/types/IndexTypes";
-import { useIsMinimalMode } from "@/lib/hooks/useGlobalMode";
+import { useIsDemoRoute } from "@/lib/hooks/useGlobalMode";
 
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
@@ -20,7 +20,7 @@ export const useAudioPlayer = () => {
   const synthRef = useRef<Tone.PolySynth | null>(null);
   const { isAudioInitialized, setAudioInitialized } = useAudio();
   const { selectedNoteIndices } = useMusical();
-  const isDemoMode = useIsMinimalMode();
+  const isDemoMode = useIsDemoRoute();
 
   //4n=500ms at default tempo
   const noteDuration = isDemoMode ? "4n" : "8n.";
@@ -180,8 +180,14 @@ export const useAudioPlayer = () => {
   };
 };
 
-// Minimal component just for auto-playback - no UI
-export const AudioPlayer: React.FC = () => {
-  useAudioPlayer(); // This ensures auto-playback happens
+const AudioPlayerContent: React.FC = () => {
+  useAudioPlayer();
   return null;
 };
+
+// Minimal component just for auto-playback - no UI
+export const AudioPlayer: React.FC = () => (
+  <Suspense fallback={null}>
+    <AudioPlayerContent />
+  </Suspense>
+);
