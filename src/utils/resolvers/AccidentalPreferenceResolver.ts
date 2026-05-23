@@ -96,7 +96,7 @@ export class AccidentalPreferenceResolver {
       case ChordType.Major:
       case ChordType.Major7:
       case ChordType.Dominant7:
-      case ChordType.Six:
+      case ChordType.Major6:
       case ChordType.SpreadMajor:
         return ChordQuality.Major;
 

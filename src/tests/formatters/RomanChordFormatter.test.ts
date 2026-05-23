@@ -25,7 +25,7 @@ describe("RomanChordFormatter.formatRomanChord", () => {
   });
 
   it("formats tetrachords", () => {
-    expectProgressionLabel(1, ChordType.Six, "I6");
+    expectProgressionLabel(1, ChordType.Major6, "I6");
     expectProgressionLabel(2, ChordType.Minor6, "ii6");
     expectProgressionLabel(1, ChordType.Dominant7, "I7");
     expectProgressionLabel(2, ChordType.Minor7, "ii7");

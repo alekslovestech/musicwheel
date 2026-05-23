@@ -78,7 +78,7 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses major sixth (I6)",
       input: "I6",
-      expected: duratedRoman(1, ChordType.Six),
+      expected: duratedRoman(1, ChordType.Major6),
     },
     {
       desc: "parses minor sixth (ii6)",
@@ -98,7 +98,7 @@ describe("parseChordProgressionDuration", () => {
     {
       desc: "parses dotted-quarter duration on sixth (I6:4.)",
       input: "I6:4.",
-      expected: duratedRoman(1, ChordType.Six, AccidentalType.None, undefined, 4, 1),
+      expected: duratedRoman(1, ChordType.Major6, AccidentalType.None, undefined, 4, 1),
     },
     {
       desc: "parses slash chord with dotted-eighth duration (iii7/ii:8.)",

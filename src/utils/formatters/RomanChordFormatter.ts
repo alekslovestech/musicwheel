@@ -61,7 +61,7 @@ export class RomanChordFormatter {
         return "ø7";
       case ChordType.Augmented:
         return "+";
-      case ChordType.Six:
+      case ChordType.Major6:
       case ChordType.Minor6:
         return "6";
       default:

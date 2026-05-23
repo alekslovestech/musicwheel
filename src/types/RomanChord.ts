@@ -87,7 +87,7 @@ export class RomanChord {
         chordType = isLowercase ? ChordType.Minor7 : ChordType.Dominant7;
         break;
       case "6":
-        chordType = isLowercase ? ChordType.Minor6 : ChordType.Six;
+        chordType = isLowercase ? ChordType.Minor6 : ChordType.Major6;
         break;
       case "maj7":
         chordType = isLowercase ? ChordType.Unknown : ChordType.Major7;
