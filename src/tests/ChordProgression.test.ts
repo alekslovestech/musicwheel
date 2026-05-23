@@ -1,6 +1,8 @@
 import { ChordType } from "@/types/enums/ChordType";
 
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
+import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { KeyType } from "@/types/enums/KeyType";
@@ -129,5 +131,13 @@ describe("ChordProgression suggestedMusicalKey default", () => {
   it("defaults to DEFAULT_MUSICAL_KEY when omitted", () => {
     const p = new ChordProgression(["I", "V"], "Test");
     expect(p.suggestedMusicalKey).toBe(DEFAULT_MUSICAL_KEY);
+  });
+});
+
+describe("ChordProgressionLibrary", () => {
+  it("Gypsy Woman tokens parse as a progression", () => {
+    expect(() =>
+      ChordProgressionLibrary.getProgression(ChordProgressionType.Gypsy_Woman),
+    ).not.toThrow();
   });
 });

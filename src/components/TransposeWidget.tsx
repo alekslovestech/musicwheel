@@ -42,8 +42,6 @@ const TransposeButton: React.FC<TransposeButtonProps> = ({ direction, target }) 
       // Transpose selected notes
       const transposedIndices = IndexUtils.transposeNotes(selectedNoteIndices, amount);
 
-      console.log("transposedIndices", transposedIndices);
-
       // Update notes directly (works for both modes)
       setNotesDirectly(transposedIndices);
 
