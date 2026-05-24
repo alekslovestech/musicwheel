@@ -2,7 +2,7 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 import { createSlugCodec } from "./slugCodec";
 
-const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
+export const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
   ionian: ScaleModeType.Ionian,
   dorian: ScaleModeType.Dorian,
   "ukrainian-dorian": ScaleModeType.UkrainianDorian,
