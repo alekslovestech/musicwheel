@@ -1,5 +1,14 @@
 import type { Metadata, Viewport } from "next";
 
+const DEFAULT_SITE_URL = "https://musicwheel.vercel.app";
+
+/** Canonical site origin for metadata and OG URLs. */
+export function getSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return DEFAULT_SITE_URL;
+}
+
 // Viewport configuration
 export const viewport: Viewport = {
   width: "device-width",
@@ -8,6 +17,7 @@ export const viewport: Viewport = {
 
 // Base metadata shared across the application
 export const baseMetadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Music Wheel App",
   keywords: [
     "music theory",
@@ -27,10 +37,10 @@ export const baseMetadata: Metadata = {
     title: "Music Wheel",
     description: "Interactive music theory application for exploring the chromatic circle",
     type: "website",
-    url: "https://chromatic-circle-next.vercel.app",
+    url: "/",
     images: [
       {
-        url: "https://chromatic-circle-next.vercel.app/opengraph-image.png",
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Music Wheel Icon",
@@ -83,6 +93,7 @@ export const scalesViewMetadata: Metadata = {
     ...baseMetadata.openGraph,
     title: "Music Wheel App - Musical Modes and Scales",
     description: "Exploring musical modes and scales on the chromatic circle",
+    url: "/scales",
   },
   twitter: {
     ...baseMetadata.twitter,
@@ -97,4 +108,41 @@ export const chordProgressionViewMetadata: Metadata = {
   title: "Music Wheel App - Chord Progressions",
   keywords: ["chord progressions", "cadences"],
   description: "Exploring chord progressions on the chromatic circle",
+  openGraph: {
+    ...baseMetadata.openGraph,
+    title: "Music Wheel - Chord Progressions",
+    description: "Exploring chord progressions on the chromatic circle",
+    url: "/progressions",
+  },
+  twitter: {
+    ...baseMetadata.twitter,
+    title: "Music Wheel - Chord Progressions",
+    description: "Exploring chord progressions on the chromatic circle",
+  },
 };
+
+/** Per-slug metadata for scales and progressions (canonical path, no query params). */
+export function metadataForSlugPage(
+  base: Metadata,
+  pathname: string,
+  itemTitle: string,
+): Metadata {
+  const pageTitle = `Music Wheel - ${itemTitle}`;
+
+  return {
+    ...base,
+    title: pageTitle,
+    openGraph: {
+      ...base.openGraph,
+      title: pageTitle,
+      url: pathname,
+    },
+    twitter: {
+      ...base.twitter,
+      title: pageTitle,
+    },
+    alternates: {
+      canonical: pathname,
+    },
+  };
+}
