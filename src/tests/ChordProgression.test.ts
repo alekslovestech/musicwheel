@@ -131,6 +131,17 @@ describe("Chord progression derives correct chords for C major key", () => {
         new AbsoluteChord("C", ChordType.Major7),
       ],
     },
+    {
+      desc: "Bohemian Rhapsody (Mama) for Eb major",
+      progression: new ChordProgression(["I", "V/VII", "vi", "ii"], "Bohemian Rhapsody (Mama)"),
+      key: MusicalKey.fromClassicalMode("Eb", KeyType.Major),
+      expected: [
+        new AbsoluteChord("Eb", ChordType.Major),
+        new AbsoluteChord("Bb", ChordType.Major, NoteConverter.toChromaticIndex("D")),
+        new AbsoluteChord("C", ChordType.Minor),
+        new AbsoluteChord("F", ChordType.Minor),
+      ],
+    },
   ];
 
   testCases.forEach(({ desc, progression, key, expected }) => {
@@ -151,10 +162,10 @@ describe("ChordProgression suggestedMusicalKey default", () => {
 });
 
 describe("ChordProgressionLibrary", () => {
-  it("Gypsy Woman tokens parse as a progression", () => {
-    expect(() =>
-      ChordProgressionLibrary.getProgression(ChordProgressionType.Gypsy_Woman),
-    ).not.toThrow();
-  });
-  /* do not add more full progressions to the test suite */
+  it.each(Object.values(ChordProgressionType))(
+    "%s tokens parse as a progression",
+    (type) => {
+      expect(() => ChordProgressionLibrary.getProgression(type)).not.toThrow();
+    },
+  );
 });
