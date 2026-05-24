@@ -7,6 +7,7 @@ import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { KeyType } from "@/types/enums/KeyType";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
+import { NoteConverter } from "@/utils/NoteConverter";
 
 describe("Chord progression derives correct chords for C major key", () => {
   const cMajor = DEFAULT_MUSICAL_KEY;
@@ -115,6 +116,21 @@ describe("Chord progression derives correct chords for C major key", () => {
         new AbsoluteChord("G", ChordType.Major),
       ],
     },
+    {
+      desc: "Michelle progression for F minor",
+      progression: new ChordProgression(
+        ["i", "III/VII", "♭viiø7", "VImaj7", "Vmaj7"],
+        "Michelle",
+      ),
+      key: MusicalKey.fromClassicalMode("F", KeyType.Minor),
+      expected: [
+        new AbsoluteChord("F", ChordType.Minor),
+        new AbsoluteChord("Ab", ChordType.Major, NoteConverter.toChromaticIndex("Eb")),
+        new AbsoluteChord("D", ChordType.HalfDiminished),
+        new AbsoluteChord("Db", ChordType.Major7),
+        new AbsoluteChord("C", ChordType.Major7),
+      ],
+    },
   ];
 
   testCases.forEach(({ desc, progression, key, expected }) => {
@@ -140,4 +156,5 @@ describe("ChordProgressionLibrary", () => {
       ChordProgressionLibrary.getProgression(ChordProgressionType.Gypsy_Woman),
     ).not.toThrow();
   });
+  /* do not add more full progressions to the test suite */
 });

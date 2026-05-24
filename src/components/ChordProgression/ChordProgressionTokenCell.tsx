@@ -18,9 +18,11 @@ export function ChordProgressionTokenCell({
       style={{ gridColumn: `span ${token.colSpan}` }}
     >
       <div className="flex flex-col items-center gap-0.5 py-0.5">
-        <span className="text-xs font-normal text-muted-foreground leading-tight">{token.label}</span>
+        <span className="text-sm font-semibold leading-tight">{token.label}</span>
         {token.absoluteLabel != null && (
-          <span className="text-sm font-semibold leading-tight">{token.absoluteLabel}</span>
+          <span className="text-xs font-normal text-muted-foreground leading-tight">
+            {token.absoluteLabel}
+          </span>
         )}
       </div>
     </div>

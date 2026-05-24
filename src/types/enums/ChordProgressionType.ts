@@ -10,4 +10,8 @@ export enum ChordProgressionType {
   Something = "Something (Beatles)",
   Blues = "Blues Progression",
   Creep = "Creep (Radiohead)",
+  The_World_Is_Not_Enough = "The World Is Not Enough (Garbage)",
+  All_I_Want_For_Christmas = "All I Want for Christmas",
+  Careless_Whisper = "Careless Whisper",
+  Michelle = "Michelle (Beatles)",
 }
