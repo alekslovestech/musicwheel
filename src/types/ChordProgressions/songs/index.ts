@@ -9,3 +9,7 @@ export { default as WithOrWithoutYouChords } from "./WithOrWithoutYou";
 export { default as SomethingChords } from "./Something";
 export { default as BluesChords } from "./Blues";
 export { default as CreepChords } from "./Creep";
+export { default as TheWorldIsNotEnoughChords } from "./The_World_Is_Not_Enough";
+export { default as AllIWantForChristmasChords } from "./All_I_Want_For_Christmas";
+export { default as CarelessWhisperChords } from "./Careless_Whisper";
+export { default as MichelleChords } from "./Michelle";

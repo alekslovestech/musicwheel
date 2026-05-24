@@ -14,6 +14,10 @@ const PROGRESSION_SLUG_MAP: Record<string, ChordProgressionType> = {
   something: ChordProgressionType.Something,
   blues: ChordProgressionType.Blues,
   creep: ChordProgressionType.Creep,
+  "the-world-is-not-enough": ChordProgressionType.The_World_Is_Not_Enough,
+  "all-i-want-for-christmas": ChordProgressionType.All_I_Want_For_Christmas,
+  "careless-whisper": ChordProgressionType.Careless_Whisper,
+  michelle: ChordProgressionType.Michelle,
 };
 
 const progressionSlugCodec = createSlugCodec(PROGRESSION_SLUG_MAP);
