@@ -80,12 +80,11 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
           factory,
           stave,
           notes,
-          containerWidth,
           highlightIndex,
           activeChordBg,
         );
       } else {
-        VexFlowUtils.drawVoice(factory, stave, notes, containerWidth);
+        VexFlowUtils.drawVoice(factory, stave, notes);
       }
 
       return;
@@ -104,7 +103,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       factory,
     );
 
-    VexFlowUtils.drawVoice(factory, stave, notes, containerWidth);
+    VexFlowUtils.drawVoice(factory, stave, notes);
   }, [
     selectedNoteIndices,
     selectedMusicalKey,

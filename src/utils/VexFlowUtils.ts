@@ -3,14 +3,17 @@ import { BoundingBox, type Factory, type RenderContext, type Stave, type StaveNo
 const CHORD_HIGHLIGHT_PAD_X = 6;
 const CHORD_HIGHLIGHT_PAD_Y = 5;
 
-/** Pixels subtracted from container width when justifying a voice. */
-const STAFF_JUSTIFY_INSET = 20;
-
 /** Stave position and width relative to the staff canvas container. */
-const STAVE_X = 5;
+const STAVE_X = 2;
 const STAVE_Y = -20;
 /** Total horizontal inset (container width minus stave width). */
-const STAVE_WIDTH_INSET = 10;
+const STAVE_WIDTH_INSET = 4;
+
+/** Extra space reserved past the last notehead for stem tails, augmentation dots, etc. */
+const TRAILING_NOTE_PADDING = 12;
+
+/** 1 = uniform spacing (duration ignored); lower than 2 rebalances dense bars more aggressively. */
+const SOFTMAX_FACTOR = 1;
 
 export class VexFlowUtils {
   static createStaveForContainer(factory: Factory, containerWidth: number): Stave {
@@ -23,21 +26,18 @@ export class VexFlowUtils {
 
   /**
    * Formats and draws a single voice.
-   * @param containerWidth staff canvas width (same basis as {@link createStaveForContainer}).
    */
-  static drawVoice(factory: Factory, stave: Stave, tickables: StaveNote[], containerWidth: number) {
-    VexFlowUtils.drawVoiceWithHighlights(factory, stave, tickables, containerWidth);
+  static drawVoice(factory: Factory, stave: Stave, tickables: StaveNote[]) {
+    VexFlowUtils.drawVoiceWithHighlights(factory, stave, tickables);
   }
 
   /**
    * Formats a single voice, optionally draws a chord background behind one tick, then draws the voice.
-   * @param containerWidth staff canvas width (same basis as {@link createStaveForContainer}).
    */
   static drawVoiceWithHighlights(
     factory: Factory,
     stave: Stave,
     tickables: StaveNote[],
-    containerWidth: number,
     backgroundNoteIndex?: number,
     backgroundFill?: string,
   ) {
@@ -45,13 +45,12 @@ export class VexFlowUtils {
     if (!context) {
       throw new Error("VexFlowUtils.drawVoice: Factory has no render context");
     }
-    const justifyWidth = containerWidth - STAFF_JUSTIFY_INSET;
     /** Common time; each {@link StaveNote} carries duration and optional `dots` for rhythm. */
     const voice = factory.Voice({ time: "4/4" });
     voice.setStrict(false);
     voice.addTickables(tickables);
-    const softmaxFactor = Math.max(2, 100 / tickables.length);
-    factory.Formatter({ softmaxFactor }).joinVoices([voice]).format([voice], justifyWidth, { context, stave });
+    VexFlowUtils.formatVoiceToStave(factory, voice, stave, context);
+    VexFlowUtils.enforceTrailingPadding(stave, tickables);
 
     if (backgroundFill && backgroundNoteIndex != null && backgroundNoteIndex >= 0) {
       const n = tickables[backgroundNoteIndex];
@@ -59,6 +58,37 @@ export class VexFlowUtils {
     }
 
     voice.draw(context, stave);
+  }
+
+  /** Stave-aware justification; trailing padding enforced after format via {@link enforceTrailingPadding}. */
+  private static formatVoiceToStave(
+    factory: Factory,
+    voice: ReturnType<Factory["Voice"]>,
+    stave: Stave,
+    context: RenderContext,
+  ) {
+    factory.Formatter({ softmaxFactor: SOFTMAX_FACTOR })
+      .joinVoices([voice])
+      .formatToStave([voice], stave, { context });
+  }
+
+  /** Nudge notes left when formatting still leaves the last chord's tail past the stave end. */
+  private static enforceTrailingPadding(stave: Stave, tickables: StaveNote[]) {
+    if (tickables.length === 0) return;
+    const last = tickables[tickables.length - 1];
+    const rightEdge = VexFlowUtils.getStaveNoteRightEdge(last);
+    const maxRight = stave.getNoteEndX() - TRAILING_NOTE_PADDING;
+    if (rightEdge <= maxRight) return;
+
+    const shift = rightEdge - maxRight;
+    for (const note of tickables) {
+      note.setX(note.getX() - shift);
+    }
+  }
+
+  private static getStaveNoteRightEdge(note: StaveNote): number {
+    const m = note.getMetrics();
+    return note.getAbsoluteX() + m.notePx + m.rightDisplacedHeadPx + m.modRightPx;
   }
 
   private static getStaveNoteHighlightBoundingBox(note: StaveNote): BoundingBox | null {
