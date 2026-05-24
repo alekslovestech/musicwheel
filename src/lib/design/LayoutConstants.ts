@@ -84,6 +84,7 @@ export const LAYOUT_CONFIGS = {
       gridAreas: SCALES_GRID_AREAS.landscape,
     },
   },
+
   [GlobalMode.ChordProgressions]: {
     portrait: {
       gridRows: CP_ROWS.portrait,

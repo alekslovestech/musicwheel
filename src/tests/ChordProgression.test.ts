@@ -51,8 +51,8 @@ describe("Chord progression derives correct chords for C major key", () => {
       ],
     },
     {
-      desc: "Blues progression for C major",
-      progression: new ChordProgression(["I", "IV", "V", "IV"], "Blues"),
+      desc: "Simple progression for C major",
+      progression: new ChordProgression(["I", "IV", "V", "IV"], "Sample"),
       key: cMajor,
       expected: [
         new AbsoluteChord("C", ChordType.Major),
@@ -62,8 +62,8 @@ describe("Chord progression derives correct chords for C major key", () => {
       ],
     },
     {
-      desc: "Blues progression for A major",
-      progression: new ChordProgression(["I", "IV", "V", "IV"], "Blues"),
+      desc: "Simple progression for A major",
+      progression: new ChordProgression(["I", "IV", "V", "IV"], "Sample"),
       key: aMajor,
       expected: [
         new AbsoluteChord("A", ChordType.Major),

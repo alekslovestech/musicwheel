@@ -5,9 +5,11 @@ import type { FormattedBarToken } from "@/types/ChordProgressions/ChordProgressi
 export function ChordProgressionTokenCell({
   token,
   isActive,
+  isCompact = false,
 }: {
   token: FormattedBarToken;
   isActive: boolean;
+  isCompact?: boolean;
 }) {
   return (
     <div
@@ -15,7 +17,7 @@ export function ChordProgressionTokenCell({
       className={`flex items-center justify-center border-x border-neutral-600/40 px-2 ${
         isActive ? "bg-cp-highlight/15 ring-1 ring-inset ring-cp-highlight/40" : ""
       }`}
-      style={{ gridColumn: `span ${token.colSpan}` }}
+      style={{ gridColumn: isCompact ? undefined : `span ${token.colSpan}` }}
     >
       <div className="flex flex-col items-center gap-0.5 py-0.5">
         <span className="text-sm font-semibold leading-tight">{token.label}</span>

@@ -3,36 +3,42 @@
 import { ChordProgressionTokenCell } from "./ChordProgressionTokenCell";
 import {
   COLUMNS_PER_BAR,
+  COMPACT_PATTERN_TOKENS_PER_LINE,
   ChordProgressionBarGrid,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 
 export function ChordProgressionDisplay({
   grid,
   readHeadStepIndex,
+  isCompact = false,
 }: {
   grid: ChordProgressionBarGrid;
   readHeadStepIndex: number | null;
+  isCompact?: boolean;
 }) {
   if (grid.length === 0) return null;
 
+  const columnsPerRow = isCompact ? COMPACT_PATTERN_TOKENS_PER_LINE : COLUMNS_PER_BAR;
+
   return (
     <div className="flex flex-col">
-      {grid.map((bar, barIndex) => (
+      {grid.map((row, rowIndex) => (
         <div
-          key={barIndex}
+          key={rowIndex}
           className="grid items-stretch border-b border-neutral-600/40 py-1 first:border-t"
           style={{
-            gridTemplateColumns: `repeat(${COLUMNS_PER_BAR}, minmax(0, 1fr))`,
+            gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
           }}
         >
-          {bar.map((tok, tokIndex) => {
+          {row.map((tok, tokIndex) => {
             const isActive =
               readHeadStepIndex != null && tok.progressionEntryIndex === readHeadStepIndex;
             return (
               <ChordProgressionTokenCell
-                key={`${barIndex}-${tokIndex}`}
+                key={`${rowIndex}-${tokIndex}`}
                 token={tok}
                 isActive={isActive}
+                isCompact={isCompact}
               />
             );
           })}
