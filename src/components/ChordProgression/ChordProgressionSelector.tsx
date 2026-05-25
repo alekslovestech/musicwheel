@@ -9,7 +9,6 @@ import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import {
   PROGRESSION_REGISTRY,
-  type ProgressionRegistryEntry,
 } from "@/types/ChordProgressions/progressionRegistry";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 
@@ -69,15 +68,9 @@ export const ChordProgressionSelector = () => {
           </option>
           {PROGRESSION_GROUPS.map(({ label, isPattern }) => (
             <optgroup key={String(isPattern)} label={label}>
-              {(
-                Object.entries(PROGRESSION_REGISTRY) as [
-                  ChordProgressionType,
-                  ProgressionRegistryEntry,
-                ][]
-              )
-                .filter(([, entry]) => entry.isPattern === isPattern)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([type]) => (
+              {Object.values(ChordProgressionType)
+                .filter((type) => PROGRESSION_REGISTRY[type].isPattern === isPattern)
+                .map((type) => (
                   <option id={`chord-progression-option-${type}`} key={type} value={type}>
                     {type}
                   </option>
