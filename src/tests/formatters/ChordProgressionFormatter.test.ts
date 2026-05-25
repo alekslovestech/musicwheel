@@ -42,6 +42,41 @@ describe("ChordProgressionFormatter.formatCombinedForDisplay", () => {
   });
 });
 
+describe("ChordProgressionFormatter.formatCompactForDisplay", () => {
+  it("fits whole-note cadence on one row", () => {
+    const p = new ChordProgression(["V:1", "I"], "cadence");
+    const rows = new ChordProgressionFormatter(p).formatCompactForDisplay(p.suggestedMusicalKey);
+    expect(rows).toHaveLength(1);
+    expect(indices(rows[0])).toEqual([0, 1]);
+    expect(rows[0].every((t) => t.colSpan === 1)).toBe(true);
+  });
+
+  it("wraps after four steps", () => {
+    const p = new ChordProgression(["I", "ii", "iii", "IV", "V", "vi", "vii"], "scale");
+    const rows = new ChordProgressionFormatter(p).formatCompactForDisplay(p.suggestedMusicalKey);
+    expect(rows).toHaveLength(2);
+    expect(indices(rows[0])).toEqual([0, 1, 2, 3]);
+    expect(indices(rows[1])).toEqual([4, 5, 6]);
+  });
+
+  it("stacks roman and absolute labels on each token", () => {
+    const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
+    const rows = new ChordProgressionFormatter(p).formatCompactForDisplay(p.suggestedMusicalKey);
+    expect(rows[0][0].label).toBe("I");
+    expect(rows[0][0].absoluteLabel).toBeTruthy();
+    expect(rows[0][1].label).toBe("IV");
+  });
+});
+
+describe("ChordProgressionFormatter.formatForDisplay", () => {
+  it("uses compact rows when isCompact is true", () => {
+    const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
+    const fmt = new ChordProgressionFormatter(p);
+    expect(fmt.formatForDisplay(p.suggestedMusicalKey, true)).toHaveLength(1);
+    expect(fmt.formatForDisplay(p.suggestedMusicalKey, false)).toHaveLength(2);
+  });
+});
+
 describe("ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars", () => {
   it("matches formatCombinedForDisplay bar boundaries", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
@@ -57,5 +92,30 @@ describe("ChordProgressionFormatter.groupProgressionEntryIndicesIntoBars", () =>
     const fmt = new ChordProgressionFormatter(p);
     expect(fmt.findBarIndexContainingStep(0)).toBe(0);
     expect(fmt.findBarIndexContainingStep(1)).toBe(1);
+  });
+});
+
+describe("ChordProgressionFormatter.compact row grouping", () => {
+  it("matches formatCompactForDisplay row boundaries", () => {
+    const p = new ChordProgression(["I", "ii", "iii", "IV", "V", "vi", "vii"], "scale");
+    const fmt = new ChordProgressionFormatter(p);
+    const fromDisplay = fmt
+      .formatCompactForDisplay(p.suggestedMusicalKey)
+      .map((row) => indices(row));
+    expect(fmt.progressionEntryIndicesByCompactRow).toEqual(fromDisplay);
+  });
+
+  it("finds the compact row containing a progression step", () => {
+    const p = new ChordProgression(["I", "ii", "iii", "IV", "V", "vi", "vii"], "scale");
+    const fmt = new ChordProgressionFormatter(p);
+    expect(fmt.findCompactRowIndexContainingStep(3)).toBe(0);
+    expect(fmt.findCompactRowIndexContainingStep(4)).toBe(1);
+  });
+
+  it("returns compact or bar step indices for display", () => {
+    const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
+    const fmt = new ChordProgressionFormatter(p);
+    expect(fmt.stepIndicesForDisplayRow(1, true)).toEqual([0, 1]);
+    expect(fmt.stepIndicesForDisplayRow(1, false)).toEqual([1]);
   });
 });

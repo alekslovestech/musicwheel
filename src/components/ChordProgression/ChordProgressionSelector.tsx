@@ -7,7 +7,15 @@ import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import {
+  PROGRESSION_REGISTRY,
+} from "@/types/ChordProgressions/progressionRegistry";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
+
+const PROGRESSION_GROUPS: { label: string; isPattern: boolean }[] = [
+  { label: "Patterns & cadences", isPattern: true },
+  { label: "Songs", isPattern: false },
+];
 
 export const ChordProgressionSelector = () => {
   const { selectedProgression, setSelectedProgression, activeProgressionStepIndex } = useAudio();
@@ -24,6 +32,10 @@ export const ChordProgressionSelector = () => {
     setSelectedMusicalKey(progression.suggestedMusicalKey);
   }, [progression, setSelectedMusicalKey]);
 
+  const registryEntry =
+    selectedProgression != null ? PROGRESSION_REGISTRY[selectedProgression] : null;
+  const isCompact = registryEntry?.isPattern ?? false;
+
   const formatter = useMemo(
     () => (progression != null ? new ChordProgressionFormatter(progression) : null),
     [progression],
@@ -31,8 +43,8 @@ export const ChordProgressionSelector = () => {
 
   const displayGrid = useMemo(() => {
     if (formatter == null) return null;
-    return formatter.formatCombinedForDisplay(selectedMusicalKey);
-  }, [formatter, selectedMusicalKey]);
+    return formatter.formatForDisplay(selectedMusicalKey, isCompact);
+  }, [formatter, selectedMusicalKey, isCompact]);
 
   const handleChordProgressionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
@@ -54,10 +66,16 @@ export const ChordProgressionSelector = () => {
           <option value="" disabled>
             Select chord progression
           </option>
-          {Object.values(ChordProgressionType).map((mode) => (
-            <option id={`chord-progression-option-${mode}`} key={mode} value={mode}>
-              {mode}
-            </option>
+          {PROGRESSION_GROUPS.map(({ label, isPattern }) => (
+            <optgroup key={String(isPattern)} label={label}>
+              {Object.values(ChordProgressionType)
+                .filter((type) => PROGRESSION_REGISTRY[type].isPattern === isPattern)
+                .map((type) => (
+                  <option id={`chord-progression-option-${type}`} key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+            </optgroup>
           ))}
         </Select>
         <div
@@ -67,6 +85,7 @@ export const ChordProgressionSelector = () => {
           <ChordProgressionDisplay
             grid={displayGrid ?? []}
             readHeadStepIndex={activeProgressionStepIndex}
+            isCompact={isCompact}
           />
         </div>
       </div>

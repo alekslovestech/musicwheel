@@ -8,6 +8,7 @@ import { useBorder } from "@/lib/hooks";
 import { useMusical } from "@/contexts/MusicalContext";
 import { prepareChordProgressionSequence } from "@/lib/sequencePlaybackHelpers";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
+import { PROGRESSION_REGISTRY } from "@/types/ChordProgressions/progressionRegistry";
 import { makeDurated } from "@/types/Durated";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
@@ -63,18 +64,21 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
       const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const cpf = new ChordProgressionFormatter(progression);
-      const barIndex = cpf.findBarIndexContainingStep(activeProgressionStepIndex);
-      const stepIndicesInBar = cpf.progressionEntryIndicesByBar[barIndex] ?? [];
+      const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
+      const stepIndicesInRow = cpf.stepIndicesForDisplayRow(
+        activeProgressionStepIndex,
+        isCompact,
+      );
 
       const steps = StaffUtils.buildDuratedChordStepsForBar(
         prepared,
-        stepIndicesInBar,
+        stepIndicesInRow,
         canonicalIonianKey,
       );
 
       if (steps.length === 0) return;
       const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
-      const highlightIndex = stepIndicesInBar.indexOf(activeProgressionStepIndex);
+      const highlightIndex = stepIndicesInRow.indexOf(activeProgressionStepIndex);
       if (highlightIndex >= 0) {
         VexFlowUtils.drawVoiceWithHighlights(
           factory,
