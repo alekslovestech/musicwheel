@@ -24,6 +24,11 @@ export const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
   6: 1, // Tritone
 };
 
+/** CSS color string for a single interval class (debug / optional UI). */
+export function getIntervalClassColorCss(ic: IntervalClass): string {
+  return INTERVAL_CLASS_COLORS[ic].css();
+}
+
 /** Map semitone interval to interval class (0–6). */
 export function intervalClass(semitone: number): IntervalClass {
   const mod = semitone % TWELVE;

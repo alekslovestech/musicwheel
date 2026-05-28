@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 
+import { ColorLegendOverlay } from "@/components/ColorLegend/ColorLegendOverlay";
 import { SequenceViewPage } from "@/components/SequenceView/SequenceViewPage";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
@@ -26,6 +27,11 @@ export default function ProgressionSlugPage() {
         settingsGridArea="progression"
         staff={<StaffRenderer />}
         staffStyle={{ gridTemplateColumns: "1fr" }}
+        circularOverlay={
+          <Suspense fallback={null}>
+            <ColorLegendOverlay />
+          </Suspense>
+        }
         circular={<KeyboardCircular />}
         linear={<KeyboardLinear />}
         settings={<SettingsPanelChordProgressions />}

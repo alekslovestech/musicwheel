@@ -9,7 +9,7 @@ import {
 } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getChordColor(indices: NoteIndices): string {
+  static getColorForIndices(indices: NoteIndices): string {
     const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
     const mixcolor = this.mixChordColor(cyclicIntervals, "lch");
     return mixcolor.css();

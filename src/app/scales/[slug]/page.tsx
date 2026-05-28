@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 
+import { ColorLegendOverlay } from "@/components/ColorLegend/ColorLegendOverlay";
 import { SequenceViewPage } from "@/components/SequenceView/SequenceViewPage";
 import { GlobalModeButton } from "@/components/Buttons/GlobalModeButton";
 import { ChordNameDisplay } from "@/components/ChordNameDisplay";
@@ -51,6 +52,7 @@ export default function ScalesSlugPage() {
         circularOverlay={
           <Suspense fallback={null}>
             <BasicModeLink />
+            <ColorLegendOverlay />
           </Suspense>
         }
         circular={<KeyboardCircular />}

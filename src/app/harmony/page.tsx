@@ -15,6 +15,7 @@ import { SettingsPanelDefault } from "@/components/Settings/SettingsPanelDefault
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
 import { GlobalModeButton } from "@/components/Buttons/GlobalModeButton";
+import { ColorLegendOverlay } from "@/components/ColorLegend/ColorLegendOverlay";
 
 function ScalesModeLink() {
   const isDemoRoute = useIsDemoRoute();
@@ -70,6 +71,7 @@ export default function Home() {
         >
           <Suspense fallback={null}>
             <ScalesModeLink />
+            <ColorLegendOverlay />
           </Suspense>
 
           <div className={`DefaultPage-circular-inner ${COMMON_STYLES.circularInner} ${border}`}>
