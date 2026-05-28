@@ -1,14 +1,13 @@
 import chroma from "chroma-js";
-import { ixIntervalClass } from "@/types/IntervalClass";
 import { NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { SpecialType } from "@/types/enums/SpecialType";
 import { toNoteIndices } from "@/types/IndexTypes";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
-import { getIntervalClassColorCss } from "@/utils/visual/IntervalClassColors";
+import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
 
 /** Neutral fallback when a grouping id has no cached color (e.g. ChordType.Unknown). */
-export const DEFAULT_GROUPING_COLOR = getIntervalClassColorCss(ixIntervalClass(0));
+export const DEFAULT_GROUPING_COLOR = INTERVAL_CLASS_COLORS[0].css();
 
 const CHORD_HIGHLIGHT_ALPHA = 0.32;
 

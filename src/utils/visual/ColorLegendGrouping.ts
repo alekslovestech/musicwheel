@@ -1,4 +1,5 @@
 import { ChordType } from "@/types/enums/ChordType";
+import { NoteGroupingType } from "@/types/enums/NoteGroupingType";
 import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
@@ -27,7 +28,7 @@ function sortIdsByOrder(ids: NoteGroupingId[]): NoteGroupingId[] {
  */
 export function legendBucketKey(id: NoteGroupingId): string {
   const color = getColorForGrouping(id);
-  const type = NoteGroupingLibrary.getGroupingById(id).getNoteGroupingType();
+  const type = isIntervalType(id) ? NoteGroupingType.Interval : NoteGroupingType.Chord;
   return `${type}:${color}`;
 }
 

@@ -1,6 +1,7 @@
 import { ChordType } from "@/types/enums/ChordType";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
+import { highlightForActiveChord } from "@/utils/visual/ChordHighlightUtils";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 
 const indices = (bar: readonly { progressionEntryIndex: number }[]) =>
@@ -138,10 +139,12 @@ describe("ChordProgressionFormatter.compact row grouping", () => {
 });
 
 describe("ChordProgressionFormatter step grouping lookup", () => {
-  it("exposes grouping id and active highlight for a step", () => {
+  it("exposes grouping id and highlight for a step", () => {
     const p = new ChordProgression(["I", "V7"], "test");
     const fmt = new ChordProgressionFormatter(p);
     expect(fmt.getGroupingIdForStep(1)).toBe(ChordType.Dominant7);
-    expect(fmt.getActiveHighlightForStep(1)).toBe(chordActiveHighlightFor(ChordType.Dominant7));
+    expect(highlightForActiveChord(p.progression[1]?.value)).toBe(
+      chordActiveHighlightFor(ChordType.Dominant7),
+    );
   });
 });

@@ -13,7 +13,6 @@ import {
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RhythmUtils } from "@/utils/RhythmUtils";
-import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
 type MutableChordProgressionBar = FormattedBarToken[];
@@ -63,10 +62,6 @@ export class ChordProgressionFormatter {
     return (
       this.progression.progression[progressionEntryIndex]?.value.chordType ?? ChordType.Unknown
     );
-  }
-
-  getActiveHighlightForStep(progressionEntryIndex: number): string {
-    return chordActiveHighlightFor(this.getGroupingIdForStep(progressionEntryIndex));
   }
 
   private getRomanLabels(): string[] {

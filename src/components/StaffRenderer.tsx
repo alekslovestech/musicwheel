@@ -60,7 +60,8 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     if (progressionBarMode) {
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
       const cpf = new ChordProgressionFormatter(progression);
-      const activeChordBg = cpf.getActiveHighlightForStep(activeProgressionStepIndex);
+      const activeRoman = progression.progression[activeProgressionStepIndex]?.value;
+      const activeChordBg = highlightForActiveChord(activeRoman);
 
       const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;

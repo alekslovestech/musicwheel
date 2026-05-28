@@ -2,7 +2,6 @@ import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
 import {
-  getAllColorLegendCatalogIds,
   getColorLegendGroupsForDisplay,
   getColorLegendSections,
   legendLabelsForGroup,
@@ -21,7 +20,7 @@ describe("colorLegendGroups", () => {
   let catalogMap: Map<string, NoteGroupingId[]>;
 
   beforeEach(() => {
-    catalogMap = buildColorLegendMap(getAllColorLegendCatalogIds());
+    catalogMap = buildColorLegendMap(COLOR_LEGEND_DISPLAY_IDS);
   });
 
   function idsInBucket(id: NoteGroupingId): NoteGroupingId[] {

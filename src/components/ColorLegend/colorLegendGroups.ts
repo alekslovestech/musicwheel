@@ -21,17 +21,11 @@ function toColorLegendGroup(groupingIds: NoteGroupingId[]): ColorLegendGroup {
   };
 }
 
-/** Catalog ids used to resolve equivalent labels; spread/narrow omitted. */
-export function getAllColorLegendCatalogIds(): NoteGroupingId[] {
-  return COLOR_LEGEND_DISPLAY_IDS;
-}
-
-/**
- * Groups from the full catalog, filtered to buckets referenced by `displayIds`.
+/** Groups from the full catalog, filtered to buckets referenced by `displayIds`.
  * Each row includes all equivalent labels from the full map, not just display ids.
  */
 export function getColorLegendGroupsForDisplay(displayIds: NoteGroupingId[]): ColorLegendGroup[] {
-  const fullMap = buildColorLegendMap(getAllColorLegendCatalogIds());
+  const fullMap = buildColorLegendMap(COLOR_LEGEND_DISPLAY_IDS);
   const displayBuckets = new Set(displayIds.map(legendBucketKey));
 
   return [...fullMap.entries()]

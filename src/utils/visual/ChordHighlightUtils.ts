@@ -6,7 +6,6 @@ import { NoteGroupingId } from "@/types/NoteGroupingId";
 import type { RomanChord } from "@/types/RomanChord";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 
-export { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 
 /** Resolve catalog id for active-chord highlighting (slash bass ignored). */
 export function groupingIdForActiveChord(
