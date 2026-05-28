@@ -1,8 +1,16 @@
+import chroma from "chroma-js";
+import { ixIntervalClass } from "@/types/IntervalClass";
 import { NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { SpecialType } from "@/types/enums/SpecialType";
 import { toNoteIndices } from "@/types/IndexTypes";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
+import { getIntervalClassColorCss } from "@/utils/visual/IntervalClassColors";
+
+/** Neutral fallback when a grouping id has no cached color (e.g. ChordType.Unknown). */
+export const DEFAULT_GROUPING_COLOR = getIntervalClassColorCss(ixIntervalClass(0));
+
+const CHORD_HIGHLIGHT_ALPHA = 0.32;
 
 /**
  * Precomputed colors keyed by catalog {@link NoteGroupingId}.
@@ -23,27 +31,18 @@ function buildGroupingColorMap(): Map<NoteGroupingId, string> {
   return colors;
 }
 
-const GROUPING_COLORS: ReadonlyMap<NoteGroupingId, string> = buildGroupingColorMap();
+export const GROUPING_COLORS: ReadonlyMap<NoteGroupingId, string> = buildGroupingColorMap();
 
 export function getColorForGrouping(id: NoteGroupingId): string {
-  const color = GROUPING_COLORS.get(id);
-  if (color === undefined) {
-    throw new Error(`No cached color for NoteGroupingId: ${id}`);
-  }
-  return color;
+  return GROUPING_COLORS.get(id) ?? DEFAULT_GROUPING_COLOR;
 }
 
-export function getAllGroupingColors(): ReadonlyMap<NoteGroupingId, string> {
-  return GROUPING_COLORS;
+/** Semi-transparent fill for active chord highlights (staff, progression cells, etc.). */
+export function chordHighlightFill(color: string): string {
+  return chroma(color).alpha(CHORD_HIGHLIGHT_ALPHA).css();
 }
 
-/** Colors for preset-visible groupings (pop-in legend). */
-export function getVisiblePresetColors(): ReadonlyMap<NoteGroupingId, string> {
-  const visible = new Map<NoteGroupingId, string>();
-  for (const [id, color] of GROUPING_COLORS) {
-    if (NoteGroupingLibrary.getGroupingById(id).isVisiblePreset) {
-      visible.set(id, color);
-    }
-  }
-  return visible;
+/** Lookup + highlight fill for an active chord by catalog id. */
+export function chordActiveHighlightFor(id: NoteGroupingId): string {
+  return chordHighlightFill(getColorForGrouping(id));
 }

@@ -1,6 +1,8 @@
 import { ChordDisplayMode } from "@/types/SettingModes";
 
+import { ChordType } from "@/types/enums/ChordType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { NoteGroupingId } from "@/types/NoteGroupingId";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import {
   COLUMNS_PER_BAR,
@@ -11,6 +13,7 @@ import {
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RhythmUtils } from "@/utils/RhythmUtils";
+import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 import { RomanChordFormatter } from "./RomanChordFormatter";
 
 type MutableChordProgressionBar = FormattedBarToken[];
@@ -40,6 +43,7 @@ export class ChordProgressionFormatter {
       absoluteLabel: absoluteLabels[i],
       colSpan: 1,
       progressionEntryIndex: i,
+      groupingId: this.getGroupingIdForStep(i),
     }));
 
     const rows: MutableChordProgressionBarGrid = [];
@@ -53,6 +57,16 @@ export class ChordProgressionFormatter {
     return isCompact
       ? this.formatCompactForDisplay(musicalKey)
       : this.formatCombinedForDisplay(musicalKey);
+  }
+
+  getGroupingIdForStep(progressionEntryIndex: number): NoteGroupingId {
+    return (
+      this.progression.progression[progressionEntryIndex]?.value.chordType ?? ChordType.Unknown
+    );
+  }
+
+  getActiveHighlightForStep(progressionEntryIndex: number): string {
+    return chordActiveHighlightFor(this.getGroupingIdForStep(progressionEntryIndex));
   }
 
   private getRomanLabels(): string[] {
@@ -158,6 +172,7 @@ export class ChordProgressionFormatter {
         absoluteLabel: absoluteLabelsByIndex?.[progressionEntryIndex],
         colSpan,
         progressionEntryIndex,
+        groupingId: entry.value.chordType,
       });
       colsInBar += colSpan;
 

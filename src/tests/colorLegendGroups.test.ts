@@ -1,22 +1,21 @@
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
-import { NoteGroupingId } from "@/types/NoteGroupingId";
+import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
 import {
-  adjacentDeltaESum,
-  buildColorLegendMap,
-  ColorLegendGroup,
   getAllColorLegendCatalogIds,
   getColorLegendGroupsForDisplay,
-  isIntervalLegendGroup,
-  legendBucketKey,
+  getColorLegendSections,
   legendLabelsForGroup,
-  seriateLegendGroupsByDeltaE,
 } from "@/components/ColorLegend/colorLegendGroups";
 import {
-  COLOR_LEGEND_CHORD_DISPLAY_IDS,
-  COLOR_LEGEND_DISPLAY_IDS,
-} from "@/components/ColorLegend/colorLegendEntries";
-import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
+  buildColorLegendMap,
+  CHORD_CATALOG_ORDER,
+  ColorLegendGroup,
+  isIntervalLegendGroup,
+  legendBucketKey,
+  sortChordLegendGroupsByCatalogOrder,
+} from "@/utils/visual/ColorLegendGrouping";
+import { COLOR_LEGEND_DISPLAY_IDS } from "@/components/ColorLegend/colorLegendEntries";
 
 describe("colorLegendGroups", () => {
   let catalogMap: Map<string, NoteGroupingId[]>;
@@ -87,12 +86,13 @@ describe("colorLegendGroups", () => {
       expect(legendLabelsForGroup(singleDisplayGroup(ChordType.Minor))).toBe("min");
     });
 
-    it("includes all interval buckets when displaying every interval", () => {
-      const intervalIds = COLOR_LEGEND_DISPLAY_IDS.filter(
-        (id) => NoteGroupingLibrary.getGroupingById(id).numNotes === 2,
-      );
+    it("includes all interval display buckets", () => {
+      const intervalIds = COLOR_LEGEND_DISPLAY_IDS.filter((id) => isIntervalType(id));
       const groups = getColorLegendGroupsForDisplay(intervalIds);
-      expect(groups.length).toBeGreaterThanOrEqual(7);
+      const displayBuckets = new Set(intervalIds.map(legendBucketKey));
+
+      expect(groups.length).toBe(displayBuckets.size);
+      expect(intervalIds).not.toContain(IntervalType.Octave);
     });
 
     it("does not attach spread chord labels to standard triads", () => {
@@ -100,27 +100,81 @@ describe("colorLegendGroups", () => {
     });
   });
 
-  describe("seriateLegendGroupsByDeltaE", () => {
+  describe("getColorLegendSections", () => {
+    function expectedChordBucketOrder(displayIds: NoteGroupingId[]): string[] {
+      const seen = new Set<string>();
+      const order: string[] = [];
+
+      for (const id of CHORD_CATALOG_ORDER) {
+        if (!displayIds.includes(id)) continue;
+        const key = legendBucketKey(id);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        order.push(key);
+      }
+
+      return order;
+    }
+
+    it("orders chord rows by ChordType catalog order", () => {
+      const { chords } = getColorLegendSections();
+      const bucketKeys = chords.map((group) => legendBucketKey(group.groupingIds[0]!));
+
+      expect(bucketKeys).toEqual(expectedChordBucketOrder(COLOR_LEGEND_DISPLAY_IDS));
+    });
+  });
+
+  describe("sortChordLegendGroupsByCatalogOrder", () => {
+    function expectedChordBucketOrder(displayIds: NoteGroupingId[]): string[] {
+      const seen = new Set<string>();
+      const order: string[] = [];
+
+      for (const id of CHORD_CATALOG_ORDER) {
+        if (!displayIds.includes(id)) continue;
+        const key = legendBucketKey(id);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        order.push(key);
+      }
+
+      return order;
+    }
+
     let chordGroups: ColorLegendGroup[];
 
     beforeEach(() => {
-      chordGroups = getColorLegendGroupsForDisplay(COLOR_LEGEND_CHORD_DISPLAY_IDS).filter(
+      chordGroups = getColorLegendGroupsForDisplay(COLOR_LEGEND_DISPLAY_IDS).filter(
         (group) => !isIntervalLegendGroup(group),
       );
     });
 
     it("preserves all groups", () => {
-      const seriated = seriateLegendGroupsByDeltaE(chordGroups);
-      expect(seriated).toHaveLength(chordGroups.length);
-      expect(new Set(seriated.map((group) => group.color))).toEqual(
+      const sorted = sortChordLegendGroupsByCatalogOrder(chordGroups, COLOR_LEGEND_DISPLAY_IDS);
+      expect(sorted).toHaveLength(chordGroups.length);
+      expect(new Set(sorted.map((group) => group.color))).toEqual(
         new Set(chordGroups.map((group) => group.color)),
       );
     });
 
-    it("reduces total adjacent deltaE versus catalog order", () => {
-      const catalogAdjacent = adjacentDeltaESum(chordGroups);
-      const seriatedAdjacent = adjacentDeltaESum(seriateLegendGroupsByDeltaE(chordGroups));
-      expect(seriatedAdjacent).toBeLessThanOrEqual(catalogAdjacent);
+    it("orders chord rows by ChordType catalog order", () => {
+      const sorted = sortChordLegendGroupsByCatalogOrder(chordGroups, COLOR_LEGEND_DISPLAY_IDS);
+      const bucketKeys = sorted.map((group) => legendBucketKey(group.groupingIds[0]!));
+
+      expect(bucketKeys).toEqual(expectedChordBucketOrder(COLOR_LEGEND_DISPLAY_IDS));
+    });
+
+    it("places duplicate-color buckets at the earliest ChordType anchor", () => {
+      const sorted = sortChordLegendGroupsByCatalogOrder(chordGroups, COLOR_LEGEND_DISPLAY_IDS);
+      const susBucket = sorted.find((group) => group.groupingIds.includes(ChordType.Sus2))!;
+      const susIndex = sorted.indexOf(susBucket);
+
+      expect(susBucket.groupingIds).toContain(ChordType.Sus4);
+      expect(CHORD_CATALOG_ORDER.indexOf(ChordType.Sus4)).toBeLessThan(
+        CHORD_CATALOG_ORDER.indexOf(ChordType.Sus2),
+      );
+      expect(susIndex).toBe(
+        sorted.findIndex((group) => group.groupingIds.includes(ChordType.Sus4)),
+      );
     });
   });
 });

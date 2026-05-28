@@ -6,8 +6,11 @@ import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import {
-  getAllGroupingColors,
+  chordActiveHighlightFor,
+  chordHighlightFill,
+  DEFAULT_GROUPING_COLOR,
   getColorForGrouping,
+  GROUPING_COLORS,
 } from "@/utils/visual/NoteGroupingColorRegistry";
 
 function catalogIds() {
@@ -19,9 +22,8 @@ function catalogIds() {
 describe("NoteGroupingColorRegistry", () => {
   describe("catalog coverage", () => {
     it("caches a color for every non-special NoteGroupingId", () => {
-      const colors = getAllGroupingColors();
       for (const id of catalogIds()) {
-        expect(colors.has(id)).toBe(true);
+        expect(GROUPING_COLORS.has(id)).toBe(true);
         expect(getColorForGrouping(id)).toMatch(/^rgb\(/);
       }
     });
@@ -69,6 +71,28 @@ describe("NoteGroupingColorRegistry", () => {
 
     it("color(min7) = color(maj6)", () => {
       expect(getColorForGrouping(ChordType.Minor7)).toBe(getColorForGrouping(ChordType.Major6));
+    });
+  });
+
+  describe("getColorForGrouping", () => {
+    it("returns the default color for unmapped ids", () => {
+      expect(getColorForGrouping(ChordType.Unknown)).toBe(DEFAULT_GROUPING_COLOR);
+    });
+  });
+
+  describe("chordHighlightFill", () => {
+    it("returns a semi-transparent rgba/css color", () => {
+      const fill = chordHighlightFill(getColorForGrouping(ChordType.Major));
+      expect(fill).toMatch(/rgba?\(/);
+      expect(fill).not.toBe(getColorForGrouping(ChordType.Major));
+    });
+  });
+
+  describe("chordActiveHighlightFor", () => {
+    it("composes lookup and highlight fill", () => {
+      expect(chordActiveHighlightFor(ChordType.Major)).toBe(
+        chordHighlightFill(getColorForGrouping(ChordType.Major)),
+      );
     });
   });
 });

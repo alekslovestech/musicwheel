@@ -1,16 +1,12 @@
+import { ColorLegendGroup } from "@/utils/visual/ColorLegendGrouping";
 import {
-  ColorLegendGroup,
-  getColorLegendGroupsForDisplay,
-  isIntervalLegendGroup,
+  getColorLegendSections,
   legendLabelsForGroup,
-  legendTitleForGroup,
-  seriateLegendGroupsByDeltaE,
 } from "./colorLegendGroups";
-import { COLOR_LEGEND_DISPLAY_IDS } from "./colorLegendEntries";
 
 function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
   return (
-    <div className="flex items-center gap-snug" title={legendTitleForGroup(group)}>
+    <div className="flex items-center gap-snug">
       <div
         className="h-3 w-[100px] shrink-0 rounded-sm border border-containers-divider/40"
         style={{ backgroundColor: group.color }}
@@ -20,13 +16,7 @@ function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
   );
 }
 
-function ColorLegendSection({
-  title,
-  groups,
-}: {
-  title: string;
-  groups: ColorLegendGroup[];
-}) {
+function ColorLegendSection({ title, groups }: { title: string; groups: ColorLegendGroup[] }) {
   if (groups.length === 0) return null;
 
   return (
@@ -35,28 +25,21 @@ function ColorLegendSection({
         {title}
       </div>
       {groups.map((group) => (
-        <ColorLegendRow
-          key={group.groupingIds.map((id) => id).join("-")}
-          group={group}
-        />
+        <ColorLegendRow key={group.groupingIds.map((id) => id).join("-")} group={group} />
       ))}
     </div>
   );
 }
 
 export function ColorLegendPanel() {
-  const groups = getColorLegendGroupsForDisplay(COLOR_LEGEND_DISPLAY_IDS);
-  const intervalGroups = groups.filter(isIntervalLegendGroup);
-  const chordGroups = seriateLegendGroupsByDeltaE(
-    groups.filter((group) => !isIntervalLegendGroup(group)),
-  );
+  const { intervals, chords } = getColorLegendSections();
 
   return (
     <div className="max-h-[70vh] w-60 overflow-y-auto rounded border border-containers-divider bg-canvas-bgDefault/95 p-snug shadow-md">
       <div className="mb-snug text-sm font-medium">Color legend</div>
       <div className="flex flex-col gap-normal">
-        <ColorLegendSection title="Intervals" groups={intervalGroups} />
-        <ColorLegendSection title="Chords" groups={chordGroups} />
+        <ColorLegendSection title="Intervals" groups={intervals} />
+        <ColorLegendSection title="Chords" groups={chords} />
       </div>
     </div>
   );

@@ -21,10 +21,11 @@ export function ChordProgressionDisplay({
   const columnsPerRow = isCompact ? COMPACT_PATTERN_TOKENS_PER_LINE : COLUMNS_PER_BAR;
 
   return (
-    <div className="flex flex-col">
+    <div id="chord-progression-display" className="flex flex-col">
       {grid.map((row, rowIndex) => (
         <div
           key={rowIndex}
+          id={`chord-progression-row-${rowIndex}`}
           className="grid items-stretch border-b border-neutral-600/40 py-1 first:border-t"
           style={{
             gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
