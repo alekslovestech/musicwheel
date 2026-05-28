@@ -35,7 +35,7 @@ export const KeyboardCircular = () => {
   const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + CIRCLE_RADIUS * 2;
   const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
   const coords = [-VIEWPORT_RADIUS, -VIEWPORT_RADIUS, VIEWPORT_RADIUS * 2, VIEWPORT_RADIUS * 2];
-  const chordColor = ColorUtils.getChordColor(selectedNoteIndices);
+  const chordColor = ColorUtils.getColorForIndices(selectedNoteIndices);
 
   const getLineCartesianPoints = (
     tonicIndex: ChromaticIndex,

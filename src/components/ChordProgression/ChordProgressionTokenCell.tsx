@@ -1,6 +1,7 @@
 "use client";
 
 import type { FormattedBarToken } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
+import { activeChordHighlightStyle } from "@/utils/visual/ChordHighlightUtils";
 
 export function ChordProgressionTokenCell({
   token,
@@ -11,18 +12,31 @@ export function ChordProgressionTokenCell({
   isActive: boolean;
   isCompact?: boolean;
 }) {
+  const tokenIndex = token.progressionEntryIndex.toString();
   return (
     <div
+      id={`token-labels-box-${tokenIndex}`}
       data-active={isActive ? "true" : undefined}
       className={`flex items-center justify-center border-x border-neutral-600/40 px-2 ${
-        isActive ? "bg-cp-highlight/15 ring-1 ring-inset ring-cp-highlight/40" : ""
+        isActive ? "ring-1 ring-inset ring-cp-highlight/40" : ""
       }`}
-      style={{ gridColumn: isCompact ? undefined : `span ${token.colSpan}` }}
+      style={{
+        gridColumn: isCompact ? undefined : `span ${token.colSpan}`,
+        ...(isActive && activeChordHighlightStyle(token.groupingId)),
+      }}
     >
-      <div className="flex flex-col items-center gap-0.5 py-0.5">
-        <span className="text-sm font-semibold leading-tight">{token.label}</span>
+      <div id={`token-labels-${tokenIndex}`} className="flex flex-col items-center gap-0.5 py-0.5">
+        <span
+          id={`token-label-roman-${tokenIndex}`}
+          className="text-sm font-semibold leading-tight"
+        >
+          {token.label}
+        </span>
         {token.absoluteLabel != null && (
-          <span className="text-xs font-normal text-muted-foreground leading-tight">
+          <span
+            id={`token-label-absolute-${tokenIndex}`}
+            className="text-xs font-normal text-muted-foreground leading-tight"
+          >
             {token.absoluteLabel}
           </span>
         )}

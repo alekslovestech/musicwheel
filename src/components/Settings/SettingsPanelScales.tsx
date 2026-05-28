@@ -22,7 +22,7 @@ export const SettingsPanelScales = () => {
       <div className={`flex justify-between ${outerGapHorizontal} flex-1`}>
         {/* Left Column - Musical Context */}
         <div
-          className={`${LAYOUT_PATTERNS.centerFlexCol} rounded p-2 flex-1 ${settingsGap} ${border}`}
+          className={`${LAYOUT_PATTERNS.topFlexCol} rounded p-2 flex-1 ${settingsGap} ${border}`}
         >
           <TransposeWidget target="key" />
           <MusicalKeySelector useDropdownSelector={true} />
@@ -32,7 +32,7 @@ export const SettingsPanelScales = () => {
 
         {/* Right Column - Playback Settings */}
         <div
-          className={`${LAYOUT_PATTERNS.centerFlexCol} ${settingsGap} rounded p-2 flex-1 ${border}`}
+          className={`${LAYOUT_PATTERNS.topFlexCol} ${settingsGap} rounded p-2 flex-1 ${border}`}
         >
           <ScalePlaybackModeSelect />
           <PlaybackWidget />

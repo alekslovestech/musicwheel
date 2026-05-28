@@ -16,12 +16,12 @@ import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFo
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { StaffUtils } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
+import { highlightForActiveChord } from "@/utils/visual/ChordHighlightUtils";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const chordProgressionActiveColorProbeRef = useRef<HTMLDivElement>(null);
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const { selectedProgression, activeProgressionStepIndex } = useAudio();
   const isChordProgressionsMode = useIsChordProgressionsMode();
@@ -58,12 +58,12 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       isChordProgressionsMode && selectedProgression != null && activeProgressionStepIndex != null;
 
     if (progressionBarMode) {
-      const probe = chordProgressionActiveColorProbeRef.current;
-      const activeChordBg = probe != null ? getComputedStyle(probe).backgroundColor : undefined;
-
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
-      const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const cpf = new ChordProgressionFormatter(progression);
+      const activeRoman = progression.progression[activeProgressionStepIndex]?.value;
+      const activeChordBg = highlightForActiveChord(activeRoman);
+
+      const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
       const stepIndicesInRow = cpf.stepIndicesForDisplayRow(
         activeProgressionStepIndex,
@@ -107,7 +107,8 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       factory,
     );
 
-    VexFlowUtils.drawVoice(factory, stave, notes);
+    const highlightFill = highlightForActiveChord(undefined, currentChordRef);
+    VexFlowUtils.drawVoiceWithHighlights(factory, stave, notes, 0, highlightFill);
   }, [
     selectedNoteIndices,
     selectedMusicalKey,
@@ -124,12 +125,6 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       style={style}
       ref={containerRef}
     >
-      {/* Tailwind color probe (used to read `colors.cp.highlight` via getComputedStyle). */}
-      <div
-        ref={chordProgressionActiveColorProbeRef}
-        className="pointer-events-none absolute -z-10 h-0 w-0 overflow-hidden bg-cp-highlight/15"
-        aria-hidden="true"
-      />
       <div
         className="staff-canvas"
         id="staff"

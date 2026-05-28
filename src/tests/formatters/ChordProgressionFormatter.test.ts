@@ -1,5 +1,8 @@
+import { ChordType } from "@/types/enums/ChordType";
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
+import { highlightForActiveChord } from "@/utils/visual/ChordHighlightUtils";
+import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 
 const indices = (bar: readonly { progressionEntryIndex: number }[]) =>
   bar.map((t) => t.progressionEntryIndex);
@@ -40,6 +43,14 @@ describe("ChordProgressionFormatter.formatCombinedForDisplay", () => {
     expect(bars[0][1].label).toBe("vi");
     expect(bars[0][1].absoluteLabel).toBeTruthy();
   });
+
+  it("assigns chord-quality grouping ids to each token", () => {
+    const p = new ChordProgression(["I", "vi", "IV", "V7"], "50s");
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
+    expect(bars[0][0].groupingId).toBe(ChordType.Major);
+    expect(bars[0][1].groupingId).toBe(ChordType.Minor);
+    expect(bars[0][3].groupingId).toBe(ChordType.Dominant7);
+  });
 });
 
 describe("ChordProgressionFormatter.formatCompactForDisplay", () => {
@@ -65,6 +76,13 @@ describe("ChordProgressionFormatter.formatCompactForDisplay", () => {
     expect(rows[0][0].label).toBe("I");
     expect(rows[0][0].absoluteLabel).toBeTruthy();
     expect(rows[0][1].label).toBe("IV");
+  });
+
+  it("assigns chord-quality grouping ids to each token", () => {
+    const p = new ChordProgression(["I:1", "IV:1"], "two wholes");
+    const rows = new ChordProgressionFormatter(p).formatCompactForDisplay(p.suggestedMusicalKey);
+    expect(rows[0][0].groupingId).toBe(ChordType.Major);
+    expect(rows[0][1].groupingId).toBe(ChordType.Major);
   });
 });
 
@@ -117,5 +135,16 @@ describe("ChordProgressionFormatter.compact row grouping", () => {
     const fmt = new ChordProgressionFormatter(p);
     expect(fmt.stepIndicesForDisplayRow(1, true)).toEqual([0, 1]);
     expect(fmt.stepIndicesForDisplayRow(1, false)).toEqual([1]);
+  });
+});
+
+describe("ChordProgressionFormatter step grouping lookup", () => {
+  it("exposes grouping id and highlight for a step", () => {
+    const p = new ChordProgression(["I", "V7"], "test");
+    const fmt = new ChordProgressionFormatter(p);
+    expect(fmt.getGroupingIdForStep(1)).toBe(ChordType.Dominant7);
+    expect(highlightForActiveChord(p.progression[1]?.value)).toBe(
+      chordActiveHighlightFor(ChordType.Dominant7),
+    );
   });
 });

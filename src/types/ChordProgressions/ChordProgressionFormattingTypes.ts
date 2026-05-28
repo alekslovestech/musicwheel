@@ -1,3 +1,5 @@
+import { NoteGroupingId } from "../NoteGroupingId";
+
 /** 16 columns per 4/4 bar at sixteenth-note grid resolution. */
 export const COLUMNS_PER_BAR = 16;
 
@@ -13,6 +15,8 @@ export type FormattedBarToken = {
   colSpan: number;
   /** Index into `ChordProgression.progression` for this chord step (playback / highlight). */
   progressionEntryIndex: number;
+  /** Catalog id for chord quality (typically {@link ChordType}). */
+  groupingId: NoteGroupingId;
 };
 
 export type ChordProgressionBar = readonly FormattedBarToken[];
