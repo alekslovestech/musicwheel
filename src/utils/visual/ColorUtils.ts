@@ -2,6 +2,7 @@ import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalDistance } from "@/types/IntervalClass";
 import chroma from "chroma-js";
 import { IntervalUtils } from "@/utils/IntervalUtils";
+import { AppColor } from "@/utils/visual/AppColor";
 import {
   INTERVAL_CLASS_COLORS,
   INTERVAL_CLASS_DISSONANCE,
@@ -9,10 +10,9 @@ import {
 } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getColorForIndices(indices: NoteIndices): string {
+  static getColorForIndices(indices: NoteIndices): AppColor {
     const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
-    const mixcolor = this.mixChordColor(cyclicIntervals, "lch");
-    return mixcolor.css();
+    return this.mixChordColor(cyclicIntervals, "lch");
   }
 
   private static mixChordColor(

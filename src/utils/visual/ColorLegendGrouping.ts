@@ -2,7 +2,7 @@ import { ChordType } from "@/types/enums/ChordType";
 import { NoteGroupingType } from "@/types/enums/NoteGroupingType";
 import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
-import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
+import { AppColor } from "@/utils/visual/AppColor";
 
 /** {@link ChordType} declaration order; Unknown omitted. */
 export const CHORD_CATALOG_ORDER: readonly ChordType[] = (
@@ -10,44 +10,8 @@ export const CHORD_CATALOG_ORDER: readonly ChordType[] = (
 ).filter((id) => id !== ChordType.Unknown);
 
 export interface ColorLegendGroup {
-  color: string;
+  color: AppColor;
   groupingIds: NoteGroupingId[];
-}
-
-function sortIdsByOrder(ids: NoteGroupingId[]): NoteGroupingId[] {
-  return [...ids].sort(
-    (a, b) =>
-      NoteGroupingLibrary.getGroupingById(a).orderId -
-      NoteGroupingLibrary.getGroupingById(b).orderId,
-  );
-}
-
-/**
- * Group key: same computed color AND same catalog kind (interval vs chord).
- * Prevents accidental merges when a chord mix collides with a pure interval color.
- */
-export function legendBucketKey(id: NoteGroupingId): string {
-  const color = getColorForGrouping(id);
-  const type = isIntervalType(id) ? NoteGroupingType.Interval : NoteGroupingType.Chord;
-  return `${type}:${color}`;
-}
-
-/** Bucket catalog ids by legend bucket key. */
-export function buildColorLegendMap(ids: NoteGroupingId[]): Map<string, NoteGroupingId[]> {
-  const map = new Map<string, NoteGroupingId[]>();
-
-  for (const id of ids) {
-    const key = legendBucketKey(id);
-    const group = map.get(key) ?? [];
-    group.push(id);
-    map.set(key, group);
-  }
-
-  for (const [key, group] of map) {
-    map.set(key, sortIdsByOrder(group));
-  }
-
-  return map;
 }
 
 export function isIntervalLegendGroup(group: ColorLegendGroup): boolean {

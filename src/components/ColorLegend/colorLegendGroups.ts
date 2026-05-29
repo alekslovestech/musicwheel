@@ -1,10 +1,10 @@
-import { NoteGroupingId } from "@/types/NoteGroupingId";
+import { NoteGroupingType } from "@/types/enums/NoteGroupingType";
+import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
+import { colorCss } from "@/utils/visual/AppColor";
 import {
-  buildColorLegendMap,
   ColorLegendGroup,
   isIntervalLegendGroup,
-  legendBucketKey,
   sortChordLegendGroupsByCatalogOrder,
 } from "@/utils/visual/ColorLegendGrouping";
 import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
@@ -14,6 +14,20 @@ function minOrderId(ids: NoteGroupingId[]): number {
   return Math.min(...ids.map((id) => NoteGroupingLibrary.getGroupingById(id).orderId));
 }
 
+function legendBucketKey(id: NoteGroupingId): string {
+  const color = getColorForGrouping(id);
+  const type = isIntervalType(id) ? NoteGroupingType.Interval : NoteGroupingType.Chord;
+  return `${type}:${colorCss(color)}`;
+}
+
+function sortIdsByOrder(ids: NoteGroupingId[]): NoteGroupingId[] {
+  return [...ids].sort(
+    (a, b) =>
+      NoteGroupingLibrary.getGroupingById(a).orderId -
+      NoteGroupingLibrary.getGroupingById(b).orderId,
+  );
+}
+
 function toColorLegendGroup(groupingIds: NoteGroupingId[]): ColorLegendGroup {
   return {
     color: getColorForGrouping(groupingIds[0]!),
@@ -21,16 +35,18 @@ function toColorLegendGroup(groupingIds: NoteGroupingId[]): ColorLegendGroup {
   };
 }
 
-/** Groups from the full catalog, filtered to buckets referenced by `displayIds`.
- * Each row includes all equivalent labels from the full map, not just display ids.
- */
-export function getColorLegendGroupsForDisplay(displayIds: NoteGroupingId[]): ColorLegendGroup[] {
-  const fullMap = buildColorLegendMap(COLOR_LEGEND_DISPLAY_IDS);
-  const displayBuckets = new Set(displayIds.map(legendBucketKey));
+function buildColorLegendGroups(): ColorLegendGroup[] {
+  const map = new Map<string, NoteGroupingId[]>();
 
-  return [...fullMap.entries()]
-    .filter(([bucketKey]) => displayBuckets.has(bucketKey))
-    .map(([, groupingIds]) => toColorLegendGroup(groupingIds))
+  for (const id of COLOR_LEGEND_DISPLAY_IDS) {
+    const key = legendBucketKey(id);
+    const group = map.get(key) ?? [];
+    group.push(id);
+    map.set(key, group);
+  }
+
+  return [...map.values()]
+    .map((groupingIds) => toColorLegendGroup(sortIdsByOrder(groupingIds)))
     .sort((a, b) => minOrderId(a.groupingIds) - minOrderId(b.groupingIds));
 }
 
@@ -51,7 +67,7 @@ export function getColorLegendSections(): {
   intervals: ColorLegendGroup[];
   chords: ColorLegendGroup[];
 } {
-  const groups = getColorLegendGroupsForDisplay(COLOR_LEGEND_DISPLAY_IDS);
+  const groups = buildColorLegendGroups();
   const intervals = groups.filter(isIntervalLegendGroup);
   const chords = sortChordLegendGroupsByCatalogOrder(
     groups.filter((group) => !isIntervalLegendGroup(group)),

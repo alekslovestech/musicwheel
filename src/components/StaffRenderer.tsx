@@ -16,7 +16,8 @@ import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFo
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { StaffUtils } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
-import { highlightForActiveChord } from "@/utils/visual/ChordHighlightUtils";
+import { colorCss } from "@/utils/visual/AppColor";
+import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
@@ -61,7 +62,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
       const cpf = new ChordProgressionFormatter(progression);
       const activeRoman = progression.progression[activeProgressionStepIndex]?.value;
-      const activeChordBg = highlightForActiveChord(activeRoman);
+      const activeChordBg = colorCss(chordActiveHighlightFor(activeRoman?.chordType));
 
       const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
@@ -107,7 +108,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       factory,
     );
 
-    const highlightFill = highlightForActiveChord(undefined, currentChordRef);
+    const highlightFill = colorCss(chordActiveHighlightFor(currentChordRef?.id));
     VexFlowUtils.drawVoiceWithHighlights(factory, stave, notes, 0, highlightFill);
   }, [
     selectedNoteIndices,
