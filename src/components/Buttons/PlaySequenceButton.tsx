@@ -19,7 +19,7 @@ export const PlaySequenceButton: React.FC = () => {
   };
 
   return (
-    <Button size="md" variant="action" onClick={handleClick}>
+    <Button id="play-stop-sequence-button" size="md" variant="action" onClick={handleClick}>
       {isPlayingOrPaused() ? (
         <StopIcon className={PLAYBACK_BUTTON_STYLES.scalesMode} />
       ) : (
