@@ -1,4 +1,4 @@
-import { ColorLegendGroup } from "@/utils/visual/ColorLegendGrouping";
+import { ColorLegendGroup } from "./colorLegendGroups";
 import { colorCss } from "@/utils/visual/AppColor";
 import {
   getColorLegendSections,

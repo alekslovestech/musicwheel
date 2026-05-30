@@ -1,13 +1,26 @@
 import { NoteIndices } from "@/types/IndexTypes";
-import { IntervalDistance } from "@/types/IntervalClass";
+import { IntervalClass, IntervalDistance, ixIntervalClass } from "@/types/IntervalClass";
+import { TWELVE } from "@/types/constants/NoteConstants";
 import chroma from "chroma-js";
 import { IntervalUtils } from "@/utils/IntervalUtils";
 import { AppColor } from "@/utils/visual/AppColor";
-import {
-  INTERVAL_CLASS_COLORS,
-  INTERVAL_CLASS_DISSONANCE,
-  intervalClass,
-} from "@/utils/visual/IntervalClassColors";
+import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
+
+/** Only 1 (m2/M7) and 6 (tritone) pull extra; rest are flat. */
+const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
+  0: 0,
+  1: 0.9,
+  2: 0,
+  3: 0,
+  4: 0,
+  5: 0,
+  6: 1,
+};
+
+function intervalClass(semitone: number): IntervalClass {
+  const mod = semitone % TWELVE;
+  return ixIntervalClass(Math.min(mod, TWELVE - mod));
+}
 
 export class ColorUtils {
   static getColorForIndices(indices: NoteIndices): AppColor {

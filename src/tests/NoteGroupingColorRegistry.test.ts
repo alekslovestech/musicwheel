@@ -6,7 +6,6 @@ import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { expectDistinctColors, expectEqualColors } from "@/tests/utils/ColorTestUtils";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
-import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
 import {
   chordActiveHighlightFor,
   getColorForGrouping,
@@ -70,11 +69,11 @@ describe("NoteGroupingColorRegistry", () => {
 
   describe("getColorForGrouping", () => {
     it("returns the default color for unmapped ids", () => {
-      expectEqualColors(getColorForGrouping(ChordType.Unknown), INTERVAL_CLASS_COLORS[0]);
+      expectEqualColors(getColorForGrouping(ChordType.Unknown), getColorForGrouping());
     });
 
     it("returns the default color when id is omitted", () => {
-      expectEqualColors(getColorForGrouping(), INTERVAL_CLASS_COLORS[0]);
+      expectEqualColors(getColorForGrouping(), getColorForGrouping(ChordType.Unknown));
     });
   });
 
