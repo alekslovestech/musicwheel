@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { useCallback, useEffect, useRef, type MutableRefObject, type RefObject } from "react";
 import * as Tone from "tone";
 
 import { useAudio } from "@/contexts/AudioContext";
@@ -19,7 +19,7 @@ export function useAudioPlayer() {
 
   useToneContextInit(setAudioInitialized);
   usePolySynthVoiceBridge(synthRef);
-  usePolySynthLifecycle(synthRef, isAudioInitialized, isDemoMode);
+  usePolySynthLifecycle(synthRef, isAudioInitialized);
   const { playNote, playSelectedNotes } = useNotePlayback(
     synthRef,
     selectedNoteIndices,
@@ -79,38 +79,25 @@ function usePolySynthVoiceBridge(synthRef: RefObject<Tone.PolySynth | null>) {
 }
 
 function usePolySynthLifecycle(
-  synthRef: RefObject<Tone.PolySynth | null>,
+  synthRef: MutableRefObject<Tone.PolySynth | null>,
   isAudioInitialized: boolean,
-  isDemoMode: boolean,
 ) {
   useEffect(() => {
-    let isActive = true;
+    if (!isAudioInitialized) return;
 
-    const initSynth = async () => {
-      try {
-        const synth = createPolySynth(isDemoMode);
-        if (isActive) {
-          synthRef.current = synth;
-        } else {
-          synth.dispose();
-        }
-      } catch (error) {
-        console.error("Failed to initialize synth:", error);
-      }
-    };
-
-    if (isAudioInitialized) {
-      initSynth();
+    try {
+      synthRef.current = createPolySynth(false);
+    } catch (error) {
+      console.error("Failed to initialize synth:", error);
     }
 
     return () => {
-      isActive = false;
       if (synthRef.current) {
         synthRef.current.dispose();
         synthRef.current = null;
       }
     };
-  }, [isAudioInitialized, isDemoMode]);
+  }, [isAudioInitialized]);
 }
 
 function useNotePlayback(
