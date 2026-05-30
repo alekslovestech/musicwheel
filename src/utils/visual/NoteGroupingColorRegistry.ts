@@ -6,6 +6,15 @@ import { AppColor } from "@/utils/visual/AppColor";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
 
+export function getColorForGrouping(id?: NoteGroupingId): AppColor {
+  return GROUPING_COLORS.get(id!) ?? DEFAULT_GROUPING_COLOR;
+}
+
+/** Semi-transparent fill for active chord highlights (staff, progression cells, etc.). */
+export function chordActiveHighlightFor(id?: NoteGroupingId): AppColor {
+  return getColorForGrouping(id).alpha(CHORD_HIGHLIGHT_ALPHA);
+}
+
 const DEFAULT_GROUPING_COLOR = INTERVAL_CLASS_COLORS[0];
 const CHORD_HIGHLIGHT_ALPHA = 0.32;
 
@@ -29,12 +38,3 @@ function buildGroupingColorMap(): Map<NoteGroupingId, AppColor> {
 }
 
 const GROUPING_COLORS: ReadonlyMap<NoteGroupingId, AppColor> = buildGroupingColorMap();
-
-export function getColorForGrouping(id?: NoteGroupingId): AppColor {
-  return GROUPING_COLORS.get(id!) ?? DEFAULT_GROUPING_COLOR;
-}
-
-/** Semi-transparent fill for active chord highlights (staff, progression cells, etc.). */
-export function chordActiveHighlightFor(id?: NoteGroupingId): AppColor {
-  return getColorForGrouping(id).alpha(CHORD_HIGHLIGHT_ALPHA);
-}

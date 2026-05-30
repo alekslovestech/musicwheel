@@ -1,5 +1,11 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 
+export function getOppositeAccidental(prevAccidental: AccidentalType): AccidentalType {
+  if (prevAccidental === AccidentalType.Sharp) return AccidentalType.Flat;
+  if (prevAccidental === AccidentalType.Flat) return AccidentalType.Sharp;
+  return prevAccidental;
+}
+
 export class AccidentalFormatter {
   //mostly used in for text on keyboards / accidental toggle
   static getAccidentalSignForDisplay(accidental: AccidentalType): string {
@@ -33,7 +39,7 @@ export class AccidentalFormatter {
   }
 
   //mostly used in StaffRenderer / EasyScore format
-  static getAccidentalSignForEasyScore = (accidental: AccidentalType): string => {
+  static getAccidentalSignForEasyScore(accidental: AccidentalType): string {
     switch (accidental) {
       case AccidentalType.None:
         return "";
@@ -46,7 +52,7 @@ export class AccidentalFormatter {
       default:
         return "";
     }
-  };
+  }
 
   //accidental string can be in display format, or debug format
   static parseAccidentalType(accidentalString: string): AccidentalType {
@@ -71,9 +77,3 @@ export class AccidentalFormatter {
     return 0;
   }
 }
-
-export const getOppositeAccidental = (prevAccidental: AccidentalType): AccidentalType => {
-  if (prevAccidental === AccidentalType.Sharp) return AccidentalType.Flat;
-  if (prevAccidental === AccidentalType.Flat) return AccidentalType.Sharp;
-  return prevAccidental; //no change
-};

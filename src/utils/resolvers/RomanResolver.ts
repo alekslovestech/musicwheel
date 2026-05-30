@@ -9,62 +9,6 @@ import { addChromatic } from "@/types/ChromaticIndex";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 
-interface ParsedRomanLexeme {
-  accidentalPrefix: string;
-  pureRoman: string;
-  chordSuffix: string;
-  bassRoman: string | undefined;
-}
-
-const accidentalRegex: RegExp = /#|♯|b|♭/;
-const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
-/** Longer tokens first so e.g. `dim7` is not consumed as `dim`. */
-const chordTypeRegex: RegExp = /\+|maj7|dim7|o7|ø7|7|6|dim|o|aug/;
-const romanRegex: RegExp = new RegExp(
-  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${chordTypeRegex.source})?(\/(${pureRomanRegex.source}))?$`,
-);
-
-/**
- * Trailing `:denominator` with optional dot(s) for LilyPond-style length
- * (e.g. `IV:2` half, `IV:4.` dotted quarter). Each `.` multiplies duration by 1.5.
- */
-const progressionDurationSuffixRegex = /^(.+):(\d+)(\.+)?$/;
-
-function splitProgressionToken(token: string): {
-  romanPart: string;
-  noteLength: NoteLength | undefined;
-  rhythmDots: number;
-} {
-  const match = token.match(progressionDurationSuffixRegex);
-  if (match) {
-    const parsed = Number(match[2]);
-    if (!isNoteLength(parsed)) {
-      throw new Error(`Unsupported note length: ${match[2]}`);
-    }
-    const dotStr = match[3];
-    return {
-      romanPart: match[1],
-      noteLength: parsed,
-      rhythmDots: dotStr !== undefined ? dotStr.length : 0,
-    };
-  }
-  return { romanPart: token, noteLength: undefined, rhythmDots: 0 };
-}
-
-function splitRomanString(romanString: string): ParsedRomanLexeme {
-  const match = romanString.match(romanRegex);
-  if (match) {
-    return {
-      accidentalPrefix: match[1] || "",
-      pureRoman: match[2],
-      chordSuffix: match[3] || "",
-      bassRoman: match[5] || undefined,
-    };
-  }
-
-  throw new Error(`No match found for roman string: ${romanString}`);
-}
-
 export class RomanResolver {
   static resolveRomanChord(romanChord: RomanChord, musicalKey: MusicalKey): AbsoluteChord {
     const scale = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
@@ -135,4 +79,60 @@ export class RomanResolver {
     const { romanPart, noteLength, rhythmDots } = splitProgressionToken(input.trim());
     return makeDurated(this.createRomanChordFromString(romanPart), noteLength, rhythmDots);
   }
+}
+
+interface ParsedRomanLexeme {
+  accidentalPrefix: string;
+  pureRoman: string;
+  chordSuffix: string;
+  bassRoman: string | undefined;
+}
+
+const accidentalRegex: RegExp = /#|♯|b|♭/;
+const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
+/** Longer tokens first so e.g. `dim7` is not consumed as `dim`. */
+const chordTypeRegex: RegExp = /\+|maj7|dim7|o7|ø7|7|6|dim|o|aug/;
+const romanRegex: RegExp = new RegExp(
+  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${chordTypeRegex.source})?(\/(${pureRomanRegex.source}))?$`,
+);
+
+/**
+ * Trailing `:denominator` with optional dot(s) for LilyPond-style length
+ * (e.g. `IV:2` half, `IV:4.` dotted quarter). Each `.` multiplies duration by 1.5.
+ */
+const progressionDurationSuffixRegex = /^(.+):(\d+)(\.+)?$/;
+
+function splitProgressionToken(token: string): {
+  romanPart: string;
+  noteLength: NoteLength | undefined;
+  rhythmDots: number;
+} {
+  const match = token.match(progressionDurationSuffixRegex);
+  if (match) {
+    const parsed = Number(match[2]);
+    if (!isNoteLength(parsed)) {
+      throw new Error(`Unsupported note length: ${match[2]}`);
+    }
+    const dotStr = match[3];
+    return {
+      romanPart: match[1],
+      noteLength: parsed,
+      rhythmDots: dotStr !== undefined ? dotStr.length : 0,
+    };
+  }
+  return { romanPart: token, noteLength: undefined, rhythmDots: 0 };
+}
+
+function splitRomanString(romanString: string): ParsedRomanLexeme {
+  const match = romanString.match(romanRegex);
+  if (match) {
+    return {
+      accidentalPrefix: match[1] || "",
+      pureRoman: match[2],
+      chordSuffix: match[3] || "",
+      bassRoman: match[5] || undefined,
+    };
+  }
+
+  throw new Error(`No match found for roman string: ${romanString}`);
 }
