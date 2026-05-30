@@ -1,18 +1,15 @@
 import { NoteIndices } from "@/types/IndexTypes";
-import { IntervalDistance } from "@/types/IntervalClass";
+import { IntervalClass, IntervalDistance, ixIntervalClass } from "@/types/IntervalClass";
+import { TWELVE } from "@/types/constants/NoteConstants";
 import chroma from "chroma-js";
 import { IntervalUtils } from "@/utils/IntervalUtils";
-import {
-  INTERVAL_CLASS_COLORS,
-  INTERVAL_CLASS_DISSONANCE,
-  intervalClass,
-} from "@/utils/visual/IntervalClassColors";
+import { AppColor } from "@/utils/visual/AppColor";
+import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getColorForIndices(indices: NoteIndices): string {
+  static getColorForIndices(indices: NoteIndices): AppColor {
     const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
-    const mixcolor = this.mixChordColor(cyclicIntervals, "lch");
-    return mixcolor.css();
+    return this.mixChordColor(cyclicIntervals, "lch");
   }
 
   private static mixChordColor(
@@ -98,4 +95,20 @@ export class ColorUtils {
     const H = (Math.atan2(hySum, hxSum) * 180) / Math.PI;
     return chroma.lch(L, C, H < 0 ? H + 360 : H);
   }
+}
+
+/** Only 1 (m2/M7) and 6 (tritone) pull extra; rest are flat. */
+const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
+  0: 0,
+  1: 0.9,
+  2: 0,
+  3: 0,
+  4: 0,
+  5: 0,
+  6: 1,
+};
+
+function intervalClass(semitone: number): IntervalClass {
+  const mod = semitone % TWELVE;
+  return ixIntervalClass(Math.min(mod, TWELVE - mod));
 }

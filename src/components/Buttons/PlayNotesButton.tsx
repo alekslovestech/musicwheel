@@ -1,10 +1,10 @@
-import { useAudioPlayer } from "@/components/AudioPlayer";
+import { usePlaySelectedNotes } from "@/components/AudioPlayer";
 import { Button } from "../Common/Button";
 import { PlayIcon } from "../Icons";
 import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 
 export const PlayNotesButton: React.FC = () => {
-  const { playSelectedNotes } = useAudioPlayer();
+  const playSelectedNotes = usePlaySelectedNotes();
 
   return (
     <Button size="sm" variant="action" onClick={playSelectedNotes}>

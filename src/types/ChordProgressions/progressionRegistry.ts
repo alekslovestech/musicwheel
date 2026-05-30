@@ -29,14 +29,14 @@ export interface ProgressionRegistryEntry {
 }
 
 export const PROGRESSION_REGISTRY: Record<ChordProgressionType, ProgressionRegistryEntry> = {
-  [ChordProgressionType.Perfect_Cadence]: {
-    slug: "perfect-cadence",
-    chords: PerfectCadenceChords,
-    isPattern: true,
-  },
   [ChordProgressionType.Plagal_Cadence]: {
     slug: "plagal-cadence",
     chords: PlagalCadenceChords,
+    isPattern: true,
+  },
+  [ChordProgressionType.Perfect_Cadence]: {
+    slug: "perfect-cadence",
+    chords: PerfectCadenceChords,
     isPattern: true,
   },
   [ChordProgressionType.Line_Cliche]: {

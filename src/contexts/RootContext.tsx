@@ -5,6 +5,7 @@ import { useGlobalMode } from "@/lib/hooks";
 import { initPH, ph } from "@/lib/ph";
 import { usePathname } from "next/navigation";
 
+import { AudioPlayer } from "@/components/AudioPlayer";
 import { DisplayProvider } from "./DisplayContext";
 import { MusicalProvider } from "./MusicalContext";
 import { ChordPresetProvider } from "./ChordPresetContext";
@@ -35,7 +36,9 @@ export const RootProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       <DisplayProvider key={`display-${globalMode}`}>
         <AudioProvider>
           {/* Remove the key - don't reset audio */}
-          <ChordPresetProvider key={`chord-preset-${globalMode}`}>{children}</ChordPresetProvider>
+          <AudioPlayer>
+            <ChordPresetProvider key={`chord-preset-${globalMode}`}>{children}</ChordPresetProvider>
+          </AudioPlayer>
         </AudioProvider>
       </DisplayProvider>
     </MusicalProvider>

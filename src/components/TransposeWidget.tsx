@@ -10,14 +10,36 @@ import { track } from "@/lib/track";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 
-type TransposeDirection = "up" | "down";
 export type TransposeTarget = "key" | "notes";
+
+// This component is used to transpose the selected notes OR the musical key.
+export function TransposeWidget({
+  target,
+  label,
+}: {
+  target: TransposeTarget;
+  label?: string;
+}) {
+  const flexDirection = /*target === "notes" ? "flex-col" : */ "flex-row";
+  return (
+    <div>
+      {label && <div className={`${TYPOGRAPHY.chordNameText}`}>{label}</div>}
+      <div className={`transpose-buttons-container flex ${flexDirection} gap-2`}>
+        <TransposeButton direction="up" target={target} />
+        <TransposeButton direction="down" target={target} />
+      </div>
+    </div>
+  );
+}
+
+type TransposeDirection = "up" | "down";
+
 interface TransposeButtonProps {
   direction: TransposeDirection;
   target: TransposeTarget;
 }
 
-const TransposeButton: React.FC<TransposeButtonProps> = ({ direction, target }) => {
+function TransposeButton({ direction, target }: TransposeButtonProps) {
   const arrow = direction === "up" ? "↑" : "↓";
   const amount = direction === "up" ? 1 : -1;
   const symbol = target === "notes" ? "♫" : "𝄞";
@@ -33,19 +55,16 @@ const TransposeButton: React.FC<TransposeButtonProps> = ({ direction, target }) 
   } = useMusical();
   const globalMode = useGlobalMode();
   const { inputMode } = useChordPresets();
-  const onClick = () => {
+
+  function onClick() {
     track("transpose_interacted", {
       global_mode: globalMode,
       input_mode: inputMode,
     });
     if (target === "notes") {
-      // Transpose selected notes
       const transposedIndices = IndexUtils.transposeNotes(selectedNoteIndices, amount);
-
-      // Update notes directly (works for both modes)
       setNotesDirectly(transposedIndices);
 
-      // In preset mode, update chord reference from the transposed notes
       if (!isFreeformMode && currentChordRef && transposedIndices.length > 0) {
         const newChordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(transposedIndices);
         if (newChordRef) {
@@ -53,11 +72,10 @@ const TransposeButton: React.FC<TransposeButtonProps> = ({ direction, target }) 
         }
       }
     } else {
-      // Transpose musical key
       const newKey = selectedMusicalKey.getTransposedKey(amount);
       setSelectedMusicalKey(newKey);
     }
-  };
+  }
 
   return (
     <Button
@@ -70,21 +88,4 @@ const TransposeButton: React.FC<TransposeButtonProps> = ({ direction, target }) 
       {`${arrow}${symbol}${arrow}`}
     </Button>
   );
-};
-
-// This component is used to transpose the selected notes OR the musical key.
-export const TransposeWidget: React.FC<{
-  target: TransposeTarget;
-  label?: string;
-}> = ({ target, label }) => {
-  const flexDirection = /*target === "notes" ? "flex-col" : */ "flex-row";
-  return (
-    <div>
-      {label && <div className={`${TYPOGRAPHY.chordNameText}`}>{label}</div>}
-      <div className={`transpose-buttons-container flex ${flexDirection} gap-2`}>
-        <TransposeButton direction="up" target={target} />
-        <TransposeButton direction="down" target={target} />
-      </div>
-    </div>
-  );
-};
+}

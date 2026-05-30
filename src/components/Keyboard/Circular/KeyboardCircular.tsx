@@ -2,6 +2,7 @@ import { TWELVE } from "@/types/constants/NoteConstants";
 import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
 
 import { ColorUtils } from "@/utils/visual/ColorUtils";
+import { colorCss } from "@/utils/visual/AppColor";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
@@ -105,7 +106,12 @@ export const KeyboardCircular = () => {
           />
         );
       })}
-      {CircularVisualizations.draw(selectedNoteIndices, circularVisMode, INNER_RADIUS, chordColor)}
+      {CircularVisualizations.draw(
+        selectedNoteIndices,
+        circularVisMode,
+        INNER_RADIUS,
+        colorCss(chordColor),
+      )}
       {renderScaleBoundary()}
     </svg>
   );

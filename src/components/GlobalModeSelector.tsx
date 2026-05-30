@@ -8,19 +8,6 @@ import { useGlobalMode, useIsDemoRoute } from "@/lib/hooks";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { getPath } from "@/utils/slug/paths";
 
-const GLOBAL_MODE_OPTIONS: ReadonlyArray<{ mode: GlobalMode; label: string }> = [
-  { mode: GlobalMode.Harmony, label: "Harmony" },
-  { mode: GlobalMode.Scales, label: "Scales" },
-  { mode: GlobalMode.ChordProgressions, label: "Progressions" },
-];
-
-/** Horizontal padding (px-1 × 2) plus room for the native select chevron. */
-const SELECT_WIDTH_EXTRA_PX = 26;
-
-function selectedModeLabel(mode: GlobalMode): string {
-  return GLOBAL_MODE_OPTIONS.find((option) => option.mode === mode)?.label ?? "";
-}
-
 export function GlobalModeSelector() {
   const router = useRouter();
   const globalMode = useGlobalMode();
@@ -37,11 +24,11 @@ export function GlobalModeSelector() {
 
   if (isDemoRoute) return null;
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const mode = event.target.value as GlobalMode;
     if (mode === globalMode) return;
     router.push(getPath(mode, undefined, isDemoRoute));
-  };
+  }
 
   return (
     <div className="absolute top-2 left-2 z-10 flex flex-col items-start gap-tight">
@@ -74,4 +61,17 @@ export function GlobalModeSelector() {
       </div>
     </div>
   );
+}
+
+const GLOBAL_MODE_OPTIONS: ReadonlyArray<{ mode: GlobalMode; label: string }> = [
+  { mode: GlobalMode.Harmony, label: "Harmony" },
+  { mode: GlobalMode.Scales, label: "Scales" },
+  { mode: GlobalMode.ChordProgressions, label: "Progressions" },
+];
+
+/** Horizontal padding (px-1 × 2) plus room for the native select chevron. */
+const SELECT_WIDTH_EXTRA_PX = 26;
+
+function selectedModeLabel(mode: GlobalMode): string {
+  return GLOBAL_MODE_OPTIONS.find((option) => option.mode === mode)?.label ?? "";
 }

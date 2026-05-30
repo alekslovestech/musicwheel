@@ -10,15 +10,10 @@ import React, {
 } from "react";
 
 import { ChordType } from "@/types/enums/ChordType";
-import {
-  ActualIndex,
-  InversionIndex,
-  ixActual,
-  toNoteIndices,
-  NoteIndices,
-} from "@/types/IndexTypes";
+import { ActualIndex, InversionIndex, ixActual, NoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
-import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
+import { GlobalMode } from "@/types/enums/GlobalMode";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 
 import { ChordUtils } from "@/utils/ChordUtils";
@@ -44,16 +39,15 @@ export interface MusicalSettings {
 
 const MusicalContext = createContext<MusicalSettings | null>(null);
 
+const DEFAULT_HARMONY_CHORD_REF = makeChordReference(7, ChordType.Major, 0);
+
 export const MusicalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const isScales = useIsScalePreviewMode();
-  const [selectedNoteIndices, setSelectedNoteIndices] = useState<NoteIndices>(
-    isScales ? [] : toNoteIndices([7, 11, 14]),
-  );
-  const [selectedMusicalKey, setSelectedMusicalKey] = useState<MusicalKey>(DEFAULT_MUSICAL_KEY);
+  const globalMode = useGlobalMode();
   const [currentChordRef, setCurrentChordRef] = useState<ChordReference | undefined>(
-    // Create initial chord reference to match the initial notes [7, 11, 14] = G major
-    isScales ? undefined : makeChordReference(7, ChordType.Major, 0), // G major root position
+    globalMode === GlobalMode.Harmony ? DEFAULT_HARMONY_CHORD_REF : undefined,
   );
+  const [selectedNoteIndices, setSelectedNoteIndices] = useState<NoteIndices>([]);
+  const [selectedMusicalKey, setSelectedMusicalKey] = useState<MusicalKey>(DEFAULT_MUSICAL_KEY);
 
   const setChordRootNote = (rootNote: ActualIndex) => {
     if (!currentChordRef) return;

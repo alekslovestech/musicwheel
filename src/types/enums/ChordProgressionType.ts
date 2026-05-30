@@ -1,6 +1,6 @@
 export enum ChordProgressionType {
-  Perfect_Cadence = "Perfect Cadence",
   Plagal_Cadence = "Plagal Cadence",
+  Perfect_Cadence = "Perfect Cadence",
   Line_Cliche = "Line Cliche",
   Fifties_Progression = "50s Progression",
   Two_Five_One = "2-5-1",
