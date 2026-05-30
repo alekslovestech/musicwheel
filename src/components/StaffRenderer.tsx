@@ -18,7 +18,7 @@ import { StaffUtils } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
 import { colorCss } from "@/utils/visual/AppColor";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
-import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { useIsChordProgressionsMode } from "@/lib/hooks/useGlobalMode";
 
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
@@ -26,7 +26,6 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const { selectedProgression, activeProgressionStepIndex } = useAudio();
   const isChordProgressionsMode = useIsChordProgressionsMode();
-  const isScalesMode = useIsScalePreviewMode();
   const border = useBorder();
 
   useEffect(() => {
@@ -108,13 +107,11 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       factory,
     );
 
-    const highlightFill = colorCss(chordActiveHighlightFor(currentChordRef?.id));
-    VexFlowUtils.drawVoiceWithHighlights(factory, stave, notes, 0, highlightFill);
+    VexFlowUtils.drawVoice(factory, stave, notes);
   }, [
     selectedNoteIndices,
     selectedMusicalKey,
     currentChordRef,
-    isScalesMode,
     isChordProgressionsMode,
     selectedProgression,
     activeProgressionStepIndex,

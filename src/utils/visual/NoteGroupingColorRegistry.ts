@@ -31,8 +31,7 @@ function buildGroupingColorMap(): Map<NoteGroupingId, AppColor> {
 const GROUPING_COLORS: ReadonlyMap<NoteGroupingId, AppColor> = buildGroupingColorMap();
 
 export function getColorForGrouping(id?: NoteGroupingId): AppColor {
-  if (id === undefined) return DEFAULT_GROUPING_COLOR;
-  return GROUPING_COLORS.get(id) ?? DEFAULT_GROUPING_COLOR;
+  return GROUPING_COLORS.get(id!) ?? DEFAULT_GROUPING_COLOR;
 }
 
 /** Semi-transparent fill for active chord highlights (staff, progression cells, etc.). */
