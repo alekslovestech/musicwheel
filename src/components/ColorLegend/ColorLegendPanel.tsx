@@ -1,5 +1,4 @@
 import { ColorLegendGroup } from "./colorLegendGroups";
-import { colorCss } from "@/utils/visual/AppColor";
 import {
   getColorLegendSections,
   legendLabelsForGroup,
@@ -24,7 +23,7 @@ function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
     <div className="flex items-center gap-snug">
       <div
         className="h-3 w-[100px] shrink-0 rounded-sm border border-containers-divider/40"
-        style={{ backgroundColor: colorCss(group.color) }}
+        style={{ backgroundColor: group.color.css() }}
       />
       <span className="min-w-0 flex-1 text-sm leading-tight">{legendLabelsForGroup(group)}</span>
     </div>

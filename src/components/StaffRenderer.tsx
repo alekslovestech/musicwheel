@@ -16,7 +16,6 @@ import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFo
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { StaffUtils } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
-import { colorCss } from "@/utils/visual/AppColor";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 import { useIsChordProgressionsMode } from "@/lib/hooks/useGlobalMode";
 
@@ -61,7 +60,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
       const cpf = new ChordProgressionFormatter(progression);
       const activeRoman = progression.progression[activeProgressionStepIndex]?.value;
-      const activeChordBg = colorCss(chordActiveHighlightFor(activeRoman?.chordType));
+      const activeChordBg = chordActiveHighlightFor(activeRoman?.chordType).css();
 
       const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
