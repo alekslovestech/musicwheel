@@ -6,6 +6,7 @@ export const TYPOGRAPHY = {
 
   // Keyboard text (flat, non-nested)
   circularNoteText: "text-lg font-bold",
+  circularRomanText: "text-sm font-bold",
   circularAccidental: "text-base",
   linearNoteText: "text-lg font-bold",
   linearAccidental: "text-lg",

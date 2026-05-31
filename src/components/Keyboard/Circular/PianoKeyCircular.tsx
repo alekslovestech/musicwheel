@@ -5,6 +5,7 @@ import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
@@ -80,6 +81,9 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
     scalePlaybackMode,
   );
 
+  const isRomanLabels = isScales && scalePlaybackMode === ScalePlaybackMode.Triad;
+  const noteTextClass = isRomanLabels ? TYPOGRAPHY.circularRomanText : TYPOGRAPHY.circularNoteText;
+
   const handleClick = KeyboardUtils.createKeyboardClickHandler(
     globalMode,
     inputMode,
@@ -131,7 +135,7 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
         y={textPoint.y}
         textAnchor="middle"
         dominantBaseline="middle"
-        className={`text-center pointer-events-none ${keyColors.text} ${TYPOGRAPHY.circularNoteText}`}
+        className={`text-center pointer-events-none ${keyColors.text} ${noteTextClass}`}
       >
         {noteText}
       </text>

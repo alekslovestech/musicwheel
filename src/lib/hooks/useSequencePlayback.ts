@@ -33,7 +33,7 @@ export const useSequencePlayback = ({
   playbackState,
   setPlaybackState,
 }: UseSequencePlaybackProps) => {
-  const { selectedMusicalKey, setNotesDirectly } = useMusical();
+  const { selectedMusicalKey, setNotesDirectly, setCurrentChordRef } = useMusical();
   const globalMode = useGlobalMode();
 
   // Scale-specific state
@@ -78,8 +78,13 @@ export const useSequencePlayback = ({
       scalePlaybackMode,
     );
 
-    if (step.notesToPlay !== null) {
-      setNotesDirectly(step.notesToPlay);
+    if (step.chordRef !== undefined) {
+      setCurrentChordRef(step.chordRef);
+    } else {
+      setCurrentChordRef(undefined);
+      if (step.notesToPlay !== null) {
+        setNotesDirectly(step.notesToPlay);
+      }
     }
 
     if (step.shouldEndSequence) {
@@ -95,6 +100,7 @@ export const useSequencePlayback = ({
     selectedMusicalKey,
     scalePlaybackMode,
     setNotesDirectly,
+    setCurrentChordRef,
     setPlaybackState,
     stopCurrentPlayback,
   ]);

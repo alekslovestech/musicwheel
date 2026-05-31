@@ -1,5 +1,6 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { createNoteWithOctave, NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
+import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 import { toNoteIndices } from "@/types/IndexTypes";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
@@ -18,14 +19,14 @@ describe("SpellingChordPreset - Chord preset-based note spelling", () => {
       const indices = toNoteIndices(chordIndices);
       //const chordMatch = MusicalDisplayFormatter.getMatchFromIndices(indices);
       const chordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(indices);
-      const result = SpellingUtils.computeNotesFromChordPreset(indices, chordRef!);
+      const result = SpellingUtils.computeNotesForStaff(indices, DEFAULT_MUSICAL_KEY, chordRef!);
 
       expect(result).toHaveLength(expectedNotes.length);
       SpellingTestUtils.verifyNoteWithOctaveArray(result, expectedNotes);
     });
   }
 
-  describe("computeNotesFromChordPreset", () => {
+  describe("chord preset spelling", () => {
     describe("intervals", () => {
       testChordSpelling(
         "G minor 3rd",

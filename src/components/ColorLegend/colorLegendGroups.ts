@@ -8,7 +8,8 @@ import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 
 export interface ColorLegendGroup {
-  color: chroma.Color;  groupingIds: NoteGroupingId[];
+  color: chroma.Color;
+  groupingIds: NoteGroupingId[];
 }
 
 export function legendLabelsForGroup(group: ColorLegendGroup): string {

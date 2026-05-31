@@ -48,8 +48,8 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
 
     const stave = VexFlowUtils.createStaveForContainer(factory, containerWidth);
 
-    const canonicalIonianKey = selectedMusicalKey.getCanonicalIonianKey();
-    const keySignature = VexFlowFormatter.getKeySignatureForVex(canonicalIonianKey);
+    const staffSpellingKey = selectedMusicalKey.getStaffSpellingKey();
+    const keySignature = VexFlowFormatter.getKeySignatureForVex(staffSpellingKey);
     stave.addClef("treble").addKeySignature(keySignature);
     stave.setContext(context).draw();
 
@@ -72,7 +72,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       const steps = StaffUtils.buildDuratedChordStepsForBar(
         prepared,
         stepIndicesInRow,
-        canonicalIonianKey,
+        staffSpellingKey,
       );
 
       if (steps.length === 0) return;
@@ -95,9 +95,9 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
 
     if (selectedNoteIndices.length === 0) return;
 
-    const notesWithOctaves = SpellingUtils.computeNotesWithOptimalStrategy(
+    const notesWithOctaves = SpellingUtils.computeNotesForStaff(
       selectedNoteIndices,
-      canonicalIonianKey,
+      staffSpellingKey,
       currentChordRef,
     );
 
