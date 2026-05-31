@@ -1,14 +1,12 @@
+import chroma from "chroma-js";
 import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalClass, IntervalDistance, ixIntervalClass } from "@/types/IntervalClass";
 import { TWELVE } from "@/types/constants/NoteConstants";
-import chroma from "chroma-js";
 import { IntervalUtils } from "@/utils/IntervalUtils";
-import { AppColor } from "@/utils/visual/AppColor";
 import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getColorForIndices(indices: NoteIndices): AppColor {
-    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
+  static getColorForIndices(indices: NoteIndices): chroma.Color {    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
     return this.mixChordColor(cyclicIntervals, "lch");
   }
 

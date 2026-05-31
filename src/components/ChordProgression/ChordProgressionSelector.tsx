@@ -54,8 +54,8 @@ export const ChordProgressionSelector = () => {
   };
 
   return (
-    <div className="chord-progression-selector text-sm font-medium">
-      <div className="flex flex-col gap-2 max-full">
+    <div id="chord-progression-selector" className="chord-progression-selector text-sm font-medium">
+      <div id="chord-progression-selector-content" className="flex flex-col gap-2 max-full">
         <Select
           id="chord-progression-select"
           value={selectedProgression ?? ""}

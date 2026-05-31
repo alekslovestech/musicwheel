@@ -1,13 +1,12 @@
-import { AppColor } from "@/utils/visual/AppColor";
+import chroma from "chroma-js";
 
-function colorsEqual(a: AppColor, b: AppColor): boolean {
+function colorsEqual(a: chroma.Color, b: chroma.Color): boolean {
   return a.css() === b.css();
 }
 
-export function expectEqualColors(actual: AppColor, expected: AppColor): void {
+export function expectEqualColors(actual: chroma.Color, expected: chroma.Color): void {
   expect(colorsEqual(actual, expected)).toBe(true);
 }
 
-export function expectDistinctColors(actual: AppColor, expected: AppColor): void {
-  expect(colorsEqual(actual, expected)).toBe(false);
+export function expectDistinctColors(actual: chroma.Color, expected: chroma.Color): void {  expect(colorsEqual(actual, expected)).toBe(false);
 }

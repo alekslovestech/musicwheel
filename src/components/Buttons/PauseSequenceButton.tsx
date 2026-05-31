@@ -15,7 +15,7 @@ export const PauseSequenceButton: React.FC = () => {
   };
 
   return (
-    <Button size="md" variant="action" onClick={handleClick}>
+    <Button id="pause-sequence-button" size="md" variant="action" onClick={handleClick}>
       {playbackState === PlaybackState.SequencePaused ? (
         <ResumeIcon className={PLAYBACK_BUTTON_STYLES.scalesMode} />
       ) : (

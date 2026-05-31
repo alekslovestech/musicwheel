@@ -1,14 +1,14 @@
+import chroma from "chroma-js";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { NoteGroupingType } from "@/types/enums/NoteGroupingType";
 import { SpecialType } from "@/types/enums/SpecialType";
 import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
-import { colorCss, AppColor } from "@/utils/visual/AppColor";
 import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 
 export interface ColorLegendGroup {
-  color: AppColor;
+  color: chroma.Color;
   groupingIds: NoteGroupingId[];
 }
 
@@ -116,8 +116,7 @@ function minOrderId(ids: NoteGroupingId[]): number {
 function legendBucketKey(id: NoteGroupingId): string {
   const color = getColorForGrouping(id);
   const type = isIntervalType(id) ? NoteGroupingType.Interval : NoteGroupingType.Chord;
-  return `${type}:${colorCss(color)}`;
-}
+  return `${type}:${color.css()}`;}
 
 function sortIdsByOrder(ids: NoteGroupingId[]): NoteGroupingId[] {
   return [...ids].sort(function compareByOrderId(a, b) {

@@ -1,5 +1,5 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
-import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { isGreekScaleMode, ScaleModeType } from "@/types/enums/ScaleModeType";
 import { isMajor, KeyType } from "@/types/enums/KeyType";
 
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
@@ -101,6 +101,11 @@ export class MusicalKey {
     const ionianTonicIndex = this.scaleModeInfo.getIonianTonicIndex(this.tonicIndex);
     const ionianTonicString = this.findKeyWithTonicIndex(ionianTonicIndex, KeyType.Major);
     return MusicalKey.fromGreekMode(ionianTonicString, ScaleModeType.Ionian);
+  }
+
+  /** Key used for staff key signature and note spelling. Exotic modes use open C major. */
+  getStaffSpellingKey(): MusicalKey {
+    return isGreekScaleMode(this.scaleMode) ? this.getCanonicalIonianKey() : DEFAULT_MUSICAL_KEY;
   }
 
   getDefaultAccidental(): AccidentalType {

@@ -106,7 +106,7 @@ describe("MusicalKey transforms", () => {
         expected: "Ab",
       },
       {
-        desc: "C Arabic => Ab Ionian",
+        desc: "C Byzantine => Ab Ionian",
         input: MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine),
         expected: "Ab",
       },
@@ -115,6 +115,37 @@ describe("MusicalKey transforms", () => {
     cases.forEach(({ desc, input, expected }) => {
       it(desc, () => {
         expect(input.getCanonicalIonianKey().tonicString).toEqual(expected);
+      });
+    });
+  });
+
+  describe("getStaffSpellingKey", () => {
+    const cases = [
+      {
+        desc: "D Dorian => C Ionian (Greek mode)",
+        input: greekTestConstants.D_DORIAN_KEY,
+        expected: "C",
+      },
+      {
+        desc: "C Byzantine => C major (exotic mode)",
+        input: MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine),
+        expected: "C",
+      },
+      {
+        desc: "C Ukrainian Dorian => C major (exotic mode)",
+        input: MusicalKey.fromGreekMode("C", ScaleModeType.UkrainianDorian),
+        expected: "C",
+      },
+      {
+        desc: "C Hungarian Minor => C major (exotic mode)",
+        input: MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor),
+        expected: "C",
+      },
+    ];
+
+    cases.forEach(({ desc, input, expected }) => {
+      it(desc, () => {
+        expect(input.getStaffSpellingKey().tonicString).toEqual(expected);
       });
     });
   });

@@ -5,6 +5,7 @@ import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
@@ -20,6 +21,7 @@ import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { useMusical } from "@/contexts/MusicalContext";
 import { useDisplay } from "@/contexts/DisplayContext";
+import { useAudio } from "@/contexts/AudioContext";
 import { useChordPresets } from "@/contexts/ChordPresetContext";
 
 interface CircularKeyProps {
@@ -39,6 +41,7 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
 }) => {
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
   const { monochromeMode } = useDisplay();
+  const { scalePlaybackMode } = useAudio();
   const globalMode = useGlobalMode();
   const { inputMode } = useChordPresets();
   const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
@@ -70,7 +73,16 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
   );
 
   const id = KeyboardUtils.StringWithPaddedIndex("circularKey", chromaticIndex);
-  const noteText = KeyboardUtils.getNoteText(false, chromaticIndex, isScales, selectedMusicalKey);
+  const noteText = KeyboardUtils.getNoteText(
+    false,
+    chromaticIndex,
+    isScales,
+    selectedMusicalKey,
+    scalePlaybackMode,
+  );
+
+  const isRomanLabels = isScales && scalePlaybackMode === ScalePlaybackMode.Triad;
+  const noteTextClass = isRomanLabels ? TYPOGRAPHY.circularRomanText : TYPOGRAPHY.circularNoteText;
 
   const handleClick = KeyboardUtils.createKeyboardClickHandler(
     globalMode,
@@ -123,7 +135,7 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
         y={textPoint.y}
         textAnchor="middle"
         dominantBaseline="middle"
-        className={`text-center pointer-events-none ${keyColors.text} ${TYPOGRAPHY.circularNoteText}`}
+        className={`text-center pointer-events-none ${keyColors.text} ${noteTextClass}`}
       >
         {noteText}
       </text>

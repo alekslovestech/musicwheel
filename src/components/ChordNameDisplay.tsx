@@ -19,7 +19,12 @@ import { useBorder } from "@/lib/hooks";
 
 const MAX_CHORD_NAME_LENGTH = 7;
 const BREAK_CHARACTER = "\u200B";
-export const ChordNameDisplay: React.FC = () => {
+
+function chordNameElementId(part: string, idPrefix?: string): string {
+  return idPrefix ? `chord-name-${idPrefix}-${part}` : `chord-name-${part}`;
+}
+
+export const ChordNameDisplay: React.FC<{ idPrefix?: string }> = ({ idPrefix }) => {
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const { chordDisplayMode, setChordDisplayMode } = useDisplay();
   const isChordsOrIntervals = useIsChordsOrIntervals();
@@ -78,14 +83,14 @@ export const ChordNameDisplay: React.FC = () => {
         : chordName;
     return (
       <div
-        id="chord-name-description"
+        id={chordNameElementId("description", idPrefix)}
         className={`chord-name-description ${LAYOUT_PATTERNS.centerFlexCol} ${LAYOUT_PATTERNS.fullSize}`}
       >
-        <div id="chord-name-note-grouping" className={`${TYPOGRAPHY.controlLabel}`}>
+        <div id={chordNameElementId("note-grouping", idPrefix)} className={`${TYPOGRAPHY.controlLabel}`}>
           {`${noteGroupingString}:`}
         </div>
         <div
-          id="chord-name-value"
+          id={chordNameElementId("value", idPrefix)}
           className={`${TYPOGRAPHY.chordNameText} max-w-full text-center break-words`}
         >
           {chordNameDisplay}
@@ -95,7 +100,7 @@ export const ChordNameDisplay: React.FC = () => {
   };
 
   return (
-    <div id="chord-name-display" className={`${LAYOUT_PATTERNS.fullSize} ${border}`}>
+    <div id={chordNameElementId("display", idPrefix)} className={`${LAYOUT_PATTERNS.fullSize} ${border}`}>
       <div
         onClick={toggleChordDisplayMode}
         className={`cursor-pointer hover:text-buttons-textSelected transition-colors duration-200 ${LAYOUT_PATTERNS.fullSize}`}

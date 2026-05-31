@@ -1,7 +1,6 @@
 "use client";
 
 import type { FormattedBarToken } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
-import { colorCss } from "@/utils/visual/AppColor";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 
 export function ChordProgressionTokenCell({
@@ -23,7 +22,9 @@ export function ChordProgressionTokenCell({
       }`}
       style={{
         gridColumn: isCompact ? undefined : `span ${token.colSpan}`,
-        ...(isActive && { backgroundColor: colorCss(chordActiveHighlightFor(token.groupingId)) }),
+        ...(isActive && {
+          backgroundColor: chordActiveHighlightFor(token.groupingId).css(),
+        }),
       }}
     >
       <div id={`token-labels-${tokenIndex}`} className="flex flex-col items-center gap-0.5 py-0.5">

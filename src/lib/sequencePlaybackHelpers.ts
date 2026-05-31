@@ -1,8 +1,10 @@
 import type { NoteLength } from "@/types/Durated";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
-import { NoteIndices } from "@/types/IndexTypes";
+import { ChordType } from "@/types/enums/ChordType";
+import { ActualIndex, ixInversion, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 import { ScaleDegreeIndex, ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { TWELVE } from "@/types/constants/NoteConstants";
@@ -12,6 +14,8 @@ import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 export interface ScalePlaybackStepOutput {
   notesToPlay: NoteIndices | null;
+  /** Set during triad playback; caller should update currentChordRef. */
+  chordRef?: ChordReference;
   /** When set, caller should replace the scale step index with this value. */
   nextIndex: number | null;
   /** When true, caller should mark the sequence complete and stop scheduling. */
@@ -23,6 +27,30 @@ export const defaultScalePlaybackStepOutput: ScalePlaybackStepOutput = {
   nextIndex: null,
   shouldEndSequence: false,
 };
+
+function getScaleTriadChordRef(
+  key: MusicalKey,
+  scaleDegreeIndex: ScaleDegreeIndex,
+  rootNote: ActualIndex,
+): ChordReference {
+  const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
+  const offsets = key.scaleModeInfo.getTriadOffsets(scaleDegreeInfo);
+  const chordType = key.scaleModeInfo.determineChordType(offsets);
+  return makeChordReference(rootNote, chordType, ixInversion(0));
+}
+
+function chordRefForScaleStep(
+  key: MusicalKey,
+  scaleDegreeIndex: ScaleDegreeIndex,
+  noteIndices: NoteIndices,
+  scalePlaybackMode: ScalePlaybackMode,
+): ChordReference | undefined {
+  if (scalePlaybackMode !== ScalePlaybackMode.Triad || noteIndices.length === 0) {
+    return undefined;
+  }
+  const chordRef = getScaleTriadChordRef(key, scaleDegreeIndex, noteIndices[0]);
+  return chordRef.id === ChordType.Unknown ? undefined : chordRef;
+}
 
 export function computeScalePlaybackStep(
   key: MusicalKey,
@@ -40,6 +68,12 @@ export function computeScalePlaybackStep(
     return {
       ...defaultScalePlaybackStepOutput,
       notesToPlay: fittedOctaveIndices,
+      chordRef: chordRefForScaleStep(
+        key,
+        ixScaleDegreeIndex(0),
+        fittedOctaveIndices,
+        scalePlaybackMode,
+      ),
       shouldEndSequence: true,
     };
   }
@@ -52,6 +86,7 @@ export function computeScalePlaybackStep(
   return {
     ...defaultScalePlaybackStepOutput,
     notesToPlay: noteIndices,
+    chordRef: chordRefForScaleStep(key, currentScaleDegreeIndex, noteIndices, scalePlaybackMode),
     nextIndex: currentIndex + 1,
   };
 }
