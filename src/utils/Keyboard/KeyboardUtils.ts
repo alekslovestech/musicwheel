@@ -7,6 +7,7 @@ import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ActualIndex, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";
@@ -104,17 +105,26 @@ export class KeyboardUtils {
     return classes.join(" ");
   }
 
+  static resolveCircularScaleLabelMode(scalePlaybackMode: ScalePlaybackMode): KeyDisplayMode {
+    return scalePlaybackMode === ScalePlaybackMode.Triad
+      ? KeyDisplayMode.Roman
+      : KeyDisplayMode.ScaleDegree;
+  }
+
   static getNoteText(
     isLinearKeyboard: boolean,
     chromaticIndex: ChromaticIndex,
     isScales: boolean,
     selectedMusicalKey: MusicalKey,
+    scalePlaybackMode?: ScalePlaybackMode,
   ): string {
     return isScales && !isLinearKeyboard
       ? KeyboardUtils.computeNoteTextForScalesMode(
           chromaticIndex,
           selectedMusicalKey,
-          KeyDisplayMode.ScaleDegree,
+          scalePlaybackMode !== undefined
+            ? this.resolveCircularScaleLabelMode(scalePlaybackMode)
+            : KeyDisplayMode.ScaleDegree,
         )
       : KeyboardUtils.computeNoteTextForDefaultMode(chromaticIndex);
   }
