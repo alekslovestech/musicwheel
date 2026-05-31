@@ -122,9 +122,7 @@ export class KeyboardUtils {
       ? KeyboardUtils.computeNoteTextForScalesMode(
           chromaticIndex,
           selectedMusicalKey,
-          scalePlaybackMode !== undefined
-            ? this.resolveCircularScaleLabelMode(scalePlaybackMode)
-            : KeyDisplayMode.ScaleDegree,
+          this.resolveCircularScaleLabelMode(scalePlaybackMode ?? ScalePlaybackMode.SingleNote),
         )
       : KeyboardUtils.computeNoteTextForDefaultMode(chromaticIndex);
   }
