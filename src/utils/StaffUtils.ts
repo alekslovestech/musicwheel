@@ -1,4 +1,4 @@
-import type { PreparedChordProgressionSequence } from "@/lib/sequencePlaybackHelpers";
+import type { PreparedChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 import type { DuratedNoteChord } from "@/types/Durated";
 import { makeDurated } from "@/types/Durated";
 import type { MusicalKey } from "@/types/Keys/MusicalKey";

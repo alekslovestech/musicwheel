@@ -6,7 +6,7 @@ import { useAudio } from "@/contexts/AudioContext";
 import { COMMON_STYLES } from "@/lib/design";
 import { useBorder } from "@/lib/hooks";
 import { useMusical } from "@/contexts/MusicalContext";
-import { prepareChordProgressionSequence } from "@/lib/sequencePlaybackHelpers";
+import { prepareChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { PROGRESSION_REGISTRY } from "@/types/ChordProgressions/progressionRegistry";
 import { makeDurated } from "@/types/Durated";
