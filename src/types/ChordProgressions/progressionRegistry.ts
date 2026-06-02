@@ -2,6 +2,7 @@ import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { KeyType } from "@/types/enums/KeyType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
+import AndalusianCadenceChords from "./songs/Andalusian_Cadence";
 import AllIWantForChristmasChords from "./songs/All_I_Want_For_Christmas";
 import AroundTheWorldChords from "./songs/Around_The_World";
 import FiftiesProgressionChords from "./songs/Fifties_Progression";
@@ -53,6 +54,12 @@ export const PROGRESSION_REGISTRY: Record<ChordProgressionType, ProgressionRegis
     slug: "2-5-1",
     chords: TwoFiveOneChords,
     isPattern: true,
+  },
+  [ChordProgressionType.Andalusian_Cadence]: {
+    slug: "andalusian-cadence",
+    chords: AndalusianCadenceChords,
+    isPattern: true,
+    suggestedMusicalKey: MusicalKey.fromClassicalMode("A", KeyType.Minor),
   },
   [ChordProgressionType.Gypsy_Woman]: {
     slug: "gypsy-woman",
