@@ -81,6 +81,7 @@ export class ScaleModeInfo {
       [ChordType.Minor]: CHORD_OFFSET_PATTERNS.MINOR,
       [ChordType.Diminished]: CHORD_OFFSET_PATTERNS.DIMINISHED,
       [ChordType.Augmented]: CHORD_OFFSET_PATTERNS.AUGMENTED,
+      [ChordType.MajFlat5]: CHORD_OFFSET_PATTERNS.MAJ_FLAT5,
     };
 
     // Find matching chord pattern

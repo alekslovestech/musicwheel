@@ -50,7 +50,7 @@ describe("Roman Mode Index Arrays", () => {
     },
     {
       mode: ScaleModeType.Byzantine,
-      expected: ["I", "♭II", "iii", "iv", "V", "♭VI+", "VII"],
+      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VII"],
     },
     {
       mode: ScaleModeType.Lydian,

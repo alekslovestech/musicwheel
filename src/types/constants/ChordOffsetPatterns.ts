@@ -3,6 +3,7 @@ export const CHORD_OFFSET_PATTERNS = {
   MINOR: [0, 3, 7], //1-b3-5
   DIMINISHED: [0, 3, 6], //1-b3-b5
   AUGMENTED: [0, 4, 8], //1-3-#5
+  MAJ_FLAT5: [0, 4, 6], //1-3-♭5
   SUS4: [0, 5, 7], //1-4-5
   SUS2: [0, 2, 7], //1-2-5
 

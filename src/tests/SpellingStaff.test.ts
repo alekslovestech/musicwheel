@@ -30,6 +30,25 @@ describe("SpellingStaff - StaffRenderer spelling integration", () => {
     ]);
   });
 
+  test("C Byzantine V triad spells Db, not C# (MajFlat5 scale triad playback)", () => {
+    const key = MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine);
+    const step = computeScalePlaybackStep(key, 4, ScalePlaybackMode.Triad);
+
+    expect(step.chordRef?.id).toBe(ChordType.MajFlat5);
+
+    const result = SpellingUtils.computeNotesForStaff(
+      step.notesToPlay!,
+      key.getStaffSpellingKey(),
+      step.chordRef,
+    );
+
+    SpellingTestUtils.verifyNoteWithOctaveArray(result, [
+      createNoteWithOctave("G", AccidentalType.None),
+      createNoteWithOctave("B", AccidentalType.None),
+      createNoteWithOctave("D", AccidentalType.Flat, 1),
+    ]);
+  });
+
   test("D major triad in C minor spells F#, not Gb (harmony chord preset)", () => {
     const cMinor = MusicalKey.fromClassicalMode("C", KeyType.Minor);
     const chordRef = makeChordReference(2, ChordType.Major, 0);
