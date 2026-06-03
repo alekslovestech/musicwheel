@@ -1,6 +1,7 @@
 import { SCALE_MODE_PATTERNS } from "@/types/constants/ScaleModePatterns";
 
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { buildSlugMap } from "@/utils/slug/slugCodec";
 
 import { ScaleModeInfo } from "./ScaleModeInfo";
 
@@ -85,6 +86,4 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
   ), // Hungarian minor scale
 };
 
-export const SCALE_SLUG_MAP = Object.fromEntries(
-  Object.entries(SCALE_MODE_REGISTRY).map(([type, entry]) => [entry.slug, type]),
-) as Record<string, ScaleModeType>;
+export const SCALE_SLUG_MAP = buildSlugMap(SCALE_MODE_REGISTRY);

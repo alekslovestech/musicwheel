@@ -1,6 +1,7 @@
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { KeyType } from "@/types/enums/KeyType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { buildSlugMap, SluggedEntry } from "@/utils/slug/slugCodec";
 
 import AndalusianCadenceChords from "./songs/Andalusian_Cadence";
 import AllIWantForChristmasChords from "./songs/All_I_Want_For_Christmas";
@@ -21,8 +22,7 @@ import TheWorldIsNotEnoughChords from "./songs/The_World_Is_Not_Enough";
 import TwoFiveOneChords from "./songs/Two_Five_One";
 import WithOrWithoutYouChords from "./songs/WithOrWithoutYou";
 
-export interface ProgressionRegistryEntry {
-  slug: string;
+export interface ProgressionRegistryEntry extends SluggedEntry {
   chords: string;
   isPattern: boolean;
   tempo?: number;
@@ -148,6 +148,4 @@ export const PROGRESSION_REGISTRY: Record<ChordProgressionType, ProgressionRegis
   },
 };
 
-export const PROGRESSION_SLUG_MAP = Object.fromEntries(
-  Object.entries(PROGRESSION_REGISTRY).map(([type, entry]) => [entry.slug, type]),
-) as Record<string, ChordProgressionType>;
+export const PROGRESSION_SLUG_MAP = buildSlugMap(PROGRESSION_REGISTRY);

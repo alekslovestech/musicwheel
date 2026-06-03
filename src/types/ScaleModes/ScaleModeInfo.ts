@@ -2,6 +2,7 @@ import { CHORD_OFFSET_PATTERNS } from "@/types/constants/ChordOffsetPatterns";
 
 import { ChordType } from "@/types/enums/ChordType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { SluggedEntry } from "@/utils/slug/slugCodec";
 
 import { addChromatic, ChromaticIndex, subChromatic } from "@/types/ChromaticIndex";
 
@@ -10,7 +11,7 @@ import { ScaleDegreeInfo } from "./ScaleDegreeInfo";
 import { ScaleDegreeIndex } from "./ScaleDegreeType";
 import { ixScaleDegreeIndex } from "./ScaleDegreeType";
 
-export class ScaleModeInfo {
+export class ScaleModeInfo implements SluggedEntry {
   /**
    * The scale pattern for this mode.
    * For most use cases, you can access this directly to use ScalePattern methods.
