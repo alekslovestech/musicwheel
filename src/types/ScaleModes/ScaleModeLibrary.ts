@@ -20,26 +20,11 @@ export class ScaleModeLibrary {
         SCALE_MODE_PATTERNS.DORIAN,
         2,
       ), // Minor with raised 6th
-      [ScaleModeType.UkrainianDorian]: new ScaleModeInfo(
-        ScaleModeType.UkrainianDorian,
-        SCALE_MODE_PATTERNS.UKRAINIAN_DORIAN,
-        2,
-      ), // Dorian with #4
       [ScaleModeType.Phrygian]: new ScaleModeInfo(
         ScaleModeType.Phrygian,
         SCALE_MODE_PATTERNS.PHRYGIAN,
         3,
       ), // Minor with lowered 2nd
-      [ScaleModeType.PhrygianDominant]: new ScaleModeInfo(
-        ScaleModeType.PhrygianDominant,
-        SCALE_MODE_PATTERNS.PHRYGIAN_DOMINANT,
-        3,
-      ),
-      [ScaleModeType.Byzantine]: new ScaleModeInfo(
-        ScaleModeType.Byzantine,
-        SCALE_MODE_PATTERNS.BYZANTINE,
-        3,
-      ),
       [ScaleModeType.Lydian]: new ScaleModeInfo(
         ScaleModeType.Lydian,
         SCALE_MODE_PATTERNS.LYDIAN,
@@ -55,6 +40,27 @@ export class ScaleModeLibrary {
         SCALE_MODE_PATTERNS.AEOLIAN,
         6,
       ), // Natural minor scale
+      [ScaleModeType.Locrian]: new ScaleModeInfo(
+        ScaleModeType.Locrian,
+        SCALE_MODE_PATTERNS.LOCRIAN,
+        7,
+      ), // Minor with lowered 2nd and 5th
+      [ScaleModeType.UkrainianDorian]: new ScaleModeInfo(
+        ScaleModeType.UkrainianDorian,
+        SCALE_MODE_PATTERNS.UKRAINIAN_DORIAN,
+        2,
+      ), // Dorian with #4
+      [ScaleModeType.PhrygianDominant]: new ScaleModeInfo(
+        ScaleModeType.PhrygianDominant,
+        SCALE_MODE_PATTERNS.PHRYGIAN_DOMINANT,
+        3,
+      ),
+      [ScaleModeType.Byzantine]: new ScaleModeInfo(
+        ScaleModeType.Byzantine,
+        SCALE_MODE_PATTERNS.BYZANTINE,
+        3,
+      ),
+      [ScaleModeType.Aroha]: new ScaleModeInfo(ScaleModeType.Aroha, SCALE_MODE_PATTERNS.AROHA, 3), // Aroha (South Indian) scale
       [ScaleModeType.HarmonicMinor]: new ScaleModeInfo(
         ScaleModeType.HarmonicMinor,
         SCALE_MODE_PATTERNS.HARMONIC_MINOR,
@@ -65,11 +71,6 @@ export class ScaleModeLibrary {
         SCALE_MODE_PATTERNS.HUNGARIAN_MINOR,
         6,
       ), // Hungarian minor scale
-      [ScaleModeType.Locrian]: new ScaleModeInfo(
-        ScaleModeType.Locrian,
-        SCALE_MODE_PATTERNS.LOCRIAN,
-        7,
-      ), // Minor with lowered 2nd and 5th
     };
   }
 

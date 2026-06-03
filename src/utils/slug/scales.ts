@@ -5,16 +5,18 @@ import { createSlugCodec } from "./slugCodec";
 export const SCALE_SLUG_MAP: Record<string, ScaleModeType> = {
   ionian: ScaleModeType.Ionian,
   dorian: ScaleModeType.Dorian,
-  "ukrainian-dorian": ScaleModeType.UkrainianDorian,
   phrygian: ScaleModeType.Phrygian,
-  "phrygian-dominant": ScaleModeType.PhrygianDominant,
   byzantine: ScaleModeType.Byzantine,
   lydian: ScaleModeType.Lydian,
   mixolydian: ScaleModeType.Mixolydian,
   aeolian: ScaleModeType.Aeolian,
+  locrian: ScaleModeType.Locrian,
+
+  "ukrainian-dorian": ScaleModeType.UkrainianDorian,
+  "phrygian-dominant": ScaleModeType.PhrygianDominant,
   "harmonic-minor": ScaleModeType.HarmonicMinor,
   "hungarian-minor": ScaleModeType.HungarianMinor,
-  locrian: ScaleModeType.Locrian,
+  aroha: ScaleModeType.Aroha,
 };
 
 const scaleSlugCodec = createSlugCodec(SCALE_SLUG_MAP);
