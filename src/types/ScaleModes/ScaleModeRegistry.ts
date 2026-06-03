@@ -88,9 +88,3 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
 export const SCALE_SLUG_MAP = Object.fromEntries(
   Object.entries(SCALE_MODE_REGISTRY).map(([type, entry]) => [entry.slug, type]),
 ) as Record<string, ScaleModeType>;
-
-export class ScaleModeLibrary {
-  public static getModeInfo(type: ScaleModeType): ScaleModeInfo {
-    return SCALE_MODE_REGISTRY[type];
-  }
-}
