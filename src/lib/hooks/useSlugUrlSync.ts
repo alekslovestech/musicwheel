@@ -7,10 +7,14 @@ import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsDemoRoute } from "@/lib/hooks/useGlobalMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { progressionTypeToSlug, slugToProgressionType } from "@/utils/slug/progressions";
 import { GlobalMode } from "@/types/enums/GlobalMode";
+import {
+  progressionTypeToSlug,
+  scaleTypeToSlug,
+  slugToProgressionType,
+  slugToScaleType,
+} from "@/utils/slug/codecs";
 import { getPath } from "@/utils/slug/paths";
-import { scaleTypeToSlug, slugToScaleType } from "@/utils/slug/scales";
 
 function useSlugParam(): string {
   const { slug } = useParams();

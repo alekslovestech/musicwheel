@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { metadataForSlugPage, scalesViewMetadata } from "@/lib/metadata";
-import { SCALE_SLUG_MAP, slugToScaleType } from "@/utils/slug/scales";
+import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeLibrary";
+import { slugToScaleType } from "@/utils/slug/codecs";
 
 type LayoutProps = {
   children: React.ReactNode;

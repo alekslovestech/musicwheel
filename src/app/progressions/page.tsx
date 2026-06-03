@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { getPath } from "@/utils/slug/paths";
-import { progressionTypeToSlug } from "@/utils/slug/progressions";
+import { progressionTypeToSlug } from "@/utils/slug/codecs";
 
 export default async function ProgressionsPage({
   searchParams,
