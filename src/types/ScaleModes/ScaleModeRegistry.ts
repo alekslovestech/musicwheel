@@ -66,12 +66,12 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     SCALE_MODE_PATTERNS.BYZANTINE,
     3,
   ),
-  [ScaleModeType.Aroha]: new ScaleModeInfo(
-    ScaleModeType.Aroha,
-    "aroha",
-    SCALE_MODE_PATTERNS.AROHA,
+  [ScaleModeType.PanthuVaraali]: new ScaleModeInfo(
+    ScaleModeType.PanthuVaraali,
+    "panthu-varaali",
+    SCALE_MODE_PATTERNS.PANTHU_VARAALI,
     3,
-  ), // Aroha (South Indian) scale
+  ), // Panthu Varaali
   [ScaleModeType.HarmonicMinor]: new ScaleModeInfo(
     ScaleModeType.HarmonicMinor,
     "harmonic-minor",
