@@ -15,6 +15,7 @@ describe("Chord progression derives correct chords for C major key", () => {
   const fMajor = MusicalKey.fromClassicalMode("F", KeyType.Major);
   const gMajor = MusicalKey.fromClassicalMode("G", KeyType.Major);
   const aMajor = MusicalKey.fromClassicalMode("A", KeyType.Major);
+  const aMinor = MusicalKey.fromClassicalMode("A", KeyType.Minor);
 
   const testCases = [
     {
@@ -117,11 +118,19 @@ describe("Chord progression derives correct chords for C major key", () => {
       ],
     },
     {
+      desc: "Andalusian cadence for A minor",
+      progression: new ChordProgression(["i", "VII", "VI", "V"], "Andalusian Cadence"),
+      key: aMinor,
+      expected: [
+        new AbsoluteChord("A", ChordType.Minor),
+        new AbsoluteChord("G", ChordType.Major),
+        new AbsoluteChord("F", ChordType.Major),
+        new AbsoluteChord("E", ChordType.Major),
+      ],
+    },
+    {
       desc: "Michelle progression for F minor",
-      progression: new ChordProgression(
-        ["i", "III/VII", "♭viiø7", "VImaj7", "Vmaj7"],
-        "Michelle",
-      ),
+      progression: new ChordProgression(["i", "III/VII", "♭viiø7", "VImaj7", "Vmaj7"], "Michelle"),
       key: MusicalKey.fromClassicalMode("F", KeyType.Minor),
       expected: [
         new AbsoluteChord("F", ChordType.Minor),

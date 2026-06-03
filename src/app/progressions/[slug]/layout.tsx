@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { chordProgressionViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { PROGRESSION_SLUG_MAP } from "@/types/ChordProgressions/progressionRegistry";
-import { slugToProgressionType } from "@/utils/slug/progressions";
+import { slugToProgressionType } from "@/utils/slug/codecs";
 
 type LayoutProps = {
   children: React.ReactNode;

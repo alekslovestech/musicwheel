@@ -20,6 +20,7 @@ export class ScaleModeInfo {
 
   constructor(
     public readonly type: ScaleModeType,
+    public readonly slug: string,
     pattern: number[], // The pattern of the mode, typically 7 notes. e.g. [0, 2, 4, 5, 7, 9, 10] for Mixolydian
     public readonly modeNumber: number, // The number of the mode, typically 1-7. e.g. 1 for Ionian, 2 for Dorian, etc.
   ) {
@@ -81,6 +82,7 @@ export class ScaleModeInfo {
       [ChordType.Minor]: CHORD_OFFSET_PATTERNS.MINOR,
       [ChordType.Diminished]: CHORD_OFFSET_PATTERNS.DIMINISHED,
       [ChordType.Augmented]: CHORD_OFFSET_PATTERNS.AUGMENTED,
+      [ChordType.MajFlat5]: CHORD_OFFSET_PATTERNS.MAJ_FLAT5,
     };
 
     // Find matching chord pattern

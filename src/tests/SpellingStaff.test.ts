@@ -2,20 +2,19 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ChordType } from "@/types/enums/ChordType";
 import { KeyType } from "@/types/enums/KeyType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 import { createNoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { makeChordReference } from "@/types/interfaces/ChordReference";
 import { toNoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
-import { computeScalePlaybackStep } from "@/lib/sequencePlaybackHelpers";
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { SpellingTestUtils } from "@/tests/utils/SpellingTestUtils";
 
 describe("SpellingStaff - StaffRenderer spelling integration", () => {
   test("Ukrainian Dorian ii triad in C minor spells F#, not Gb (scale triad playback)", () => {
     const key = MusicalKey.fromGreekMode("C", ScaleModeType.UkrainianDorian);
-    const step = computeScalePlaybackStep(key, 1, ScalePlaybackMode.Triad);
+    const step = SpellingTestUtils.computeScaleTriadPlaybackStep(key, ixScaleDegree(2));
 
     const result = SpellingUtils.computeNotesForStaff(
       step.notesToPlay!,
@@ -27,6 +26,25 @@ describe("SpellingStaff - StaffRenderer spelling integration", () => {
       createNoteWithOctave("D", AccidentalType.None),
       createNoteWithOctave("F", AccidentalType.Sharp),
       createNoteWithOctave("A", AccidentalType.None),
+    ]);
+  });
+
+  test("C Byzantine V triad spells Db, not C# (MajFlat5 scale triad playback)", () => {
+    const key = MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine);
+    const step = SpellingTestUtils.computeScaleTriadPlaybackStep(key, ixScaleDegree(5));
+
+    expect(step.chordRef?.id).toBe(ChordType.MajFlat5);
+
+    const result = SpellingUtils.computeNotesForStaff(
+      step.notesToPlay!,
+      key.getStaffSpellingKey(),
+      step.chordRef,
+    );
+
+    SpellingTestUtils.verifyNoteWithOctaveArray(result, [
+      createNoteWithOctave("G", AccidentalType.None),
+      createNoteWithOctave("B", AccidentalType.None),
+      createNoteWithOctave("D", AccidentalType.Flat, 1),
     ]);
   });
 
@@ -66,3 +84,5 @@ describe("SpellingStaff - StaffRenderer spelling integration", () => {
     ]);
   });
 });
+
+

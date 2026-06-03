@@ -4,6 +4,7 @@ export enum ChordProgressionType {
   Line_Cliche = "Line Cliche",
   Fifties_Progression = "50s Progression",
   Two_Five_One = "2-5-1",
+  Andalusian_Cadence = "Andalusian Cadence",
   Gypsy_Woman = "Gypsy Woman",
   Around_The_World = "Around The World (Lalalalala)",
   LetItBe = "Let It Be",

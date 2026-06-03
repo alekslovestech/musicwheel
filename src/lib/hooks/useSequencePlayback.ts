@@ -15,7 +15,7 @@ import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
 import {
   computeScalePlaybackStep,
   prepareChordProgressionSequence,
-} from "@/lib/sequencePlaybackHelpers";
+} from "@/utils/SequencePlaybackUtils";
 import { RhythmUtils } from "@/utils/RhythmUtils";
 
 const PLAYBACK_DURATION_SCALE_SINGLE_NOTE = 300;

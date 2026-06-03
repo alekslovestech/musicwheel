@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { getPath } from "@/utils/slug/paths";
-import { scaleTypeToSlug } from "@/utils/slug/scales";
+import { scaleTypeToSlug } from "@/utils/slug/codecs";
 
 export default async function ScalesPage({
   searchParams,
