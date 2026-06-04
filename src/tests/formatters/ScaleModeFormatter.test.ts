@@ -1,11 +1,11 @@
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
-import { ScaleModeLibrary } from "@/types/ScaleModes/ScaleModeLibrary";
+import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 
 import { ScaleModeFormatter } from "@/utils/formatters/ScaleModeFormatter";
 
 function verifyModeScaleDegreeDisplayStrings(greekMode: ScaleModeType, expectedNotes: string[]) {
-  const greekModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
+  const greekModeInfo = SCALE_MODE_REGISTRY[greekMode];
   const displayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
     greekModeInfo,
     KeyDisplayMode.ScaleDegree,

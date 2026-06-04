@@ -11,7 +11,7 @@ export enum ScaleModeType {
   Byzantine = "Byzantine",
   HarmonicMinor = "Harmonic Minor",
   HungarianMinor = "Hungarian Minor",
-  Aroha = "Aroha (South Indian)",
+  PanthuVaraali = "Panthu Varaali",
 }
 
 const GREEK_SCALE_MODES = new Set<ScaleModeType>([

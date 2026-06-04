@@ -14,5 +14,5 @@ export const SCALE_MODE_PATTERNS = {
   BYZANTINE: [0, 1, 4, 5, 7, 8, 11], // Byzantine
   HARMONIC_MINOR: [0, 2, 3, 5, 7, 8, 11], // Harmonic Minor
   HUNGARIAN_MINOR: [0, 2, 3, 6, 7, 8, 11], // Hungarian Minor
-  AROHA: [0, 1, 4, 6, 7, 8, 11], // Aroha (South Indian)
+  PANTHU_VARAALI: [0, 1, 4, 6, 7, 8, 11], // Panthu Varaali
 };

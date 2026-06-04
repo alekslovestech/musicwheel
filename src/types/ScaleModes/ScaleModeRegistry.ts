@@ -1,6 +1,7 @@
 import { SCALE_MODE_PATTERNS } from "@/types/constants/ScaleModePatterns";
 
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { buildSlugMap } from "@/utils/slug/slugCodec";
 
 import { ScaleModeInfo } from "./ScaleModeInfo";
 
@@ -65,12 +66,12 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     SCALE_MODE_PATTERNS.BYZANTINE,
     3,
   ),
-  [ScaleModeType.Aroha]: new ScaleModeInfo(
-    ScaleModeType.Aroha,
-    "aroha",
-    SCALE_MODE_PATTERNS.AROHA,
+  [ScaleModeType.PanthuVaraali]: new ScaleModeInfo(
+    ScaleModeType.PanthuVaraali,
+    "panthu-varaali",
+    SCALE_MODE_PATTERNS.PANTHU_VARAALI,
     3,
-  ), // Aroha (South Indian) scale
+  ), // Panthu Varaali
   [ScaleModeType.HarmonicMinor]: new ScaleModeInfo(
     ScaleModeType.HarmonicMinor,
     "harmonic-minor",
@@ -85,12 +86,4 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
   ), // Hungarian minor scale
 };
 
-export const SCALE_SLUG_MAP = Object.fromEntries(
-  Object.entries(SCALE_MODE_REGISTRY).map(([type, entry]) => [entry.slug, type]),
-) as Record<string, ScaleModeType>;
-
-export class ScaleModeLibrary {
-  public static getModeInfo(type: ScaleModeType): ScaleModeInfo {
-    return SCALE_MODE_REGISTRY[type];
-  }
-}
+export const SCALE_SLUG_MAP = buildSlugMap(SCALE_MODE_REGISTRY);

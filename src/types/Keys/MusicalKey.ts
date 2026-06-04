@@ -3,7 +3,7 @@ import { isGreekScaleMode, ScaleModeType } from "@/types/enums/ScaleModeType";
 import { isMajor, KeyType } from "@/types/enums/KeyType";
 
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
-import { ScaleModeLibrary } from "@/types/ScaleModes/ScaleModeLibrary";
+import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 import { ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
@@ -27,7 +27,7 @@ export class MusicalKey {
     this.scaleMode = greekMode;
     this.keySignature = new KeySignature(tonicAsString, classicalMode);
     this.tonicIndex = NoteConverter.toChromaticIndex(this.tonicString);
-    this.scaleModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
+    this.scaleModeInfo = SCALE_MODE_REGISTRY[greekMode];
   }
 
   public get scalePatternLength(): number {

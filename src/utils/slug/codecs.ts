@@ -1,5 +1,5 @@
 import { PROGRESSION_SLUG_MAP } from "@/types/ChordProgressions/progressionRegistry";
-import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeLibrary";
+import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeRegistry";
 
 import { createSlugCodec } from "./slugCodec";
 

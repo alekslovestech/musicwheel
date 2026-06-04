@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { metadataForSlugPage, scalesViewMetadata } from "@/lib/metadata";
-import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeLibrary";
+import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeRegistry";
 import { slugToScaleType } from "@/utils/slug/codecs";
 
 type LayoutProps = {

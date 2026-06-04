@@ -2,7 +2,7 @@ import { SEVEN, TWELVE } from "@/types/constants/NoteConstants";
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
-import { ScaleModeLibrary } from "@/types/ScaleModes/ScaleModeLibrary";
+import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormatter";
@@ -11,7 +11,7 @@ import { GreekTestConstants } from "../utils/GreekTestConstants";
 
 function verifyRomanDisplayStrings(greekMode: ScaleModeType, expectedNotes: string[]) {
   expect(expectedNotes.length).toBe(SEVEN);
-  const scaleModeInfo = ScaleModeLibrary.getModeInfo(greekMode);
+  const scaleModeInfo = SCALE_MODE_REGISTRY[greekMode];
   const romanDisplayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
     scaleModeInfo,
     KeyDisplayMode.Roman,
