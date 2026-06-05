@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
 
-import { ChromaticIndex } from "@/types/ChromaticIndex";
-import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
+import { actualToChromatic } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
-import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { TYPOGRAPHY } from "@/lib/design/Typography";
 
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
@@ -22,35 +21,37 @@ import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { useAudio } from "@/contexts/AudioContext";
-import { useChordPresets } from "@/contexts/ChordPresetContext";
 
-interface CircularKeyProps {
-  chromaticIndex: ChromaticIndex;
-  isBassNote: boolean;
+interface PianoKeyCircularProps extends PianoKeyBaseProps {
   outerRadius: number;
   innerRadius: number;
-  onClick: (index: ActualIndex) => void;
 }
 
-export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
-  chromaticIndex,
+export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
+  actualIndex,
   isBassNote,
   outerRadius,
   innerRadius,
-  onClick,
+  onKeyClick,
 }) => {
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
   const { monochromeMode } = useDisplay();
   const { scalePlaybackMode } = useAudio();
-  const globalMode = useGlobalMode();
-  const { inputMode } = useChordPresets();
+  const chromaticIndex = actualToChromatic(actualIndex);
   const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
   const textPoint = ArcPathVisualizer.getTextPoint(chromaticIndex, outerRadius, innerRadius);
 
   const baseClasses = ["key-base"];
-  const isSelected = KeyboardUtils.isSelectedEitherOctave(chromaticIndex, selectedNoteIndices);
+  const isSelected = KeyboardUtils.isKeySelected(
+    actualIndex,
+    selectedNoteIndices,
+    KeyboardUIType.Circular,
+  );
   const isScales = useIsScalePreviewMode();
   const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
+  const isDiatonicInScale =
+    !isScales ||
+    selectedMusicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, selectedMusicalKey.tonicIndex);
 
   // Add color classes based on visual state and selection
   const keyColors = VisualStateUtils.getKeyColors(
@@ -70,11 +71,12 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
     isBlack,
     isScales,
     isBassNote,
+    isDiatonicInScale,
   );
 
-  const id = KeyboardUtils.StringWithPaddedIndex("circularKey", chromaticIndex);
+  const id = KeyboardUtils.StringWithPaddedIndex("circularKey", actualIndex);
   const noteText = KeyboardUtils.getNoteText(
-    false,
+    KeyboardUIType.Circular,
     chromaticIndex,
     isScales,
     selectedMusicalKey,
@@ -83,14 +85,6 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
 
   const isRomanLabels = isScales && scalePlaybackMode === ScalePlaybackMode.Triad;
   const noteTextClass = isRomanLabels ? TYPOGRAPHY.circularRomanText : TYPOGRAPHY.circularNoteText;
-
-  const handleClick = KeyboardUtils.createKeyboardClickHandler(
-    globalMode,
-    inputMode,
-    KeyboardUIType.Circular,
-    onClick,
-    chromaticToActual(chromaticIndex),
-  );
 
   const renderAccidental = (
     accidental: AccidentalType,
@@ -127,7 +121,7 @@ export const PianoKeyCircular: React.FC<CircularKeyProps> = ({
     <g
       id={id}
       className={`${allBaseClasses} !${keyColors.border} hover:[&_path]:opacity-80`}
-      onClick={handleClick}
+      onClick={() => onKeyClick(actualIndex)}
     >
       <path d={pathData} className={`${keyColors.primary} stroke-gray-400 stroke-1`} />
       <text

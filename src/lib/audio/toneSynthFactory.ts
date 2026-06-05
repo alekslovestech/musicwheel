@@ -1,5 +1,7 @@
 import * as Tone from "tone";
 
+import { CLICK_NOTE_TONE_DEFAULT, CLICK_NOTE_TONE_DEMO } from "@/lib/audio/playbackDurations";
+
 const DESTINATION_VOLUME_DB = -8;
 
 const DEMO_ENVELOPE = {
@@ -16,9 +18,8 @@ const DEFAULT_ENVELOPE = {
   release: 0.8,
 };
 
-/** 4n ≈ 500ms at default tempo; 8n. is shorter for normal mode. */
 export function noteDurationForDemoMode(isDemoMode: boolean): string {
-  return isDemoMode ? "4n" : "8n.";
+  return isDemoMode ? CLICK_NOTE_TONE_DEMO : CLICK_NOTE_TONE_DEFAULT;
 }
 
 export function createPolySynth(isDemoMode: boolean): Tone.PolySynth {

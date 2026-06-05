@@ -1,11 +1,9 @@
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
 import { AccidentalType } from "@/types/enums/AccidentalType";
-import { InputMode } from "@/types/enums/InputMode";
-import { GlobalMode } from "@/types/enums/GlobalMode";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 
 import { ChromaticIndex } from "@/types/ChromaticIndex";
-import { ActualIndex, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
+import { ActualIndex, actualToChromatic, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 
@@ -13,14 +11,12 @@ import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";
 import { MusicalKeyNoteFormatter } from "@/utils/formatters/MusicalKeyNoteFormatter";
 import { ChromaticNoteResolver } from "@/utils/resolvers/ChromaticNoteResolver";
-import { track } from "@/lib/track";
-
 export class KeyboardUtils {
   static StringWithPaddedIndex(prefix: string, index: number): string {
     return `${prefix}${String(index).padStart(2, "0")}`;
   }
 
-  static isSelectedEitherOctave(
+  private static isSelectedEitherOctave(
     chromaticIndex: ChromaticIndex,
     selectedNoteIndices: NoteIndices,
   ): boolean {
@@ -29,7 +25,18 @@ export class KeyboardUtils {
     return selectedNoteIndices.includes(actualIndex0) || selectedNoteIndices.includes(actualIndex1);
   }
 
-  static computeNoteTextForScalesMode(
+  static isKeySelected(
+    actualIndex: ActualIndex,
+    selectedNoteIndices: NoteIndices,
+    keyboardUI: KeyboardUIType,
+  ): boolean {
+    if (keyboardUI === KeyboardUIType.Linear) {
+      return selectedNoteIndices.includes(actualIndex);
+    }
+    return this.isSelectedEitherOctave(actualToChromatic(actualIndex), selectedNoteIndices);
+  }
+
+  private static computeNoteTextForScalesMode(
     chromaticIndex: ChromaticIndex,
     selectedMusicalKey: MusicalKey,
     keyDisplayMode: KeyDisplayMode,
@@ -48,7 +55,7 @@ export class KeyboardUtils {
         );
   }
 
-  static computeNoteTextForDefaultMode(chromaticIndex: ChromaticIndex): string {
+  private static computeNoteTextForDefaultMode(chromaticIndex: ChromaticIndex): string {
     if (BlackKeyUtils.isBlackKey(chromaticIndex)) return "";
     const resolvedNote = ChromaticNoteResolver.resolveAbsoluteNote(
       chromaticIndex,
@@ -96,51 +103,35 @@ export class KeyboardUtils {
     isShortKey: boolean,
     isScales: boolean,
     isBassNote: boolean,
+    isDiatonicInScale = true,
   ): string {
     const classes = [...baseClasses];
     if (isSelected) classes.push("selected");
     if (isShortKey) classes.push("short");
-    if (isScales) classes.push("disabled");
+    if (isScales && !isDiatonicInScale) classes.push("disabled");
     if (isBassNote) classes.push("root-note");
     return classes.join(" ");
   }
 
-  static resolveCircularScaleLabelMode(scalePlaybackMode: ScalePlaybackMode): KeyDisplayMode {
+  private static resolveCircularScaleLabelMode(scalePlaybackMode: ScalePlaybackMode): KeyDisplayMode {
     return scalePlaybackMode === ScalePlaybackMode.Triad
       ? KeyDisplayMode.Roman
       : KeyDisplayMode.ScaleDegree;
   }
 
   static getNoteText(
-    isLinearKeyboard: boolean,
+    keyboardUI: KeyboardUIType,
     chromaticIndex: ChromaticIndex,
     isScales: boolean,
     selectedMusicalKey: MusicalKey,
     scalePlaybackMode?: ScalePlaybackMode,
   ): string {
-    return isScales && !isLinearKeyboard
-      ? KeyboardUtils.computeNoteTextForScalesMode(
+    return isScales && keyboardUI === KeyboardUIType.Circular
+      ? this.computeNoteTextForScalesMode(
           chromaticIndex,
           selectedMusicalKey,
           this.resolveCircularScaleLabelMode(scalePlaybackMode ?? ScalePlaybackMode.SingleNote),
         )
-      : KeyboardUtils.computeNoteTextForDefaultMode(chromaticIndex);
-  }
-
-  static createKeyboardClickHandler(
-    globalMode: GlobalMode,
-    inputMode: InputMode,
-    keyboardType: KeyboardUIType,
-    onClick: (index: ActualIndex) => void,
-    index: ActualIndex,
-  ) {
-    return () => {
-      track("keyboard_interacted", {
-        global_mode: globalMode,
-        input_mode: inputMode,
-        keyboard_ui: keyboardType,
-      });
-      onClick(index);
-    };
+      : this.computeNoteTextForDefaultMode(chromaticIndex);
   }
 }

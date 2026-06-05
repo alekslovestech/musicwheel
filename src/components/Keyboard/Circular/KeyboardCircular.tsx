@@ -1,5 +1,6 @@
 import { TWELVE } from "@/types/constants/NoteConstants";
-import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
+import { ChromaticIndex } from "@/types/ChromaticIndex";
+import { ixActual } from "@/types/IndexTypes";
 
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
@@ -13,14 +14,13 @@ import { CircularVisualizations } from "./CircularVisualizations";
 import { PianoKeyCircular } from "./PianoKeyCircular";
 import { CircularVisMode } from "@/types/SettingModes";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
-import { chromaticToActual } from "@/types/IndexTypes";
 
 const MAX_RADIUS = 100;
 const OUTER_RADIUS = 0.9 * MAX_RADIUS;
 const INNER_RADIUS = 0.5 * MAX_RADIUS;
 
 export const KeyboardCircular = () => {
-  const { handleKeyClick, checkIsBassNote } = useKeyboardHandlers();
+  const { onCircularKeyClick, checkIsBassNote } = useKeyboardHandlers();
   const { selectedNoteIndices, selectedMusicalKey } = useMusical();
   //const { circularVisMode } = useDisplay();
   const numNotes = selectedNoteIndices.length;
@@ -90,16 +90,15 @@ export const KeyboardCircular = () => {
       className="flex w-full max-w-[800px] h-full aspect-square p-[5px] justify-center items-center [container-type:inline-size]"
     >
       {Array.from({ length: TWELVE }).map((_, index) => {
-        const chromaticIndex = ixChromatic(index);
-        const actualIndex = chromaticToActual(chromaticIndex); // Need to convert for checkIsRootNote
+        const actualIndex = ixActual(index);
         const isBassNote = checkIsBassNote(actualIndex);
 
         return (
           <PianoKeyCircular
             key={index}
-            chromaticIndex={chromaticIndex}
-            isBassNote={isBassNote} // Rename prop
-            onClick={handleKeyClick}
+            actualIndex={actualIndex}
+            isBassNote={isBassNote}
+            onKeyClick={onCircularKeyClick}
             outerRadius={OUTER_RADIUS}
             innerRadius={INNER_RADIUS}
           />
