@@ -8,7 +8,7 @@ export const SCALE_MODE_PATTERNS = {
   AEOLIAN: [0, 2, 3, 5, 7, 8, 10], // aka Natural Minor
   LOCRIAN: [0, 1, 3, 5, 6, 8, 10],
 
-  //non-greek modes
+  //other scales
   UKRAINIAN_DORIAN: [0, 2, 3, 6, 7, 9, 10], // Dorian with #4
   PHRYGIAN_DOMINANT: [0, 1, 4, 5, 7, 8, 10], // Phrygian Dominant
   BYZANTINE: [0, 1, 4, 5, 7, 8, 11], // Byzantine
