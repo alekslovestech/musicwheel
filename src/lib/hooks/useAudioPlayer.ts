@@ -7,21 +7,15 @@ import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { frequencyFromIndex } from "@/lib/audio/toneFrequency";
 import { setPolySynthVoiceReleaser } from "@/lib/audio/polySynthVoiceBridge";
-import {
-  SCALE_CLICK_MS_SINGLE_NOTE,
-  SCALE_CLICK_MS_TRIAD,
-} from "@/lib/audio/playbackDurations";
-import { createPolySynth, noteDurationForDemoMode } from "@/lib/audio/toneSynthFactory";
-import { useIsDemoRoute, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { resolvePlaybackProfile } from "@/lib/audio/playbackProfiles";
+import { createPolySynth } from "@/lib/audio/toneSynthFactory";
+import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ActualIndex } from "@/types/IndexTypes";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 
 export function useAudioPlayer() {
   const synthRef = useRef<Tone.PolySynth | null>(null);
-  const { isAudioInitialized, setAudioInitialized, playbackState, scalePlaybackMode } = useAudio();
+  const { isAudioInitialized, setAudioInitialized } = useAudio();
   const { selectedNoteIndices } = useMusical();
-  const isDemoMode = useIsDemoRoute();
-  const isScalesMode = useIsScalePreviewMode();
 
   useToneContextInit(setAudioInitialized);
   usePolySynthVoiceBridge(synthRef);
@@ -30,12 +24,7 @@ export function useAudioPlayer() {
     synthRef,
     selectedNoteIndices,
     isAudioInitialized,
-    isDemoMode,
-    isScalesMode,
-    playbackState,
-    scalePlaybackMode,
   );
-  useSynthReleaseOnUnmount(synthRef);
 
   return {
     playNote,
@@ -95,7 +84,7 @@ function usePolySynthLifecycle(
     if (!isAudioInitialized) return;
 
     try {
-      synthRef.current = createPolySynth(false);
+      synthRef.current = createPolySynth();
     } catch (error) {
       console.error("Failed to initialize synth:", error);
     }
@@ -113,19 +102,16 @@ function useNotePlayback(
   synthRef: RefObject<Tone.PolySynth | null>,
   selectedNoteIndices: ActualIndex[],
   isAudioInitialized: boolean,
-  isDemoMode: boolean,
-  isScalesMode: boolean,
-  playbackState: PlaybackState,
-  scalePlaybackMode: ScalePlaybackMode,
 ) {
-  const defaultNoteDuration = noteDurationForDemoMode(isDemoMode);
+  const isScalesMode = useIsScalePreviewMode();
+  const { playbackState, scalePlaybackMode } = useAudio();
 
   const playNote = useCallback(
-    (index: ActualIndex, duration: number | string) => {
+    (index: ActualIndex, durationSec: number) => {
       if (!synthRef.current || !isAudioInitialized) return;
 
       try {
-        synthRef.current.triggerAttackRelease(frequencyFromIndex(index), duration);
+        synthRef.current.triggerAttackRelease(frequencyFromIndex(index), durationSec);
       } catch (error) {
         console.error("Failed to play note:", error);
       }
@@ -136,17 +122,13 @@ function useNotePlayback(
   const playSelectedNotes = useCallback(() => {
     if (!synthRef.current || !isAudioInitialized) return;
 
-    const isScaleClick =
-      isScalesMode && playbackState !== PlaybackState.SequencePlaying;
-    const duration = isScaleClick
-      ? (scalePlaybackMode === ScalePlaybackMode.SingleNote
-          ? SCALE_CLICK_MS_SINGLE_NOTE
-          : SCALE_CLICK_MS_TRIAD) / 1000
-      : defaultNoteDuration;
+    const isScaleClick = isScalesMode && playbackState !== PlaybackState.SequencePlaying;
+    const profile = resolvePlaybackProfile(scalePlaybackMode, isScaleClick);
 
+    synthRef.current.set({ envelope: profile.envelope });
     synthRef.current.releaseAll();
     selectedNoteIndices.forEach((index) => {
-      playNote(index, duration);
+      playNote(index, profile.durationSec);
     });
   }, [
     selectedNoteIndices,
@@ -155,7 +137,6 @@ function useNotePlayback(
     isScalesMode,
     playbackState,
     scalePlaybackMode,
-    defaultNoteDuration,
   ]);
 
   useEffect(() => {
@@ -163,14 +144,4 @@ function useNotePlayback(
   }, [selectedNoteIndices, playSelectedNotes]);
 
   return { playNote, playSelectedNotes };
-}
-
-function useSynthReleaseOnUnmount(synthRef: RefObject<Tone.PolySynth | null>) {
-  useEffect(() => {
-    return () => {
-      if (synthRef.current) {
-        synthRef.current.releaseAll();
-      }
-    };
-  }, []);
 }
