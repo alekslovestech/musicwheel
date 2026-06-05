@@ -3,19 +3,19 @@
 import { useCallback, useEffect, useRef, type MutableRefObject, type RefObject } from "react";
 import * as Tone from "tone";
 
-import { useAudio } from "@/contexts/AudioContext";
+import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { frequencyFromIndex } from "@/lib/audio/toneFrequency";
 import { setPolySynthVoiceReleaser } from "@/lib/audio/polySynthVoiceBridge";
-import { createPolySynth, noteDurationForDemoMode } from "@/lib/audio/toneSynthFactory";
-import { useIsDemoRoute } from "@/lib/hooks/useGlobalMode";
+import { resolvePlaybackProfile } from "@/lib/audio/playbackProfiles";
+import { createPolySynth } from "@/lib/audio/toneSynthFactory";
+import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ActualIndex } from "@/types/IndexTypes";
 
 export function useAudioPlayer() {
   const synthRef = useRef<Tone.PolySynth | null>(null);
   const { isAudioInitialized, setAudioInitialized } = useAudio();
   const { selectedNoteIndices } = useMusical();
-  const isDemoMode = useIsDemoRoute();
 
   useToneContextInit(setAudioInitialized);
   usePolySynthVoiceBridge(synthRef);
@@ -24,9 +24,7 @@ export function useAudioPlayer() {
     synthRef,
     selectedNoteIndices,
     isAudioInitialized,
-    isDemoMode,
   );
-  useSynthReleaseOnUnmount(synthRef);
 
   return {
     playNote,
@@ -86,7 +84,7 @@ function usePolySynthLifecycle(
     if (!isAudioInitialized) return;
 
     try {
-      synthRef.current = createPolySynth(false);
+      synthRef.current = createPolySynth();
     } catch (error) {
       console.error("Failed to initialize synth:", error);
     }
@@ -104,45 +102,46 @@ function useNotePlayback(
   synthRef: RefObject<Tone.PolySynth | null>,
   selectedNoteIndices: ActualIndex[],
   isAudioInitialized: boolean,
-  isDemoMode: boolean,
 ) {
-  const noteDuration = noteDurationForDemoMode(isDemoMode);
+  const isScalesMode = useIsScalePreviewMode();
+  const { playbackState, scalePlaybackMode } = useAudio();
 
   const playNote = useCallback(
-    (index: ActualIndex) => {
+    (index: ActualIndex, durationSec: number) => {
       if (!synthRef.current || !isAudioInitialized) return;
 
       try {
-        synthRef.current.triggerAttackRelease(frequencyFromIndex(index), noteDuration);
+        synthRef.current.triggerAttackRelease(frequencyFromIndex(index), durationSec);
       } catch (error) {
         console.error("Failed to play note:", error);
       }
     },
-    [isAudioInitialized, noteDuration],
+    [isAudioInitialized],
   );
 
   const playSelectedNotes = useCallback(() => {
     if (!synthRef.current || !isAudioInitialized) return;
 
+    const isScaleClick = isScalesMode && playbackState !== PlaybackState.SequencePlaying;
+    const profile = resolvePlaybackProfile(scalePlaybackMode, isScaleClick);
+
+    synthRef.current.set({ envelope: profile.envelope });
     synthRef.current.releaseAll();
     selectedNoteIndices.forEach((index) => {
-      playNote(index);
+      playNote(index, profile.durationSec);
     });
-  }, [selectedNoteIndices, playNote, isAudioInitialized]);
+  }, [
+    selectedNoteIndices,
+    playNote,
+    isAudioInitialized,
+    isScalesMode,
+    playbackState,
+    scalePlaybackMode,
+  ]);
 
   useEffect(() => {
     playSelectedNotes();
   }, [selectedNoteIndices, playSelectedNotes]);
 
   return { playNote, playSelectedNotes };
-}
-
-function useSynthReleaseOnUnmount(synthRef: RefObject<Tone.PolySynth | null>) {
-  useEffect(() => {
-    return () => {
-      if (synthRef.current) {
-        synthRef.current.releaseAll();
-      }
-    };
-  }, []);
 }

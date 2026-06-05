@@ -13,7 +13,7 @@ import { Select } from "./Common/Select";
 
 const SCALE_MODE_GROUPS = [
   { label: "Greek modes", isGreek: true },
-  { label: "Other modes", isGreek: false },
+  { label: "Other Scales", isGreek: false },
 ] as const;
 
 export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelector: boolean }) => {

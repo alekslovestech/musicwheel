@@ -17,9 +17,10 @@ import {
   prepareChordProgressionSequence,
 } from "@/utils/SequencePlaybackUtils";
 import { RhythmUtils } from "@/utils/RhythmUtils";
-
-const PLAYBACK_DURATION_SCALE_SINGLE_NOTE = 300;
-const PLAYBACK_DURATION_SCALE_TRIAD = 500;
+import {
+  SCALE_STEP_MS_SINGLE_NOTE,
+  SCALE_STEP_MS_TRIAD,
+} from "@/lib/audio/playbackDurations";
 
 interface UseSequencePlaybackProps {
   isAudioInitialized: boolean;
@@ -148,8 +149,8 @@ export const useSequencePlayback = ({
 
   const getPlaybackDuration = useCallback((scalePlaybackMode: ScalePlaybackMode) => {
     return scalePlaybackMode === ScalePlaybackMode.SingleNote
-      ? PLAYBACK_DURATION_SCALE_SINGLE_NOTE
-      : PLAYBACK_DURATION_SCALE_TRIAD;
+      ? SCALE_STEP_MS_SINGLE_NOTE
+      : SCALE_STEP_MS_TRIAD;
   }, []);
 
   const resumeCurrentPlayback = useCallback(() => {

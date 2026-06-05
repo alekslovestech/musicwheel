@@ -1,10 +1,10 @@
 import React from "react";
 
-import { useIsScalePreviewMode, useGlobalMode } from "@/lib/hooks/useGlobalMode";
+import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 import { TYPOGRAPHY } from "@/lib/design/Typography";
 
-import { ActualIndex, actualToChromatic } from "@/types/IndexTypes";
+import { actualToChromatic } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { BLACK_KEY_WIDTH_RATIO, WHITE_KEYS_PER_2OCTAVES } from "@/types/constants/NoteConstants";
@@ -14,36 +14,38 @@ import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils
 import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
+import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { useMusical } from "@/contexts/MusicalContext";
 import { useDisplay } from "@/contexts/DisplayContext";
-import { useChordPresets } from "@/contexts/ChordPresetContext";
 
-interface PianoKeyProps {
-  actualIndex: ActualIndex;
-  isBassNote: boolean;
+interface PianoKeyLinearProps extends PianoKeyBaseProps {
   doDisplayText: boolean;
-  onClick: (index: ActualIndex) => void;
 }
 
-export const PianoKeyLinear: React.FC<PianoKeyProps> = ({
+export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   actualIndex,
   isBassNote,
   doDisplayText,
-  onClick,
+  onKeyClick,
 }) => {
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
   const { monochromeMode } = useDisplay();
-  const globalMode = useGlobalMode();
-  const { inputMode } = useChordPresets();
 
   const chromaticIndex = actualToChromatic(actualIndex);
   const isShortKey = BlackKeyUtils.isBlackKey(chromaticIndex);
   const left = LinearKeyboardUtils.getKeyPosition(actualIndex);
 
   const baseClasses = ["key-base"];
-  const isSelected = selectedNoteIndices.includes(actualIndex);
+  const isSelected = KeyboardUtils.isKeySelected(
+    actualIndex,
+    selectedNoteIndices,
+    KeyboardUIType.Linear,
+  );
   const isScales = useIsScalePreviewMode();
+  const isDiatonicInScale =
+    !isScales ||
+    selectedMusicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, selectedMusicalKey.tonicIndex);
 
   const {
     prevAccidentalExists,
@@ -72,21 +74,18 @@ export const PianoKeyLinear: React.FC<PianoKeyProps> = ({
     isShortKey,
     isScales,
     isBassNote,
+    isDiatonicInScale,
   );
 
   const id = KeyboardUtils.StringWithPaddedIndex("linearKey", actualIndex);
-  const noteText = KeyboardUtils.getNoteText(true, chromaticIndex, isScales, selectedMusicalKey);
-
-  const handleClick = KeyboardUtils.createKeyboardClickHandler(
-    globalMode,
-    inputMode,
+  const noteText = KeyboardUtils.getNoteText(
     KeyboardUIType.Linear,
-    onClick,
-    actualIndex,
+    chromaticIndex,
+    isScales,
+    selectedMusicalKey,
   );
 
-  const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {
-    const isSharp = accidental === AccidentalType.Sharp;
+  const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {    const isSharp = accidental === AccidentalType.Sharp;
     const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(
       isSelected,
       false, // isBlack: Accidentals are on white keys in linear keyboard
@@ -112,7 +111,7 @@ export const PianoKeyLinear: React.FC<PianoKeyProps> = ({
         isShortKey ? "h-[60%] -translate-x-1/2 z-[2]" : "h-full z-[1]"
       } ${isShortKey ? "" : "items-end"} shadow-linear-key`}
       style={{ left, width: keyWidthAsPercent }}
-      onClick={handleClick}
+      onClick={() => onKeyClick(actualIndex)}
     >
       {doDisplayText && (
         <>

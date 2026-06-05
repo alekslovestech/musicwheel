@@ -11,7 +11,7 @@ import { PianoKeyLinear } from "@/components/Keyboard/Linear/PianoKeyLinear";
 import { useMusical } from "@/contexts/MusicalContext";
 
 export const KeyboardLinear = () => {
-  const { handleKeyClick, checkIsBassNote } = useKeyboardHandlers();
+  const { onLinearKeyClick, checkIsBassNote } = useKeyboardHandlers();
   const { selectedMusicalKey } = useMusical();
   const containerRef = useRef<HTMLDivElement>(null);
   const doDisplayText = useLinearKeyboardDoDisplayText(containerRef);
@@ -83,7 +83,7 @@ export const KeyboardLinear = () => {
         actualIndex={actualIndex}
         isBassNote={isBassNote}
         doDisplayText={doDisplayText}
-        onClick={handleKeyClick}
+        onKeyClick={onLinearKeyClick}
       />,
     );
   }
