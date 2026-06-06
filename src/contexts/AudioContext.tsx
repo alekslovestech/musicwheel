@@ -5,6 +5,7 @@ import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
 import { useSequencePlayback } from "@/lib/hooks/useSequencePlayback";
+import type { StartSequencePlaybackOptions } from "@/lib/hooks/useSequencePlayback";
 
 export enum PlaybackState {
   SequenceComplete,
@@ -18,7 +19,7 @@ interface AudioContextType {
   setAudioInitialized: (initialized: boolean) => void;
 
   // Unified sequence playback
-  startSequencePlayback: () => void;
+  startSequencePlayback: (options?: StartSequencePlaybackOptions) => void;
   pauseSequencePlayback: () => void;
   resumeSequencePlayback: () => void;
   stopSequencePlayback: () => void;

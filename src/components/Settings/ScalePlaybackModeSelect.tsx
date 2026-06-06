@@ -38,8 +38,7 @@ export const ScalePlaybackModeSelect: React.FC = () => {
 
   const handleModeChange = (newMode: ScalePlaybackMode) => {
     setScalePlaybackMode(newMode);
-    // Trigger autoplay when playback mode changes
-    startSequencePlayback();
+    startSequencePlayback({ scalePlaybackMode: newMode });
   };
 
   return (

@@ -11,6 +11,7 @@ import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
+import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 
 export interface ScalePlaybackStepOutput {
   notesToPlay: NoteIndices | null;
@@ -34,8 +35,7 @@ function getScaleTriadChordRef(
   rootNote: ActualIndex,
 ): ChordReference {
   const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
-  const offsets = key.scaleModeInfo.getTriadOffsets(scaleDegreeInfo);
-  const chordType = key.scaleModeInfo.determineChordType(offsets);
+  const chordType = RomanChordFormatter.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
   return makeChordReference(rootNote, chordType, ixInversion(0));
 }
 

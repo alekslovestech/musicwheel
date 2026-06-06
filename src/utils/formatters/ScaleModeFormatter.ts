@@ -3,7 +3,7 @@ import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 
-import { RomanFormatter } from "./RomanFormatter";
+import { RomanChordFormatter } from "./RomanChordFormatter";
 import { ScaleDegreeFormatter } from "./ScaleDegreeFormatter";
 
 export class ScaleModeFormatter {
@@ -26,7 +26,9 @@ export class ScaleModeFormatter {
       case KeyDisplayMode.ScaleDegree:
         return ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo);
       case KeyDisplayMode.Roman:
-        return RomanFormatter.formatForDisplay(scaleDegreeInfo, scaleModeInfo);
+        return RomanChordFormatter.formatRomanChord(
+          RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo),
+        );
       default:
         return "???";
     }

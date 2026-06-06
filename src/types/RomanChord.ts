@@ -70,47 +70,4 @@ export class RomanChord {
   static isLowercaseRomanNumeral(numeral: string): boolean {
     return numeral.toLowerCase() === numeral;
   }
-
-  /**
-   * Determines the chord type based on whether the Roman numeral is lowercase and its suffix.
-   * @param isLowercase Whether the Roman numeral is lowercase
-   * @param suffix The chord suffix (e.g., "", "7", "maj7", "dim")
-   * @returns The determined chord type
-   */
-  static determineChordType(isLowercase: boolean, suffix: string): ChordType {
-    let chordType: ChordType;
-    switch (suffix) {
-      case "":
-        chordType = isLowercase ? ChordType.Minor : ChordType.Major;
-        break;
-      case "7":
-        chordType = isLowercase ? ChordType.Minor7 : ChordType.Dominant7;
-        break;
-      case "6":
-        chordType = isLowercase ? ChordType.Minor6 : ChordType.Major6;
-        break;
-      case "maj7":
-        chordType = isLowercase ? ChordType.Unknown : ChordType.Major7;
-        break;
-      case "o":
-      case "dim":
-        chordType = isLowercase ? ChordType.Diminished : ChordType.Unknown;
-        break;
-      case "o7":
-      case "dim7":
-        chordType = isLowercase ? ChordType.Diminished7 : ChordType.Unknown;
-        break;
-      case "aug":
-      case "+":
-        chordType = isLowercase ? ChordType.Unknown : ChordType.Augmented;
-        break;
-      case "ø7":
-        chordType = isLowercase ? ChordType.HalfDiminished : ChordType.Unknown;
-        break;
-      default:
-        chordType = ChordType.Unknown;
-    }
-
-    return chordType;
-  }
 }
