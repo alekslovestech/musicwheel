@@ -1,12 +1,5 @@
 import { ChordType } from "@/types/enums/ChordType";
 
-export type RomanQualitySpec = {
-  suffix: string;
-  isLowerCase: boolean;
-  /** Alternate suffix tokens accepted when parsing (canonical encode uses `suffix`). */
-  parseTokens?: readonly string[];
-};
-
 export const DEFAULT_ROMAN_QUALITY: RomanQualitySpec = {
   suffix: "",
   isLowerCase: false,
@@ -20,6 +13,20 @@ export function romanQuality(
   return parseTokens ? { suffix, isLowerCase, parseTokens } : { suffix, isLowerCase };
 }
 
+export function getRomanQuality(chordType: ChordType): RomanQualitySpec {
+  return ROMAN_QUALITY[chordType] ?? DEFAULT_ROMAN_QUALITY;
+}
+
+export function resolveRomanQuality(isLowerCase: boolean, suffix: string): ChordType {
+  return DECODE_MAP.get(decodeKey(isLowerCase, suffix)) ?? ChordType.Unknown;
+}
+
+type RomanQualitySpec = {
+  suffix: string;
+  isLowerCase: boolean;
+  /** Alternate suffix tokens accepted when parsing (canonical encode uses `suffix`). */
+  parseTokens?: readonly string[];
+};
 /** Progression roman quality: encode/decode via suffix + numeral case. */
 const ROMAN_QUALITY: Partial<Record<ChordType, RomanQualitySpec>> = {
   [ChordType.Major]: romanQuality("", false),
@@ -38,6 +45,9 @@ const ROMAN_QUALITY: Partial<Record<ChordType, RomanQualitySpec>> = {
   [ChordType.Sus2]: romanQuality("sus2", false),
   [ChordType.Narrow24sharp]: romanQuality("sus2♯4", false),
 };
+
+/** Longer tokens first so e.g. `sus2` is not consumed as `sus`. */
+export const ROMAN_CHORD_SUFFIX_PATTERN = buildParseSuffixPattern();
 
 function decodeKey(isLowerCase: boolean, suffix: string): string {
   return `${isLowerCase}:${suffix}`;
@@ -70,14 +80,3 @@ function buildParseSuffixPattern(): RegExp {
 }
 
 const DECODE_MAP = buildDecodeMap();
-
-/** Longer tokens first so e.g. `sus2` is not consumed as `sus`. */
-export const ROMAN_CHORD_SUFFIX_PATTERN = buildParseSuffixPattern();
-
-export function getRomanQuality(chordType: ChordType): RomanQualitySpec {
-  return ROMAN_QUALITY[chordType] ?? DEFAULT_ROMAN_QUALITY;
-}
-
-export function resolveRomanQuality(isLowerCase: boolean, suffix: string): ChordType {
-  return DECODE_MAP.get(decodeKey(isLowerCase, suffix)) ?? ChordType.Unknown;
-}

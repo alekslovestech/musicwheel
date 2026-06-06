@@ -6,7 +6,7 @@ import { RomanChord } from "@/types/RomanChord";
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { isNoteLength, makeDurated, type Durated, type NoteLength } from "@/types/Durated";
 import { addChromatic } from "@/types/ChromaticIndex";
-import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
+import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { resolveRomanQuality, ROMAN_CHORD_SUFFIX_PATTERN } from "@/types/RomanQualityRegistry";
 import {
@@ -18,14 +18,14 @@ export class RomanResolver {
   static resolveRomanChord(romanChord: RomanChord, musicalKey: MusicalKey): AbsoluteChord {
     const scale = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
 
-    let chromaticIndex = scale[romanChord.scaleDegreeIndex];
+    let chromaticIndex = scale[scaleDegreeToIndex(romanChord.scaleDegree)];
 
     const accidentalOffset = AccidentalFormatter.toSemitoneOffset(romanChord.accidental);
     chromaticIndex = addChromatic(chromaticIndex, accidentalOffset);
 
     const bassNote =
       romanChord.bassDegree !== undefined
-        ? scale[ixScaleDegreeIndex(romanChord.bassDegree - 1)]
+        ? scale[scaleDegreeToIndex(romanChord.bassDegree)]
         : chromaticIndex;
 
     return new AbsoluteChord(chromaticIndex, romanChord.chordType, bassNote);

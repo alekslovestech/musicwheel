@@ -6,6 +6,7 @@ import { NoteConverter } from "@/utils/NoteConverter";
 import { makeDurated, type NoteLength } from "@/types/Durated";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
 import { makeRomanChord } from "../utils/RomanTestUtils";
+import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 // Local helper to shorten creation of durated RomanChords in test cases:
 function duratedRoman(
@@ -17,7 +18,7 @@ function duratedRoman(
   rhythmDots = 0,
 ) {
   return makeDurated(
-    makeRomanChord(degree, type, accidental, bass),
+    makeRomanChord(ixScaleDegree(degree), type, accidental, bass ? ixScaleDegree(bass) : undefined),
     noteLength,
     rhythmDots,
   );

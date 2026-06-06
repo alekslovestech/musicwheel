@@ -5,8 +5,7 @@ import { addChromatic, ChromaticIndex, subChromatic } from "@/types/ChromaticInd
 
 import { ScalePattern } from "./ScalePattern";
 import { ScaleDegreeInfo } from "./ScaleDegreeInfo";
-import { ScaleDegreeIndex } from "./ScaleDegreeType";
-import { ixScaleDegreeIndex } from "./ScaleDegreeType";
+import { ixScaleDegreeIndex, scaleDegreeToIndex, ScaleDegreeIndex } from "./ScaleDegreeType";
 
 export class ScaleModeInfo implements SluggedEntry {
   /**
@@ -78,8 +77,9 @@ export class ScaleModeInfo implements SluggedEntry {
   }
 
   public getTriadOffsets(scaleDegreeInfo: ScaleDegreeInfo): number[] {
-    const scaleDegreeIndex = scaleDegreeInfo.scaleDegreeIndex;
-    const offsets135 = this.scalePattern.getOffsets135(scaleDegreeIndex);
+    const offsets135 = this.scalePattern.getOffsets135(
+      scaleDegreeToIndex(scaleDegreeInfo.scaleDegree),
+    );
     return offsets135.map((offset) => offset - offsets135[0]);
   }
 }

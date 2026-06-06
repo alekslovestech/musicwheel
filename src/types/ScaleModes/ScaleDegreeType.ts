@@ -19,6 +19,14 @@ export function ixScaleDegree(n: number): ScaleDegree {
   return n as ScaleDegree;
 }
 
+export function scaleDegreeToIndex(degree: ScaleDegree): ScaleDegreeIndex {
+  return ixScaleDegreeIndex(degree - 1);
+}
+
+export function scaleDegreeIndexToDegree(index: ScaleDegreeIndex): ScaleDegree {
+  return ixScaleDegree(index + 1);
+}
+
 /**
  * Returns true if the shorter circular path from `from` to `to` on the
  * diatonic scale (1–7) is descending. Ties (distance = 3.5, not possible
