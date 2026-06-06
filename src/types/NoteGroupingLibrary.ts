@@ -330,7 +330,7 @@ class NoteGroupingLibrarySingleton {
       38,
       "sus2♯4",
       "sus2♯4",
-      "Sus2 ♯4 Chord",
+      "Sus2(♯4) Chord",
       CHORD_OFFSET_PATTERNS.NARROW_24_SHARP,
       false,
       false,
