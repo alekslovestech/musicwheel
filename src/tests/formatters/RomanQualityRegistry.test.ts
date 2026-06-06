@@ -1,5 +1,6 @@
 import { ChordType } from "@/types/enums/ChordType";
 import {
+  DEFAULT_ROMAN_QUALITY,
   getRomanQuality,
   resolveRomanQuality,
 } from "@/types/RomanQualityRegistry";
@@ -13,6 +14,10 @@ describe("RomanQualityRegistry", () => {
     expect(getRomanQuality(ChordType.Minor)).toEqual({ suffix: "", isLowerCase: true });
     expect(resolveRomanQuality(false, "")).toBe(ChordType.Major);
     expect(resolveRomanQuality(true, "")).toBe(ChordType.Minor);
+  });
+
+  it("returns default quality for unmapped chord types", () => {
+    expect(getRomanQuality(ChordType.Unknown)).toEqual(DEFAULT_ROMAN_QUALITY);
   });
 
   it("round-trips progression types through format and parse", () => {

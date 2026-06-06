@@ -7,6 +7,11 @@ export type RomanQualitySpec = {
   parseTokens?: readonly string[];
 };
 
+export const DEFAULT_ROMAN_QUALITY: RomanQualitySpec = {
+  suffix: "",
+  isLowerCase: false,
+};
+
 export function romanQuality(
   suffix: string,
   isLowerCase: boolean,
@@ -69,8 +74,8 @@ const DECODE_MAP = buildDecodeMap();
 /** Longer tokens first so e.g. `sus2` is not consumed as `sus`. */
 export const ROMAN_CHORD_SUFFIX_PATTERN = buildParseSuffixPattern();
 
-export function getRomanQuality(chordType: ChordType): RomanQualitySpec | undefined {
-  return ROMAN_QUALITY[chordType];
+export function getRomanQuality(chordType: ChordType): RomanQualitySpec {
+  return ROMAN_QUALITY[chordType] ?? DEFAULT_ROMAN_QUALITY;
 }
 
 export function resolveRomanQuality(isLowerCase: boolean, suffix: string): ChordType {

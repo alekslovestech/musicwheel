@@ -38,8 +38,7 @@ export class RomanChordFormatter {
   static formatRomanChord(romanChord: RomanChord, includesBass = true): string {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
     const romanNumeralString = this.getProgressionRootNumeral(romanChord);
-    const quality = getRomanQuality(romanChord.chordType);
-    const chordPostfix = quality?.suffix ?? "";
+    const { suffix: chordPostfix } = getRomanQuality(romanChord.chordType);
     const bass =
       includesBass && romanChord.bassDegree !== undefined
         ? `/${this.bassNumeral(romanChord.bassDegree as ScaleDegree)}`
@@ -49,8 +48,7 @@ export class RomanChordFormatter {
 
   private static getProgressionRootNumeral(romanChord: RomanChord): RomanNumeralString {
     const scaleDegreeIndex = romanChord.scaleDegreeIndex;
-    const quality = getRomanQuality(romanChord.chordType);
-    const isLowercase = quality?.isLowerCase ?? false;
+    const { isLowerCase: isLowercase } = getRomanQuality(romanChord.chordType);
     return isLowercase
       ? this.LOWER_ROMAN_NUMERALS[scaleDegreeIndex]
       : this.UPPER_ROMAN_NUMERALS[scaleDegreeIndex];
