@@ -24,6 +24,7 @@ jest.mock("tone", () => ({
     dispose: jest.fn(),
     toDestination: jest.fn().mockReturnThis(),
     releaseAll: jest.fn(),
+    set: jest.fn(),
   })),
   Synth: jest.fn(), // Add this since it's referenced in PolySynth constructor
   Destination: {
