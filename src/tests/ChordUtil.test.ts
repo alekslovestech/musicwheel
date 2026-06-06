@@ -95,7 +95,7 @@ describe("ChordUtils", () => {
       { expected: "C24", indices: [0, 2, 5] },
       { expected: "C♭34", indices: [0, 3, 5] },
       { expected: "C34", indices: [0, 4, 5] },
-      { expected: "C2♯4", indices: [0, 2, 6] },
+      { expected: "Csus2♯4", indices: [0, 2, 6] },
       { expected: "C♭5", indices: [0, 4, 6] },
     ];
 

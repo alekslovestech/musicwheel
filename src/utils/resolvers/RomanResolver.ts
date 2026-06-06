@@ -8,6 +8,11 @@ import { isNoteLength, makeDurated, type Durated, type NoteLength } from "@/type
 import { addChromatic } from "@/types/ChromaticIndex";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
+import { resolveRomanQuality, ROMAN_CHORD_SUFFIX_PATTERN } from "@/types/RomanQualityRegistry";
+import {
+  isLowercaseRomanNumeral,
+  scaleDegreeFromRomanNumeral,
+} from "@/types/RomanTypes";
 
 export class RomanResolver {
   static resolveRomanChord(romanChord: RomanChord, musicalKey: MusicalKey): AbsoluteChord {
@@ -15,12 +20,7 @@ export class RomanResolver {
 
     let chromaticIndex = scale[romanChord.scaleDegreeIndex];
 
-    const accidentalOffset =
-      romanChord.accidental === AccidentalType.Flat
-        ? -1
-        : romanChord.accidental === AccidentalType.Sharp
-          ? 1
-          : 0;
+    const accidentalOffset = AccidentalFormatter.toSemitoneOffset(romanChord.accidental);
     chromaticIndex = addChromatic(chromaticIndex, accidentalOffset);
 
     const bassNote =
@@ -61,11 +61,11 @@ export class RomanResolver {
       parsedRoman.accidentalPrefix,
     );
 
-    const ordinal = RomanChord.fromRoman(parsedRoman.pureRoman);
-    const isLowercase = RomanChord.isLowercaseRomanNumeral(parsedRoman.pureRoman);
-    const chordType = RomanChord.determineChordType(isLowercase, parsedRoman.chordSuffix);
+    const ordinal = scaleDegreeFromRomanNumeral(parsedRoman.pureRoman);
+    const isLowercase = isLowercaseRomanNumeral(parsedRoman.pureRoman);
+    const chordType = resolveRomanQuality(isLowercase, parsedRoman.chordSuffix);
     const bassDegree = parsedRoman.bassRoman
-      ? RomanChord.fromRoman(parsedRoman.bassRoman)
+      ? scaleDegreeFromRomanNumeral(parsedRoman.bassRoman)
       : undefined;
 
     if (chordType === ChordType.Unknown) {
@@ -90,10 +90,8 @@ interface ParsedRomanLexeme {
 
 const accidentalRegex: RegExp = /#|♯|b|♭/;
 const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
-/** Longer tokens first so e.g. `dim7` is not consumed as `dim`. */
-const chordTypeRegex: RegExp = /\+|maj7|dim7|o7|ø7|7|6|dim|o|aug/;
 const romanRegex: RegExp = new RegExp(
-  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${chordTypeRegex.source})?(\/(${pureRomanRegex.source}))?$`,
+  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${ROMAN_CHORD_SUFFIX_PATTERN.source})?(\/(${pureRomanRegex.source}))?$`,
 );
 
 /**

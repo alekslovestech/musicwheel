@@ -1,11 +1,11 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ChordType } from "@/types/enums/ChordType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { NoteConverter } from "@/utils/NoteConverter";
 import { makeDurated, type NoteLength } from "@/types/Durated";
 import { GreekTestConstants } from "../utils/GreekTestConstants";
+import { makeRomanChord } from "../utils/RomanTestUtils";
 
 // Local helper to shorten creation of durated RomanChords in test cases:
 function duratedRoman(
@@ -17,7 +17,7 @@ function duratedRoman(
   rhythmDots = 0,
 ) {
   return makeDurated(
-    RomanChord.fromScaleDegree(degree, type, accidental, bass),
+    makeRomanChord(degree, type, accidental, bass),
     noteLength,
     rhythmDots,
   );

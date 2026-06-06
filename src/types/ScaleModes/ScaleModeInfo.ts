@@ -1,6 +1,3 @@
-import { CHORD_OFFSET_PATTERNS } from "@/types/constants/ChordOffsetPatterns";
-
-import { ChordType } from "@/types/enums/ChordType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { SluggedEntry } from "@/utils/slug/slugCodec";
 
@@ -74,24 +71,6 @@ export class ScaleModeInfo implements SluggedEntry {
   public isDiatonicNote(chromaticIndex: ChromaticIndex, tonicIndex: ChromaticIndex): boolean {
     const scaleNotes = this.getAbsoluteScaleNotes(tonicIndex);
     return scaleNotes.includes(chromaticIndex);
-  }
-
-  //scaleDegreeIndex is the index of the scale degree in the pattern (0-6)
-  public determineChordType(offsetsFromRoot: number[]): ChordType {
-    const patterns = {
-      [ChordType.Major]: CHORD_OFFSET_PATTERNS.MAJOR,
-      [ChordType.Minor]: CHORD_OFFSET_PATTERNS.MINOR,
-      [ChordType.Diminished]: CHORD_OFFSET_PATTERNS.DIMINISHED,
-      [ChordType.Augmented]: CHORD_OFFSET_PATTERNS.AUGMENTED,
-      [ChordType.MajFlat5]: CHORD_OFFSET_PATTERNS.MAJ_FLAT5,
-    };
-
-    // Find matching chord pattern
-    const matchingPattern = Object.entries(patterns).find(([, pattern]) => {
-      return offsetsFromRoot.every((offset, index) => offset === pattern[index]);
-    });
-
-    return (matchingPattern?.[0] as ChordType) || ChordType.Unknown;
   }
 
   public getScaleDegreeInfoFromPosition(scaleDegreeIndex: ScaleDegreeIndex): ScaleDegreeInfo {

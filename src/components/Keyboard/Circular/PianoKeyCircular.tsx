@@ -84,7 +84,10 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
   );
 
   const isRomanLabels = isScales && scalePlaybackMode === ScalePlaybackMode.Triad;
-  const noteTextClass = isRomanLabels ? TYPOGRAPHY.circularRomanText : TYPOGRAPHY.circularNoteText;
+  const romanLabelFit = isRomanLabels
+    ? ArcPathVisualizer.getRomanLabelFit(noteText, outerRadius, innerRadius)
+    : undefined;
+  const noteTextClass = romanLabelFit ? "font-bold" : isRomanLabels ? TYPOGRAPHY.circularRomanText : TYPOGRAPHY.circularNoteText;
 
   const renderAccidental = (
     accidental: AccidentalType,
@@ -129,6 +132,9 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
         y={textPoint.y}
         textAnchor="middle"
         dominantBaseline="middle"
+        fontSize={romanLabelFit?.fontSize}
+        textLength={romanLabelFit?.textLength}
+        lengthAdjust={romanLabelFit !== undefined ? "spacingAndGlyphs" : undefined}
         className={`text-center pointer-events-none ${keyColors.text} ${noteTextClass}`}
       >
         {noteText}

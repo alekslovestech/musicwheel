@@ -9,6 +9,17 @@ const ACCIDENTAL_SYMBOL_STYLES = {
   angleCoefficient: 0.7, //how far from the edges of the pie slice to place the accidental (anglular coordinates)
 } as const;
 
+/** Fraction of slice chord width available for roman label text at the label radius. */
+const ROMAN_LABEL_WIDTH_FRACTION = 0.85;
+/** Labels with more than this many characters get width/height fitting (see getRomanLabelFit). */
+const ROMAN_LABEL_FIT_MAX_DEFAULT_LENGTH = 4;
+/** Base label height as a fraction of radial wedge depth (SVG user units). */
+const ROMAN_LABEL_BASE_FONT_HEIGHT_FRACTION = 0.35;
+/** Smallest height scale applied when compressing long roman labels. */
+const ROMAN_LABEL_MIN_HEIGHT_SCALE = 0.6;
+/** Reference character count for full-height roman labels when fitting. */
+const ROMAN_LABEL_REFERENCE_LENGTH = 4;
+
 export class ArcPathVisualizer {
   public static getTextPoint(
     chromaticIndex: ChromaticIndex,
@@ -17,6 +28,39 @@ export class ArcPathVisualizer {
   ): CartesianPoint {
     const middleAngle = PolarMath.NoteIndexToMiddleAngle(chromaticIndex);
     return PolarMath.getCartesianFromPolar((innerRadius + outerRadius) * 0.5, middleAngle);
+  }
+
+  /** SVG user-unit width for {@link SVGTextElement.textLength} on roman triad labels. */
+  public static getRomanLabelTextLength(outerRadius: number, innerRadius: number): number {
+    const textRadius = (innerRadius + outerRadius) * 0.5;
+    const sliceAngle = (2 * Math.PI) / TWELVE;
+    const chordWidth = 2 * textRadius * Math.sin(sliceAngle / 2);
+    return chordWidth * ROMAN_LABEL_WIDTH_FRACTION;
+  }
+
+  /**
+   * Width/height fit for long roman triad labels. Width uses {@link SVGTextElement.textLength};
+   * height scales down proportionally so glyphs are not tall and narrow.
+   */
+  public static getRomanLabelFit(
+    label: string,
+    outerRadius: number,
+    innerRadius: number,
+  ): { textLength: number; fontSize: number } | undefined {
+    if (label.length <= ROMAN_LABEL_FIT_MAX_DEFAULT_LENGTH) return undefined;
+
+    const textLength = this.getRomanLabelTextLength(outerRadius, innerRadius);
+    const wedgeDepth = outerRadius - innerRadius;
+    const baseFontSize = wedgeDepth * ROMAN_LABEL_BASE_FONT_HEIGHT_FRACTION;
+    const heightScale = Math.max(
+      ROMAN_LABEL_MIN_HEIGHT_SCALE,
+      ROMAN_LABEL_REFERENCE_LENGTH / label.length,
+    );
+
+    return {
+      textLength,
+      fontSize: baseFontSize * heightScale,
+    };
   }
 
   public static getAccidentalPositions(
