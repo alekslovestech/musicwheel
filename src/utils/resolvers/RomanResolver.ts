@@ -20,12 +20,7 @@ export class RomanResolver {
 
     let chromaticIndex = scale[romanChord.scaleDegreeIndex];
 
-    const accidentalOffset =
-      romanChord.accidental === AccidentalType.Flat
-        ? -1
-        : romanChord.accidental === AccidentalType.Sharp
-          ? 1
-          : 0;
+    const accidentalOffset = AccidentalFormatter.toSemitoneOffset(romanChord.accidental);
     chromaticIndex = addChromatic(chromaticIndex, accidentalOffset);
 
     const bassNote =

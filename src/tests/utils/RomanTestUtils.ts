@@ -9,7 +9,7 @@ export function makeRomanChord(
   accidental: AccidentalType = AccidentalType.None,
   bassScaleDegree?: ScaleDegree,
 ): RomanChord {
-  const bass =
-    bassScaleDegree !== undefined ? ixScaleDegree(bassScaleDegree) : undefined;
+  const bass = bassScaleDegree ?? undefined;
   return new RomanChord(ixScaleDegree(scaleDegree), chordType, accidental, bass);
 }
+
