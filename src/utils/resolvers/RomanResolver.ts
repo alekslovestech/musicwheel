@@ -9,6 +9,10 @@ import { addChromatic } from "@/types/ChromaticIndex";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { resolveRomanQuality, ROMAN_CHORD_SUFFIX_PATTERN } from "@/types/RomanQualityRegistry";
+import {
+  isLowercaseRomanNumeral,
+  scaleDegreeFromRomanNumeral,
+} from "@/types/RomanTypes";
 
 export class RomanResolver {
   static resolveRomanChord(romanChord: RomanChord, musicalKey: MusicalKey): AbsoluteChord {
@@ -62,11 +66,11 @@ export class RomanResolver {
       parsedRoman.accidentalPrefix,
     );
 
-    const ordinal = RomanChord.fromRoman(parsedRoman.pureRoman);
-    const isLowercase = RomanChord.isLowercaseRomanNumeral(parsedRoman.pureRoman);
+    const ordinal = scaleDegreeFromRomanNumeral(parsedRoman.pureRoman);
+    const isLowercase = isLowercaseRomanNumeral(parsedRoman.pureRoman);
     const chordType = resolveRomanQuality(isLowercase, parsedRoman.chordSuffix);
     const bassDegree = parsedRoman.bassRoman
-      ? RomanChord.fromRoman(parsedRoman.bassRoman)
+      ? scaleDegreeFromRomanNumeral(parsedRoman.bassRoman)
       : undefined;
 
     if (chordType === ChordType.Unknown) {

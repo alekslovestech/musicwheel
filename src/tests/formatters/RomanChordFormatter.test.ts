@@ -1,7 +1,8 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ChordType } from "@/types/enums/ChordType";
-import { RomanChord } from "@/types/RomanChord";
+import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
+import { makeRomanChord } from "../utils/RomanTestUtils";
 
 describe("RomanChordFormatter.formatRomanChord", () => {
   type TestCase = {
@@ -157,11 +158,11 @@ describe("RomanChordFormatter.formatRomanChord", () => {
 
   for (const { name, scaleDegree, chordType, expected, accidental, bassDegree } of allCases) {
     it(name, () => {
-      const chord = RomanChord.fromScaleDegree(
+      const chord = makeRomanChord(
         scaleDegree,
         chordType,
         accidental ?? AccidentalType.None,
-        bassDegree,
+        bassDegree ? ixScaleDegree(bassDegree) : undefined,
       );
       const actual = RomanChordFormatter.formatRomanChord(chord);
       expect(actual).toBe(expected);

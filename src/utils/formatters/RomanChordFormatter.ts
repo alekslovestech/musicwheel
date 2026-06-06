@@ -2,10 +2,9 @@ import { ChordType } from "@/types/enums/ChordType";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { RomanChord } from "@/types/RomanChord";
 import { getRomanQuality } from "@/types/RomanQualityRegistry";
-import type { ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
-import { RomanNumeralString } from "@/types/RomanTypes";
+import { formatNumeralForDegree } from "@/types/RomanTypes";
 import { AccidentalFormatter } from "./AccidentalFormatter";
 
 /**
@@ -37,44 +36,11 @@ export class RomanChordFormatter {
    */
   static formatRomanChord(romanChord: RomanChord): string {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
-    const romanNumeralString = this.getProgressionRootNumeral(romanChord);
-    const { suffix: chordPostfix } = getRomanQuality(romanChord.chordType);
-    const bass =
-      romanChord.bassDegree !== undefined
-        ? `/${this.bassNumeral(romanChord.bassDegree as ScaleDegree)}`
-        : "";
+    const { suffix: chordPostfix, isLowerCase } = getRomanQuality(romanChord.chordType);
+    const romanNumeralString = formatNumeralForDegree(romanChord.scaleDegree, isLowerCase);
+    const bass = romanChord.bassDegree
+      ? `/${formatNumeralForDegree(romanChord.bassDegree, false)}`
+      : "";
     return `${accidentalString}${romanNumeralString}${chordPostfix}${bass}`;
   }
-
-  private static getProgressionRootNumeral(romanChord: RomanChord): RomanNumeralString {
-    const scaleDegreeIndex = romanChord.scaleDegreeIndex;
-    const { isLowerCase: isLowercase } = getRomanQuality(romanChord.chordType);
-    return isLowercase
-      ? this.LOWER_ROMAN_NUMERALS[scaleDegreeIndex]
-      : this.UPPER_ROMAN_NUMERALS[scaleDegreeIndex];
-  }
-
-  private static bassNumeral(degree: ScaleDegree): RomanNumeralString {
-    const idx = Number(degree) - 1;
-    return this.UPPER_ROMAN_NUMERALS[idx];
-  }
-
-  private static UPPER_ROMAN_NUMERALS: RomanNumeralString[] = [
-    "I",
-    "II",
-    "III",
-    "IV",
-    "V",
-    "VI",
-    "VII",
-  ];
-  private static LOWER_ROMAN_NUMERALS: RomanNumeralString[] = [
-    "i",
-    "ii",
-    "iii",
-    "iv",
-    "v",
-    "vi",
-    "vii",
-  ];
 }

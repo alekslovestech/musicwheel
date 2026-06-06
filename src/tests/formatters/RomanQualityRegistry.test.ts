@@ -4,9 +4,9 @@ import {
   getRomanQuality,
   resolveRomanQuality,
 } from "@/types/RomanQualityRegistry";
-import { RomanChord } from "@/types/RomanChord";
-import { RomanResolver } from "@/utils/resolvers/RomanResolver";
+import { makeRomanChord } from "../utils/RomanTestUtils";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
+import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
 describe("RomanQualityRegistry", () => {
   it("encodes and decodes major/minor triads via case", () => {
@@ -39,7 +39,7 @@ describe("RomanQualityRegistry", () => {
     ];
 
     for (const chordType of types) {
-      const roman = RomanChord.fromScaleDegree(3, chordType);
+      const roman = makeRomanChord(3, chordType);
       const formatted = RomanChordFormatter.formatRomanChord(roman);
       const parsed = RomanResolver.createRomanChordFromString(formatted);
       expect(parsed.chordType).toBe(chordType);

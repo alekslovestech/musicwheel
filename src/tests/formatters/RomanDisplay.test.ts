@@ -45,14 +45,6 @@ describe("Roman Mode Index Arrays", () => {
       expected: ["i", "♭II", "♭III", "iv", "v°", "♭VI", "♭vii"],
     },
     {
-      mode: ScaleModeType.PhrygianDominant,
-      expected: ["I", "♭II", "iii°", "iv", "v°", "♭VI+", "♭vii"],
-    },
-    {
-      mode: ScaleModeType.Byzantine,
-      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VII"],
-    },
-    {
       mode: ScaleModeType.Lydian,
       expected: ["I", "II", "iii", "♯iv°", "V", "vi", "vii"],
     },
@@ -67,6 +59,18 @@ describe("Roman Mode Index Arrays", () => {
     {
       mode: ScaleModeType.Locrian,
       expected: ["i°", "♭II", "♭iii", "iv", "♭V", "♭VI", "♭vii"],
+    },
+    {
+      mode: ScaleModeType.PhrygianDominant,
+      expected: ["I", "♭II", "iii°", "iv", "v°", "♭VI+", "♭vii"],
+    },
+    {
+      mode: ScaleModeType.Byzantine,
+      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VIIsus2♯4"],
+    },
+    {
+      mode: ScaleModeType.PanthuVaraali,
+      expected: ["I", "♭IIsus", "iii", "♯IVsus2♯4", "V♭5", "♭VI+", "VIIsus2"],
     },
   ];
 
