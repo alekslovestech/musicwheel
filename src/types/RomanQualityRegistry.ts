@@ -43,7 +43,9 @@ const ROMAN_QUALITY: Partial<Record<ChordType, RomanQualitySpec>> = {
   [ChordType.MajFlat5]: romanQuality("♭5", false),
   [ChordType.Sus4]: romanQuality("sus", false),
   [ChordType.Sus2]: romanQuality("sus2", false),
-  [ChordType.Narrow24sharp]: romanQuality("sus2♯4", false),
+  [ChordType.Sus2sharp4]: romanQuality("sus2♯4", false),
+  [ChordType.Sus2_4]: romanQuality("sus24", false),
+  [ChordType.Narrow_b3_4]: romanQuality("add4", true),
 };
 
 /** Longer tokens first so e.g. `sus2` is not consumed as `sus`. */

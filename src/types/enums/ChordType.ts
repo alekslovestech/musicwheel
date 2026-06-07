@@ -32,11 +32,9 @@ export enum ChordType {
 
   //Narrow chords
   MajFlat5 = "Chord_Maj_b5", //C E G♭
-
   Narrow23 = "Chord_Narrow_23", //C D E
-  Narrow24 = "Chord_Narrow_24", //C D F
+  Sus2_4 = "Chord_Sus2_4", //C D F
   Narrow34 = "Chord_Narrow_34", //C E F
-  Narrow24sharp = "Chord_Narrow_24#", //C D F#
-
-  Narrow3flat4 = "Chord_Narrow_3flat4", //C E Fb
+  Sus2sharp4 = "Chord_Sus2#4", //C D F#
+  Narrow_b3_4 = "Chord_m_add4", //C Eb F
 }
