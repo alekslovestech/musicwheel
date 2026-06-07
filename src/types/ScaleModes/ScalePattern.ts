@@ -60,7 +60,7 @@ export class ScalePattern {
     return [rootOffset, thirdOffset, fifthOffset, seventhOffset];
   }
 
-  public getLength(): number {
+  public get length(): number {
     return this.SCALE_LENGTH;
   }
 

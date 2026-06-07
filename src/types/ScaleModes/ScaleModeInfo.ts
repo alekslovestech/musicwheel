@@ -25,7 +25,7 @@ export class ScaleModeInfo implements SluggedEntry {
   }
 
   public getScalePatternLength(): number {
-    return this.scalePattern.getLength();
+    return this.scalePattern.length;
   }
 
   /**
@@ -58,7 +58,7 @@ export class ScaleModeInfo implements SluggedEntry {
   public getIonianTonicIndex(tonicIndex: ChromaticIndex): ChromaticIndex {
     const offset = this.modeNumber - 1;
 
-    const scaleLength = this.scalePattern.getLength();
+    const scaleLength = this.scalePattern.length;
     const ionianOffset = this.scalePattern.getOffsetAtIndex(
       ixScaleDegreeIndex((scaleLength - offset) % scaleLength),
     );
