@@ -1,11 +1,17 @@
-import { ColorLegendGroup } from "./colorLegendGroups";
+"use client";
+
 import {
-  getColorLegendSections,
+  ColorLegendGroup,
   legendLabelsForGroup,
+  partitionColorLegendGroupsForDisplay,
 } from "./colorLegendGroups";
+import { useColorLegendGroups } from "./useColorLegendGroups";
 
 export function ColorLegendPanel() {
-  const { intervals, chords } = getColorLegendSections();
+  const { groups, chordsOnly } = useColorLegendGroups();
+  const { intervals, chords } = chordsOnly
+    ? { intervals: [], chords: groups }
+    : partitionColorLegendGroupsForDisplay(groups);
 
   return (
     <div
@@ -14,7 +20,7 @@ export function ColorLegendPanel() {
     >
       <div className="mb-snug text-sm font-medium">Color legend</div>
       <div id="color-legend-sections" className="flex flex-col gap-normal">
-        <ColorLegendSection title="Intervals" groups={intervals} />
+        {!chordsOnly && <ColorLegendSection title="Intervals" groups={intervals} />}
         <ColorLegendSection title="Chords" groups={chords} />
       </div>
     </div>

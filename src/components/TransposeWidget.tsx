@@ -5,7 +5,7 @@ import { useMusical } from "@/contexts/MusicalContext";
 import { useChordPresets, useIsFreeformMode } from "@/contexts/ChordPresetContext";
 
 import { Button } from "./Common/Button";
-import { TYPOGRAPHY } from "@/lib/design";
+import { LAYOUT_PATTERNS, TYPOGRAPHY } from "@/lib/design";
 import { track } from "@/lib/track";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
@@ -16,13 +16,15 @@ export type TransposeTarget = "key" | "notes";
 export function TransposeWidget({
   target,
   label,
+  coupled = false,
 }: {
   target: TransposeTarget;
   label?: string;
+  coupled?: boolean;
 }) {
   const flexDirection = /*target === "notes" ? "flex-col" : */ "flex-row";
   return (
-    <div>
+    <div className={coupled ? LAYOUT_PATTERNS.coupledActionSlot : undefined}>
       {label && <div className={`${TYPOGRAPHY.chordNameText}`}>{label}</div>}
       <div className={`transpose-buttons-container flex ${flexDirection} gap-2`}>
         <TransposeButton direction="up" target={target} />

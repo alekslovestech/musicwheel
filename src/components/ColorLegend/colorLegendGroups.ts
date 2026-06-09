@@ -25,17 +25,58 @@ export function legendLabelsForGroup(group: ColorLegendGroup): string {
   return labels.join("·");
 }
 
-export function getColorLegendSections(): {
+export function getColorLegendGroups(): ColorLegendGroup[] {
+  return buildColorLegendGroups();
+}
+
+/** Subset of the full legend: one row per color bucket that matches any of {@link displayIds}. */
+export function getColorLegendGroupsForIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
+  return groupsForDisplayIds(displayIds);
+}
+
+/** Split a sorted legend into interval and chord sections for display. */
+export function partitionColorLegendGroupsForDisplay(groups: ColorLegendGroup[]): {
   intervals: ColorLegendGroup[];
   chords: ColorLegendGroup[];
 } {
-  const groups = buildColorLegendGroups();
-  const intervals = groups.filter(isIntervalLegendGroup);
-  const chords = sortChordLegendGroupsByCatalogOrder(
-    groups.filter(isChordLegendGroup),
-    COLOR_LEGEND_DISPLAY_IDS,
-  );
+  const intervals: ColorLegendGroup[] = [];
+  const chords: ColorLegendGroup[] = [];
+  for (const group of groups) {
+    if (isIntervalLegendGroup(group)) {
+      intervals.push(group);
+    } else {
+      chords.push(group);
+    }
+  }
   return { intervals, chords };
+}
+
+function groupsForDisplayIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
+  const fullMap = buildColorLegendMap(COLOR_LEGEND_DISPLAY_IDS);
+  const displayBuckets = new Set([...displayIds].map(legendBucketKey));
+
+  const groups = [...fullMap.entries()]
+    .filter(([bucketKey]) => displayBuckets.has(bucketKey))
+    .map(([, groupingIds]) => toColorLegendGroup(groupingIds));
+
+  return sortColorLegendGroups(groups, displayIds);
+}
+
+function buildColorLegendMap(ids: Set<NoteGroupingId>): Map<string, NoteGroupingId[]> {
+  const map = new Map<string, NoteGroupingId[]>();
+
+  for (const id of ids) {
+    const key = legendBucketKey(id);
+    const group = map.get(key) ?? [];
+    group.push(id);
+    map.set(key, group);
+  }
+
+  for (const [key, group] of map) {
+    map.set(key, sortIdsByOrder(group));
+  }
+
+  return map;
 }
 
 /** Spread, narrow, and hidden voicings omitted from the chord legend. */
@@ -45,22 +86,20 @@ const COLOR_LEGEND_EXCLUDED_CHORD_IDS: ReadonlySet<NoteGroupingId> = new Set([
   ChordType.SpreadAugmented,
   ChordType.SpreadDiminished,
   ChordType.Narrow23,
-  ChordType.Sus2_4,
   ChordType.Narrow34,
-  ChordType.Sus2sharp4,
   ChordType.Narrow_b3_4,
-  ChordType.MajFlat5,
   ChordType.Add2,
   ChordType.Seven13,
 ]);
 
-const COLOR_LEGEND_DISPLAY_IDS: NoteGroupingId[] =
-  NoteGroupingLibrary.getAllIds().filter(isColorLegendId);
+const COLOR_LEGEND_DISPLAY_IDS: Set<NoteGroupingId> = new Set(
+  NoteGroupingLibrary.getAllIds().filter(isColorLegendId),
+);
 
 /** {@link ChordType} declaration order; Unknown omitted. */
-const CHORD_CATALOG_ORDER: readonly ChordType[] = (
-  Object.values(ChordType) as ChordType[]
-).filter(isNotUnknownChordType);
+const CHORD_CATALOG_ORDER: readonly ChordType[] = (Object.values(ChordType) as ChordType[]).filter(
+  isNotUnknownChordType,
+);
 
 function isColorLegendId(id: NoteGroupingId): boolean {
   if (id === SpecialType.None || id === SpecialType.Note) return false;
@@ -76,24 +115,35 @@ function isIntervalLegendGroup(group: ColorLegendGroup): boolean {
   return isIntervalType(group.groupingIds[0]!);
 }
 
-function isChordLegendGroup(group: ColorLegendGroup): boolean {
-  return !isIntervalLegendGroup(group);
-}
-
-function sortChordLegendGroupsByCatalogOrder(
+function sortColorLegendGroups(
   groups: ColorLegendGroup[],
-  displayIds: NoteGroupingId[],
+  displayIdSet: Set<NoteGroupingId>,
 ): ColorLegendGroup[] {
-  const displayIdSet = new Set(displayIds);
-  return [...groups].sort(function compareByCatalogOrder(a, b) {
-    return catalogSortKey(a, displayIdSet) - catalogSortKey(b, displayIdSet);
+  return [...groups].sort(function compareColorLegendGroups(a, b) {
+    return compareColorLegendGroupOrder(a, b, displayIdSet);
   });
 }
 
-function catalogSortKey(
-  group: ColorLegendGroup,
+function compareColorLegendGroupOrder(
+  a: ColorLegendGroup,
+  b: ColorLegendGroup,
   displayIdSet: Set<NoteGroupingId>,
 ): number {
+  const aIsInterval = isIntervalLegendGroup(a);
+  const bIsInterval = isIntervalLegendGroup(b);
+
+  if (aIsInterval !== bIsInterval) {
+    return aIsInterval ? -1 : 1;
+  }
+
+  if (aIsInterval) {
+    return minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
+  }
+
+  return catalogSortKey(a, displayIdSet) - catalogSortKey(b, displayIdSet);
+}
+
+function catalogSortKey(group: ColorLegendGroup, displayIdSet: Set<NoteGroupingId>): number {
   const anchorIds = group.groupingIds.filter(function isDisplayId(id) {
     return displayIdSet.has(id);
   });
@@ -116,7 +166,8 @@ function minOrderId(ids: NoteGroupingId[]): number {
 function legendBucketKey(id: NoteGroupingId): string {
   const color = getColorForGrouping(id);
   const type = isIntervalType(id) ? NoteGroupingType.Interval : NoteGroupingType.Chord;
-  return `${type}:${color.css()}`;}
+  return `${type}:${color.css()}`;
+}
 
 function sortIdsByOrder(ids: NoteGroupingId[]): NoteGroupingId[] {
   return [...ids].sort(function compareByOrderId(a, b) {
@@ -148,7 +199,5 @@ function buildColorLegendGroups(): ColorLegendGroup[] {
     return toColorLegendGroup(sortIdsByOrder(groupingIds));
   });
 
-  return groups.sort(function compareGroupsByMinOrderId(a, b) {
-    return minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
-  });
+  return sortColorLegendGroups(groups, COLOR_LEGEND_DISPLAY_IDS);
 }
