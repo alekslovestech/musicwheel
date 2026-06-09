@@ -10,7 +10,7 @@ interface PageLayout {
 }
 
 const GRID_COLUMNS = "1fr 1fr";
-/** Narrower circular column in CP landscape so progression + staff get more width. */
+/** Narrower circular column in CP landscape so the notation column gets more width. */
 const CP_GRID_COLUMNS_LANDSCAPE = "1fr 2fr";
 
 export function usePageLayout(): PageLayout {

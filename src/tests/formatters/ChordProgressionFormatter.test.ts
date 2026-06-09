@@ -136,6 +136,32 @@ describe("ChordProgressionFormatter.compact row grouping", () => {
     expect(fmt.stepIndicesForDisplayRow(1, true)).toEqual([0, 1]);
     expect(fmt.stepIndicesForDisplayRow(1, false)).toEqual([1]);
   });
+
+  it("returns a sliding window of display rows for playback", () => {
+    const p = new ChordProgression(["I", "IV", "V", "vi"], "four quarters");
+    const fmt = new ChordProgressionFormatter(p);
+    const grid = fmt.formatCombinedForDisplay(p.suggestedMusicalKey);
+
+    expect(fmt.displayRowsForStep(grid, 0, false, 2)).toHaveLength(1);
+    expect(fmt.displayRowsForStep(grid, 0, false, 2)[0]).toEqual(grid[0]);
+
+    const multiBar = new ChordProgression(["I:1", "IV:1", "V:1", "vi:1"], "four bars");
+    const multiFmt = new ChordProgressionFormatter(multiBar);
+    const multiGrid = multiFmt.formatCombinedForDisplay(multiBar.suggestedMusicalKey);
+    expect(multiGrid).toHaveLength(4);
+    expect(multiFmt.displayRowsForStep(multiGrid, 0, false, 2)).toEqual([
+      multiGrid[0],
+      multiGrid[1],
+    ]);
+    expect(multiFmt.displayRowsForStep(multiGrid, 2, false, 2)).toEqual([
+      multiGrid[2],
+      multiGrid[3],
+    ]);
+    expect(multiFmt.displayRowsForStep(multiGrid, 3, false, 2)).toEqual([
+      multiGrid[2],
+      multiGrid[3],
+    ]);
+  });
 });
 
 describe("ChordProgressionFormatter step grouping lookup", () => {

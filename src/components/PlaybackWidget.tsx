@@ -13,7 +13,7 @@ export const PlaybackWidget: React.FC = () => {
       className={`${LAYOUT_PATTERNS.centerFlexRowGap} max-w-xs self-center`}
     >
       <PlaySequenceButton />
-      {playbackState !== PlaybackState.SequenceComplete && <PauseSequenceButton />}
+      <PauseSequenceButton visible={playbackState !== PlaybackState.SequenceComplete} />
     </div>
   );
 };
