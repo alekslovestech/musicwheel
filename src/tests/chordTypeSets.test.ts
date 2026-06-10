@@ -1,7 +1,7 @@
 import {
   getDistinctChordTypesFromProgression,
   getTriadChordTypesForKey,
-} from "@/components/ColorLegend/colorLegendSources";
+} from "@/utils/chordTypeSets";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordType } from "@/types/enums/ChordType";

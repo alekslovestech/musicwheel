@@ -4,11 +4,11 @@ import {
   ColorLegendGroup,
   getColorLegendGroups,
   getColorLegendGroupsForIds,
-} from "@/components/ColorLegend/colorLegendGroups";
+} from "@/utils/visual/colorLegendGroups";
 import {
   getDistinctChordTypesFromProgression,
   getTriadChordTypesForKey,
-} from "@/components/ColorLegend/colorLegendSources";
+} from "@/utils/chordTypeSets";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";

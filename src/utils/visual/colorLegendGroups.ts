@@ -12,19 +12,6 @@ export interface ColorLegendGroup {
   groupingIds: NoteGroupingId[];
 }
 
-export function legendLabelsForGroup(group: ColorLegendGroup): string {
-  const seen = new Set<string>();
-  const labels: string[] = [];
-  for (const id of group.groupingIds) {
-    const label = NoteGroupingLibrary.getGroupingById(id).shortForm;
-    const dedupeKey = label.toLowerCase();
-    if (seen.has(dedupeKey)) continue;
-    seen.add(dedupeKey);
-    labels.push(label);
-  }
-  return labels.join("·");
-}
-
 export function getColorLegendGroups(): ColorLegendGroup[] {
   return buildColorLegendGroups();
 }
@@ -32,23 +19,6 @@ export function getColorLegendGroups(): ColorLegendGroup[] {
 /** Subset of the full legend: one row per color bucket that matches any of {@link displayIds}. */
 export function getColorLegendGroupsForIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
   return groupsForDisplayIds(displayIds);
-}
-
-/** Split a sorted legend into interval and chord sections for display. */
-export function partitionColorLegendGroupsForDisplay(groups: ColorLegendGroup[]): {
-  intervals: ColorLegendGroup[];
-  chords: ColorLegendGroup[];
-} {
-  const intervals: ColorLegendGroup[] = [];
-  const chords: ColorLegendGroup[] = [];
-  for (const group of groups) {
-    if (isIntervalLegendGroup(group)) {
-      intervals.push(group);
-    } else {
-      chords.push(group);
-    }
-  }
-  return { intervals, chords };
 }
 
 function groupsForDisplayIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
