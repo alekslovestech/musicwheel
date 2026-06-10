@@ -1,7 +1,4 @@
-import {
-  getDistinctChordTypesFromProgression,
-  getTriadChordTypesForKey,
-} from "@/utils/chordTypeSets";
+import { ChordSetUtils } from "@/utils/ChordSetUtils";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordType } from "@/types/enums/ChordType";
@@ -9,15 +6,15 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { expectSetsEqual } from "@/tests/utils/SetTestUtils";
 
-describe("getDistinctChordTypesFromProgression", () => {
+describe("ChordTypeUtils.distinctFromProgression", () => {
   it("returns distinct chord types from a plagal cadence", () => {
     const progression = ChordProgressionLibrary.getProgression(ChordProgressionType.Plagal_Cadence);
-    expectSetsEqual(getDistinctChordTypesFromProgression(progression), [ChordType.Major]);
+    expectSetsEqual(ChordSetUtils.distinctFromProgression(progression), [ChordType.Major]);
   });
 
   it("returns distinct chord types from a ii-V-I progression", () => {
     const progression = ChordProgressionLibrary.getProgression(ChordProgressionType.Two_Five_One);
-    expectSetsEqual(getDistinctChordTypesFromProgression(progression), [
+    expectSetsEqual(ChordSetUtils.distinctFromProgression(progression), [
       ChordType.Minor,
       ChordType.Major,
     ]);
@@ -25,7 +22,7 @@ describe("getDistinctChordTypesFromProgression", () => {
 
   it("returns distinct chord types from a line cliche", () => {
     const progression = ChordProgressionLibrary.getProgression(ChordProgressionType.Line_Cliche);
-    expectSetsEqual(getDistinctChordTypesFromProgression(progression), [
+    expectSetsEqual(ChordSetUtils.distinctFromProgression(progression), [
       ChordType.Minor,
       ChordType.Major,
       ChordType.Augmented,
@@ -34,7 +31,7 @@ describe("getDistinctChordTypesFromProgression", () => {
 
   it("returns distinct chord types from Gypsy Woman", () => {
     const progression = ChordProgressionLibrary.getProgression(ChordProgressionType.Gypsy_Woman);
-    expectSetsEqual(getDistinctChordTypesFromProgression(progression), [
+    expectSetsEqual(ChordSetUtils.distinctFromProgression(progression), [
       ChordType.Diminished7,
       ChordType.Major6,
       ChordType.Major7,
@@ -43,10 +40,10 @@ describe("getDistinctChordTypesFromProgression", () => {
   });
 });
 
-describe("getTriadChordTypesForKey", () => {
+describe("ChordTypeUtils.triadTypesForKey", () => {
   it("returns diatonic triad types in Ionian", () => {
     const key = MusicalKey.fromGreekMode("C", ScaleModeType.Ionian);
-    expectSetsEqual(getTriadChordTypesForKey(key), [
+    expectSetsEqual(ChordSetUtils.triadTypesForKey(key), [
       ChordType.Major,
       ChordType.Minor,
       ChordType.Diminished,
@@ -55,7 +52,7 @@ describe("getTriadChordTypesForKey", () => {
 
   it("returns diatonic triad types in Phrygian dominant", () => {
     const key = MusicalKey.fromGreekMode("C", ScaleModeType.PhrygianDominant);
-    expectSetsEqual(getTriadChordTypesForKey(key), [
+    expectSetsEqual(ChordSetUtils.triadTypesForKey(key), [
       ChordType.Major,
       ChordType.Minor,
       ChordType.Diminished,
@@ -65,7 +62,7 @@ describe("getTriadChordTypesForKey", () => {
 
   it("returns diatonic triad types in Hungarian minor", () => {
     const key = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
-    expectSetsEqual(getTriadChordTypesForKey(key), [
+    expectSetsEqual(ChordSetUtils.triadTypesForKey(key), [
       ChordType.Major,
       ChordType.Minor,
       ChordType.MajFlat5,
