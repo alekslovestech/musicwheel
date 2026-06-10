@@ -3,7 +3,7 @@ import { Button } from "../Common/Button";
 import { PauseIcon, ResumeIcon } from "../Icons";
 import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 
-export const PauseSequenceButton: React.FC = () => {
+export const PauseSequenceButton: React.FC<{ visible: boolean }> = ({ visible }) => {
   const { playbackState, pauseSequencePlayback, resumeSequencePlayback } = useAudio();
 
   const handleClick = () => {
@@ -15,7 +15,13 @@ export const PauseSequenceButton: React.FC = () => {
   };
 
   return (
-    <Button id="pause-sequence-button" size="md" variant="action" onClick={handleClick}>
+    <Button
+      id="pause-sequence-button"
+      size="md"
+      variant="action"
+      className={visible ? undefined : "invisible pointer-events-none"}
+      onClick={handleClick}
+    >
       {playbackState === PlaybackState.SequencePaused ? (
         <ResumeIcon className={PLAYBACK_BUTTON_STYLES.scalesMode} />
       ) : (

@@ -19,15 +19,10 @@ export function ixScaleDegree(n: number): ScaleDegree {
   return n as ScaleDegree;
 }
 
-/**
- * Returns true if the shorter circular path from `from` to `to` on the
- * diatonic scale (1–7) is descending. Ties (distance = 3.5, not possible
- * with mod 7) default to ascending.
- *
- * Examples: I→VII = down 1 (true), V→vi = up 1 (false), I→V = down 3 (true).
- */
-export function scaleDegreeGoesDown(from: ScaleDegree, to: ScaleDegree): boolean {
-  const circDown = (from - to + SEVEN) % SEVEN;
-  const circUp = (to - from + SEVEN) % SEVEN;
-  return circDown < circUp;
+export function scaleDegreeToIndex(degree: ScaleDegree): ScaleDegreeIndex {
+  return ixScaleDegreeIndex(degree - 1);
+}
+
+export function scaleDegreeIndexToDegree(index: ScaleDegreeIndex): ScaleDegree {
+  return ixScaleDegree(index + 1);
 }

@@ -1,6 +1,8 @@
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
-const STAFF_HEIGHT_PX = "90px";
+export const STAFF_HEIGHT_PX = "90px";
+/** Max width for the shared staff + progression bar column in CP mode. */
+export const CP_NOTATION_MAX_WIDTH = "46rem";
 const MIN_SETTINGS_HEIGHT_DEFAULT = "220px";
 const MIN_SETTINGS_HEIGHT_SCALES = "160px";
 
@@ -38,14 +40,12 @@ const SCALES_GRID_AREAS: GridAreaConfig = {
 };
 
 const CP_GRID_AREAS: GridAreaConfig = {
-  portrait: `'staff staff'
-             'progression progression'
+  portrait: `'notation notation'
              'circular circular'
              'linear linear'`,
 
-  landscape: `'staff staff'
-              'circular progression'
-              'linear progression'`,
+  landscape: `'circular notation'
+              'linear notation'`,
 };
 
 const DEFAULT_ROWS: GridRowsConfig = {
@@ -59,8 +59,8 @@ const SCALES_ROWS: GridRowsConfig = {
 };
 
 const CP_ROWS: GridRowsConfig = {
-  portrait: `${STAFF_HEIGHT_PX} minmax(${MIN_SETTINGS_HEIGHT_SCALES}, 0.5fr) 2fr auto`,
-  landscape: `${STAFF_HEIGHT_PX} 1.8fr 1.2fr`,
+  portrait: `auto minmax(0, 1fr) auto`,
+  landscape: `1.8fr 1.2fr`,
 };
 
 export const LAYOUT_CONFIGS = {

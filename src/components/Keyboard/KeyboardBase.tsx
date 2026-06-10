@@ -16,6 +16,7 @@ import { useGlobalMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode"
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { track } from "@/lib/track";
 import { ChordReference } from "@/types/interfaces/ChordReference";
+import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import {
   computeScalePlaybackStep,
   ScalePlaybackStepOutput,
@@ -106,7 +107,7 @@ export const useKeyboardHandlers = () => {
 
         const step = computeScalePlaybackStep(
           selectedMusicalKey,
-          scaleDegreeInfo.scaleDegreeIndex,
+          scaleDegreeToIndex(scaleDegreeInfo.scaleDegree),
           scalePlaybackMode,
         );
         applyScalePlaybackStep(

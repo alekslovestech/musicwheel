@@ -97,6 +97,23 @@ export class ChordProgressionFormatter {
     return this.progressionEntryIndicesByBar[barIndex] ?? [];
   }
 
+  /** Sliding window of display rows anchored on the active progression step. */
+  displayRowsForStep(
+    grid: ChordProgressionBarGrid,
+    progressionEntryIndex: number,
+    isCompact: boolean,
+    rowCount: number,
+  ): ChordProgressionBarGrid {
+    if (grid.length === 0 || rowCount <= 0) return [];
+
+    const rowIndex = isCompact
+      ? this.findCompactRowIndexContainingStep(progressionEntryIndex)
+      : this.findBarIndexContainingStep(progressionEntryIndex);
+    const count = Math.min(rowCount, grid.length);
+    const start = Math.max(0, Math.min(rowIndex, grid.length - count));
+    return grid.slice(start, start + count);
+  }
+
   private buildEntryIndicesByCompactRow(): number[][] {
     const length = this.progression.progression.length;
     const rows: number[][] = [];

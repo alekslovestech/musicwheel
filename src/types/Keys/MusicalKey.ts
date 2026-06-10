@@ -40,10 +40,7 @@ export class MusicalKey {
    * @param isTriad If true, returns offsets for root, third and fifth (for roman numeral triads)
    *               If false, returns just the root offset (for single note scale degrees)
    */
-  public getOffsets(
-    scaleDegreeIndex: ScaleDegreeIndex,
-    scalePlaybackMode: ScalePlaybackMode,
-  ): number[] {
+  getOffsets(scaleDegreeIndex: ScaleDegreeIndex, scalePlaybackMode: ScalePlaybackMode): number[] {
     switch (scalePlaybackMode) {
       case ScalePlaybackMode.Triad:
         return this.scaleModeInfo.scalePattern.getOffsets135(scaleDegreeIndex);

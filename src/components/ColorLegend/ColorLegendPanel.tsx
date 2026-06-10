@@ -1,11 +1,15 @@
-import { ColorLegendGroup } from "./colorLegendGroups";
-import {
-  getColorLegendSections,
-  legendLabelsForGroup,
-} from "./colorLegendGroups";
+"use client";
+
+import { ColorLegendGroup } from "@/utils/visual/colorLegendGroups";
+import { isIntervalType } from "@/types/NoteGroupingId";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
+import { useColorLegendGroups } from "./useColorLegendGroups";
 
 export function ColorLegendPanel() {
-  const { intervals, chords } = getColorLegendSections();
+  const { groups, chordsOnly } = useColorLegendGroups();
+  const { intervals, chords } = chordsOnly
+    ? { intervals: [], chords: groups }
+    : partitionColorLegendGroupsForDisplay(groups);
 
   return (
     <div
@@ -14,7 +18,7 @@ export function ColorLegendPanel() {
     >
       <div className="mb-snug text-sm font-medium">Color legend</div>
       <div id="color-legend-sections" className="flex flex-col gap-normal">
-        <ColorLegendSection title="Intervals" groups={intervals} />
+        {!chordsOnly && <ColorLegendSection title="Intervals" groups={intervals} />}
         <ColorLegendSection title="Chords" groups={chords} />
       </div>
     </div>
@@ -49,4 +53,33 @@ function ColorLegendSection({ title, groups }: { title: string; groups: ColorLeg
       ))}
     </div>
   );
+}
+
+function legendLabelsForGroup(group: ColorLegendGroup): string {
+  const seen = new Set<string>();
+  const labels: string[] = [];
+  for (const id of group.groupingIds) {
+    const label = NoteGroupingLibrary.getGroupingById(id).shortForm;
+    const dedupeKey = label.toLowerCase();
+    if (seen.has(dedupeKey)) continue;
+    seen.add(dedupeKey);
+    labels.push(label);
+  }
+  return labels.join("·");
+}
+
+function partitionColorLegendGroupsForDisplay(groups: ColorLegendGroup[]): {
+  intervals: ColorLegendGroup[];
+  chords: ColorLegendGroup[];
+} {
+  const intervals: ColorLegendGroup[] = [];
+  const chords: ColorLegendGroup[] = [];
+  for (const group of groups) {
+    if (isIntervalType(group.groupingIds[0]!)) {
+      intervals.push(group);
+    } else {
+      chords.push(group);
+    }
+  }
+  return { intervals, chords };
 }

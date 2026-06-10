@@ -1,13 +1,13 @@
 "use client";
 
-import { ChordProgressionTokenCell } from "./ChordProgressionTokenCell";
+import { ProgressionNotebookCell } from "./ProgressionNotebookCell";
 import {
   COLUMNS_PER_BAR,
   COMPACT_PATTERN_TOKENS_PER_LINE,
   ChordProgressionBarGrid,
 } from "@/types/ChordProgressions/ChordProgressionFormattingTypes";
 
-export function ChordProgressionDisplay({
+export function ProgressionNotebook({
   grid,
   readHeadStepIndex,
   isCompact = false,
@@ -21,11 +21,11 @@ export function ChordProgressionDisplay({
   const columnsPerRow = isCompact ? COMPACT_PATTERN_TOKENS_PER_LINE : COLUMNS_PER_BAR;
 
   return (
-    <div id="chord-progression-display" className="flex flex-col">
+    <div id="progression-notebook" className="flex w-full min-w-0 flex-col pr-2">
       {grid.map((row, rowIndex) => (
         <div
           key={rowIndex}
-          id={`chord-progression-row-${rowIndex}`}
+          id={`progression-notebook-row-${rowIndex}`}
           className="grid items-stretch border-b border-neutral-600/40 py-1 first:border-t"
           style={{
             gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
@@ -35,7 +35,7 @@ export function ChordProgressionDisplay({
             const isActive =
               readHeadStepIndex != null && tok.progressionEntryIndex === readHeadStepIndex;
             return (
-              <ChordProgressionTokenCell
+              <ProgressionNotebookCell
                 key={`${rowIndex}-${tokIndex}`}
                 token={tok}
                 isActive={isActive}

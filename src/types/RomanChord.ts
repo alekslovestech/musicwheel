@@ -1,18 +1,11 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ChordType } from "@/types/enums/ChordType";
-
-import {
-  ixScaleDegreeIndex,
-  ScaleDegree,
-  ScaleDegreeIndex,
-} from "./ScaleModes/ScaleDegreeType";
-
+import { ScaleDegree } from "./ScaleModes/ScaleDegreeType";
 export class RomanChord {
   scaleDegree: ScaleDegree;
   chordType: ChordType;
   accidental: AccidentalType;
   bassDegree: ScaleDegree | undefined;
-
   constructor(
     scaleDegree: ScaleDegree,
     chordType: ChordType,
@@ -23,9 +16,5 @@ export class RomanChord {
     this.chordType = chordType;
     this.accidental = accidental;
     this.bassDegree = bassDegree;
-  }
-
-  get scaleDegreeIndex(): ScaleDegreeIndex {
-    return ixScaleDegreeIndex(this.scaleDegree - 1);
   }
 }

@@ -5,7 +5,11 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
-import { ixScaleDegreeIndex, ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
+import {
+  ixScaleDegreeIndex,
+  scaleDegreeIndexToDegree,
+  ScaleDegreeIndex,
+} from "@/types/ScaleModes/ScaleDegreeType";
 
 export class ScalePattern {
   private readonly pattern: number[];
@@ -27,7 +31,7 @@ export class ScalePattern {
         : currentNote < ionianNote
           ? AccidentalType.Flat
           : AccidentalType.None;
-    return ScaleDegreeInfo.fromScaleDegreeIndex(scaleDegreeIndex, accidental);
+    return new ScaleDegreeInfo(scaleDegreeIndexToDegree(scaleDegreeIndex), accidental);
   }
 
   public getRootOffset(scaleDegreeIndex: ScaleDegreeIndex): [number] {
@@ -56,7 +60,7 @@ export class ScalePattern {
     return [rootOffset, thirdOffset, fifthOffset, seventhOffset];
   }
 
-  public getLength(): number {
+  public get length(): number {
     return this.SCALE_LENGTH;
   }
 

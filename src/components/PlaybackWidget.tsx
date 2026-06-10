@@ -4,16 +4,18 @@ import { PlaySequenceButton } from "./Buttons/PlaySequenceButton";
 import { PauseSequenceButton } from "./Buttons/PauseSequenceButton";
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 
-export const PlaybackWidget: React.FC = () => {
+export const PlaybackWidget: React.FC<{ coupled?: boolean }> = ({ coupled = false }) => {
   const { playbackState } = useAudio();
 
   return (
     <div
       id="playback-widget"
-      className={`${LAYOUT_PATTERNS.centerFlexRowGap} max-w-xs self-center`}
+      className={`${LAYOUT_PATTERNS.centerFlexRowGap} max-w-xs self-center ${
+        coupled ? LAYOUT_PATTERNS.coupledActionSlot : ""
+      }`}
     >
       <PlaySequenceButton />
-      {playbackState !== PlaybackState.SequenceComplete && <PauseSequenceButton />}
+      <PauseSequenceButton visible={playbackState !== PlaybackState.SequenceComplete} />
     </div>
   );
 };
