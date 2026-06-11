@@ -11,7 +11,6 @@ import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
-import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { ChordSetUtils } from "./ChordSetUtils";
 
 export interface ScalePlaybackStepOutput {
