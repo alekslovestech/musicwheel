@@ -5,7 +5,7 @@ import {
   getColorLegendGroups,
   getColorLegendGroupsForIds,
 } from "@/utils/visual/colorLegendGroups";
-import { ChordTypeUtils } from "@/utils/ChordSetUtils";
+import { ChordSetUtils } from "@/utils/ChordSetUtils";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
@@ -23,7 +23,7 @@ export function useColorLegendGroups(): {
 
   if (isProgressionsMode && selectedProgression != null) {
     const progression = ChordProgressionLibrary.getProgression(selectedProgression);
-    const chordTypes = ChordTypeUtils.distinctFromProgression(progression);
+    const chordTypes = ChordSetUtils.distinctFromProgression(progression);
     return {
       groups: getColorLegendGroupsForIds(chordTypes),
       chordsOnly: true,
@@ -31,7 +31,7 @@ export function useColorLegendGroups(): {
   }
 
   if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.Triad) {
-    const chordTypes = ChordTypeUtils.triadTypesForKey(selectedMusicalKey);
+    const chordTypes = ChordSetUtils.triadTypesForKey(selectedMusicalKey);
     return {
       groups: getColorLegendGroupsForIds(chordTypes),
       chordsOnly: true,
