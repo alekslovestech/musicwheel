@@ -1,8 +1,10 @@
 import { ChordProgression } from "@/types/ChordProgressions/ChordProgression";
 import { ChordType } from "@/types/enums/ChordType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
+import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
+import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 
 export class ChordSetUtils {
   /** Distinct chord qualities appearing in {@link progression}. */
@@ -17,6 +19,14 @@ export class ChordSetUtils {
     return types;
   }
 
+  static getTriadChordType(
+    scaleDegreeInfo: ScaleDegreeInfo,
+    scaleModeInfo: ScaleModeInfo,
+  ): ChordType {
+    const offsets = scaleModeInfo.getTriadOffsets(scaleDegreeInfo);
+    return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
+  }
+
   /** Distinct diatonic triad qualities for each scale degree in {@link key}. */
   static triadTypesForKey(key: MusicalKey): Set<ChordType> {
     const types = new Set<ChordType>();
@@ -24,7 +34,7 @@ export class ChordSetUtils {
       const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(
         ixScaleDegreeIndex(i),
       );
-      const chordType = RomanChordFormatter.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
+      const chordType = this.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
       if (chordType !== ChordType.Unknown) {
         types.add(chordType);
       }
