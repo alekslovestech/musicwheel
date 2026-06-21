@@ -1,11 +1,19 @@
+import { ph } from "./ph";
+
 import { InputMode } from "@/types/enums/InputMode";
 import { GlobalMode } from "@/types/enums/GlobalMode";
-import { ph } from "./ph";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { TransposeTarget } from "@/types/enums/TransposeTarget";
+import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 
 type Ctx = {
   global_mode?: GlobalMode;
   input_mode?: InputMode;
-  keyboard_ui?: "linear" | "circular";
+  keyboard_ui?: KeyboardUIType;
+  scale_type?: ScaleModeType;
+  scale_playback_mode?: ScalePlaybackMode;
+  transpose_target?: TransposeTarget;
 };
 
 export function track(name: string, props: Ctx = {}) {

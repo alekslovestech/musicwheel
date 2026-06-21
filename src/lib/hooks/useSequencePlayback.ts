@@ -5,7 +5,7 @@ import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
 import { NoteIndices } from "@/types/IndexTypes";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";

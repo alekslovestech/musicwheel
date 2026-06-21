@@ -1,4 +1,4 @@
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 type SynthEnvelope = {
   attack: number;

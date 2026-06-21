@@ -6,8 +6,7 @@ import { useIsFreeformMode } from "@/contexts/ChordPresetContext";
 import { ClearButton } from "../Buttons/ClearButton";
 import { PlayNotesButton } from "../Buttons/PlayNotesButton";
 import { TransposeWidget } from "../TransposeWidget";
-//import {MonochromeModeToggle} from "../MonochromeModeToggle";
-//import { CircularVisModeSelect } from "../Keyboard/Circular/CircularVisModeSelect";
+import { TransposeTarget } from "@/types/enums/TransposeTarget";
 
 export const SettingsPanelDefault = () => {
   const settingsGap = "gap-tight";
@@ -24,7 +23,7 @@ export const SettingsPanelDefault = () => {
       <div className="flex flex-col max-w-xs self-center gap-snug">
         <PlayNotesButton />
         <div className="transpose-widget-container">
-          <TransposeWidget target="notes" />
+          <TransposeWidget target={TransposeTarget.Notes} />
         </div>
         {isFreeformMode && <ClearButton />}
       </div>

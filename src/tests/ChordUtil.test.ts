@@ -7,7 +7,7 @@ import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
-import { ChordDisplayMode } from "@/types/SettingModes";
+import { ChordDisplayMode } from "@/types/enums/SettingModes";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { makeChordReference } from "@/types/interfaces/ChordReference";

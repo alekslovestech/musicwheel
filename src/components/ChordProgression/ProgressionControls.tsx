@@ -4,6 +4,7 @@ import { useMusical } from "@/contexts/MusicalContext";
 
 import { PlaybackWidget } from "../PlaybackWidget";
 import { TransposeWidget } from "../TransposeWidget";
+import { TransposeTarget } from "@/types/enums/TransposeTarget";
 
 export function ProgressionControls() {
   const { selectedMusicalKey } = useMusical();
@@ -13,7 +14,7 @@ export function ProgressionControls() {
       id="progression-controls"
       className="flex shrink-0 flex-wrap items-center justify-center gap-tight pt-1"
     >
-      <TransposeWidget target="key" coupled />
+      <TransposeWidget target={TransposeTarget.Key} coupled />
       <div
         id="chord-progressions-inferred-key"
         className="text-sm font-medium text-center max-w-xs"

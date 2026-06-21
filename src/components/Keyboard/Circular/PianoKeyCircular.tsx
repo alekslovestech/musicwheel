@@ -4,7 +4,7 @@ import React from "react";
 import { actualToChromatic } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";

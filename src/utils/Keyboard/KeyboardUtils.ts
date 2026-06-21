@@ -5,7 +5,7 @@ import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ActualIndex, actualToChromatic, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";

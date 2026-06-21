@@ -13,7 +13,7 @@ import {
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { isIntervalType, NoteGroupingId } from "@/types/NoteGroupingId";
-import { ChordDisplayMode, ChordTypeContext } from "@/types/SettingModes";
+import { ChordDisplayMode, ChordTypeContext } from "@/types/enums/SettingModes";
 import {
   ActualIndex,
   InversionIndex,

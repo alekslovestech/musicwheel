@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
 import { useSequencePlayback } from "@/lib/hooks/useSequencePlayback";

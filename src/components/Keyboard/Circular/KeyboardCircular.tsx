@@ -12,7 +12,7 @@ import { CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
 
 import { CircularVisualizations } from "./CircularVisualizations";
 import { PianoKeyCircular } from "./PianoKeyCircular";
-import { CircularVisMode } from "@/types/SettingModes";
+import { CircularVisMode } from "@/types/enums/SettingModes";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 const MAX_RADIUS = 100;
