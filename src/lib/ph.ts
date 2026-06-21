@@ -1,6 +1,8 @@
 import posthog from "posthog-js";
 import packageJson from "../../package.json";
 
+import { getPostHogUiHost, POSTHOG_PROXY_PATH } from "./posthogProxy";
+
 const isDevelopment = process.env.NODE_ENV === "development";
 
 export function initPH() {
@@ -8,7 +10,8 @@ export function initPH() {
 
   if (process.env.NEXT_PUBLIC_POSTHOG_KEY && !posthog.__loaded) {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_API_HOST,
+      api_host: POSTHOG_PROXY_PATH,
+      ui_host: getPostHogUiHost(),
       person_profiles: "always", //include anonymous users
       loaded: (posthog) => {
         if (isDevelopment) {
