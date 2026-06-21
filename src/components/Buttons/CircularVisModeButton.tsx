@@ -1,5 +1,5 @@
 import { InputMode } from "@/types/enums/InputMode";
-import { CircularVisMode } from "@/types/SettingModes";
+import { CircularVisMode } from "@/types/enums/SettingModes";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { useChordPresets } from "@/contexts/ChordPresetContext";
 

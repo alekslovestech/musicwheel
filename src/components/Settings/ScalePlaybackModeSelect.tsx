@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { useAudio } from "@/contexts/AudioContext";
+import { track } from "@/lib/track";
+import { GlobalMode } from "@/types/enums/GlobalMode";
 import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";
 
@@ -37,6 +39,11 @@ export const ScalePlaybackModeSelect: React.FC = () => {
   const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } = useAudio();
 
   const handleModeChange = (newMode: ScalePlaybackMode) => {
+    if (newMode === scalePlaybackMode) return;
+    track("scale_playback_mode_changed", {
+      global_mode: GlobalMode.Scales,
+      scale_playback_mode: newMode,
+    });
     setScalePlaybackMode(newMode);
     startSequencePlayback({ scalePlaybackMode: newMode });
   };

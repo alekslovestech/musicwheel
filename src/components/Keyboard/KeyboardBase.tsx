@@ -6,7 +6,7 @@ import {
   chromaticToActual,
 } from "@/types/IndexTypes";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { ChordUtils } from "@/utils/ChordUtils";
 import { IndexUtils } from "@/utils/IndexUtils";
@@ -17,10 +17,7 @@ import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { track } from "@/lib/track";
 import { ChordReference } from "@/types/interfaces/ChordReference";
 import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import {
-  computeScalePlaybackStep,
-  ScalePlaybackStepOutput,
-} from "@/utils/SequencePlaybackUtils";
+import { computeScalePlaybackStep, ScalePlaybackStepOutput } from "@/utils/SequencePlaybackUtils";
 
 function applyScalePlaybackStep(
   clickedIndex: ActualIndex,
@@ -160,24 +157,28 @@ export const useKeyboardHandlers = () => {
     (index: ActualIndex) => {
       track("keyboard_interacted", {
         global_mode: globalMode,
-        input_mode: inputMode,
         keyboard_ui: KeyboardUIType.Linear,
+        ...(isScalesMode
+          ? { scale_type: selectedMusicalKey.scaleMode }
+          : { input_mode: inputMode }),
       });
       handleKeyClick(index, KeyboardUIType.Linear);
     },
-    [globalMode, inputMode, handleKeyClick],
+    [globalMode, inputMode, isScalesMode, selectedMusicalKey.scaleMode, handleKeyClick],
   );
 
   const onCircularKeyClick = useCallback(
     (index: ActualIndex) => {
       track("keyboard_interacted", {
         global_mode: globalMode,
-        input_mode: inputMode,
         keyboard_ui: KeyboardUIType.Circular,
+        ...(isScalesMode
+          ? { scale_type: selectedMusicalKey.scaleMode }
+          : { input_mode: inputMode }),
       });
       handleKeyClick(index, KeyboardUIType.Circular);
     },
-    [globalMode, inputMode, handleKeyClick],
+    [globalMode, inputMode, isScalesMode, selectedMusicalKey.scaleMode, handleKeyClick],
   );
 
   return {

@@ -16,7 +16,7 @@ export function ColorLegendPanel() {
       id="color-legend-panel"
       className="max-h-[70vh] w-60 overflow-y-auto rounded border border-containers-divider bg-canvas-bgDefault/95 p-snug shadow-md"
     >
-      <div className="mb-snug text-sm font-medium">Color legend</div>
+      <div className="mb-snug text-sm font-medium">Legend</div>
       <div id="color-legend-sections" className="flex flex-col gap-normal">
         {!chordsOnly && <ColorLegendSection title="Intervals" groups={intervals} />}
         <ColorLegendSection title="Chords" groups={chords} />

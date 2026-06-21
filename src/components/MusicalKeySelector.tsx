@@ -7,6 +7,8 @@ import { isMajor } from "@/types/enums/KeyType";
 import { KeySignature } from "@/types/Keys/KeySignature";
 
 import { useMusical } from "@/contexts/MusicalContext";
+import { track } from "@/lib/track";
+import { GlobalMode } from "@/types/enums/GlobalMode";
 
 import { Button } from "./Common/Button";
 import { Select } from "./Common/Select";
@@ -31,6 +33,12 @@ export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelecto
 
   const handleScaleModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const scaleMode = event.target.value as ScaleModeType;
+    if (useDropdownSelector) {
+      track("scale_type_changed", {
+        global_mode: GlobalMode.Scales,
+        scale_type: scaleMode,
+      });
+    }
     const newKey = MusicalKey.fromGreekMode(selectedMusicalKey.tonicString, scaleMode);
     setSelectedMusicalKey(newKey);
   };
