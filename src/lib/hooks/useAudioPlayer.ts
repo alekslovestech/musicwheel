@@ -14,10 +14,12 @@ import { ActualIndex } from "@/types/IndexTypes";
 
 export function useAudioPlayer() {
   const synthRef = useRef<Tone.PolySynth | null>(null);
-  const { isAudioInitialized, setAudioInitialized } = useAudio();
+  const { isAudioInitialized, setAudioInitialized, playbackState, pauseSequencePlayback } =
+    useAudio();
   const { selectedNoteIndices } = useMusical();
 
   useToneContextInit(setAudioInitialized);
+  usePauseSequenceOnHide(playbackState, pauseSequencePlayback);
   usePolySynthVoiceBridge(synthRef);
   usePolySynthLifecycle(synthRef, isAudioInitialized);
   const { playNote, playSelectedNotes } = useNotePlayback(
@@ -33,40 +35,98 @@ export function useAudioPlayer() {
   };
 }
 
+async function ensureToneContextRunning(): Promise<boolean> {
+  try {
+    const context = Tone.getContext();
+    if (context.state === "running") {
+      return true;
+    }
+    context.lookAhead = 0.05;
+    await Tone.start();
+    return Tone.getContext().state === "running";
+  } catch (error) {
+    console.error("Failed to resume audio context:", error);
+    return false;
+  }
+}
+
+function syncAudioInitialized(
+  setAudioInitialized: (initialized: boolean) => void,
+  running: boolean,
+) {
+  if (running) {
+    setAudioInitialized(true);
+  }
+}
+
 function useToneContextInit(setAudioInitialized: (initialized: boolean) => void) {
   useEffect(() => {
-    const checkExistingAudio = async () => {
-      if (Tone.getContext().state === "running") {
-        setAudioInitialized(true);
-        return;
-      }
+    if (Tone.getContext().state === "running") {
+      setAudioInitialized(true);
+    }
 
-      const handleUserInteraction = async () => {
-        try {
-          if (Tone.getContext().state !== "running") {
-            Tone.getContext().lookAhead = 0.05;
-            await Tone.start();
-            console.log("Tone.js context started");
-          }
-          setAudioInitialized(true);
-          document.removeEventListener("click", handleUserInteraction);
-          document.removeEventListener("touchstart", handleUserInteraction);
-        } catch (error) {
-          console.error("Failed to initialize audio:", error);
-        }
-      };
-
-      document.addEventListener("click", handleUserInteraction);
-      document.addEventListener("touchstart", handleUserInteraction);
-
-      return () => {
-        document.removeEventListener("click", handleUserInteraction);
-        document.removeEventListener("touchstart", handleUserInteraction);
-      };
+    const resumeFromUserGesture = () => {
+      void ensureToneContextRunning().then((running) =>
+        syncAudioInitialized(setAudioInitialized, running),
+      );
     };
 
-    checkExistingAudio();
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        void ensureToneContextRunning().then((running) =>
+          syncAudioInitialized(setAudioInitialized, running),
+        );
+      }
+    };
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        void ensureToneContextRunning().then((running) =>
+          syncAudioInitialized(setAudioInitialized, running),
+        );
+      }
+    };
+
+    const handleContextStateChange = () => {
+      syncAudioInitialized(setAudioInitialized, Tone.getContext().state === "running");
+    };
+
+    const captureOptions: AddEventListenerOptions = { capture: true };
+
+    document.addEventListener("click", resumeFromUserGesture, captureOptions);
+    document.addEventListener("touchstart", resumeFromUserGesture, captureOptions);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", handlePageShow);
+    const rawContext = Tone.getContext().rawContext;
+    rawContext?.addEventListener("statechange", handleContextStateChange);
+
+    return () => {
+      document.removeEventListener("click", resumeFromUserGesture, captureOptions);
+      document.removeEventListener("touchstart", resumeFromUserGesture, captureOptions);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", handlePageShow);
+      rawContext?.removeEventListener("statechange", handleContextStateChange);
+    };
   }, [setAudioInitialized]);
+}
+
+function usePauseSequenceOnHide(
+  playbackState: PlaybackState,
+  pauseSequencePlayback: () => void,
+) {
+  const playbackStateRef = useRef(playbackState);
+  playbackStateRef.current = playbackState;
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && playbackStateRef.current === PlaybackState.SequencePlaying) {
+        pauseSequencePlayback();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [pauseSequencePlayback]);
 }
 
 function usePolySynthVoiceBridge(synthRef: RefObject<Tone.PolySynth | null>) {
@@ -107,8 +167,11 @@ function useNotePlayback(
   const { playbackState, scalePlaybackMode } = useAudio();
 
   const playNote = useCallback(
-    (index: ActualIndex, durationSec: number) => {
+    async (index: ActualIndex, durationSec: number) => {
       if (!synthRef.current || !isAudioInitialized) return;
+
+      const running = await ensureToneContextRunning();
+      if (!running || !synthRef.current) return;
 
       try {
         synthRef.current.triggerAttackRelease(frequencyFromIndex(index), durationSec);
@@ -119,17 +182,20 @@ function useNotePlayback(
     [isAudioInitialized],
   );
 
-  const playSelectedNotes = useCallback(() => {
+  const playSelectedNotes = useCallback(async () => {
     if (!synthRef.current || !isAudioInitialized) return;
+
+    const running = await ensureToneContextRunning();
+    if (!running || !synthRef.current) return;
 
     const isScaleClick = isScalesMode && playbackState !== PlaybackState.SequencePlaying;
     const profile = resolvePlaybackProfile(scalePlaybackMode, isScaleClick);
 
     synthRef.current.set({ envelope: profile.envelope });
     synthRef.current.releaseAll();
-    selectedNoteIndices.forEach((index) => {
-      playNote(index, profile.durationSec);
-    });
+    for (const index of selectedNoteIndices) {
+      await playNote(index, profile.durationSec);
+    }
   }, [
     selectedNoteIndices,
     playNote,
@@ -140,7 +206,7 @@ function useNotePlayback(
   ]);
 
   useEffect(() => {
-    playSelectedNotes();
+    void playSelectedNotes();
   }, [selectedNoteIndices, playSelectedNotes]);
 
   return { playNote, playSelectedNotes };
