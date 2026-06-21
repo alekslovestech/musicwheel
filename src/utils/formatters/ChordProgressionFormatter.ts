@@ -1,4 +1,4 @@
-import { ChordDisplayMode } from "@/types/SettingModes";
+import { ChordDisplayMode } from "@/types/enums/SettingModes";
 
 import { ChordType } from "@/types/enums/ChordType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -139,12 +139,13 @@ export class ChordProgressionFormatter {
     const romanChords = this.progression.progression.map((e) => e.value);
     const noteIndices = ChordProgressionResolver.computeProgressionOctaves(romanChords, musicalKey);
 
-    return noteIndices.map((indices) =>
-      MusicalDisplayFormatter.getDisplayInfoFromIndices(
-        indices,
-        ChordDisplayMode.Symbols,
-        musicalKey,
-      ).chordName,
+    return noteIndices.map(
+      (indices) =>
+        MusicalDisplayFormatter.getDisplayInfoFromIndices(
+          indices,
+          ChordDisplayMode.Symbols,
+          musicalKey,
+        ).chordName,
     );
   }
 

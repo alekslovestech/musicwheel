@@ -6,7 +6,7 @@ import { ChordType } from "./enums/ChordType";
 import { CHORD_OFFSET_PATTERNS } from "./constants/ChordOffsetPatterns";
 import { ixOffsetArray } from "./IndexTypes";
 import { NoteGrouping } from "./NoteGrouping";
-import { ChordDisplayMode, ChordTypeContext } from "./SettingModes";
+import { ChordDisplayMode, ChordTypeContext } from "./enums/SettingModes";
 import { IndexUtils } from "@/utils/IndexUtils";
 
 class NoteGroupingLibrarySingleton {

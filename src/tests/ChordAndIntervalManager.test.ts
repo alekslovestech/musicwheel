@@ -2,7 +2,7 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 import { toNoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
-import { ChordDisplayMode } from "@/types/SettingModes";
+import { ChordDisplayMode } from "@/types/enums/SettingModes";
 
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 

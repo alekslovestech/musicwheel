@@ -1,5 +1,5 @@
 import { toNoteIndices } from "@/types/IndexTypes";
-import { CircularVisMode } from "@/types/SettingModes";
+import { CircularVisMode } from "@/types/enums/SettingModes";
 import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
 

@@ -5,8 +5,8 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
-import { CircularVisMode } from "@/types/SettingModes";
-import { ChordDisplayMode } from "@/types/SettingModes";
+import { CircularVisMode } from "@/types/enums/SettingModes";
+import { ChordDisplayMode } from "@/types/enums/SettingModes";
 
 export interface DisplaySettings {
   circularVisMode: CircularVisMode;

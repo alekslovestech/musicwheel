@@ -1,7 +1,7 @@
 import { NoteWithOctaveArray } from "@/types/interfaces/NoteWithOctave";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ixScaleDegreeIndex, ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { computeScalePlaybackStep, ScalePlaybackStepOutput } from "@/utils/SequencePlaybackUtils";
 
 export class SpellingTestUtils {

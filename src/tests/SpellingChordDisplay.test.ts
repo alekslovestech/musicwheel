@@ -1,7 +1,7 @@
 import { toNoteIndices } from "@/types/IndexTypes";
 
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
-import { ChordDisplayMode } from "@/types/SettingModes";
+import { ChordDisplayMode } from "@/types/enums/SettingModes";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 import { ChordType } from "@/types/enums/ChordType";

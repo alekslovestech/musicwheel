@@ -1,6 +1,6 @@
 import React, { type JSX } from "react";
 import { NoteIndices } from "@/types/IndexTypes";
-import { CircularVisMode } from "@/types/SettingModes";
+import { CircularVisMode } from "@/types/enums/SettingModes";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
 

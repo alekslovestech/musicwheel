@@ -3,7 +3,7 @@ import { NoteGroupingType } from "./enums/NoteGroupingType";
 
 import { IndexUtils } from "../utils/IndexUtils";
 import { ixOffsetArray, OffsetIndex } from "./IndexTypes";
-import { ChordDisplayMode, ChordTypeContext } from "./SettingModes";
+import { ChordDisplayMode, ChordTypeContext } from "./enums/SettingModes";
 
 export class NoteGrouping {
   public readonly inversions: OffsetIndex[][];

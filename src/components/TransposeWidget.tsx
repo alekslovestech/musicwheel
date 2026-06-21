@@ -8,9 +8,9 @@ import { Button } from "./Common/Button";
 import { LAYOUT_PATTERNS, TYPOGRAPHY } from "@/lib/design";
 import { track } from "@/lib/track";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
+import { GlobalMode } from "@/types/enums/GlobalMode";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
-
-export type TransposeTarget = "key" | "notes";
+import { TransposeTarget } from "@/types/enums/TransposeTarget";
 
 // This component is used to transpose the selected notes OR the musical key.
 export function TransposeWidget({
@@ -44,7 +44,7 @@ interface TransposeButtonProps {
 function TransposeButton({ direction, target }: TransposeButtonProps) {
   const arrow = direction === "up" ? "↑" : "↓";
   const amount = direction === "up" ? 1 : -1;
-  const symbol = target === "notes" ? "♫" : "𝄞";
+  const symbol = target === TransposeTarget.Notes ? "♫" : "𝄞";
   const title = `Transpose ${target} ${direction}`;
   const isFreeformMode = useIsFreeformMode();
   const {
@@ -61,9 +61,12 @@ function TransposeButton({ direction, target }: TransposeButtonProps) {
   function onClick() {
     track("transpose_interacted", {
       global_mode: globalMode,
-      input_mode: inputMode,
+      transpose_target: target,
+      ...(globalMode === GlobalMode.Scales
+        ? { scale_type: selectedMusicalKey.scaleMode }
+        : { input_mode: inputMode }),
     });
-    if (target === "notes") {
+    if (target === TransposeTarget.Notes) {
       const transposedIndices = IndexUtils.transposeNotes(selectedNoteIndices, amount);
       setNotesDirectly(transposedIndices);
 

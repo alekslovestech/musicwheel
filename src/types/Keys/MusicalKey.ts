@@ -6,7 +6,7 @@ import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
 import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 import { ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { NoteIndices, toNoteIndices } from "@/types/IndexTypes";
 import { KeySignature } from "@/types/Keys/KeySignature";
 

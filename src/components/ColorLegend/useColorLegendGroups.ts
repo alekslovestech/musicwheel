@@ -10,7 +10,7 @@ import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 export function useColorLegendGroups(): {
   groups: ColorLegendGroup[];

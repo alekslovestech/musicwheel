@@ -7,6 +7,7 @@ import { MusicalKeySelector } from "../MusicalKeySelector";
 import { TransposeWidget } from "../TransposeWidget";
 import { ScalePlaybackModeSelect } from "./ScalePlaybackModeSelect";
 import { PlaybackWidget } from "../PlaybackWidget";
+import { TransposeTarget } from "@/types/enums/TransposeTarget";
 
 export const SettingsPanelScales = () => {
   const settingsGap = "gap-tight";
@@ -24,7 +25,7 @@ export const SettingsPanelScales = () => {
         <div
           className={`${LAYOUT_PATTERNS.topFlexCol} rounded p-2 flex-1 ${settingsGap} ${border}`}
         >
-          <TransposeWidget target="key" />
+          <TransposeWidget target={TransposeTarget.Key} />
           <MusicalKeySelector useDropdownSelector={true} />
           {/* currently disabled for simplicity */}
           {/*<NoteDisplayModeSelect />*/}

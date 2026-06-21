@@ -5,7 +5,7 @@ import { SpecialType } from "@/types/enums/SpecialType";
 import { ChordType } from "@/types/enums/ChordType";
 
 import { ChordDisplayInfo } from "@/types/interfaces/ChordDisplayInfo";
-import { ChordDisplayMode } from "@/types/SettingModes";
+import { ChordDisplayMode } from "@/types/enums/SettingModes";
 
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 

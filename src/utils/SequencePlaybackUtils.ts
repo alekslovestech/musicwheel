@@ -5,7 +5,7 @@ import { ChordType } from "@/types/enums/ChordType";
 import { ActualIndex, ixInversion, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
-import { ScalePlaybackMode } from "@/types/ScalePlaybackMode";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ScaleDegreeIndex, ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
