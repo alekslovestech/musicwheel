@@ -59,6 +59,16 @@ function syncAudioInitialized(
   }
 }
 
+function resumeToneContextAndSync(setAudioInitialized: (initialized: boolean) => void) {
+  if (Tone.getContext().state === "running") {
+    syncAudioInitialized(setAudioInitialized, true);
+    return;
+  }
+  void ensureToneContextRunning().then((running) =>
+    syncAudioInitialized(setAudioInitialized, running),
+  );
+}
+
 function useToneContextInit(setAudioInitialized: (initialized: boolean) => void) {
   useEffect(() => {
     if (Tone.getContext().state === "running") {
@@ -66,24 +76,18 @@ function useToneContextInit(setAudioInitialized: (initialized: boolean) => void)
     }
 
     const resumeFromUserGesture = () => {
-      void ensureToneContextRunning().then((running) =>
-        syncAudioInitialized(setAudioInitialized, running),
-      );
+      resumeToneContextAndSync(setAudioInitialized);
     };
 
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        void ensureToneContextRunning().then((running) =>
-          syncAudioInitialized(setAudioInitialized, running),
-        );
+        resumeToneContextAndSync(setAudioInitialized);
       }
     };
 
     const handlePageShow = (event: PageTransitionEvent) => {
       if (event.persisted) {
-        void ensureToneContextRunning().then((running) =>
-          syncAudioInitialized(setAudioInitialized, running),
-        );
+        resumeToneContextAndSync(setAudioInitialized);
       }
     };
 

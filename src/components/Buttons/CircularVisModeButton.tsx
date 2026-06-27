@@ -1,4 +1,4 @@
-import { InputMode } from "@/types/enums/InputMode";
+import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
 import { CircularVisMode } from "@/types/enums/SettingModes";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { useChordPresets } from "@/contexts/ChordPresetContext";
@@ -11,13 +11,13 @@ export const CircularVisModeButton: React.FC<{
   label: string;
 }> = ({ mode, label }) => {
   const { circularVisMode, setCircularVisMode } = useDisplay(); //vis mode currently selected
-  const { inputMode } = useChordPresets();
+  const { harmonyInputMode } = useChordPresets();
   const visIcons = new CircularVisIcons(12, 10);
 
   const isDisabled =
-    (inputMode === InputMode.SingleNote &&
+    (harmonyInputMode === HarmonyInputMode.SingleNote &&
       (mode === CircularVisMode.Radial || mode === CircularVisMode.Polygon)) ||
-    (inputMode === InputMode.IntervalPresets && mode === CircularVisMode.Polygon);
+    (harmonyInputMode === HarmonyInputMode.IntervalPresets && mode === CircularVisMode.Polygon);
 
   const isSelected = circularVisMode === mode;
   return (

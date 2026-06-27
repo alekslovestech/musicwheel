@@ -1,5 +1,5 @@
 import posthog from "posthog-js";
-import packageJson from "../../package.json";
+import packageJson from "../../../package.json";
 
 import { getPostHogUiHost, POSTHOG_PROXY_PATH } from "./posthogProxy";
 

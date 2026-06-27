@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 import { RootProvider } from "@/contexts/RootContext";
 
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
-import { InputModeSelector } from "@/components/Settings/InputModeSelector";
+import { HarmonyInputModeSelector } from "@/components/Settings/HarmonyInputModeSelector";
 import { ChordPresetSelector } from "@/components/Settings/ChordPresetsSelector";
 
 import { ReactTestUtils } from "@/tests/reactutils/ReactTestUtils";
@@ -16,7 +16,7 @@ describe("KeyboardLinear", () => {
     render(
       <RootProvider>
         <KeyboardLinear />
-        <InputModeSelector />
+        <HarmonyInputModeSelector />
         <ChordPresetSelector />
       </RootProvider>,
     );

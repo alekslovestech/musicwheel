@@ -22,8 +22,8 @@
 /build
 
 # generated assets
-/public/favicon.ico
-/public/opengraph-image.png
+#/public/favicon.ico
+#/public/opengraph-image.png
 
 # misc
 .DS_Store

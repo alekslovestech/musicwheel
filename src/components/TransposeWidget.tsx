@@ -2,13 +2,12 @@
 
 import { IndexUtils } from "@/utils/IndexUtils";
 import { useMusical } from "@/contexts/MusicalContext";
-import { useChordPresets, useIsFreeformMode } from "@/contexts/ChordPresetContext";
+import { useIsFreeformMode } from "@/contexts/ChordPresetContext";
 
 import { Button } from "./Common/Button";
 import { LAYOUT_PATTERNS, TYPOGRAPHY } from "@/lib/design";
-import { track } from "@/lib/track";
-import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
-import { GlobalMode } from "@/types/enums/GlobalMode";
+import { TrackEvent } from "@/lib/tracking/events";
+import { useTrack } from "@/lib/tracking/useTrack";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { TransposeTarget } from "@/types/enums/TransposeTarget";
 
@@ -55,17 +54,10 @@ function TransposeButton({ direction, target }: TransposeButtonProps) {
     setCurrentChordRef,
     setNotesDirectly,
   } = useMusical();
-  const globalMode = useGlobalMode();
-  const { inputMode } = useChordPresets();
+  const trackAction = useTrack();
 
   function onClick() {
-    track("transpose_interacted", {
-      global_mode: globalMode,
-      transpose_target: target,
-      ...(globalMode === GlobalMode.Scales
-        ? { scale_type: selectedMusicalKey.scaleMode }
-        : { input_mode: inputMode }),
-    });
+    trackAction(TrackEvent.TransposeInteracted, { transpose_target: target });
     if (target === TransposeTarget.Notes) {
       const transposedIndices = IndexUtils.transposeNotes(selectedNoteIndices, amount);
       setNotesDirectly(transposedIndices);

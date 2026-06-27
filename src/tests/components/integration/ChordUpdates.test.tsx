@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 
 import { RootProvider } from "@/contexts/RootContext";
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
-import { InputModeSelector } from "@/components/Settings/InputModeSelector";
+import { HarmonyInputModeSelector } from "@/components/Settings/HarmonyInputModeSelector";
 import { ChordPresetSelector } from "@/components/Settings/ChordPresetsSelector";
 import { ChordNameDisplay } from "@/components/ChordNameDisplay";
 import { SettingsPanelDefault } from "@/components/Settings/SettingsPanelDefault";
@@ -27,7 +27,7 @@ describe("ChordUpdates", () => {
       <RootProvider>
         <KeyboardLinear />
         <KeyboardCircular />
-        <InputModeSelector />
+        <HarmonyInputModeSelector />
         <ChordPresetSelector />
         <ChordNameDisplay />
         <SettingsPanelDefault />

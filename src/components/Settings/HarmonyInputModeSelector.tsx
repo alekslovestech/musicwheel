@@ -3,7 +3,7 @@
 import React from "react";
 
 import { LAYOUT_PATTERNS } from "@/lib/design";
-import { InputMode } from "@/types/enums/InputMode";
+import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { useBorder } from "@/lib/hooks";
 
@@ -14,52 +14,52 @@ import { useChordPresets, useIsChordsOrIntervals } from "@/contexts/ChordPresetC
 
 interface ModeSelectorButton {
   id: string;
-  mode: InputMode;
+  mode: HarmonyInputMode;
   description: string;
 }
 
 const AVAILABLE_MODES: ModeSelectorButton[] = [
   {
     id: "mode-freeform",
-    mode: InputMode.Freeform,
+    mode: HarmonyInputMode.Freeform,
     description: "Click notes to toggle them on/off",
   },
   {
     id: "mode-singlenote",
-    mode: InputMode.SingleNote,
+    mode: HarmonyInputMode.SingleNote,
     description: "Click a note to select it",
   },
   {
     id: "mode-intervals",
-    mode: InputMode.IntervalPresets,
+    mode: HarmonyInputMode.IntervalPresets,
     description: "Select from predefined intervals",
   },
   {
     id: "mode-chords",
-    mode: InputMode.ChordPresets,
+    mode: HarmonyInputMode.ChordPresets,
     description: "Select from predefined chord patterns",
   },
 ];
 
-export const InputModeSelector: React.FC = () => {
-  const { inputMode, setInputMode } = useChordPresets();
+export const HarmonyInputModeSelector: React.FC = () => {
+  const { harmonyInputMode, setHarmonyInputMode } = useChordPresets();
   const border = useBorder();
-  const handleModeChange = (newMode: InputMode) => {
-    setInputMode(newMode);
+  const handleModeChange = (newMode: HarmonyInputMode) => {
+    setHarmonyInputMode(newMode);
   };
 
   const gapSize = "gap-snug";
   const isScalesMode = useIsScalePreviewMode();
-  const isChordsOrIntervals = useIsChordsOrIntervals(); // Move hook call here
+  const isChordsOrIntervals = useIsChordsOrIntervals();
 
   return (
     <div
-      className={`input-mode-selector text-center space-y-2 ${border} ${LAYOUT_PATTERNS.fullSize}`}
+      className={`harmony-input-mode-selector text-center space-y-2 ${border} ${LAYOUT_PATTERNS.fullSize}`}
     >
-      <SectionTitle>Input Mode</SectionTitle>
+      <SectionTitle>Harmony Input</SectionTitle>
       <div className={`mode-selector-buttons ${LAYOUT_PATTERNS.centerFlexCol} ${gapSize}`}>
         {AVAILABLE_MODES.map(({ id, mode, description }) => {
-          const isHidden = isScalesMode && isChordsOrIntervals; // Use the variable instead of calling the hook
+          const isHidden = isScalesMode && isChordsOrIntervals;
 
           return (
             <Button
@@ -68,7 +68,7 @@ export const InputModeSelector: React.FC = () => {
               variant="option"
               size="sm"
               onClick={() => handleModeChange(mode)}
-              selected={inputMode === mode}
+              selected={harmonyInputMode === mode}
               title={description}
               hidden={isHidden}
             >

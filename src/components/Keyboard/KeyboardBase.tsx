@@ -11,10 +11,11 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { useMusical } from "@/contexts/MusicalContext";
-import { useChordPresets, useIsFreeformMode } from "@/contexts/ChordPresetContext";
-import { useGlobalMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { useIsFreeformMode } from "@/contexts/ChordPresetContext";
+import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
-import { track } from "@/lib/track";
+import { TrackEvent } from "@/lib/tracking/events";
+import { useTrack } from "@/lib/tracking/useTrack";
 import { ChordReference } from "@/types/interfaces/ChordReference";
 import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { computeScalePlaybackStep, ScalePlaybackStepOutput } from "@/utils/SequencePlaybackUtils";
@@ -75,8 +76,7 @@ export interface PianoKeyBaseProps {
 }
 
 export const useKeyboardHandlers = () => {
-  const globalMode = useGlobalMode();
-  const { inputMode } = useChordPresets();
+  const trackAction = useTrack();
   const isFreeformMode = useIsFreeformMode();
   const isScalesMode = useIsScalePreviewMode();
   const { playbackState, scalePlaybackMode } = useAudio();
@@ -155,30 +155,18 @@ export const useKeyboardHandlers = () => {
 
   const onLinearKeyClick = useCallback(
     (index: ActualIndex) => {
-      track("keyboard_interacted", {
-        global_mode: globalMode,
-        keyboard_ui: KeyboardUIType.Linear,
-        ...(isScalesMode
-          ? { scale_type: selectedMusicalKey.scaleMode }
-          : { input_mode: inputMode }),
-      });
+      trackAction(TrackEvent.KeyboardInteracted, { keyboard_ui: KeyboardUIType.Linear });
       handleKeyClick(index, KeyboardUIType.Linear);
     },
-    [globalMode, inputMode, isScalesMode, selectedMusicalKey.scaleMode, handleKeyClick],
+    [trackAction, handleKeyClick],
   );
 
   const onCircularKeyClick = useCallback(
     (index: ActualIndex) => {
-      track("keyboard_interacted", {
-        global_mode: globalMode,
-        keyboard_ui: KeyboardUIType.Circular,
-        ...(isScalesMode
-          ? { scale_type: selectedMusicalKey.scaleMode }
-          : { input_mode: inputMode }),
-      });
+      trackAction(TrackEvent.KeyboardInteracted, { keyboard_ui: KeyboardUIType.Circular });
       handleKeyClick(index, KeyboardUIType.Circular);
     },
-    [globalMode, inputMode, isScalesMode, selectedMusicalKey.scaleMode, handleKeyClick],
+    [trackAction, handleKeyClick],
   );
 
   return {

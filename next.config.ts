@@ -4,7 +4,7 @@ import {
   getPostHogApiHost,
   getPostHogAssetsHost,
   POSTHOG_PROXY_PATH,
-} from "./src/lib/posthogProxy";
+} from "./src/lib/tracking/posthogProxy";
 
 const posthogApiHost = getPostHogApiHost();
 const posthogAssetsHost = getPostHogAssetsHost();

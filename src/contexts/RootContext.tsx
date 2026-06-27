@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useEffect } from "react";
 import { useGlobalMode } from "@/lib/hooks";
-import { initPH, ph } from "@/lib/ph";
+import { initPH, ph } from "@/lib/tracking/ph";
 import { usePathname } from "next/navigation";
 
 import { AudioPlayer } from "@/components/AudioPlayer";

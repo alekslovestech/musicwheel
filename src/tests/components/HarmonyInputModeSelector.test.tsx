@@ -4,14 +4,14 @@ import { ReactTestUtils } from "../reactutils/ReactTestUtils";
 
 import { RootProvider } from "@/contexts/RootContext";
 
-import { InputModeSelector } from "@/components/Settings/InputModeSelector";
+import { HarmonyInputModeSelector } from "@/components/Settings/HarmonyInputModeSelector";
 import { ChordPresetSelector } from "@/components/Settings/ChordPresetsSelector";
 
 describe("ModeSelector with preset buttons", () => {
   const renderComponent = () =>
     render(
       <RootProvider>
-        <InputModeSelector />
+        <HarmonyInputModeSelector />
         <ChordPresetSelector />
       </RootProvider>,
     );

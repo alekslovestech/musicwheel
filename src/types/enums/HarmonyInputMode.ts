@@ -1,5 +1,4 @@
-export enum InputMode {
-  None = "None",
+export enum HarmonyInputMode {
   Freeform = "Freeform",
   SingleNote = "Single Note",
   IntervalPresets = "Intervals",
