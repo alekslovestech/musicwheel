@@ -6,7 +6,7 @@ import { useChordPresets, useIsFreeformMode } from "@/contexts/ChordPresetContex
 
 import { Button } from "./Common/Button";
 import { LAYOUT_PATTERNS, TYPOGRAPHY } from "@/lib/design";
-import { track } from "@/lib/track";
+import { track } from "@/lib/tracking/track";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";

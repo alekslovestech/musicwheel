@@ -2,7 +2,7 @@
 import React from "react";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { useAudio } from "@/contexts/AudioContext";
-import { track } from "@/lib/track";
+import { track } from "@/lib/tracking/track";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";

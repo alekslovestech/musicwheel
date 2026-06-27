@@ -17,7 +17,7 @@ import { SectionTitle } from "../Common/SectionTitle";
 import { ChordPresetButton } from "./ChordPresetButton";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { makeChordReference } from "@/types/interfaces/ChordReference";
-import { track } from "@/lib/track";
+import { track } from "@/lib/tracking/track";
 
 export const ChordPresetSelector: React.FC = () => {
   const { inputMode } = useChordPresets();
@@ -31,6 +31,7 @@ export const ChordPresetSelector: React.FC = () => {
     track("chord_preset_changed", {
       global_mode: globalMode,
       input_mode: inputMode,
+      preset_id: newPresetId,
     });
     // Use currentChordRef.rootNote if available, otherwise fall back to chord recognition or default
     const rootNote =

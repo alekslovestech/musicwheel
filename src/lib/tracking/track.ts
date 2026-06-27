@@ -6,6 +6,7 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { TransposeTarget } from "@/types/enums/TransposeTarget";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { NoteGroupingId } from "@/types/NoteGroupingId";
 
 type Ctx = {
   global_mode?: GlobalMode;
@@ -13,6 +14,7 @@ type Ctx = {
   keyboard_ui?: KeyboardUIType;
   scale_type?: ScaleModeType;
   scale_playback_mode?: ScalePlaybackMode;
+  preset_id?: NoteGroupingId;
   transpose_target?: TransposeTarget;
 };
 

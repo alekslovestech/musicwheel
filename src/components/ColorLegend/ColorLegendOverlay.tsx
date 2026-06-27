@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/Common/Button";
 import { useAudio } from "@/contexts/AudioContext";
-import { track } from "@/lib/track";
+import { track } from "@/lib/tracking/track";
 import { useGlobalMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 

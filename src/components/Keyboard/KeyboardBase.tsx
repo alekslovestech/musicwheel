@@ -14,7 +14,7 @@ import { useMusical } from "@/contexts/MusicalContext";
 import { useChordPresets, useIsFreeformMode } from "@/contexts/ChordPresetContext";
 import { useGlobalMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
-import { track } from "@/lib/track";
+import { track } from "@/lib/tracking/track";
 import { ChordReference } from "@/types/interfaces/ChordReference";
 import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { computeScalePlaybackStep, ScalePlaybackStepOutput } from "@/utils/SequencePlaybackUtils";
