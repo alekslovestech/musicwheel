@@ -44,7 +44,7 @@ jest.mock("tone", () => ({
 }));
 
 // Mock PostHog to avoid init/capture warnings in component integration tests.
-jest.mock("@/lib/ph", () => ({
+jest.mock("@/lib/tracking/ph", () => ({
   initPH: jest.fn(),
   ph: {
     __loaded: true,

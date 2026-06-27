@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { RootProvider } from "@/contexts/RootContext";
 
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
-import { InputModeSelector } from "@/components/Settings/InputModeSelector";
+import { HarmonyInputModeSelector } from "@/components/Settings/HarmonyInputModeSelector";
 import { ChordPresetSelector } from "@/components/Settings/ChordPresetsSelector";
 
 import { ReactTestUtils } from "@/tests/reactutils/ReactTestUtils";
@@ -15,7 +15,7 @@ describe("KeyboardCircular", () => {
     render(
       <RootProvider>
         <KeyboardCircular />
-        <InputModeSelector />
+        <HarmonyInputModeSelector />
         <ChordPresetSelector />
       </RootProvider>,
     );

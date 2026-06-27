@@ -1,9 +1,14 @@
+"use client";
+
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { Button } from "../Common/Button";
 import { PlayIcon, StopIcon } from "../Icons";
 import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
+import { TrackEvent } from "@/lib/tracking/events";
+import { useTrack } from "@/lib/tracking/useTrack";
 
 export const PlaySequenceButton: React.FC = () => {
+  const trackAction = useTrack();
   const { playbackState, startSequencePlayback, stopSequencePlayback } = useAudio();
 
   const isPlayingOrPaused = () =>
@@ -11,6 +16,7 @@ export const PlaySequenceButton: React.FC = () => {
     playbackState === PlaybackState.SequencePaused;
 
   const handleClick = () => {
+    trackAction(TrackEvent.SequencePlaybackInteracted);
     if (isPlayingOrPaused()) {
       stopSequencePlayback();
     } else {

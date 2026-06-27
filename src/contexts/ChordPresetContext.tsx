@@ -5,24 +5,24 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 import { makeChordReference } from "@/types/interfaces/ChordReference";
 
 import { NoteGroupingId } from "@/types/NoteGroupingId";
-import { InputMode } from "@/types/enums/InputMode";
+import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
 import { SpecialType } from "@/types/enums/SpecialType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { ChordType } from "@/types/enums/ChordType";
 
 import { useMusical } from "./MusicalContext";
 export interface ChordPresetSettings {
-  inputMode: InputMode;
-  setInputMode: (mode: InputMode) => void;
+  harmonyInputMode: HarmonyInputMode;
+  setHarmonyInputMode: (mode: HarmonyInputMode) => void;
 }
 
-function getDefaultChordTypeForInputMode(newMode: InputMode): NoteGroupingId {
+function getDefaultChordTypeForHarmonyInputMode(newMode: HarmonyInputMode): NoteGroupingId {
   switch (newMode) {
-    case InputMode.IntervalPresets:
+    case HarmonyInputMode.IntervalPresets:
       return IntervalType.Major3;
-    case InputMode.ChordPresets:
+    case HarmonyInputMode.ChordPresets:
       return ChordType.Major;
-    case InputMode.SingleNote:
+    case HarmonyInputMode.SingleNote:
       return SpecialType.Note;
     default:
       return SpecialType.None;
@@ -32,16 +32,18 @@ function getDefaultChordTypeForInputMode(newMode: InputMode): NoteGroupingId {
 const ChordPresetContext = createContext<ChordPresetSettings | null>(null);
 
 export const ChordPresetProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [inputMode, setInputMode] = useState<InputMode>(InputMode.ChordPresets);
+  const [harmonyInputMode, setHarmonyInputMode] = useState<HarmonyInputMode>(
+    HarmonyInputMode.ChordPresets,
+  );
   const { selectedNoteIndices, setCurrentChordRef } = useMusical();
 
-  const handleInputModeChange = (newMode: InputMode) => {
-    setInputMode(newMode);
+  const handleHarmonyInputModeChange = (newMode: HarmonyInputMode) => {
+    setHarmonyInputMode(newMode);
 
     const rootNoteIndex = selectedNoteIndices[0] || null;
-    const newChordType = getDefaultChordTypeForInputMode(newMode);
+    const newChordType = getDefaultChordTypeForHarmonyInputMode(newMode);
 
-    if (newMode !== InputMode.Freeform && rootNoteIndex !== null) {
+    if (newMode !== HarmonyInputMode.Freeform && rootNoteIndex !== null) {
       setCurrentChordRef(makeChordReference(rootNoteIndex, newChordType, 0));
     } else {
       setCurrentChordRef(undefined);
@@ -49,21 +51,24 @@ export const ChordPresetProvider: React.FC<{ children: ReactNode }> = ({ childre
   };
 
   const value: ChordPresetSettings = {
-    inputMode,
-    setInputMode: handleInputModeChange,
+    harmonyInputMode,
+    setHarmonyInputMode: handleHarmonyInputModeChange,
   };
 
   return <ChordPresetContext.Provider value={value}>{children}</ChordPresetContext.Provider>;
 };
 
 export const useIsChordsOrIntervals = () => {
-  const { inputMode } = useChordPresets();
-  return inputMode === InputMode.ChordPresets || inputMode === InputMode.IntervalPresets;
+  const { harmonyInputMode } = useChordPresets();
+  return (
+    harmonyInputMode === HarmonyInputMode.ChordPresets ||
+    harmonyInputMode === HarmonyInputMode.IntervalPresets
+  );
 };
 
 export const useIsFreeformMode = () => {
-  const { inputMode } = useChordPresets();
-  return inputMode === InputMode.Freeform;
+  const { harmonyInputMode } = useChordPresets();
+  return harmonyInputMode === HarmonyInputMode.Freeform;
 };
 
 export const useChordPresets = () => {

@@ -7,7 +7,7 @@ import { ReactTestUtils } from "../reactutils/ReactTestUtils";
 import { RootProvider } from "@/contexts/RootContext";
 
 import { KeyboardLinear } from "@/components/Keyboard/Linear/KeyboardLinear";
-import { InputModeSelector } from "@/components/Settings/InputModeSelector";
+import { HarmonyInputModeSelector } from "@/components/Settings/HarmonyInputModeSelector";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
 import { ChordPresetSelector } from "@/components/Settings/ChordPresetsSelector";
 
@@ -18,7 +18,7 @@ describe("KeyboardGeneral", () => {
       <RootProvider>
         <KeyboardLinear />
         <KeyboardCircular />
-        <InputModeSelector />
+        <HarmonyInputModeSelector />
         <ChordPresetSelector />
       </RootProvider>,
     );
@@ -88,7 +88,7 @@ describe("Keyboards in Advanced Mode", () => {
       <RootProvider>
         <KeyboardLinear />
         <KeyboardCircular />
-        <InputModeSelector />
+        <HarmonyInputModeSelector />
         <ChordPresetSelector />
       </RootProvider>,
     );

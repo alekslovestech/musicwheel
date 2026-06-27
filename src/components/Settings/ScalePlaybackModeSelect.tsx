@@ -2,8 +2,8 @@
 import React from "react";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { useAudio } from "@/contexts/AudioContext";
-import { track } from "@/lib/tracking/track";
-import { GlobalMode } from "@/types/enums/GlobalMode";
+import { TrackEvent } from "@/lib/tracking/events";
+import { useTrack } from "@/lib/tracking/useTrack";
 import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";
 
@@ -36,14 +36,12 @@ const SCALE_PLAYBACK_MODE_OPTIONS: PlaybackModeOption[] = [
 ];
 
 export const ScalePlaybackModeSelect: React.FC = () => {
+  const trackAction = useTrack();
   const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } = useAudio();
 
   const handleModeChange = (newMode: ScalePlaybackMode) => {
     if (newMode === scalePlaybackMode) return;
-    track("scale_playback_mode_changed", {
-      global_mode: GlobalMode.Scales,
-      scale_playback_mode: newMode,
-    });
+    trackAction(TrackEvent.ScalePlaybackModeChanged, { scale_playback_mode: newMode });
     setScalePlaybackMode(newMode);
     startSequencePlayback({ scalePlaybackMode: newMode });
   };

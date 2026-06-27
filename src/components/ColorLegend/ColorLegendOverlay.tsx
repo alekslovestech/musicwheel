@@ -4,23 +4,22 @@ import { useState } from "react";
 
 import { Button } from "@/components/Common/Button";
 import { useAudio } from "@/contexts/AudioContext";
-import { track } from "@/lib/tracking/track";
-import { useGlobalMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { TrackEvent } from "@/lib/tracking/events";
+import { useTrack } from "@/lib/tracking/useTrack";
+import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { ColorLegendPanel } from "./ColorLegendPanel";
 
 export function ColorLegendOverlay() {
   const [open, setOpen] = useState(false);
-  const globalMode = useGlobalMode();
+  const trackAction = useTrack();
   const isScalesMode = useIsScalePreviewMode();
   const { scalePlaybackMode } = useAudio();
 
   function handleLegendToggle() {
     setOpen((wasOpen) => {
-      if (!wasOpen) {
-        track("color_legend_opened", { global_mode: globalMode });
-      }
+      trackAction(TrackEvent.ColorLegendInteracted);
       return !wasOpen;
     });
   }
