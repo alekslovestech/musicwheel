@@ -18,6 +18,7 @@ import {
 } from "@/utils/SequencePlaybackUtils";
 import { RhythmUtils } from "@/utils/RhythmUtils";
 import {
+  SCALE_AUDIO_WARMUP_MS,
   SCALE_STEP_MS_SINGLE_NOTE,
   SCALE_STEP_MS_TRIAD,
 } from "@/lib/audio/playbackDurations";
@@ -31,7 +32,6 @@ interface UseSequencePlaybackProps {
 export type StartSequencePlaybackOptions = {
   scalePlaybackMode?: ScalePlaybackMode;
 };
-
 
 export const useSequencePlayback = ({
   isAudioInitialized,
@@ -74,9 +74,7 @@ export const useSequencePlayback = ({
   }, []);
 
   const getPlaybackDuration = useCallback((mode: ScalePlaybackMode) => {
-    return mode === ScalePlaybackMode.SingleNote
-      ? SCALE_STEP_MS_SINGLE_NOTE
-      : SCALE_STEP_MS_TRIAD;
+    return mode === ScalePlaybackMode.SingleNote ? SCALE_STEP_MS_SINGLE_NOTE : SCALE_STEP_MS_TRIAD;
   }, []);
 
   const clearSequenceSelection = useCallback(() => {
@@ -119,11 +117,7 @@ export const useSequencePlayback = ({
       if (!selectedMusicalKey) return;
 
       const mode = modeOverride ?? scalePlaybackMode;
-      const step = computeScalePlaybackStep(
-        selectedMusicalKey,
-        scaleIndexRef.current,
-        mode,
-      );
+      const step = computeScalePlaybackStep(selectedMusicalKey, scaleIndexRef.current, mode);
 
       if (step.chordRef !== undefined) {
         setCurrentChordRef(step.chordRef);
@@ -243,10 +237,13 @@ export const useSequencePlayback = ({
       abortPlayback({ clearSelection: true });
       setActiveProgressionStepIndex(null);
       scaleIndexRef.current = 0;
-      playScaleStep(mode);
-      const playbackDuration = getPlaybackDuration(mode);
-      sequenceTimerRef.current = setInterval(() => playScaleStep(), playbackDuration);
       setPlaybackState(PlaybackState.SequencePlaying);
+
+      const playbackDuration = getPlaybackDuration(mode);
+      sequenceTimerRef.current = setTimeout(() => {
+        playScaleStep(mode);
+        sequenceTimerRef.current = setInterval(() => playScaleStep(), playbackDuration);
+      }, SCALE_AUDIO_WARMUP_MS);
     },
     [
       selectedMusicalKey,

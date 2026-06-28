@@ -65,7 +65,7 @@ describe("Roman Mode Index Arrays", () => {
       expected: ["I", "♭II", "iii°", "iv", "v°", "♭VI+", "♭vii"],
     },
     {
-      mode: ScaleModeType.Byzantine,
+      mode: ScaleModeType.DoubleHarmonicMajor,
       expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VIIsus2♯4"],
     },
     {

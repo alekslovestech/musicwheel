@@ -29,8 +29,8 @@ describe("SpellingStaff - StaffRenderer spelling integration", () => {
     ]);
   });
 
-  test("C Byzantine V triad spells Db, not C# (MajFlat5 scale triad playback)", () => {
-    const key = MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine);
+  test("C double harmonic major V triad spells Db, not C# (MajFlat5 scale triad playback)", () => {
+    const key = MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor);
     const step = SpellingTestUtils.computeScaleTriadPlaybackStep(key, ixScaleDegree(5));
 
     expect(step.chordRef?.id).toBe(ChordType.MajFlat5);

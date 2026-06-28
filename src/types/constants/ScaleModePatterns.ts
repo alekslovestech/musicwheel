@@ -11,7 +11,7 @@ export const SCALE_MODE_PATTERNS = {
   //other scales
   UKRAINIAN_DORIAN: [0, 2, 3, 6, 7, 9, 10], // Dorian with #4
   PHRYGIAN_DOMINANT: [0, 1, 4, 5, 7, 8, 10], // Phrygian Dominant
-  BYZANTINE: [0, 1, 4, 5, 7, 8, 11], // Byzantine
+  DOUBLE_HARMONIC_MAJOR: [0, 1, 4, 5, 7, 8, 11], // 1 b2 3 4 5 b6 7
   HARMONIC_MINOR: [0, 2, 3, 5, 7, 8, 11], // Harmonic Minor
   HUNGARIAN_MINOR: [0, 2, 3, 6, 7, 8, 11], // Hungarian Minor
   PANTHU_VARAALI: [0, 1, 4, 6, 7, 8, 11], // Panthu Varaali

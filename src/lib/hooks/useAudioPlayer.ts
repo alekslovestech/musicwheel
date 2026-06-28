@@ -146,6 +146,7 @@ function usePolySynthLifecycle(
 ) {
   useEffect(() => {
     if (!isAudioInitialized) return;
+    if (synthRef.current) return;
 
     try {
       synthRef.current = createPolySynth();

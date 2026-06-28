@@ -2,7 +2,8 @@
 import React from "react";
 
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { isGreekScaleMode, ScaleModeType } from "@/types/enums/ScaleModeType";
+import { getScaleModeGroup, ScaleModeGroup } from "@/types/enums/ScaleModeGroup";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { isMajor } from "@/types/enums/KeyType";
 import { KeySignature } from "@/types/Keys/KeySignature";
 
@@ -13,10 +14,11 @@ import { useTrack } from "@/lib/tracking/useTrack";
 import { Button } from "./Common/Button";
 import { Select } from "./Common/Select";
 
-const SCALE_MODE_GROUPS = [
-  { label: "Greek modes", isGreek: true },
-  { label: "Other Scales", isGreek: false },
-] as const;
+const SCALE_MODE_GROUPS: ReadonlyArray<{ id: ScaleModeGroup; label: string }> = [
+  { id: ScaleModeGroup.Greek, label: "Greek modes" },
+  { id: ScaleModeGroup.HarmonicMinor, label: "Harmonic minor modes" },
+  { id: ScaleModeGroup.Other, label: "Other scales" },
+];
 
 export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelector: boolean }) => {
   const trackAction = useTrack();
@@ -29,6 +31,7 @@ export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelecto
     const newKey = useDropdownSelector
       ? MusicalKey.fromGreekMode(tonicName, selectedMusicalKey.scaleMode)
       : MusicalKey.fromClassicalMode(tonicName, selectedMusicalKey.classicalMode);
+    trackAction(TrackEvent.ScaleTonicInteracted);
     setSelectedMusicalKey(newKey);
   };
 
@@ -79,10 +82,10 @@ export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelecto
             onChange={handleScaleModeChange}
             title="Select musical mode"
           >
-            {SCALE_MODE_GROUPS.map(({ label, isGreek }) => (
-              <optgroup key={label} label={label}>
+            {SCALE_MODE_GROUPS.map(({ id, label }) => (
+              <optgroup key={id} label={label}>
                 {Object.values(ScaleModeType)
-                  .filter((mode) => isGreekScaleMode(mode) === isGreek)
+                  .filter((mode) => getScaleModeGroup(mode) === id)
                   .map((mode) => (
                     <option id={`scale-mode-option-${mode}`} key={mode} value={mode}>
                       {mode}
