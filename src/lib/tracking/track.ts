@@ -48,6 +48,8 @@ export function buildModeContext({
 }
 
 export function track(name: string, props: TrackCtx = {}) {
+  if (process.env.NODE_ENV !== "production") return;
+
   if (ph.__loaded) {
     ph.capture(name, props);
   } else {
