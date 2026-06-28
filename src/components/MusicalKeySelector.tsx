@@ -29,6 +29,7 @@ export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelecto
     const newKey = useDropdownSelector
       ? MusicalKey.fromGreekMode(tonicName, selectedMusicalKey.scaleMode)
       : MusicalKey.fromClassicalMode(tonicName, selectedMusicalKey.classicalMode);
+    trackAction(TrackEvent.ScaleTonicInteracted);
     setSelectedMusicalKey(newKey);
   };
 
