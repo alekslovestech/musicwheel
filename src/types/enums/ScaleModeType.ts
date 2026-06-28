@@ -8,7 +8,7 @@ export enum ScaleModeType {
   Locrian = "Locrian",
   UkrainianDorian = "Ukrainian Dorian",
   PhrygianDominant = "Phrygian Dominant",
-  Byzantine = "Byzantine",
+  DoubleHarmonicMajor = "Double Harmonic Major",
   HarmonicMinor = "Harmonic Minor",
   HungarianMinor = "Hungarian Minor",
   PanthuVaraali = "Panthu Varaali",

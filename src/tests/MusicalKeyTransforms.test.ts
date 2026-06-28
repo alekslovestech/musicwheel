@@ -106,8 +106,8 @@ describe("MusicalKey transforms", () => {
         expected: "Ab",
       },
       {
-        desc: "C Byzantine => Ab Ionian",
-        input: MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine),
+        desc: "C double harmonic major => Ab Ionian",
+        input: MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor),
         expected: "Ab",
       },
     ];
@@ -127,8 +127,8 @@ describe("MusicalKey transforms", () => {
         expected: "C",
       },
       {
-        desc: "C Byzantine => C major (exotic mode)",
-        input: MusicalKey.fromGreekMode("C", ScaleModeType.Byzantine),
+        desc: "C double harmonic major => C major (exotic mode)",
+        input: MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor),
         expected: "C",
       },
       {

@@ -60,10 +60,10 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     SCALE_MODE_PATTERNS.PHRYGIAN_DOMINANT,
     3,
   ),
-  [ScaleModeType.Byzantine]: new ScaleModeInfo(
-    ScaleModeType.Byzantine,
-    "byzantine",
-    SCALE_MODE_PATTERNS.BYZANTINE,
+  [ScaleModeType.DoubleHarmonicMajor]: new ScaleModeInfo(
+    ScaleModeType.DoubleHarmonicMajor,
+    "double-harmonic-major",
+    SCALE_MODE_PATTERNS.DOUBLE_HARMONIC_MAJOR,
     3,
   ),
   [ScaleModeType.PanthuVaraali]: new ScaleModeInfo(
