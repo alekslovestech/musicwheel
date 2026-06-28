@@ -1,5 +1,6 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
-import { isGreekScaleMode, ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScaleModeGroup, getScaleModeGroup } from "@/types/enums/ScaleModeGroup";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { isMajor, KeyType } from "@/types/enums/KeyType";
 
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
@@ -102,7 +103,9 @@ export class MusicalKey {
 
   /** Key used for staff key signature and note spelling. Exotic modes use open C major. */
   getStaffSpellingKey(): MusicalKey {
-    return isGreekScaleMode(this.scaleMode) ? this.getCanonicalIonianKey() : DEFAULT_MUSICAL_KEY;
+    return getScaleModeGroup(this.scaleMode) === ScaleModeGroup.Greek
+      ? this.getCanonicalIonianKey()
+      : DEFAULT_MUSICAL_KEY;
   }
 
   getDefaultAccidental(): AccidentalType {

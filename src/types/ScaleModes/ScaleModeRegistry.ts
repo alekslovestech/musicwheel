@@ -58,7 +58,7 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     ScaleModeType.PhrygianDominant,
     "phrygian-dominant",
     SCALE_MODE_PATTERNS.PHRYGIAN_DOMINANT,
-    3,
+    5,
   ),
   [ScaleModeType.DoubleHarmonicMajor]: new ScaleModeInfo(
     ScaleModeType.DoubleHarmonicMajor,
@@ -76,7 +76,7 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     ScaleModeType.HarmonicMinor,
     "harmonic-minor",
     SCALE_MODE_PATTERNS.HARMONIC_MINOR,
-    6,
+    1,
   ), // Harmonic minor scale
   [ScaleModeType.HungarianMinor]: new ScaleModeInfo(
     ScaleModeType.HungarianMinor,
