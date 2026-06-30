@@ -5,6 +5,7 @@ import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { ChromaticNoteResolver } from "@/utils/resolvers/ChromaticNoteResolver";
+import { ScaleNoteSpellingResolver } from "@/utils/resolvers/ScaleNoteSpellingResolver";
 
 import { ScaleModeFormatter } from "./ScaleModeFormatter";
 import { NoteFormatter } from "./NoteFormatter";
@@ -21,6 +22,12 @@ export class MusicalKeyNoteFormatter {
       musicalKey.tonicIndex,
     );
     if (keyTextMode === KeyDisplayMode.NoteNames) {
+      const scaleNoteInfo = ScaleNoteSpellingResolver.resolveNoteInScale(
+        musicalKey,
+        chromaticIndex,
+      );
+      if (scaleNoteInfo) return NoteFormatter.formatForDisplay(scaleNoteInfo);
+
       const noteInfo = ChromaticNoteResolver.resolveAbsoluteNote(
         chromaticIndex,
         musicalKey.getDefaultAccidental(),

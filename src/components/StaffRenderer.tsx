@@ -17,7 +17,8 @@ import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { StaffUtils } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
-import { useIsChordProgressionsMode } from "@/lib/hooks/useGlobalMode";
+import { useGlobalMode, useIsChordProgressionsMode } from "@/lib/hooks/useGlobalMode";
+import { resolveSpellingContext } from "@/utils/spelling/SpellingContext";
 
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
@@ -25,6 +26,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const { selectedProgression, activeProgressionStepIndex } = useAudio();
   const isChordProgressionsMode = useIsChordProgressionsMode();
+  const globalMode = useGlobalMode();
   const border = useBorder();
 
   useEffect(() => {
@@ -95,10 +97,15 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
 
     if (selectedNoteIndices.length === 0) return;
 
+    const spelling = resolveSpellingContext({
+      globalMode,
+      musicalKey: selectedMusicalKey,
+      currentChordRef,
+    });
     const notesWithOctaves = SpellingUtils.computeNotesForStaff(
       selectedNoteIndices,
       staffSpellingKey,
-      currentChordRef,
+      spelling,
     );
 
     const notes = VexFlowFormatter.createStaveChordNotes(
@@ -111,6 +118,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     selectedNoteIndices,
     selectedMusicalKey,
     currentChordRef,
+    globalMode,
     isChordProgressionsMode,
     selectedProgression,
     activeProgressionStepIndex,

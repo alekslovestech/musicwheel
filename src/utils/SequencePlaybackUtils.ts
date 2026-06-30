@@ -6,28 +6,28 @@ import { ActualIndex, ixInversion, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
-import { ScaleDegreeIndex, ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
+import { ixScaleDegreeIndex, ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
 import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { ChordSetUtils } from "./ChordSetUtils";
 
-export interface ScalePlaybackStepOutput {
-  notesToPlay: NoteIndices | null;
-  /** Set during triad playback; caller should update currentChordRef. */
+export type ScaleStepAtDegree = {
+  notesToPlay: NoteIndices;
   chordRef?: ChordReference;
-  /** When set, caller should replace the scale step index with this value. */
-  nextIndex: number | null;
-  /** When true, caller should mark the sequence complete and stop scheduling. */
-  shouldEndSequence: boolean;
+};
+
+export enum ScaleSequenceStepKind {
+  Play = "play",
+  PlayFinal = "playFinal",
+  Idle = "idle",
 }
 
-export const defaultScalePlaybackStepOutput: ScalePlaybackStepOutput = {
-  notesToPlay: null,
-  nextIndex: null,
-  shouldEndSequence: false,
-};
+export type ScaleSequenceStep =
+  | { kind: ScaleSequenceStepKind.Play; step: ScaleStepAtDegree; nextStepIndex: number }
+  | { kind: ScaleSequenceStepKind.PlayFinal; step: ScaleStepAtDegree }
+  | { kind: ScaleSequenceStepKind.Idle };
 
 function getScaleTriadChordRef(
   key: MusicalKey,
@@ -52,42 +52,42 @@ function chordRefForScaleStep(
   return chordRef.id === ChordType.Unknown ? undefined : chordRef;
 }
 
-export function computeScalePlaybackStep(
+export function getScaleStepAtDegree(
   key: MusicalKey,
-  currentIndex: number,
+  scaleDegreeIndex: ScaleDegreeIndex,
   scalePlaybackMode: ScalePlaybackMode,
-): ScalePlaybackStepOutput {
-  const currentScaleDegreeIndex = currentIndex as ScaleDegreeIndex;
+  transposeBy = 0,
+): ScaleStepAtDegree {
+  const notes = key.getNoteIndicesForScaleDegree(scaleDegreeIndex, scalePlaybackMode);
+  const notesToPlay =
+    transposeBy === 0 ? notes : IndexUtils.transposeNotes(notes, transposeBy);
+  return {
+    notesToPlay,
+    chordRef: chordRefForScaleStep(key, scaleDegreeIndex, notesToPlay, scalePlaybackMode),
+  };
+}
 
-  if (currentScaleDegreeIndex === key.scalePatternLength) {
-    const octaveNoteIndices = key.getNoteIndicesForScaleDegree(
-      ixScaleDegreeIndex(0),
-      scalePlaybackMode,
-    );
-    const fittedOctaveIndices = IndexUtils.transposeNotes(octaveNoteIndices, TWELVE);
+/** Scale sequence cursor: 0..length-1 are scale degrees; length is the final octave tonic step. */
+export function advanceScaleSequenceStep(
+  key: MusicalKey,
+  stepIndex: number,
+  scalePlaybackMode: ScalePlaybackMode,
+): ScaleSequenceStep {
+  if (stepIndex > key.scalePatternLength) {
+    return { kind: ScaleSequenceStepKind.Idle };
+  }
+
+  if (stepIndex === key.scalePatternLength) {
     return {
-      ...defaultScalePlaybackStepOutput,
-      notesToPlay: fittedOctaveIndices,
-      chordRef: chordRefForScaleStep(
-        key,
-        ixScaleDegreeIndex(0),
-        fittedOctaveIndices,
-        scalePlaybackMode,
-      ),
-      shouldEndSequence: true,
+      kind: ScaleSequenceStepKind.PlayFinal,
+      step: getScaleStepAtDegree(key, ixScaleDegreeIndex(0), scalePlaybackMode, TWELVE),
     };
   }
 
-  if (currentScaleDegreeIndex > key.scalePatternLength) {
-    return { ...defaultScalePlaybackStepOutput };
-  }
-
-  const noteIndices = key.getNoteIndicesForScaleDegree(currentScaleDegreeIndex, scalePlaybackMode);
   return {
-    ...defaultScalePlaybackStepOutput,
-    notesToPlay: noteIndices,
-    chordRef: chordRefForScaleStep(key, currentScaleDegreeIndex, noteIndices, scalePlaybackMode),
-    nextIndex: currentIndex + 1,
+    kind: ScaleSequenceStepKind.Play,
+    step: getScaleStepAtDegree(key, stepIndex as ScaleDegreeIndex, scalePlaybackMode),
+    nextStepIndex: stepIndex + 1,
   };
 }
 

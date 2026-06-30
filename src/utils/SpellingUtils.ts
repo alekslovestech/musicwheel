@@ -9,20 +9,30 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { AccidentalPreferenceResolver } from "@/utils/resolvers/AccidentalPreferenceResolver";
 import { ActualNoteResolver } from "@/utils/resolvers/ActualNoteResolver";
+import { SpellingContext, SpellingKind } from "@/utils/spelling/SpellingContext";
 
 export class SpellingUtils {
   static computeNotesForStaff(
     selectedNoteIndices: NoteIndices,
-    selectedMusicalKey: MusicalKey,
-    currentChordRef?: ChordReference,
+    staffSpellingKey: MusicalKey,
+    spelling: SpellingContext,
   ): NoteWithOctaveArray {
-    if (currentChordRef) {
-      return this.applyKeySignatureToNotes(
-        this.computeNotesFromChordPreset(selectedNoteIndices, currentChordRef),
-        selectedMusicalKey,
-      );
+    switch (spelling.kind) {
+      case SpellingKind.ChordPreset:
+        return this.applyKeySignatureToNotes(
+          this.computeNotesFromChordPreset(selectedNoteIndices, spelling.chordRef),
+          staffSpellingKey,
+        );
+      case SpellingKind.ScaleDegree:
+        return this.applyKeySignatureToNotes(
+          selectedNoteIndices.map((actualIndex) =>
+            ActualNoteResolver.resolveNoteInScaleWithOctave(spelling.musicalKey, actualIndex),
+          ),
+          staffSpellingKey,
+        );
+      case SpellingKind.KeySignature:
+        return this.computeNotesFromMusicalKey(selectedNoteIndices, spelling.musicalKey);
     }
-    return this.computeNotesFromMusicalKey(selectedNoteIndices, selectedMusicalKey);
   }
 
   static computeNotesFromMusicalKey(

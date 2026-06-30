@@ -4,6 +4,7 @@ import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
 import { toNoteIndices } from "@/types/IndexTypes";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
+import { SpellingKind } from "@/utils/spelling/SpellingContext";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 
 import { SpellingTestUtils } from "@/tests/utils/SpellingTestUtils";
@@ -19,7 +20,10 @@ describe("SpellingChordPreset - Chord preset-based note spelling", () => {
       const indices = toNoteIndices(chordIndices);
       //const chordMatch = MusicalDisplayFormatter.getMatchFromIndices(indices);
       const chordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(indices);
-      const result = SpellingUtils.computeNotesForStaff(indices, DEFAULT_MUSICAL_KEY, chordRef!);
+      const result = SpellingUtils.computeNotesForStaff(indices, DEFAULT_MUSICAL_KEY, {
+        kind: SpellingKind.ChordPreset,
+        chordRef: chordRef!,
+      });
 
       expect(result).toHaveLength(expectedNotes.length);
       SpellingTestUtils.verifyNoteWithOctaveArray(result, expectedNotes);

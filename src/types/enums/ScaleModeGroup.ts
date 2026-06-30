@@ -3,6 +3,7 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 export enum ScaleModeGroup {
   Greek = "greek",
   HarmonicMinor = "harmonicMinor",
+  DoubleHarmonic = "doubleHarmonic",
   Other = "other",
 }
 
@@ -20,6 +21,10 @@ export function getScaleModeGroup(mode: ScaleModeType): ScaleModeGroup {
     case ScaleModeType.HarmonicMinor:
     case ScaleModeType.PhrygianDominant:
       return ScaleModeGroup.HarmonicMinor;
+
+    case ScaleModeType.DoubleHarmonicMajor:
+    case ScaleModeType.HungarianMinor:
+      return ScaleModeGroup.DoubleHarmonic;
 
     default:
       return ScaleModeGroup.Other;
