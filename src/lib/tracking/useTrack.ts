@@ -13,17 +13,18 @@ export function useTrack() {
   const globalMode = useGlobalMode();
   const { selectedMusicalKey } = useMusical();
   const { harmonyInputMode } = useChordPresets();
-  const { selectedProgression } = useAudio();
+  const { selectedProgression, scalePlaybackMode } = useAudio();
 
   const modeContext = useMemo(
     () =>
       buildModeContext({
         globalMode,
         scaleType: selectedMusicalKey.scaleMode,
+        scalePlaybackMode,
         harmonyInputMode,
         progressionType: selectedProgression,
       }),
-    [globalMode, selectedMusicalKey.scaleMode, harmonyInputMode, selectedProgression],
+    [globalMode, selectedMusicalKey.scaleMode, scalePlaybackMode, harmonyInputMode, selectedProgression],
   );
 
   return useCallback(
