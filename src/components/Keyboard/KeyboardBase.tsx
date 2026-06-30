@@ -18,11 +18,11 @@ import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 import { ChordReference } from "@/types/interfaces/ChordReference";
 import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import { computeScalePlaybackStep, ScalePlaybackStepOutput } from "@/utils/SequencePlaybackUtils";
+import { getScaleStepAtDegree, ScaleStepAtDegree } from "@/utils/SequencePlaybackUtils";
 
-function applyScalePlaybackStep(
+function applyScaleStepAtDegree(
   clickedIndex: ActualIndex,
-  step: ScalePlaybackStepOutput,
+  step: ScaleStepAtDegree,
   scalePlaybackMode: ScalePlaybackMode,
   keyboardUI: KeyboardUIType,
   setCurrentChordRef: (chordRef?: ChordReference) => void,
@@ -36,7 +36,7 @@ function applyScalePlaybackStep(
     return;
   }
 
-  if (useLinearOctave && step.notesToPlay !== null) {
+  if (useLinearOctave && step.notesToPlay.length > 0) {
     if (step.chordRef !== undefined) {
       const { octaveOffset } = actualIndexToChromaticAndOctave(clickedIndex);
       const degreeRootChromatic = actualToChromatic(step.notesToPlay[0]);
@@ -61,9 +61,7 @@ function applyScalePlaybackStep(
     setCurrentChordRef(step.chordRef);
   } else {
     setCurrentChordRef(undefined);
-    if (step.notesToPlay !== null) {
-      setNotesDirectly(step.notesToPlay);
-    }
+    setNotesDirectly(step.notesToPlay);
   }
 }
 
@@ -102,12 +100,12 @@ export const useKeyboardHandlers = () => {
         );
         if (!scaleDegreeInfo) return;
 
-        const step = computeScalePlaybackStep(
+        const step = getScaleStepAtDegree(
           selectedMusicalKey,
           scaleDegreeToIndex(scaleDegreeInfo.scaleDegree),
           scalePlaybackMode,
         );
-        applyScalePlaybackStep(
+        applyScaleStepAtDegree(
           clickedIndex,
           step,
           scalePlaybackMode,

@@ -13,7 +13,8 @@ import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import type { NoteLength } from "@/types/Durated";
 import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
 import {
-  computeScalePlaybackStep,
+  advanceScaleSequenceStep,
+  ScaleSequenceStepKind,
   prepareChordProgressionSequence,
 } from "@/utils/SequencePlaybackUtils";
 import { RhythmUtils } from "@/utils/RhythmUtils";
@@ -117,26 +118,29 @@ export const useSequencePlayback = ({
       if (!selectedMusicalKey) return;
 
       const mode = modeOverride ?? scalePlaybackMode;
-      const step = computeScalePlaybackStep(selectedMusicalKey, scaleIndexRef.current, mode);
+      const sequenceStep = advanceScaleSequenceStep(
+        selectedMusicalKey,
+        scaleIndexRef.current,
+        mode,
+      );
 
-      if (step.chordRef !== undefined) {
-        setCurrentChordRef(step.chordRef);
+      if (sequenceStep.kind === ScaleSequenceStepKind.Idle) return;
+
+      const { notesToPlay, chordRef } = sequenceStep.step;
+      if (chordRef !== undefined) {
+        setCurrentChordRef(chordRef);
       } else {
         setCurrentChordRef(undefined);
-        if (step.notesToPlay !== null) {
-          setNotesDirectly(step.notesToPlay);
-        }
+        setNotesDirectly(notesToPlay);
       }
 
-      if (step.shouldEndSequence) {
+      if (sequenceStep.kind === ScaleSequenceStepKind.PlayFinal) {
         stopAllTimers();
         scheduleSequenceCompletion(getPlaybackDuration(mode));
         return;
       }
 
-      if (step.nextIndex !== null) {
-        scaleIndexRef.current = step.nextIndex;
-      }
+      scaleIndexRef.current = sequenceStep.nextStepIndex;
     },
     [
       selectedMusicalKey,

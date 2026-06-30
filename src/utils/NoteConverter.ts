@@ -2,35 +2,42 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 
 import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
 import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
+import { NoteInfo } from "@/types/interfaces/NoteInfo";
 import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";
 import { ActualNoteResolver } from "@/utils/resolvers/ActualNoteResolver";
 
+const NOTE_TO_CHROMATIC: Record<string, number> = {
+  C: 0,
+  "C#": 1,
+  Db: 1,
+  D: 2,
+  "D#": 3,
+  Eb: 3,
+  E: 4,
+  F: 5,
+  "F#": 6,
+  Gb: 6,
+  G: 7,
+  "G#": 8,
+  Ab: 8,
+  A: 9,
+  "A#": 10,
+  Bb: 10,
+  B: 11,
+};
+
 export class NoteConverter {
   // For testing and input - converts text to index
   static toChromaticIndex(note: string): ChromaticIndex {
-    const noteMap: { [key: string]: number } = {
-      C: 0,
-      "C#": 1,
-      Db: 1,
-      D: 2,
-      "D#": 3,
-      Eb: 3,
-      E: 4,
-      F: 5,
-      "F#": 6,
-      Gb: 6,
-      G: 7,
-      "G#": 8,
-      Ab: 8,
-      A: 9,
-      "A#": 10,
-      Bb: 10,
-      B: 11,
-    };
-    const sanitizedNote = this.sanitizeNoteString(note);
-    return ixChromatic(noteMap[sanitizedNote] ?? -1);
+    const chromatic = NOTE_TO_CHROMATIC[this.sanitizeNoteString(note)];
+    return ixChromatic(chromatic ?? -1);
+  }
+
+  static tryToChromaticIndex(note: string): ChromaticIndex | null {
+    const chromatic = NOTE_TO_CHROMATIC[this.sanitizeNoteString(note)];
+    return chromatic === undefined ? null : ixChromatic(chromatic);
   }
 
   static sanitizeNoteString(noteString: string): string {
@@ -80,15 +87,26 @@ export class NoteConverter {
     return notes.map((note) => this.toChromaticIndex(note));
   }
 
-  static noteWithOctaveToActual(note: NoteWithOctave): ActualIndex {
-    // Natural is chromatically identical to None; only Sharp/Flat change the pitch.
+  static noteInfoToChromaticIndex(noteInfo: NoteInfo): ChromaticIndex {
+    return this.toChromaticIndex(this.noteInfoToText(noteInfo));
+  }
+
+  static tryNoteInfoToChromaticIndex(noteInfo: NoteInfo): ChromaticIndex | null {
+    return this.tryToChromaticIndex(this.noteInfoToText(noteInfo));
+  }
+
+  private static noteInfoToText(noteInfo: NoteInfo): string {
     const suffix =
-      note.accidental === AccidentalType.Sharp
+      noteInfo.accidental === AccidentalType.Sharp
         ? "#"
-        : note.accidental === AccidentalType.Flat
+        : noteInfo.accidental === AccidentalType.Flat
           ? "b"
           : "";
-    const chromatic = NoteConverter.toChromaticIndex(note.noteName + suffix);
+    return noteInfo.noteName + suffix;
+  }
+
+  static noteWithOctaveToActual(note: NoteWithOctave): ActualIndex {
+    const chromatic = this.noteInfoToChromaticIndex(note);
     return chromaticToActual(chromatic, note.octaveOffset);
   }
 

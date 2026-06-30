@@ -17,6 +17,7 @@ import { ChordDisplayMode, ChordTypeContext } from "@/types/enums/SettingModes";
 import {
   ActualIndex,
   InversionIndex,
+  actualIndexToChromaticAndOctave,
   ixActual,
   ixInversion,
   actualToChromatic,
@@ -32,6 +33,7 @@ import { ChordUtils } from "@/utils/ChordUtils";
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { AccidentalPreferenceResolver } from "@/utils/resolvers/AccidentalPreferenceResolver";
 import { ActualNoteResolver } from "@/utils/resolvers/ActualNoteResolver";
+import { ScaleNoteSpellingResolver } from "@/utils/resolvers/ScaleNoteSpellingResolver";
 
 import { NoteFormatter } from "./NoteFormatter";
 
@@ -40,6 +42,7 @@ export class MusicalDisplayFormatter {
     indices: NoteIndices,
     chordDisplayMode: ChordDisplayMode,
     musicalKey: MusicalKey,
+    useScaleNoteSpelling = false,
   ): ChordDisplayInfo {
     const chordRef = this.getChordReferenceFromIndices(indices);
     const noteGrouping = NoteGrouping.getNoteGroupingTypeFromNumNotes(indices.length);
@@ -49,13 +52,27 @@ export class MusicalDisplayFormatter {
       chordName =
         chordRef.id === ChordType.Unknown
           ? this.formatUnknownChordName(chordRef, musicalKey)
-          : this.deriveChordNameFromReference(chordRef, chordDisplayMode, musicalKey);
+          : useScaleNoteSpelling && indices.length === 1 && chordRef.id === SpecialType.Note
+            ? this.formatScaleNoteName(indices[0], musicalKey)
+            : this.deriveChordNameFromReference(chordRef, chordDisplayMode, musicalKey);
     }
 
     return {
       noteGroupingString: noteGrouping.toString(),
       chordName,
     };
+  }
+
+  private static formatScaleNoteName(actualIndex: ActualIndex, musicalKey: MusicalKey): string {
+    const { chromaticIndex } = actualIndexToChromaticAndOctave(actualIndex);
+    const noteInfo = ScaleNoteSpellingResolver.resolveNoteInScale(musicalKey, chromaticIndex);
+    if (!noteInfo) {
+      return NoteConverter.getNoteTextFromActualIndex(
+        actualIndex,
+        musicalKey.getDefaultAccidental(),
+      );
+    }
+    return NoteFormatter.formatForDisplay(noteInfo);
   }
 
   static getChordPresetDisplayInfo(
