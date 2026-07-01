@@ -23,6 +23,7 @@ export type TrackCtx = {
 type ModeContextInput = {
   globalMode: GlobalMode;
   scaleType: ScaleModeType;
+  scalePlaybackMode: ScalePlaybackMode;
   harmonyInputMode: HarmonyInputMode;
   progressionType: ChordProgressionType | null;
 };
@@ -33,13 +34,17 @@ export function buildModeContext({
   scaleType,
   harmonyInputMode,
   progressionType,
+  scalePlaybackMode,
 }: ModeContextInput): Pick<
   TrackCtx,
-  "global_mode" | "scale_type" | "harmony_input_mode" | "progression_type"
+  "global_mode" | "scale_type" | "scale_playback_mode" | "harmony_input_mode" | "progression_type"
 > {
   return {
     global_mode: globalMode,
-    ...(globalMode === GlobalMode.Scales && { scale_type: scaleType }),
+    ...(globalMode === GlobalMode.Scales && {
+      scale_type: scaleType,
+      scale_playback_mode: scalePlaybackMode,
+    }),
     ...(globalMode === GlobalMode.Harmony && { harmony_input_mode: harmonyInputMode }),
     ...(globalMode === GlobalMode.ChordProgressions && {
       progression_type: progressionType,

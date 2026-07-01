@@ -5,7 +5,12 @@ const DEFAULT_SITE_URL = "https://musicwheel.vercel.app";
 /** Canonical site origin for metadata and OG URLs. */
 export function getSiteUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  
   return DEFAULT_SITE_URL;
 }
 
