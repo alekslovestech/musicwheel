@@ -17,7 +17,8 @@ import { Select } from "./Common/Select";
 const SCALE_MODE_GROUPS: ReadonlyArray<{ id: ScaleModeGroup; label: string }> = [
   { id: ScaleModeGroup.Greek, label: "Greek modes" },
   { id: ScaleModeGroup.HarmonicMinor, label: "Harmonic minor modes" },
-  { id: ScaleModeGroup.DoubleHarmonic, label: "Double harmonic scales" },
+  { id: ScaleModeGroup.HarmonicMajor, label: "Harmonic major modes" },
+  { id: ScaleModeGroup.DoubleHarmonic, label: "Double harmonic modes" },
   { id: ScaleModeGroup.Other, label: "Other scales" },
 ];
 

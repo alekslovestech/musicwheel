@@ -84,6 +84,18 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     SCALE_MODE_PATTERNS.HUNGARIAN_MINOR,
     6,
   ), // Hungarian minor scale
+  [ScaleModeType.HarmonicMajor]: new ScaleModeInfo(
+    ScaleModeType.HarmonicMajor,
+    "harmonic-major",
+    SCALE_MODE_PATTERNS.HARMONIC_MAJOR,
+    1,
+  ),
+  [ScaleModeType.MixolydianB2]: new ScaleModeInfo(
+    ScaleModeType.MixolydianB2,
+    "mixolydian-b2",
+    SCALE_MODE_PATTERNS.MIXOLYDIAN_B2,
+    5,
+  ),
 };
 
 export const SCALE_SLUG_MAP = buildSlugMap(SCALE_MODE_REGISTRY);
