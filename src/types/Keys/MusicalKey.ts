@@ -36,10 +36,9 @@ export class MusicalKey {
   }
 
   /**
-   * Gets the offsets for a given scale degree.
+   * Gets the offsets for a given scale degree
    * @param scaleDegreeIndex The index in the scale pattern (0-6)
-   * @param isTriad If true, returns offsets for root, third and fifth (for roman numeral triads)
-   *               If false, returns just the root offset (for single note scale degrees)
+   * @param scalePlaybackMode The mode of playback (triad, seventh, droned single note, or root)
    */
   getOffsets(scaleDegreeIndex: ScaleDegreeIndex, scalePlaybackMode: ScalePlaybackMode): number[] {
     switch (scalePlaybackMode) {
