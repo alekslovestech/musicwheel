@@ -12,6 +12,7 @@ describe("RomanChordFormatter.formatRomanChord", () => {
     expected: string;
     accidental?: AccidentalType;
     bassDegree?: number;
+    includeBass?: boolean;
   };
 
   const triads: TestCase[] = [
@@ -132,6 +133,7 @@ describe("RomanChordFormatter.formatRomanChord", () => {
       expected: "Isus/V",
       accidental: AccidentalType.None,
       bassDegree: 5,
+      includeBass: true,
     },
   ];
 
@@ -143,6 +145,7 @@ describe("RomanChordFormatter.formatRomanChord", () => {
       expected: "I/V",
       accidental: AccidentalType.None,
       bassDegree: 5,
+      includeBass: true,
     },
     {
       name: "formats iii7/II (slash chord, minor7 over II)",
@@ -151,12 +154,21 @@ describe("RomanChordFormatter.formatRomanChord", () => {
       expected: "iii7/II",
       accidental: AccidentalType.None,
       bassDegree: 2,
+      includeBass: true,
     },
   ];
 
   const allCases = [...triads, ...tetrachords, ...suspensions, ...slashChords];
 
-  for (const { name, scaleDegree, chordType, expected, accidental, bassDegree } of allCases) {
+  for (const {
+    name,
+    scaleDegree,
+    chordType,
+    expected,
+    accidental,
+    bassDegree,
+    includeBass = false,
+  } of allCases) {
     it(name, () => {
       const chord = makeRomanChord(
         scaleDegree,
@@ -164,8 +176,19 @@ describe("RomanChordFormatter.formatRomanChord", () => {
         accidental ?? AccidentalType.None,
         bassDegree ? ixScaleDegree(bassDegree) : undefined,
       );
-      const actual = RomanChordFormatter.formatRomanChord(chord);
-      expect(actual).toBe(expected);
+      expect(RomanChordFormatter.formatRomanChord(chord, includeBass)).toBe(expected);
     });
   }
+});
+
+describe("RomanChordFormatter.formatRomanChord compact (includeBass: false)", () => {
+  it("omits slash bass from iii7/ii", () => {
+    const chord = makeRomanChord(3, ChordType.Minor7, AccidentalType.None, ixScaleDegree(2));
+    expect(RomanChordFormatter.formatRomanChord(chord)).toBe("iii7");
+  });
+
+  it("omits slash bass from I/V", () => {
+    const chord = makeRomanChord(1, ChordType.Major, AccidentalType.None, ixScaleDegree(5));
+    expect(RomanChordFormatter.formatRomanChord(chord)).toBe("I");
+  });
 });

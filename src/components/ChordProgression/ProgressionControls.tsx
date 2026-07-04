@@ -4,6 +4,7 @@ import { useMusical } from "@/contexts/MusicalContext";
 
 import { PlaybackWidget } from "../PlaybackWidget";
 import { TransposeWidget } from "../TransposeWidget";
+import { ShowBassInRomanToggle } from "./ShowBassInRomanToggle";
 import { TransposeTarget } from "@/types/enums/TransposeTarget";
 
 export function ProgressionControls() {
@@ -24,9 +25,11 @@ export function ProgressionControls() {
           {selectedMusicalKey.tonicString} {selectedMusicalKey.classicalMode}
         </div>
       </div>
+
       {/* Add larger horizontal separation before PlaybackWidget */}
       <div className="w-6" aria-hidden="true" />
       <PlaybackWidget coupled />
+      <ShowBassInRomanToggle />
     </div>
   );
 }

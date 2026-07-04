@@ -17,4 +17,5 @@ export enum ChordProgressionType {
   Careless_Whisper = "Careless Whisper",
   Michelle = "Michelle (Beatles)",
   Bohemian_Rhapsody_Mama = "Bohemian Rhapsody (Mama)",
+  Sing_For_Absolution = "Sing for Absolution (Muse)",
 }

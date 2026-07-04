@@ -33,14 +33,16 @@ export class RomanChordFormatter {
   /**
    * Progression / parser vocabulary (7, maj7, dim, slash bass), for chord-progression UI
    * and stable labels. Scale-mode UI uses {@link romanChordFromScaleDegree} via ScaleModeFormatter.
+   * @param includeBass When true, appends slash-bass (e.g. `/ii`). Default false for compact display.
    */
-  static formatRomanChord(romanChord: RomanChord): string {
+  static formatRomanChord(romanChord: RomanChord, includeBass = false): string {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
     const { suffix: chordPostfix, isLowerCase } = getRomanQuality(romanChord.chordType);
     const romanNumeralString = formatNumeralForDegree(romanChord.scaleDegree, isLowerCase);
-    const bass = romanChord.bassDegree
-      ? `/${formatNumeralForDegree(romanChord.bassDegree, false)}`
-      : "";
-    return `${accidentalString}${romanNumeralString}${chordPostfix}${bass}`;
+    const bassSuffix =
+      includeBass && romanChord.bassDegree !== undefined
+        ? `/${formatNumeralForDegree(romanChord.bassDegree, false)}`
+        : "";
+    return `${accidentalString}${romanNumeralString}${chordPostfix}${bassSuffix}`;
   }
 }
