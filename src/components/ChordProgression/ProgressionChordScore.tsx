@@ -5,6 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import { ProgressionNotebook } from "./ProgressionNotebook";
 import { ProgressionPicker } from "./ProgressionPicker";
 import { useAudio } from "@/contexts/AudioContext";
+import { useDisplay } from "@/contexts/DisplayContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { PROGRESSION_REGISTRY } from "@/types/ChordProgressions/progressionRegistry";
@@ -16,6 +17,7 @@ import { useIsLandscape } from "@/lib/hooks";
 export function ProgressionChordScore() {
   const { selectedProgression, setSelectedProgression, activeProgressionStepIndex } = useAudio();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
+  const { showBassInRomanNotation } = useDisplay();
   const isLandscape = useIsLandscape();
 
   const progression = useMemo(() => {
@@ -40,8 +42,8 @@ export function ProgressionChordScore() {
 
   const displayGrid = useMemo(() => {
     if (formatter == null) return null;
-    return formatter.formatForDisplay(selectedMusicalKey, isCompact);
-  }, [formatter, selectedMusicalKey, isCompact]);
+    return formatter.formatForDisplay(selectedMusicalKey, isCompact, showBassInRomanNotation);
+  }, [formatter, selectedMusicalKey, isCompact, showBassInRomanNotation]);
 
   const visibleGrid = useMemo(() => {
     if (displayGrid == null) return null;

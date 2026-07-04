@@ -170,6 +170,36 @@ describe("ChordProgression suggestedMusicalKey default", () => {
   });
 });
 
+describe("ChordProgression hasSlashChords", () => {
+  it("is false when no steps have slash bass", () => {
+    const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
+    expect(p.hasSlashChords).toBe(false);
+  });
+
+  it("is true when any step has slash bass", () => {
+    const p = new ChordProgression(["iii7/ii", "IVmaj7/iii"], "slash");
+    expect(p.hasSlashChords).toBe(true);
+  });
+
+  it.each([
+    ChordProgressionType.Line_Cliche,
+    ChordProgressionType.LetItBe,
+    ChordProgressionType.LetItBe_Intermission,
+    ChordProgressionType.Gypsy_Woman,
+    ChordProgressionType.Michelle,
+  ])("%s has slash chords", (type) => {
+    expect(ChordProgressionLibrary.getProgression(type).hasSlashChords).toBe(true);
+  });
+
+  it.each([
+    ChordProgressionType.Plagal_Cadence,
+    ChordProgressionType.Creep,
+    ChordProgressionType.Sing_For_Absolution,
+  ])("%s has no slash chords", (type) => {
+    expect(ChordProgressionLibrary.getProgression(type).hasSlashChords).toBe(false);
+  });
+});
+
 describe("ChordProgressionLibrary", () => {
   it.each(Object.values(ChordProgressionType))(
     "%s tokens parse as a progression",

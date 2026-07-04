@@ -18,6 +18,7 @@ import MichelleChords from "./songs/Michelle";
 import PerfectCadenceChords from "./songs/Perfect_Cadence";
 import PlagalCadenceChords from "./songs/Plagal_Cadence";
 import SomethingChords from "./songs/Something";
+import SingForAbsolutionChords from "./songs/Sing_For_Absolution";
 import TheWorldIsNotEnoughChords from "./songs/The_World_Is_Not_Enough";
 import TwoFiveOneChords from "./songs/Two_Five_One";
 import WithOrWithoutYouChords from "./songs/WithOrWithoutYou";
@@ -145,6 +146,13 @@ export const PROGRESSION_REGISTRY: Record<ChordProgressionType, ProgressionRegis
     isPattern: false,
     tempo: 72,
     suggestedMusicalKey: MusicalKey.fromClassicalMode("Bb", KeyType.Major),
+  },
+  [ChordProgressionType.Sing_For_Absolution]: {
+    slug: "sing-for-absolution",
+    chords: SingForAbsolutionChords,
+    isPattern: true,
+    tempo: 86,
+    suggestedMusicalKey: MusicalKey.fromClassicalMode("D", KeyType.Minor),
   },
 };
 

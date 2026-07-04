@@ -36,12 +36,32 @@ describe("ChordProgressionFormatter.formatCombinedForDisplay", () => {
 
   it("stacks roman and absolute labels on each token", () => {
     const p = new ChordProgression(["I", "vi", "IV", "V"], "50s");
-    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(
+      p.suggestedMusicalKey,
+      true,
+    );
     expect(bars[0]).toHaveLength(4);
     expect(bars[0][0].label).toBe("I");
     expect(bars[0][0].absoluteLabel).toBeTruthy();
     expect(bars[0][1].label).toBe("vi");
     expect(bars[0][1].absoluteLabel).toBeTruthy();
+  });
+
+  it("omits slash bass from roman labels by default", () => {
+    const p = new ChordProgression(["iii7/ii", "IVmaj7/iii"], "slash");
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(p.suggestedMusicalKey);
+    expect(bars[0][0].label).toBe("iii7");
+    expect(bars[0][1].label).toBe("IVΔ7");
+  });
+
+  it("includes slash bass in roman labels when includeBassInRoman is true", () => {
+    const p = new ChordProgression(["iii7/ii", "IVmaj7/iii"], "slash");
+    const bars = new ChordProgressionFormatter(p).formatCombinedForDisplay(
+      p.suggestedMusicalKey,
+      true,
+    );
+    expect(bars[0][0].label).toBe("iii7/II");
+    expect(bars[0][1].label).toBe("IVΔ7/III");
   });
 
   it("assigns chord-quality grouping ids to each token", () => {

@@ -10,6 +10,9 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ixScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 
 import { SpellingUtils } from "@/utils/SpellingUtils";
+import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
+import { ChordProgressionResolver } from "@/utils/resolvers/ChordProgressionResolver";
+import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 import { getScaleStepAtDegree } from "@/utils/SequencePlaybackUtils";
 import { SpellingKind } from "@/utils/spelling/SpellingContext";
 import { SpellingTestUtils } from "@/tests/utils/SpellingTestUtils";
@@ -73,6 +76,25 @@ describe("SpellingStaff - StaffRenderer spelling integration", () => {
       createNoteWithOctave("D", AccidentalType.None),
       createNoteWithOctave("F", AccidentalType.Sharp),
       createNoteWithOctave("A", AccidentalType.Natural),
+    ]);
+  });
+
+  test("E major (II) in D minor spells G#, not Ab (progression step spelling)", () => {
+    const dMinor = MusicalKey.fromClassicalMode("D", KeyType.Minor);
+    const roman = RomanResolver.createRomanChordFromString("II");
+    const noteIndices = ChordProgressionResolver.computeProgressionOctaves([roman], dMinor)[0]!;
+    const chordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(noteIndices)!;
+
+    const result = SpellingUtils.computeNotesForStaff(
+      noteIndices,
+      dMinor.getStaffSpellingKey(),
+      { kind: SpellingKind.ChordPreset, chordRef },
+    );
+
+    SpellingTestUtils.verifyNoteWithOctaveArray(result, [
+      createNoteWithOctave("E", AccidentalType.None),
+      createNoteWithOctave("G", AccidentalType.Sharp),
+      createNoteWithOctave("B", AccidentalType.Natural),
     ]);
   });
 

@@ -16,6 +16,8 @@ export class ChordProgression {
   tempo: number;
   /** Optional metadata: recommended key to use when selecting this progression. */
   suggestedMusicalKey: MusicalKey;
+  /** True when any step uses slash-bass notation (e.g. I/V). */
+  readonly hasSlashChords: boolean;
 
   get length(): number {
     return this.progression.length;
@@ -23,16 +25,17 @@ export class ChordProgression {
 
   constructor(
     chords: string[],
-    name: string | undefined = undefined,
+    name: string,
     tempo: number = DEFAULT_CHORD_PROGRESSION_BPM,
     suggestedMusicalKey: MusicalKey = DEFAULT_MUSICAL_KEY,
   ) {
     this.progression = this.applyCarriedProgressionDurations(
       chords.map((roman) => RomanResolver.parseRomanChordWithDuration(roman)),
     );
-    this.name = name ?? "Unknown";
+    this.name = name;
     this.tempo = tempo;
     this.suggestedMusicalKey = suggestedMusicalKey;
+    this.hasSlashChords = this.progression.some(({ value }) => value.bassDegree !== undefined);
   }
 
   static fromFile(

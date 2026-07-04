@@ -1,15 +1,21 @@
-export enum ScaleModeType {
-  Ionian = "Ionian",
-  Dorian = "Dorian",
-  Phrygian = "Phrygian",
-  Lydian = "Lydian",
-  Mixolydian = "Mixolydian",
-  Aeolian = "Aeolian",
-  Locrian = "Locrian",
-  UkrainianDorian = "Ukrainian Dorian",
-  PhrygianDominant = "Phrygian Dominant",
-  DoubleHarmonicMajor = "Double Harmonic Major",
-  HarmonicMinor = "Harmonic Minor",
-  HungarianMinor = "Hungarian Minor",
-  PanthuVaraali = "Panthu Varaali",
-}
+export enum ScaleModeType {
+  Ionian = "Ionian",
+  Dorian = "Dorian",
+  Phrygian = "Phrygian",
+  Lydian = "Lydian",
+  Mixolydian = "Mixolydian",
+  Aeolian = "Aeolian",
+  Locrian = "Locrian",
+
+  HarmonicMinor = "Harmonic Minor",
+  PhrygianDominant = "Phrygian Dominant",
+
+  HarmonicMajor = "Harmonic Major",
+  MixolydianB2 = "Mixolydian b2",
+
+  DoubleHarmonicMajor = "Double Harmonic Major",
+  HungarianMinor = "Hungarian Minor",
+
+  PanthuVaraali = "Panthu Varaali",
+  UkrainianDorian = "Ukrainian Dorian",
+}

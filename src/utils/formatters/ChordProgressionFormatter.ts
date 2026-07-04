@@ -28,14 +28,20 @@ export class ChordProgressionFormatter {
   }
 
   /** Roman numerals with resolved chord names stacked in each cell. */
-  formatCombinedForDisplay(musicalKey: MusicalKey): ChordProgressionBarGrid {
-    const romanLabels = this.getRomanLabels();
+  formatCombinedForDisplay(
+    musicalKey: MusicalKey,
+    includeBassInRoman = false,
+  ): ChordProgressionBarGrid {
+    const romanLabels = this.getRomanLabels(includeBassInRoman);
     return this.buildBarRowsForDisplay(romanLabels, this.getAbsoluteLabels(musicalKey));
   }
 
   /** Equal-width cells, up to {@link COMPACT_PATTERN_TOKENS_PER_LINE} steps per row. */
-  formatCompactForDisplay(musicalKey: MusicalKey): ChordProgressionBarGrid {
-    const romanLabels = this.getRomanLabels();
+  formatCompactForDisplay(
+    musicalKey: MusicalKey,
+    includeBassInRoman = false,
+  ): ChordProgressionBarGrid {
+    const romanLabels = this.getRomanLabels(includeBassInRoman);
     const absoluteLabels = this.getAbsoluteLabels(musicalKey);
     const tokens: FormattedBarToken[] = this.progression.progression.map((_, i) => ({
       label: romanLabels[i],
@@ -52,10 +58,14 @@ export class ChordProgressionFormatter {
     return rows;
   }
 
-  formatForDisplay(musicalKey: MusicalKey, isCompact: boolean): ChordProgressionBarGrid {
+  formatForDisplay(
+    musicalKey: MusicalKey,
+    isCompact: boolean,
+    includeBassInRoman = false,
+  ): ChordProgressionBarGrid {
     return isCompact
-      ? this.formatCompactForDisplay(musicalKey)
-      : this.formatCombinedForDisplay(musicalKey);
+      ? this.formatCompactForDisplay(musicalKey, includeBassInRoman)
+      : this.formatCombinedForDisplay(musicalKey, includeBassInRoman);
   }
 
   getGroupingIdForStep(progressionEntryIndex: number): NoteGroupingId {
@@ -64,9 +74,9 @@ export class ChordProgressionFormatter {
     );
   }
 
-  private getRomanLabels(): string[] {
+  private getRomanLabels(includeBassInRoman: boolean): string[] {
     return this.progression.progression.map((entry) =>
-      RomanChordFormatter.formatRomanChord(entry.value),
+      RomanChordFormatter.formatRomanChord(entry.value, includeBassInRoman),
     );
   }
 

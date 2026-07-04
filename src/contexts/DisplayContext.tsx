@@ -14,11 +14,13 @@ export interface DisplaySettings {
   scalePreviewMode: boolean;
   keyTextMode: KeyDisplayMode;
   chordDisplayMode: ChordDisplayMode;
+  showBassInRomanNotation: boolean;
   setCircularVisMode: (mode: CircularVisMode) => void;
   setMonochromeMode: (mode: boolean) => void;
   setScalePreviewMode: (mode: boolean) => void;
   setKeyTextMode: (mode: KeyDisplayMode) => void;
   setChordDisplayMode: (mode: ChordDisplayMode) => void;
+  setShowBassInRomanNotation: (show: boolean) => void;
 }
 
 const DisplayContext = createContext<DisplaySettings | null>(null);
@@ -36,6 +38,7 @@ export const DisplayProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [chordDisplayMode, setChordDisplayMode] = useState<ChordDisplayMode>(
     ChordDisplayMode.Symbols,
   );
+  const [showBassInRomanNotation, setShowBassInRomanNotation] = useState<boolean>(false);
 
   const [monochromeMode, setMonochromeMode] = useState<boolean>(isScales);
 
@@ -45,11 +48,13 @@ export const DisplayProvider: React.FC<{ children: ReactNode }> = ({ children })
     scalePreviewMode,
     keyTextMode,
     chordDisplayMode,
+    showBassInRomanNotation,
     setCircularVisMode,
     setMonochromeMode,
     setScalePreviewMode,
     setKeyTextMode,
     setChordDisplayMode,
+    setShowBassInRomanNotation,
   };
 
   return <DisplayContext.Provider value={value}>{children}</DisplayContext.Provider>;

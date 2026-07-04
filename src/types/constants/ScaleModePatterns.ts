@@ -15,4 +15,6 @@ export const SCALE_MODE_PATTERNS = {
   HARMONIC_MINOR: [0, 2, 3, 5, 7, 8, 11], // Harmonic Minor
   HUNGARIAN_MINOR: [0, 2, 3, 6, 7, 8, 11], // Hungarian Minor
   PANTHU_VARAALI: [0, 1, 4, 6, 7, 8, 11], // Panthu Varaali
+  HARMONIC_MAJOR: [0, 2, 4, 5, 7, 8, 11], // 1 2 3 4 5 b6 7
+  MIXOLYDIAN_B2: [0, 1, 4, 5, 7, 9, 10], // Mixolydian b2 (5th mode of Harmonic Major)
 };
