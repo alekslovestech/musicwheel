@@ -4,18 +4,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
-import { NoteIndices } from "@/types/IndexTypes";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
-import type { NoteLength } from "@/types/Durated";
 import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
 import {
   advanceScaleSequenceStep,
   ScaleSequenceStepKind,
   prepareChordProgressionSequence,
+  type PreparedChordStep,
 } from "@/utils/SequencePlaybackUtils";
 import { RhythmUtils } from "@/utils/RhythmUtils";
 import {
@@ -53,9 +52,7 @@ export const useSequencePlayback = ({
   // Chord progression-specific state
   const [selectedProgression, setSelectedProgression] = useState<ChordProgressionType | null>(null);
   const chordIndexRef = useRef<number>(0);
-  const precomputedProgressionRef = useRef<NoteIndices[] | null>(null);
-  const chordStepNoteLengthsRef = useRef<NoteLength[] | null>(null);
-  const chordStepRhythmDotsRef = useRef<number[] | null>(null);
+  const preparedProgressionStepsRef = useRef<PreparedChordStep[] | null>(null);
   const chordProgressionTempoRef = useRef<number | null>(null);
   /** Bumped when starting/stopping chord playback so stale setTimeouts no-op. */
   const chordPlaybackGenerationRef = useRef(0);
@@ -154,27 +151,20 @@ export const useSequencePlayback = ({
   );
 
   const playProgressionStep = useCallback(() => {
-    const precomputed = precomputedProgressionRef.current;
-    const stepNoteLengths = chordStepNoteLengthsRef.current;
-    const stepRhythmDots = chordStepRhythmDotsRef.current;
+    const steps = preparedProgressionStepsRef.current;
     const tempo = chordProgressionTempoRef.current;
-    if (
-      !precomputed?.length ||
-      !stepNoteLengths?.length ||
-      !stepRhythmDots?.length ||
-      tempo == null
-    )
-      return;
+    if (!steps?.length || tempo == null) return;
 
     const i = chordIndexRef.current;
+    const step = steps[i];
     setActiveProgressionStepIndex(i);
-    setNotesDirectly(precomputed[i]);
+    setNotesDirectly(step.value);
 
-    const isLastChord = i === precomputed.length - 1;
+    const isLastChord = i === steps.length - 1;
     if (isLastChord) {
       stopAllTimers();
       scheduleSequenceCompletion(
-        RhythmUtils.chordDurationMs(tempo, stepNoteLengths[i], stepRhythmDots[i]),
+        RhythmUtils.chordDurationMs(tempo, step.noteLength, step.rhythmDots),
       );
       return;
     }
@@ -182,8 +172,8 @@ export const useSequencePlayback = ({
     chordIndexRef.current = i + 1;
     const delayAfterThisChord = RhythmUtils.chordDurationMs(
       tempo,
-      stepNoteLengths[i],
-      stepRhythmDots[i],
+      step.noteLength,
+      step.rhythmDots,
     );
     stopAllTimers();
     const generationWhenScheduled = chordPlaybackGenerationRef.current;
@@ -198,21 +188,16 @@ export const useSequencePlayback = ({
     if (globalMode === GlobalMode.Scales) {
       sequenceTimerRef.current = setInterval(() => playScaleStep(), playbackDuration);
     } else if (globalMode === GlobalMode.ChordProgressions) {
-      const stepNoteLengths = chordStepNoteLengthsRef.current;
-      const stepRhythmDots = chordStepRhythmDotsRef.current;
+      const steps = preparedProgressionStepsRef.current;
       const tempo = chordProgressionTempoRef.current;
       const nextIndex = chordIndexRef.current;
+      const previousStep = nextIndex > 0 ? steps?.[nextIndex - 1] : undefined;
       const delayBeforeNextChord =
-        nextIndex > 0 &&
-        stepNoteLengths != null &&
-        stepNoteLengths.length > 0 &&
-        stepRhythmDots != null &&
-        stepRhythmDots.length > 0 &&
-        tempo != null
+        previousStep != null && tempo != null
           ? RhythmUtils.chordDurationMs(
               tempo,
-              stepNoteLengths[nextIndex - 1],
-              stepRhythmDots[nextIndex - 1],
+              previousStep.noteLength,
+              previousStep.rhythmDots,
             )
           : 0;
       const generationWhenScheduled = chordPlaybackGenerationRef.current;
@@ -264,9 +249,7 @@ export const useSequencePlayback = ({
     if (!selectedProgression || !selectedMusicalKey) return;
 
     const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
-    precomputedProgressionRef.current = prepared.precomputedProgression;
-    chordStepNoteLengthsRef.current = prepared.chordStepNoteLengths;
-    chordStepRhythmDotsRef.current = prepared.chordStepRhythmDots;
+    preparedProgressionStepsRef.current = prepared.steps;
     chordProgressionTempoRef.current = prepared.tempo;
 
     abortPlayback({ releaseVoices: true });

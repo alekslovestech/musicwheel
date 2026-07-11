@@ -16,18 +16,16 @@ export class StaffUtils {
     spellingKey: MusicalKey,
   ): DuratedNoteChord[] {
     return stepIndicesInBar.flatMap((entryIndex) => {
-      const noteIndices = prepared.precomputedProgression[entryIndex];
-      const noteLength = prepared.chordStepNoteLengths[entryIndex];
-      if (noteIndices == null || noteIndices.length === 0 || noteLength === undefined) {
+      const step = prepared.steps[entryIndex];
+      if (step == null || step.value.length === 0) {
         return [];
       }
-      const chordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(noteIndices)!;
-      const notes = SpellingUtils.computeNotesForStaff(noteIndices, spellingKey, {
+      const chordRef = MusicalDisplayFormatter.getChordReferenceFromIndices(step.value)!;
+      const notes = SpellingUtils.computeNotesForStaff(step.value, spellingKey, {
         kind: SpellingKind.ChordPreset,
         chordRef,
       });
-      const rhythmDots = prepared.chordStepRhythmDots[entryIndex] ?? 0;
-      return [makeDurated(notes, noteLength, rhythmDots)];
+      return [makeDurated(notes, step.noteLength, step.rhythmDots)];
     });
   }
 }

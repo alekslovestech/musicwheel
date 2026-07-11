@@ -1,4 +1,4 @@
-import type { NoteLength } from "@/types/Durated";
+import type { Durated } from "@/types/Durated";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordType } from "@/types/enums/ChordType";
@@ -91,11 +91,11 @@ export function advanceScaleSequenceStep(
   };
 }
 
+/** Resolved chord step with note indices, length, and rhythm dots (after LilyPond carry). */
+export type PreparedChordStep = Required<Durated<NoteIndices>>;
+
 export interface PreparedChordProgressionSequence {
-  precomputedProgression: NoteIndices[];
-  chordStepNoteLengths: NoteLength[];
-  /** Per step; 0 = undotted. Each dot multiplies that step's playback length by 1.5. */
-  chordStepRhythmDots: number[];
+  steps: PreparedChordStep[];
   tempo: number;
 }
 
@@ -111,12 +111,13 @@ export function prepareChordProgressionSequence(
     progression.progression.map((e) => e.value),
     musicalKey,
   );
-  const chordStepNoteLengths = resolved.map((e) => e.noteLength!);
-  const chordStepRhythmDots = resolved.map((e) => e.rhythmDots ?? 0);
+  const steps: PreparedChordStep[] = resolved.map((entry, i) => ({
+    value: precomputedProgression[i],
+    noteLength: entry.noteLength!,
+    rhythmDots: entry.rhythmDots ?? 0,
+  }));
   return {
-    precomputedProgression,
-    chordStepNoteLengths,
-    chordStepRhythmDots,
+    steps,
     tempo: progression.tempo,
   };
 }
