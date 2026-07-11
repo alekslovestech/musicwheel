@@ -18,7 +18,7 @@ if (typeof globalThis.ResizeObserver === "undefined") {
 // Mock Tone.js to prevent ES module issues in Jest
 jest.mock("tone", () => ({
   PolySynth: jest.fn().mockImplementation(() => ({
-    connect: jest.fn(),
+    connect: jest.fn().mockReturnThis(),
     disconnect: jest.fn(),
     triggerAttackRelease: jest.fn(),
     dispose: jest.fn(),
@@ -26,7 +26,17 @@ jest.mock("tone", () => ({
     releaseAll: jest.fn(),
     set: jest.fn(),
   })),
-  Synth: jest.fn(), // Add this since it's referenced in PolySynth constructor
+  Synth: jest.fn().mockImplementation(() => ({
+    connect: jest.fn().mockReturnThis(),
+    triggerAttack: jest.fn(),
+    triggerRelease: jest.fn(),
+    dispose: jest.fn(),
+  })),
+  Filter: jest.fn().mockImplementation(() => ({
+    connect: jest.fn().mockReturnThis(),
+    toDestination: jest.fn().mockReturnThis(),
+    dispose: jest.fn(),
+  })),
   Destination: {
     connect: jest.fn(),
   },

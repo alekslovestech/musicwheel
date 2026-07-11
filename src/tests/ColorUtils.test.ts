@@ -2,6 +2,16 @@ import { toNoteIndices } from "@/types/IndexTypes";
 import { expectDistinctColors, expectEqualColors } from "@/tests/utils/ColorTestUtils";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 
+describe("ColorUtils.getColorForSemitoneDistance", () => {
+  it("P4 and P5 (IC 5) produce the same color", () => {
+    expectEqualColors(ColorUtils.getColorForSemitoneDistance(5), ColorUtils.getColorForSemitoneDistance(7));
+  });
+
+  it("m2 and M7 (IC 1) produce the same color", () => {
+    expectEqualColors(ColorUtils.getColorForSemitoneDistance(1), ColorUtils.getColorForSemitoneDistance(11));
+  });
+});
+
 describe("ColorUtils.getColorForIndices", () => {
   describe("interval and inverse resolve to the same color", () => {
     it("P4 and P5 (IC 5) produce the same color", () => {

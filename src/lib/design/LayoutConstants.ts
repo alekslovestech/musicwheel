@@ -98,6 +98,6 @@ export const LAYOUT_CONFIGS = {
 } as const;
 
 export const NOTATION_LAYOUT = {
-  gridTemplateColumns: "50% 50%",
+  gridTemplateColumns: "3fr 1fr",
   gap: "0.5rem",
 } as const;

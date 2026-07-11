@@ -19,6 +19,7 @@ import {
 import { RhythmUtils } from "@/utils/RhythmUtils";
 import {
   SCALE_AUDIO_WARMUP_MS,
+  SCALE_STEP_MS_DRONED,
   SCALE_STEP_MS_SINGLE_NOTE,
   SCALE_STEP_MS_TRIAD,
 } from "@/lib/audio/playbackDurations";
@@ -38,7 +39,8 @@ export const useSequencePlayback = ({
   playbackState,
   setPlaybackState,
 }: UseSequencePlaybackProps) => {
-  const { selectedMusicalKey, setNotesDirectly, setCurrentChordRef, clearNotes } = useMusical();
+  const { selectedMusicalKey, setNotesDirectly, setSelectedNotesFromSequence, setCurrentChordRef, clearNotes } =
+    useMusical();
   const globalMode = useGlobalMode();
 
   // Scale-specific state
@@ -58,6 +60,8 @@ export const useSequencePlayback = ({
   const chordPlaybackGenerationRef = useRef(0);
   /** Index into progression steps for grid highlight; null when not in chord playback context. */
   const [activeProgressionStepIndex, setActiveProgressionStepIndex] = useState<number | null>(null);
+  /** Index into scale staff sequence (0–7); null when not in scale playback context. */
+  const [activeScaleStepIndex, setActiveScaleStepIndex] = useState<number | null>(null);
 
   // Helper functions - define these first
   const stopAllTimers = useCallback(() => {
@@ -72,7 +76,14 @@ export const useSequencePlayback = ({
   }, []);
 
   const getPlaybackDuration = useCallback((mode: ScalePlaybackMode) => {
-    return mode === ScalePlaybackMode.SingleNote ? SCALE_STEP_MS_SINGLE_NOTE : SCALE_STEP_MS_TRIAD;
+    switch (mode) {
+      case ScalePlaybackMode.SingleNote:
+        return SCALE_STEP_MS_SINGLE_NOTE;
+      case ScalePlaybackMode.DronedSingleNote:
+        return SCALE_STEP_MS_DRONED;
+      default:
+        return SCALE_STEP_MS_TRIAD;
+    }
   }, []);
 
   const clearSequenceSelection = useCallback(() => {
@@ -103,6 +114,7 @@ export const useSequencePlayback = ({
       completionTimerRef.current = setTimeout(() => {
         completionTimerRef.current = null;
         setPlaybackState(PlaybackState.SequenceComplete);
+        setActiveScaleStepIndex(null);
         clearSequenceSelection();
       }, delayMs);
     },
@@ -115,20 +127,22 @@ export const useSequencePlayback = ({
       if (!selectedMusicalKey) return;
 
       const mode = modeOverride ?? scalePlaybackMode;
+      const currentStepIndex = scaleIndexRef.current;
       const sequenceStep = advanceScaleSequenceStep(
         selectedMusicalKey,
-        scaleIndexRef.current,
+        currentStepIndex,
         mode,
       );
 
       if (sequenceStep.kind === ScaleSequenceStepKind.Idle) return;
 
+      setActiveScaleStepIndex(currentStepIndex);
+
       const { notesToPlay, chordRef } = sequenceStep.step;
       if (chordRef !== undefined) {
         setCurrentChordRef(chordRef);
       } else {
-        setCurrentChordRef(undefined);
-        setNotesDirectly(notesToPlay);
+        setSelectedNotesFromSequence(notesToPlay);
       }
 
       if (sequenceStep.kind === ScaleSequenceStepKind.PlayFinal) {
@@ -142,7 +156,7 @@ export const useSequencePlayback = ({
     [
       selectedMusicalKey,
       scalePlaybackMode,
-      setNotesDirectly,
+      setSelectedNotesFromSequence,
       setCurrentChordRef,
       stopAllTimers,
       scheduleSequenceCompletion,
@@ -225,6 +239,7 @@ export const useSequencePlayback = ({
 
       abortPlayback({ clearSelection: true });
       setActiveProgressionStepIndex(null);
+      setActiveScaleStepIndex(null);
       scaleIndexRef.current = 0;
       setPlaybackState(PlaybackState.SequencePlaying);
 
@@ -292,6 +307,7 @@ export const useSequencePlayback = ({
   const stopSequencePlayback = useCallback(() => {
     abortPlayback({ clearSelection: true, releaseVoices: true });
     setActiveProgressionStepIndex(null);
+    setActiveScaleStepIndex(null);
     setPlaybackState(PlaybackState.SequenceComplete);
   }, [abortPlayback, setPlaybackState]);
 
@@ -304,6 +320,12 @@ export const useSequencePlayback = ({
   useEffect(() => {
     if (globalMode !== GlobalMode.ChordProgressions) {
       setActiveProgressionStepIndex(null);
+    }
+  }, [globalMode]);
+
+  useEffect(() => {
+    if (globalMode !== GlobalMode.Scales) {
+      setActiveScaleStepIndex(null);
     }
   }, [globalMode]);
 
@@ -322,5 +344,6 @@ export const useSequencePlayback = ({
     selectedProgression,
     setSelectedProgression,
     activeProgressionStepIndex,
+    activeScaleStepIndex,
   };
 };

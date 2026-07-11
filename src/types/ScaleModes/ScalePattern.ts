@@ -39,7 +39,12 @@ export class ScalePattern {
   }
 
   public getTonicDroneWithRootOffset(scaleDegreeIndex: ScaleDegreeIndex): number[] {
-    return [this.pattern[0], this.pattern[scaleDegreeIndex]];
+    const droneOffset = this.pattern[0];
+    const melodyOffset = this.pattern[scaleDegreeIndex];
+    if (droneOffset === melodyOffset) {
+      return [melodyOffset];
+    }
+    return [droneOffset, melodyOffset];
   }
 
   public getOffsets135(scaleDegreeIndex: ScaleDegreeIndex): number[] {

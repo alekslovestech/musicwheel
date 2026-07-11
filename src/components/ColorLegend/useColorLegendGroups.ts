@@ -6,6 +6,7 @@ import {
   getColorLegendGroupsForIds,
 } from "@/utils/visual/colorLegendGroups";
 import { ChordSetUtils } from "@/utils/ChordSetUtils";
+import { getIntervalTypesForScaleFromRoot } from "@/utils/visual/scaleRibbonUtils";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
@@ -34,6 +35,21 @@ export function useColorLegendGroups(): {
     const chordTypes = ChordSetUtils.triadTypesForKey(selectedMusicalKey);
     return {
       groups: getColorLegendGroupsForIds(chordTypes),
+      chordsOnly: true,
+    };
+  }
+
+  if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.DronedSingleNote) {
+    const intervalIds = getIntervalTypesForScaleFromRoot(selectedMusicalKey);
+    return {
+      groups: getColorLegendGroupsForIds(intervalIds),
+      chordsOnly: false,
+    };
+  }
+
+  if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.SingleNote) {
+    return {
+      groups: [],
       chordsOnly: true,
     };
   }

@@ -15,6 +15,13 @@ const TRAILING_NOTE_PADDING = 12;
 /** 1 = uniform spacing (duration ignored); lower than 2 rebalances dense bars more aggressively. */
 const SOFTMAX_FACTOR = 1;
 
+export type VexFlowDrawVoiceOptions = {
+  /** VexFlow voice meter; defaults to common time. */
+  voiceTime?: string;
+  /** Hide stems after formatting (e.g. scale-degree survey without rhythmic emphasis). */
+  stemless?: boolean;
+};
+
 export class VexFlowUtils {
   static createStaveForContainer(factory: Factory, containerWidth: number): Stave {
     return factory.Stave({
@@ -27,8 +34,13 @@ export class VexFlowUtils {
   /**
    * Formats and draws a single voice.
    */
-  static drawVoice(factory: Factory, stave: Stave, tickables: StaveNote[]) {
-    VexFlowUtils.drawVoiceWithHighlights(factory, stave, tickables);
+  static drawVoice(
+    factory: Factory,
+    stave: Stave,
+    tickables: StaveNote[],
+    options?: VexFlowDrawVoiceOptions,
+  ) {
+    VexFlowUtils.drawVoiceWithHighlights(factory, stave, tickables, undefined, undefined, options);
   }
 
   /**
@@ -40,16 +52,20 @@ export class VexFlowUtils {
     tickables: StaveNote[],
     backgroundNoteIndex?: number,
     backgroundFill?: string,
+    options?: VexFlowDrawVoiceOptions,
   ) {
     const context = factory.getContext();
     if (!context) {
       throw new Error("VexFlowUtils.drawVoice: Factory has no render context");
     }
     /** Common time; each {@link StaveNote} carries duration and optional `dots` for rhythm. */
-    const voice = factory.Voice({ time: "4/4" });
+    const voice = factory.Voice({ time: options?.voiceTime ?? "4/4" });
     voice.setStrict(false);
     voice.addTickables(tickables);
     VexFlowUtils.formatVoiceToStave(factory, voice, stave, context);
+    if (options?.stemless) {
+      VexFlowUtils.hideStems(tickables);
+    }
     VexFlowUtils.enforceTrailingPadding(stave, tickables);
 
     if (backgroundFill && backgroundNoteIndex != null && backgroundNoteIndex >= 0) {
@@ -83,6 +99,12 @@ export class VexFlowUtils {
     const shift = rightEdge - maxRight;
     for (const note of tickables) {
       note.setX(note.getX() - shift);
+    }
+  }
+
+  private static hideStems(tickables: StaveNote[]) {
+    for (const note of tickables) {
+      note.getStem()?.setVisibility(false);
     }
   }
 

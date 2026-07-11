@@ -21,12 +21,12 @@ const SCALE_PLAYBACK_MODE_OPTIONS: PlaybackModeOption[] = [
     label: "♪",
     description: "Play single notes",
   },
-  /*{
+  {
     id: "droned-single-note",
     mode: ScalePlaybackMode.DronedSingleNote,
     label: "♩_ ♪",
     description: "Play single notes with a tonic drone",
-  },*/
+  },
   {
     id: "triad",
     mode: ScalePlaybackMode.Triad,

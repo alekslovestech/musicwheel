@@ -127,19 +127,19 @@ describe("MusicalKey transforms", () => {
         expected: "C",
       },
       {
-        desc: "C double harmonic major => C major (exotic mode)",
+        desc: "C double harmonic major => A minor (best-fit exotic mode)",
         input: MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor),
-        expected: "C",
+        expected: "A",
       },
       {
-        desc: "C Ukrainian Dorian => C major (exotic mode)",
+        desc: "C Ukrainian Dorian => Bb major (best-fit exotic mode)",
         input: MusicalKey.fromGreekMode("C", ScaleModeType.UkrainianDorian),
-        expected: "C",
+        expected: "Bb",
       },
       {
-        desc: "C Hungarian Minor => C major (exotic mode)",
+        desc: "C Hungarian Minor => E minor (best-fit exotic mode)",
         input: MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor),
-        expected: "C",
+        expected: "E",
       },
     ];
 

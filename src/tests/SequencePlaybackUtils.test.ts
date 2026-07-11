@@ -4,6 +4,7 @@ import {
   advanceScaleSequenceStep,
   ScaleSequenceStepKind,
 } from "@/utils/SequencePlaybackUtils";
+import { StaffUtils } from "@/utils/StaffUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
 describe("advanceScaleSequenceStep", () => {
@@ -31,5 +32,50 @@ describe("advanceScaleSequenceStep", () => {
     expect(advanceScaleSequenceStep(key, length + 1, ScalePlaybackMode.SingleNote)).toEqual({
       kind: ScaleSequenceStepKind.Idle,
     });
+  });
+
+  test("final octave tonic matches staff octave step for SingleNote", () => {
+    const key = constants.C_IONIAN_KEY;
+    const length = key.scalePatternLength;
+    const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.SingleNote);
+    if (final.kind !== ScaleSequenceStepKind.PlayFinal) {
+      throw new Error("expected PlayFinal");
+    }
+
+    expect(final.step.notesToPlay.length).toBe(1);
+
+    const staffStepIndex = StaffUtils.findScaleStepIndexForSelection(
+      key,
+      ScalePlaybackMode.SingleNote,
+      final.step.notesToPlay,
+    );
+    expect(staffStepIndex).toBe(length);
+  });
+
+  test("tonic degree in drone mode is a single note (no unison doubling)", () => {
+    const key = constants.C_IONIAN_KEY;
+    const tonicStep = advanceScaleSequenceStep(key, 0, ScalePlaybackMode.DronedSingleNote);
+    if (tonicStep.kind !== ScaleSequenceStepKind.Play) {
+      throw new Error("expected Play");
+    }
+    expect(tonicStep.step.notesToPlay).toEqual([0]);
+  });
+
+  test("final drone step is lower tonic drone plus upper octave tonic", () => {
+    const key = constants.C_IONIAN_KEY;
+    const length = key.scalePatternLength;
+    const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.DronedSingleNote);
+    if (final.kind !== ScaleSequenceStepKind.PlayFinal) {
+      throw new Error("expected PlayFinal");
+    }
+
+    expect(final.step.notesToPlay).toEqual([0, 12]);
+
+    const staffStepIndex = StaffUtils.findScaleStepIndexForSelection(
+      key,
+      ScalePlaybackMode.DronedSingleNote,
+      final.step.notesToPlay,
+    );
+    expect(staffStepIndex).toBe(length);
   });
 });

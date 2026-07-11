@@ -114,9 +114,14 @@ export class KeyboardUtils {
   }
 
   private static resolveCircularScaleLabelMode(scalePlaybackMode: ScalePlaybackMode): KeyDisplayMode {
-    return scalePlaybackMode === ScalePlaybackMode.Triad
-      ? KeyDisplayMode.Roman
-      : KeyDisplayMode.ScaleDegree;
+    switch (scalePlaybackMode) {
+      case ScalePlaybackMode.Triad:
+        return KeyDisplayMode.Roman;
+      case ScalePlaybackMode.DronedSingleNote:
+        return KeyDisplayMode.ScaleDegree;
+      default:
+        return KeyDisplayMode.NoteNames;
+    }
   }
 
   static getNoteText(

@@ -6,8 +6,14 @@ import { IntervalUtils } from "@/utils/IntervalUtils";
 import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getColorForIndices(indices: NoteIndices): chroma.Color {    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
+  static getColorForIndices(indices: NoteIndices): chroma.Color {
+    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
     return this.mixChordColor(cyclicIntervals, "lch");
+  }
+
+  /** Single interval distance from root (or step size), without chord mixing. */
+  static getColorForSemitoneDistance(semitones: number): chroma.Color {
+    return INTERVAL_CLASS_COLORS[intervalClassFromSemitones(semitones)];
   }
 
   private static mixChordColor(
@@ -28,7 +34,7 @@ export class ColorUtils {
     const weights: number[] = [];
 
     intervals.forEach((interval, i) => {
-      const ic = intervalClass(interval);
+      const ic = intervalClassFromSemitones(interval);
       colors.push(INTERVAL_CLASS_COLORS[ic]);
       const dissonance = INTERVAL_CLASS_DISSONANCE[ic];
       const dissonanceWeight = 1 + dissonance;
@@ -106,7 +112,7 @@ const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
   6: 1,
 };
 
-function intervalClass(semitone: number): IntervalClass {
+export function intervalClassFromSemitones(semitone: number): IntervalClass {
   const mod = semitone % TWELVE;
   return ixIntervalClass(Math.min(mod, TWELVE - mod));
 }

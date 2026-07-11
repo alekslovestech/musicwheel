@@ -13,6 +13,7 @@ import { KeySignature } from "@/types/Keys/KeySignature";
 
 import { NoteConverter } from "@/utils/NoteConverter";
 import { IndexUtils } from "@/utils/IndexUtils";
+import { StaffSpellingKeyResolver } from "@/utils/resolvers/StaffSpellingKeyResolver";
 
 export class MusicalKey {
   public readonly tonicString: string; // Root note (e.g., "C", "A")
@@ -100,11 +101,11 @@ export class MusicalKey {
     return MusicalKey.fromGreekMode(ionianTonicString, ScaleModeType.Ionian);
   }
 
-  /** Key used for staff key signature and note spelling. Exotic modes use open C major. */
+  /** Key used for staff key signature and note spelling. */
   getStaffSpellingKey(): MusicalKey {
     return getScaleModeGroup(this.scaleMode) === ScaleModeGroup.Greek
       ? this.getCanonicalIonianKey()
-      : DEFAULT_MUSICAL_KEY;
+      : StaffSpellingKeyResolver.resolveBestFit(this);
   }
 
   getDefaultAccidental(): AccidentalType {

@@ -2,7 +2,7 @@ import type { Durated } from "@/types/Durated";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordType } from "@/types/enums/ChordType";
-import { ActualIndex, ixInversion, NoteIndices } from "@/types/IndexTypes";
+import { ActualIndex, ixInversion, NoteIndices, toNoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
@@ -52,19 +52,58 @@ function chordRefForScaleStep(
   return chordRef.id === ChordType.Unknown ? undefined : chordRef;
 }
 
+/** One scale degree step (keyboard clicks, spelling, etc.). */
 export function getScaleStepAtDegree(
   key: MusicalKey,
   scaleDegreeIndex: ScaleDegreeIndex,
   scalePlaybackMode: ScalePlaybackMode,
-  transposeBy = 0,
 ): ScaleStepAtDegree {
-  const notes = key.getNoteIndicesForScaleDegree(scaleDegreeIndex, scalePlaybackMode);
-  const notesToPlay =
-    transposeBy === 0 ? notes : IndexUtils.transposeNotes(notes, transposeBy);
+  const notesToPlay = key.getNoteIndicesForScaleDegree(scaleDegreeIndex, scalePlaybackMode);
   return {
     notesToPlay,
     chordRef: chordRefForScaleStep(key, scaleDegreeIndex, notesToPlay, scalePlaybackMode),
   };
+}
+
+/** Scale sequence index: 0..length-1 are degrees; length is the final octave tonic. */
+export function getScaleStepAtSequenceIndex(
+  key: MusicalKey,
+  stepIndex: number,
+  scalePlaybackMode: ScalePlaybackMode,
+): ScaleStepAtDegree {
+  if (stepIndex === key.scalePatternLength) {
+    if (scalePlaybackMode === ScalePlaybackMode.DronedSingleNote) {
+      const lowerDroneTonic = getScaleStepAtDegree(
+        key,
+        ixScaleDegreeIndex(0),
+        scalePlaybackMode,
+      ).notesToPlay[0]!;
+      const upperTonic = IndexUtils.transposeNotes(
+        getScaleStepAtDegree(key, ixScaleDegreeIndex(0), ScalePlaybackMode.SingleNote).notesToPlay,
+        TWELVE,
+      )[0]!;
+      return {
+        notesToPlay: toNoteIndices([lowerDroneTonic, upperTonic]),
+      };
+    }
+
+    const octaveTonic = getScaleStepAtDegree(
+      key,
+      ixScaleDegreeIndex(0),
+      scalePlaybackMode,
+    ).notesToPlay;
+    return {
+      notesToPlay: IndexUtils.transposeNotes(octaveTonic, TWELVE),
+      chordRef: chordRefForScaleStep(
+        key,
+        ixScaleDegreeIndex(0),
+        IndexUtils.transposeNotes(octaveTonic, TWELVE),
+        scalePlaybackMode,
+      ),
+    };
+  }
+
+  return getScaleStepAtDegree(key, ixScaleDegreeIndex(stepIndex), scalePlaybackMode);
 }
 
 /** Scale sequence cursor: 0..length-1 are scale degrees; length is the final octave tonic step. */
@@ -77,16 +116,15 @@ export function advanceScaleSequenceStep(
     return { kind: ScaleSequenceStepKind.Idle };
   }
 
+  const step = getScaleStepAtSequenceIndex(key, stepIndex, scalePlaybackMode);
+
   if (stepIndex === key.scalePatternLength) {
-    return {
-      kind: ScaleSequenceStepKind.PlayFinal,
-      step: getScaleStepAtDegree(key, ixScaleDegreeIndex(0), scalePlaybackMode, TWELVE),
-    };
+    return { kind: ScaleSequenceStepKind.PlayFinal, step };
   }
 
   return {
     kind: ScaleSequenceStepKind.Play,
-    step: getScaleStepAtDegree(key, stepIndex as ScaleDegreeIndex, scalePlaybackMode),
+    step,
     nextStepIndex: stepIndex + 1,
   };
 }
