@@ -3,18 +3,13 @@ import { getScaleStepAtSequenceIndex } from "@/utils/SequencePlaybackUtils";
 import type { DuratedNoteChord, NoteLength } from "@/types/Durated";
 import { makeDurated } from "@/types/Durated";
 import type { MusicalKey } from "@/types/Keys/MusicalKey";
-import { TWELVE } from "@/types/constants/NoteConstants";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { NoteIndices } from "@/types/IndexTypes";
-import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { SpellingContext, SpellingKind } from "@/utils/spelling/SpellingContext";
-import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
-import {
-  intervalClassFromSemitones,
-  scaleStaffHighlightForSemitones,
-} from "@/utils/visual/ColorUtils";
+import { SCALE_STAFF_HIGHLIGHT_ALPHA } from "@/utils/visual/ColorUtils";
+import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 import type { VexFlowDrawVoiceOptions } from "@/utils/VexFlowUtils";
 
 /** Quarter notes: eight scale steps span two 4/4 bars on the staff. */
@@ -89,30 +84,7 @@ export class StaffUtils {
     scalePlaybackMode: ScalePlaybackMode,
     stepIndex: number,
   ): string {
-    const scaleLength = key.scalePatternLength;
-    if (stepIndex < 0 || stepIndex > scaleLength) {
-      return scaleStaffHighlightForSemitones(0);
-    }
-
-    if (scalePlaybackMode === ScalePlaybackMode.SingleNote) {
-      return scaleStaffHighlightForSemitones(0);
-    }
-
-    const semitonesFromRoot =
-      stepIndex === scaleLength
-        ? TWELVE
-        : key.scaleModeInfo.scalePattern.getOffsetAtIndex(ixScaleDegreeIndex(stepIndex));
-
-    if (intervalClassFromSemitones(semitonesFromRoot) === 0) {
-      return scaleStaffHighlightForSemitones(semitonesFromRoot);
-    }
-
-    if (scalePlaybackMode === ScalePlaybackMode.Triad) {
-      const step = getScaleStepAtSequenceIndex(key, stepIndex, scalePlaybackMode);
-      return chordActiveHighlightFor(step.chordRef?.id).css();
-    }
-
-    return scaleStaffHighlightForSemitones(semitonesFromRoot);
+    return noteHighlightColor(key, scalePlaybackMode, stepIndex).alpha(SCALE_STAFF_HIGHLIGHT_ALPHA).css();
   }
 
   private static toDuratedScaleStaffStep(

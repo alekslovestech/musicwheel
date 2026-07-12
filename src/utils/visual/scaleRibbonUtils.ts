@@ -6,12 +6,11 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { IntervalClass } from "@/types/IntervalClass";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import { ChordSetUtils } from "@/utils/ChordSetUtils";
 import { ScaleDegreeFormatter } from "@/utils/formatters/ScaleDegreeFormatter";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { ColorUtils, intervalClassFromSemitones } from "@/utils/visual/ColorUtils";
-import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
+import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 
 export type ScaleRibbonStep = {
   label: string;
@@ -79,17 +78,17 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
   const offsets = getScalePatternOffsets(key);
-  const notes: ScaleRibbonNote[] = offsets.map((offset, i) => {
+  const notes: ScaleRibbonNote[] = offsets.map((_, i) => {
     const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
     return {
       label: ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo),
-      color: ColorUtils.getColorForSemitoneDistance(offset),
+      color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, i),
       isTonic: i === 0,
     };
   });
   notes.push({
     label: "8",
-    color: INTERVAL_CLASS_COLORS[0],
+    color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, key.scalePatternLength),
     isTonic: true,
   });
 
@@ -99,13 +98,12 @@ function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
 function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
   const notes: ScaleRibbonNote[] = Array.from({ length: key.scalePatternLength }, (_, i) => {
     const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
-    const chordType = ChordSetUtils.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
     const roman = RomanChordFormatter.formatRomanChord(
       RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, key.scaleModeInfo),
     );
     return {
       label: roman,
-      color: getColorForGrouping(chordType),
+      color: noteHighlightColor(key, ScalePlaybackMode.Triad, i),
       isTonic: i === 0,
     };
   });
@@ -116,12 +114,7 @@ function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
         key.scaleModeInfo,
       ),
     ),
-    color: getColorForGrouping(
-      ChordSetUtils.getTriadChordType(
-        key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(0)),
-        key.scaleModeInfo,
-      ),
-    ),
+    color: noteHighlightColor(key, ScalePlaybackMode.Triad, key.scalePatternLength),
     isTonic: true,
   });
 
