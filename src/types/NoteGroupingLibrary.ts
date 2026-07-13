@@ -73,6 +73,16 @@ class NoteGroupingLibrarySingleton {
     return Object.values(ChordType).includes(grouping.id as ChordType);
   }
 
+  /** Root-position reverse lookup against library interval entries (offsets = [0, semitones]). */
+  public matchIntervalTypeFromOffset(semitonesFromRoot: number): IntervalType | undefined {
+    const found = NoteGroupingLibrarySingleton.library.find(
+      (grouping) =>
+        grouping.numNotes === 2 &&
+        IndexUtils.areIndicesEqual(grouping.offsets, [0, semitonesFromRoot]),
+    );
+    return found?.id as IntervalType | undefined;
+  }
+
   private static instance: NoteGroupingLibrarySingleton;
 
   private constructor() {}

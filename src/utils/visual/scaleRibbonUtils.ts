@@ -1,15 +1,14 @@
 import chroma from "chroma-js";
 
-import { IntervalType } from "@/types/enums/IntervalType";
 import { NoteGroupingId } from "@/types/NoteGroupingId";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
-import { IntervalClass } from "@/types/IntervalClass";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeFormatter } from "@/utils/formatters/ScaleDegreeFormatter";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { ColorUtils, intervalClassFromSemitones } from "@/utils/visual/ColorUtils";
-import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
+import { DEFAULT_INTERVAL_CLASS_COLOR } from "@/utils/visual/IntervalClassColors";
 import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 
 export type ScaleRibbonStep = {
@@ -28,8 +27,6 @@ export type ScaleRibbonData = {
   notes: ScaleRibbonNote[];
   steps: ScaleRibbonStep[];
 };
-
-const STEP_NEUTRAL_COLOR = INTERVAL_CLASS_COLORS[0];
 
 function stepLabelForSemitones(semitones: number): string {
   if (semitones === 1) return "H";
@@ -60,10 +57,10 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
   const offsets = getScalePatternOffsets(key);
   const notes: ScaleRibbonNote[] = offsets.map((_, i) => ({
     label: `${i + 1}`,
-    color: STEP_NEUTRAL_COLOR,
+    color: DEFAULT_INTERVAL_CLASS_COLOR,
     isTonic: i === 0,
   }));
-  notes.push({ label: "8", color: STEP_NEUTRAL_COLOR, isTonic: true });
+  notes.push({ label: "8", color: DEFAULT_INTERVAL_CLASS_COLOR, isTonic: true });
 
   const steps: ScaleRibbonStep[] = offsets.map((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
@@ -148,22 +145,13 @@ export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
 
 export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroupingId> {
   const offsets = getScalePatternOffsets(key);
-  const intervalClassToType: Record<IntervalClass, IntervalType> = {
-    0: IntervalType.Octave,
-    1: IntervalType.Minor2,
-    2: IntervalType.Major2,
-    3: IntervalType.Minor3,
-    4: IntervalType.Major3,
-    5: IntervalType.Fourth,
-    6: IntervalType.Tritone,
-  };
 
   const types = new Set<NoteGroupingId>();
   for (const offset of offsets) {
     const intervalClass = intervalClassFromSemitones(offset);
-    if (intervalClass !== 0) {
-      types.add(intervalClassToType[intervalClass]);
-    }
+    if (intervalClass === 0) continue;
+    const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(intervalClass);
+    if (type != null) types.add(type);
   }
   return types;
 }
