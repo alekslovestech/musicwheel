@@ -28,10 +28,7 @@ describe("advanceScaleSequenceStep", () => {
   test("final octave tonic matches staff octave step for SingleNote", () => {
     const key = constants.C_IONIAN_KEY;
     const length = key.scalePatternLength;
-    const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.SingleNote);
-    if (final == null) {
-      throw new Error("expected a final step");
-    }
+    const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.SingleNote)!;
 
     expect(final.step.notesToPlay.length).toBe(1);
 
@@ -45,20 +42,14 @@ describe("advanceScaleSequenceStep", () => {
 
   test("tonic degree in drone mode is a single note (no unison doubling)", () => {
     const key = constants.C_IONIAN_KEY;
-    const tonicStep = advanceScaleSequenceStep(key, 0, ScalePlaybackMode.DronedSingleNote);
-    if (tonicStep == null) {
-      throw new Error("expected a step");
-    }
+    const tonicStep = advanceScaleSequenceStep(key, 0, ScalePlaybackMode.DronedSingleNote)!;
     expect(tonicStep.step.notesToPlay).toEqual([0]);
   });
 
   test("final drone step is lower tonic drone plus upper octave tonic", () => {
     const key = constants.C_IONIAN_KEY;
     const length = key.scalePatternLength;
-    const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.DronedSingleNote);
-    if (final == null) {
-      throw new Error("expected a final step");
-    }
+    const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.DronedSingleNote)!;
 
     expect(final.step.notesToPlay).toEqual([0, 12]);
 
