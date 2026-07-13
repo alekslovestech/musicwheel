@@ -12,7 +12,6 @@ import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
 import {
   advanceScaleSequenceStep,
-  ScaleSequenceStepKind,
   prepareChordProgressionSequence,
   type PreparedChordStep,
 } from "@/utils/SequencePlaybackUtils";
@@ -58,10 +57,9 @@ export const useSequencePlayback = ({
   const chordProgressionTempoRef = useRef<number | null>(null);
   /** Bumped when starting/stopping chord playback so stale setTimeouts no-op. */
   const chordPlaybackGenerationRef = useRef(0);
-  /** Index into progression steps for grid highlight; null when not in chord playback context. */
-  const [activeProgressionStepIndex, setActiveProgressionStepIndex] = useState<number | null>(null);
-  /** Index into scale staff sequence (0–7); null when not in scale playback context. */
-  const [activeScaleStepIndex, setActiveScaleStepIndex] = useState<number | null>(null);
+  /** Index of the currently sounding step, for UI highlight (progression grid or scale staff).
+   * Meaning depends on globalMode; null when playback isn't active in that mode. */
+  const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);
 
   // Helper functions - define these first
   const stopAllTimers = useCallback(() => {
@@ -114,7 +112,7 @@ export const useSequencePlayback = ({
       completionTimerRef.current = setTimeout(() => {
         completionTimerRef.current = null;
         setPlaybackState(PlaybackState.SequenceComplete);
-        setActiveScaleStepIndex(null);
+        setActiveStepIndex(null);
         clearSequenceSelection();
       }, delayMs);
     },
@@ -134,9 +132,9 @@ export const useSequencePlayback = ({
         mode,
       );
 
-      if (sequenceStep.kind === ScaleSequenceStepKind.Idle) return;
+      if (sequenceStep === null) return;
 
-      setActiveScaleStepIndex(currentStepIndex);
+      setActiveStepIndex(currentStepIndex);
 
       const { notesToPlay, chordRef } = sequenceStep.step;
       if (chordRef !== undefined) {
@@ -145,7 +143,7 @@ export const useSequencePlayback = ({
         setSelectedNotesFromSequence(notesToPlay);
       }
 
-      if (sequenceStep.kind === ScaleSequenceStepKind.PlayFinal) {
+      if (sequenceStep.nextStepIndex === undefined) {
         stopAllTimers();
         scheduleSequenceCompletion(getPlaybackDuration(mode));
         return;
@@ -171,7 +169,7 @@ export const useSequencePlayback = ({
 
     const i = chordIndexRef.current;
     const step = steps[i];
-    setActiveProgressionStepIndex(i);
+    setActiveStepIndex(i);
     setNotesDirectly(step.value);
 
     const isLastChord = i === steps.length - 1;
@@ -238,8 +236,7 @@ export const useSequencePlayback = ({
       const mode = modeOverride ?? scalePlaybackMode;
 
       abortPlayback({ clearSelection: true });
-      setActiveProgressionStepIndex(null);
-      setActiveScaleStepIndex(null);
+      setActiveStepIndex(null);
       scaleIndexRef.current = 0;
       setPlaybackState(PlaybackState.SequencePlaying);
 
@@ -306,27 +303,19 @@ export const useSequencePlayback = ({
 
   const stopSequencePlayback = useCallback(() => {
     abortPlayback({ clearSelection: true, releaseVoices: true });
-    setActiveProgressionStepIndex(null);
-    setActiveScaleStepIndex(null);
+    setActiveStepIndex(null);
     setPlaybackState(PlaybackState.SequenceComplete);
   }, [abortPlayback, setPlaybackState]);
 
   useEffect(() => {
     if (selectedProgression == null) {
-      setActiveProgressionStepIndex(null);
+      setActiveStepIndex(null);
     }
   }, [selectedProgression]);
 
+  /** Switching modes always invalidates whichever step index was active. */
   useEffect(() => {
-    if (globalMode !== GlobalMode.ChordProgressions) {
-      setActiveProgressionStepIndex(null);
-    }
-  }, [globalMode]);
-
-  useEffect(() => {
-    if (globalMode !== GlobalMode.Scales) {
-      setActiveScaleStepIndex(null);
-    }
+    setActiveStepIndex(null);
   }, [globalMode]);
 
   return {
@@ -343,7 +332,6 @@ export const useSequencePlayback = ({
     // Chord progression-specific
     selectedProgression,
     setSelectedProgression,
-    activeProgressionStepIndex,
-    activeScaleStepIndex,
+    activeStepIndex,
   };
 };

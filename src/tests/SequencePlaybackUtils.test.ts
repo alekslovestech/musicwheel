@@ -1,9 +1,6 @@
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
-import {
-  advanceScaleSequenceStep,
-  ScaleSequenceStepKind,
-} from "@/utils/SequencePlaybackUtils";
+import { advanceScaleSequenceStep } from "@/utils/SequencePlaybackUtils";
 import { StaffUtils } from "@/utils/StaffUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
@@ -16,30 +13,24 @@ describe("advanceScaleSequenceStep", () => {
 
     for (let i = 0; i < length; i++) {
       const result = advanceScaleSequenceStep(key, i, ScalePlaybackMode.SingleNote);
-      expect(result.kind).toBe(ScaleSequenceStepKind.Play);
-      if (result.kind === ScaleSequenceStepKind.Play) {
-        expect(result.nextStepIndex).toBe(i + 1);
-        expect(result.step.notesToPlay.length).toBeGreaterThan(0);
-      }
+      expect(result?.nextStepIndex).toBe(i + 1);
+      expect(result?.step.notesToPlay.length).toBeGreaterThan(0);
     }
 
     const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.SingleNote);
-    expect(final.kind).toBe(ScaleSequenceStepKind.PlayFinal);
-    if (final.kind === ScaleSequenceStepKind.PlayFinal) {
-      expect(final.step.notesToPlay.length).toBe(1);
-    }
+    expect(final).not.toBeNull();
+    expect(final?.nextStepIndex).toBeUndefined();
+    expect(final?.step.notesToPlay.length).toBe(1);
 
-    expect(advanceScaleSequenceStep(key, length + 1, ScalePlaybackMode.SingleNote)).toEqual({
-      kind: ScaleSequenceStepKind.Idle,
-    });
+    expect(advanceScaleSequenceStep(key, length + 1, ScalePlaybackMode.SingleNote)).toBeNull();
   });
 
   test("final octave tonic matches staff octave step for SingleNote", () => {
     const key = constants.C_IONIAN_KEY;
     const length = key.scalePatternLength;
     const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.SingleNote);
-    if (final.kind !== ScaleSequenceStepKind.PlayFinal) {
-      throw new Error("expected PlayFinal");
+    if (final == null) {
+      throw new Error("expected a final step");
     }
 
     expect(final.step.notesToPlay.length).toBe(1);
@@ -55,8 +46,8 @@ describe("advanceScaleSequenceStep", () => {
   test("tonic degree in drone mode is a single note (no unison doubling)", () => {
     const key = constants.C_IONIAN_KEY;
     const tonicStep = advanceScaleSequenceStep(key, 0, ScalePlaybackMode.DronedSingleNote);
-    if (tonicStep.kind !== ScaleSequenceStepKind.Play) {
-      throw new Error("expected Play");
+    if (tonicStep == null) {
+      throw new Error("expected a step");
     }
     expect(tonicStep.step.notesToPlay).toEqual([0]);
   });
@@ -65,8 +56,8 @@ describe("advanceScaleSequenceStep", () => {
     const key = constants.C_IONIAN_KEY;
     const length = key.scalePatternLength;
     const final = advanceScaleSequenceStep(key, length, ScalePlaybackMode.DronedSingleNote);
-    if (final.kind !== ScaleSequenceStepKind.PlayFinal) {
-      throw new Error("expected PlayFinal");
+    if (final == null) {
+      throw new Error("expected a final step");
     }
 
     expect(final.step.notesToPlay).toEqual([0, 12]);

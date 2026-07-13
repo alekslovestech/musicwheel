@@ -15,7 +15,7 @@ import { useIsLandscape } from "@/lib/hooks";
 
 /** Chord/Roman view of the selected progression (picker + notebook). Staff notation is StaffRenderer. */
 export function ProgressionChordScore() {
-  const { selectedProgression, setSelectedProgression, activeProgressionStepIndex } = useAudio();
+  const { selectedProgression, setSelectedProgression, activeStepIndex } = useAudio();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
   const { showBassInRomanNotation } = useDisplay();
   const isLandscape = useIsLandscape();
@@ -47,17 +47,17 @@ export function ProgressionChordScore() {
 
   const visibleGrid = useMemo(() => {
     if (displayGrid == null) return null;
-    if (activeProgressionStepIndex == null || formatter == null) return displayGrid;
+    if (activeStepIndex == null || formatter == null) return displayGrid;
 
     return formatter.displayRowsForStep(
       displayGrid,
-      activeProgressionStepIndex,
+      activeStepIndex,
       isCompact,
       CP_PLAYBACK_DISPLAY_ROW_COUNT,
     );
-  }, [displayGrid, activeProgressionStepIndex, formatter, isCompact]);
+  }, [displayGrid, activeStepIndex, formatter, isCompact]);
 
-  const isPlaybackWindow = activeProgressionStepIndex != null;
+  const isPlaybackWindow = activeStepIndex != null;
 
   return (
     <div
@@ -83,7 +83,7 @@ export function ProgressionChordScore() {
       >
         <ProgressionNotebook
           grid={visibleGrid ?? []}
-          readHeadStepIndex={activeProgressionStepIndex}
+          readHeadStepIndex={activeStepIndex}
           isCompact={isCompact}
         />
       </div>

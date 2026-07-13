@@ -26,9 +26,8 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const {
     selectedProgression,
-    activeProgressionStepIndex,
     scalePlaybackMode,
-    activeScaleStepIndex,
+    activeStepIndex,
     playbackState,
   } = useAudio();
   const isChordProgressionsMode = useIsChordProgressionsMode();
@@ -63,18 +62,18 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     stave.setContext(context).draw();
 
     const progressionBarMode =
-      isChordProgressionsMode && selectedProgression != null && activeProgressionStepIndex != null;
+      isChordProgressionsMode && selectedProgression != null && activeStepIndex != null;
 
     if (progressionBarMode) {
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
       const cpf = new ChordProgressionFormatter(progression);
-      const activeRoman = progression.progression[activeProgressionStepIndex]?.value;
+      const activeRoman = progression.progression[activeStepIndex]?.value;
       const activeChordBg = chordActiveHighlightFor(activeRoman?.chordType).css();
 
       const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
       const stepIndicesInRow = cpf.stepIndicesForDisplayRow(
-        activeProgressionStepIndex,
+        activeStepIndex,
         isCompact,
       );
 
@@ -86,7 +85,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
 
       if (steps.length === 0) return;
       const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
-      const highlightIndex = stepIndicesInRow.indexOf(activeProgressionStepIndex);
+      const highlightIndex = stepIndicesInRow.indexOf(activeStepIndex);
       if (highlightIndex >= 0) {
         VexFlowUtils.drawVoiceWithHighlights(
           factory,
@@ -118,7 +117,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
         playbackState === PlaybackState.SequencePaused;
 
       const highlightIndex = isScalePlaybackActive
-        ? activeScaleStepIndex
+        ? activeStepIndex
         : StaffUtils.findScaleStepIndexForSelection(
             selectedMusicalKey,
             scalePlaybackMode,
@@ -172,9 +171,9 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     isChordProgressionsMode,
     isScalesMode,
     selectedProgression,
-    activeProgressionStepIndex,
+    activeStepIndex,
     scalePlaybackMode,
-    activeScaleStepIndex,
+    activeStepIndex,
     playbackState,
   ]);
 

@@ -31,10 +31,9 @@ interface AudioContextType {
   // Chord progression-specific
   selectedProgression: ChordProgressionType | null;
   setSelectedProgression: (progression: ChordProgressionType | null) => void;
-  /** Current chord step for progression UI highlight; null when not applicable. */
-  activeProgressionStepIndex: number | null;
-  /** Current scale step for staff highlight (0–7); null when not applicable. */
-  activeScaleStepIndex: number | null;
+  /** Index of the currently sounding step, for UI highlight (progression grid or scale staff).
+   * Meaning depends on globalMode; null when playback isn't active in that mode. */
+  activeStepIndex: number | null;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
