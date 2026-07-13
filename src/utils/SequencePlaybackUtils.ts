@@ -45,10 +45,7 @@ export function getScaleStepAtSequenceIndex(
   if (stepIndex !== key.scalePatternLength) 
     return getScaleStepAtDegree(key, ixScaleDegreeIndex(stepIndex), scalePlaybackMode);  
 
-  if (scalePlaybackMode === ScalePlaybackMode.DronedSingleNote) 
-    return getFinalDronedStep(key);  
-
-  return getFinalOctaveTonicStep(key, scalePlaybackMode);
+  return getFinalStep(key, scalePlaybackMode);
 }
 
 /** Scale sequence cursor: 0..length-1 are scale degrees; length is the final octave tonic step. */
@@ -120,31 +117,33 @@ function chordRefForScaleStep(
 }
 
 
-/** Final sequence step for droned mode: drone stays at the low tonic, melody jumps an octave. */
-function getFinalDronedStep(key: MusicalKey): ScaleStepAtDegree {
+/** Final sequence step: the tonic notes for this mode, transposed up an octave. */
+function getFinalStep(key: MusicalKey, scalePlaybackMode: ScalePlaybackMode): ScaleStepAtDegree {
+  const notesToPlay =
+    scalePlaybackMode === ScalePlaybackMode.DronedSingleNote
+      ? getFinalDronedNotes(key)
+      : getFinalOctaveTonicNotes(key, scalePlaybackMode);
+
+  return {
+    notesToPlay,
+    chordRef: chordRefForScaleStep(key, ixScaleDegreeIndex(0), notesToPlay, scalePlaybackMode),
+  };
+}
+
+/** Droned mode: drone stays at the low tonic, melody jumps an octave. */
+function getFinalDronedNotes(key: MusicalKey): NoteIndices {
   const droneTonic = getScaleStepAtDegree(
     key,
     ixScaleDegreeIndex(0),
     ScalePlaybackMode.DronedSingleNote,
   ).notesToPlay[0]!;
   const upperTonic = IndexUtils.transposeNotes(toNoteIndices([droneTonic]), TWELVE)[0]!;
-  return { notesToPlay: toNoteIndices([droneTonic, upperTonic]) };
+  return toNoteIndices([droneTonic, upperTonic]);
 }
 
-/** Final sequence step for other modes: the tonic step transposed up an octave. */
-function getFinalOctaveTonicStep(
-  key: MusicalKey,
-  scalePlaybackMode: ScalePlaybackMode,
-): ScaleStepAtDegree {
-  const tonicNotes = getScaleStepAtDegree(
-    key,
-    ixScaleDegreeIndex(0),
-    scalePlaybackMode,
-  ).notesToPlay;
-  const octaveNotes = IndexUtils.transposeNotes(tonicNotes, TWELVE);
-  return {
-    notesToPlay: octaveNotes,
-    chordRef: chordRefForScaleStep(key, ixScaleDegreeIndex(0), octaveNotes, scalePlaybackMode),
-  };
+/** Other modes: the whole tonic step transposed up an octave. */
+function getFinalOctaveTonicNotes(key: MusicalKey, scalePlaybackMode: ScalePlaybackMode): NoteIndices {
+  const tonicNotes = getScaleStepAtDegree(key, ixScaleDegreeIndex(0), scalePlaybackMode).notesToPlay;
+  return IndexUtils.transposeNotes(tonicNotes, TWELVE);
 }
 
