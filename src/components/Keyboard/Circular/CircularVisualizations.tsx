@@ -8,6 +8,7 @@ import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualiz
 import { getStepSegmentsForScale } from "@/utils/visual/scaleRibbonUtils";
 
 const DOT_RADIUS = 6;
+const SCALE_DEGREE_DOT_RADIUS = 3;
 
 export class CircularVisualizations {
   static draw(
@@ -31,7 +32,7 @@ export class CircularVisualizations {
     const scaleNotes = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
     const steps = getStepSegmentsForScale(musicalKey);
 
-    return steps.map((step, index) =>
+    const segments = steps.map((step, index) =>
       this.drawSegment(
         ixActual(scaleNotes[index]!),
         ixActual(scaleNotes[(index + 1) % scaleNotes.length]!),
@@ -40,6 +41,19 @@ export class CircularVisualizations {
         `scale-step-${index}`,
       ),
     );
+
+    /** Drawn on top of the segments to smooth the seam where two differently-colored steps meet. */
+    const degreeDots = scaleNotes.map((noteIndex, index) =>
+      this.drawNoteDot(
+        ixActual(noteIndex),
+        innerRadius,
+        "scale-degree-dot fill-keys-borderColor",
+        `scale-degree-dot-${index}`,
+        SCALE_DEGREE_DOT_RADIUS,
+      ),
+    );
+
+    return [...segments, ...degreeDots];
   }
 
   private static drawSegment(
@@ -50,8 +64,20 @@ export class CircularVisualizations {
     key: string,
   ): JSX.Element {
     const visualizer = new NoteIndexVisualizer(innerRadius);
-    const points = visualizer.getVisualization([fromIndex, toIndex], CircularVisMode.Polygon);
-    return this.drawPolygon(points, color, key);
+    const [from, to] = visualizer.getVisualization([fromIndex, toIndex], CircularVisMode.Polygon);
+    return (
+      <line
+        className="scale-step-segment"
+        key={key}
+        stroke={color}
+        strokeWidth={4}
+        strokeLinecap="round"
+        x1={from!.x}
+        y1={from!.y}
+        x2={to!.x}
+        y2={to!.y}
+      />
+    );
   }
 
   private static drawPolygon(points: CartesianPoint[], color: string, key: string): JSX.Element {
@@ -70,16 +96,23 @@ export class CircularVisualizations {
     baseIndex: ActualIndex,
     innerRadius: number,
   ): JSX.Element {
-    const middleAngle = PolarMath.NoteIndexToMiddleAngle(baseIndex);
-    const innerPoint = PolarMath.getCartesianFromPolar(innerRadius, middleAngle, true);
-    return (
-      <circle
-        className="base-note-dot fill-keys-bgRootNote"
-        key="circularVis-base-note"
-        cx={innerPoint.x}
-        cy={innerPoint.y}
-        r={DOT_RADIUS}
-      />
+    return this.drawNoteDot(
+      baseIndex,
+      innerRadius,
+      "base-note-dot fill-keys-bgRootNote",
+      "circularVis-base-note",
     );
+  }
+
+  private static drawNoteDot(
+    index: ActualIndex,
+    innerRadius: number,
+    className: string,
+    key: string,
+    radius: number = DOT_RADIUS,
+  ): JSX.Element {
+    const middleAngle = PolarMath.NoteIndexToMiddleAngle(index);
+    const point = PolarMath.getCartesianFromPolar(innerRadius, middleAngle, true);
+    return <circle className={className} key={key} cx={point.x} cy={point.y} r={radius} />;
   }
 }
