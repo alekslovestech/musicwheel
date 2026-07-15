@@ -1,5 +1,6 @@
 import chroma from "chroma-js";
 
+import { subChromatic } from "@/types/ChromaticIndex";
 import { NoteGroupingId } from "@/types/NoteGroupingId";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -28,6 +29,37 @@ export type ScaleRibbonData = {
   steps: ScaleRibbonStep[];
 };
 
+export function buildScaleRibbonData(
+  key: MusicalKey,
+  scalePlaybackMode: ScalePlaybackMode,
+): ScaleRibbonData {
+  switch (scalePlaybackMode) {
+    case ScalePlaybackMode.DronedSingleNote:
+      return buildFromRootRibbon(key);
+    case ScalePlaybackMode.Triad:
+      return buildTriadsRibbon(key);
+    default:
+      return buildStepsRibbon(key);
+  }
+}
+
+export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
+  return buildStepSegments(getScalePatternOffsets(key));
+}
+
+export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroupingId> {
+  const offsets = getScalePatternOffsets(key);
+
+  const types = new Set<NoteGroupingId>();
+  for (const offset of offsets) {
+    const intervalClass = intervalClassFromSemitones(offset);
+    if (intervalClass === 0) continue;
+    const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(intervalClass);
+    if (type != null) types.add(type);
+  }
+  return types;
+}
+
 function stepLabelForSemitones(semitones: number): string {
   if (semitones === 1) return "H";
   if (semitones === 2) return "W";
@@ -47,10 +79,18 @@ function getScalePatternOffsets(key: MusicalKey): number[] {
 }
 
 function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {
-  if (fromIndex < offsets.length - 1) {
-    return offsets[fromIndex + 1]! - offsets[fromIndex]!;
-  }
-  return 12 + offsets[0]! - offsets[offsets.length - 1]!;
+  const nextIndex = (fromIndex + 1) % offsets.length;
+  return subChromatic(offsets[nextIndex], offsets[fromIndex]);
+}
+
+function buildStepSegments(offsets: number[]): ScaleRibbonStep[] {
+  return offsets.map((_, i) => {
+    const semitones = getStepSemitonesBetween(offsets, i);
+    return {
+      label: stepLabelForSemitones(semitones),
+      color: stepColorForSemitones(semitones),
+    };
+  });
 }
 
 function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
@@ -62,15 +102,7 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
   }));
   notes.push({ label: "8", color: DEFAULT_INTERVAL_CLASS_COLOR, isTonic: true });
 
-  const steps: ScaleRibbonStep[] = offsets.map((_, i) => {
-    const semitones = getStepSemitonesBetween(offsets, i);
-    return {
-      label: stepLabelForSemitones(semitones),
-      color: stepColorForSemitones(semitones),
-    };
-  });
-
-  return { title: "Steps (W–H)", notes, steps };
+  return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets) };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
@@ -116,42 +148,4 @@ function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
   });
 
   return { title: "Triads", notes, steps: [] };
-}
-
-export function buildScaleRibbonData(
-  key: MusicalKey,
-  scalePlaybackMode: ScalePlaybackMode,
-): ScaleRibbonData {
-  switch (scalePlaybackMode) {
-    case ScalePlaybackMode.DronedSingleNote:
-      return buildFromRootRibbon(key);
-    case ScalePlaybackMode.Triad:
-      return buildTriadsRibbon(key);
-    default:
-      return buildStepsRibbon(key);
-  }
-}
-
-export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
-  const offsets = getScalePatternOffsets(key);
-  return offsets.map((_, i) => {
-    const semitones = getStepSemitonesBetween(offsets, i);
-    return {
-      label: stepLabelForSemitones(semitones),
-      color: stepColorForSemitones(semitones),
-    };
-  });
-}
-
-export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroupingId> {
-  const offsets = getScalePatternOffsets(key);
-
-  const types = new Set<NoteGroupingId>();
-  for (const offset of offsets) {
-    const intervalClass = intervalClassFromSemitones(offset);
-    if (intervalClass === 0) continue;
-    const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(intervalClass);
-    if (type != null) types.add(type);
-  }
-  return types;
 }
