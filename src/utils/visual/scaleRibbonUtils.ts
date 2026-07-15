@@ -20,7 +20,6 @@ export type ScaleRibbonStep = {
 export type ScaleRibbonNote = {
   label: string;
   color?: chroma.Color;
-  isTonic?: boolean;
 };
 
 export type ScaleRibbonData = {
@@ -98,9 +97,8 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
   const notes: ScaleRibbonNote[] = offsets.map((_, i) => ({
     label: `${i + 1}`,
     color: DEFAULT_INTERVAL_CLASS_COLOR,
-    isTonic: i === 0,
   }));
-  notes.push({ label: "8", color: DEFAULT_INTERVAL_CLASS_COLOR, isTonic: true });
+  notes.push({ label: "8", color: DEFAULT_INTERVAL_CLASS_COLOR });
 
   return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets) };
 }
@@ -112,13 +110,11 @@ function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
     return {
       label: ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo),
       color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, i),
-      isTonic: i === 0,
     };
   });
   notes.push({
     label: "8",
     color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, key.scalePatternLength),
-    isTonic: true,
   });
 
   return { title: "From root (1–♭2…)", notes, steps: [] };
@@ -133,7 +129,6 @@ function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
     return {
       label: roman,
       color: noteHighlightColor(key, ScalePlaybackMode.Triad, i),
-      isTonic: i === 0,
     };
   });
   notes.push({
@@ -144,7 +139,6 @@ function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
       ),
     ),
     color: noteHighlightColor(key, ScalePlaybackMode.Triad, key.scalePatternLength),
-    isTonic: true,
   });
 
   return { title: "Triads", notes, steps: [] };
