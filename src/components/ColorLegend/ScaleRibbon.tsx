@@ -1,8 +1,16 @@
 "use client";
 
+import { Fragment } from "react";
+
 import { ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
-export function ScaleRibbon({ ribbon }: { ribbon: ScaleRibbonData }) {
+export function ScaleRibbon({
+  ribbon,
+  activeNoteIndex = null,
+}: {
+  ribbon: ScaleRibbonData;
+  activeNoteIndex?: number | null;
+}) {
   const hasSteps = ribbon.steps.length > 0;
 
   return (
@@ -12,21 +20,29 @@ export function ScaleRibbon({ ribbon }: { ribbon: ScaleRibbonData }) {
       </div>
 
       {hasSteps ? (
-        <StepsRibbonLayout notes={ribbon.notes} steps={ribbon.steps} />
+        <StepsRibbonLayout notes={ribbon.notes} steps={ribbon.steps} activeNoteIndex={activeNoteIndex} />
       ) : (
-        <NotesRibbonLayout notes={ribbon.notes} />
+        <NotesRibbonLayout notes={ribbon.notes} activeNoteIndex={activeNoteIndex} />
       )}
-
-      {hasSteps && <StepLegendHint />}
     </div>
   );
 }
 
-function NotesRibbonLayout({ notes }: { notes: ScaleRibbonData["notes"] }) {
+function NotesRibbonLayout({
+  notes,
+  activeNoteIndex,
+}: {
+  notes: ScaleRibbonData["notes"];
+  activeNoteIndex: number | null;
+}) {
   return (
     <div className="flex items-end gap-0.5">
       {notes.map((note, index) => (
-        <RibbonNoteSwatch key={`${note.label}-${index}`} note={note} />
+        <RibbonNoteSwatch
+          key={`${note.label}-${index}`}
+          note={note}
+          isActive={index === activeNoteIndex}
+        />
       ))}
     </div>
   );
@@ -35,17 +51,19 @@ function NotesRibbonLayout({ notes }: { notes: ScaleRibbonData["notes"] }) {
 function StepsRibbonLayout({
   notes,
   steps,
+  activeNoteIndex,
 }: {
   notes: ScaleRibbonData["notes"];
   steps: ScaleRibbonData["steps"];
+  activeNoteIndex: number | null;
 }) {
   return (
     <div className="flex items-end">
       {notes.map((note, index) => (
-        <div key={`${note.label}-${index}`} className="flex min-w-0 flex-1 items-end">
-          <RibbonNoteSwatch note={note} compact />
+        <Fragment key={`${note.label}-${index}`}>
+          <RibbonNoteTick note={note} isActive={index === activeNoteIndex} />
           {index < steps.length && <RibbonStepConnector step={steps[index]!} />}
-        </div>
+        </Fragment>
       ))}
     </div>
   );
@@ -53,18 +71,17 @@ function StepsRibbonLayout({
 
 function RibbonNoteSwatch({
   note,
-  compact = false,
+  isActive,
 }: {
   note: ScaleRibbonData["notes"][number];
-  compact?: boolean;
+  isActive: boolean;
 }) {
-  const swatchSize = compact ? "h-3 w-3" : "h-4 w-4";
-  const borderClass = note.isTonic ? "ring-2 ring-keys-scaleBoundaryColor ring-offset-1" : "";
-
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
       <div
-        className={`${swatchSize} shrink-0 rounded-sm border border-containers-divider/40 ${borderClass}`}
+        className={`h-4 w-4 shrink-0 rounded-sm border border-containers-divider/40 ${
+          isActive ? "ring-2 ring-keys-scaleBoundaryColor ring-offset-1" : ""
+        }`}
         style={{ backgroundColor: note.color?.css() ?? "transparent" }}
       />
       <span className="text-[10px] leading-none text-labels-textDefault">{note.label}</span>
@@ -72,40 +89,40 @@ function RibbonNoteSwatch({
   );
 }
 
-function RibbonStepConnector({ step }: { step: ScaleRibbonData["steps"][number] }) {
+function RibbonNoteTick({
+  note,
+  isActive,
+}: {
+  note: ScaleRibbonData["notes"][number];
+  isActive: boolean;
+}) {
   return (
-    <div className="mb-3 flex min-w-0 flex-1 flex-col items-center gap-0.5 px-0.5">
+    <div className="flex shrink-0 flex-col items-center gap-0.5">
       <div
-        className="h-1 w-full min-w-[8px] rounded-full"
-        style={{ backgroundColor: step.color.css() }}
+        className={`h-3 shrink-0 ${
+          isActive ? "w-0.5 bg-keys-scaleBoundaryColor" : "w-px bg-containers-divider"
+        }`}
       />
-      <span className="text-[10px] font-medium leading-none" style={{ color: step.color.css() }}>
-        {step.label}
+      <span
+        className={`flex h-4 min-w-4 items-center justify-center text-[10px] leading-none text-labels-textDefault ${
+          isActive ? "rounded-full border-2 border-keys-scaleBoundaryColor" : ""
+        }`}
+      >
+        {note.label}
       </span>
     </div>
   );
 }
 
-function StepLegendHint() {
+function RibbonStepConnector({ step }: { step: ScaleRibbonData["steps"][number] }) {
   return (
-    <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-labels-textDefault opacity-70">
-      <span>
-        <span className="font-medium" style={{ color: "rgb(255, 166, 0)" }}>
-          W
-        </span>{" "}
-        whole
-      </span>
-      <span>
-        <span className="font-medium" style={{ color: "rgb(219, 20, 61)" }}>
-          H
-        </span>{" "}
-        half
-      </span>
-      <span>
-        <span className="font-medium" style={{ color: "rgb(255, 215, 0)" }}>
-          A2
-        </span>{" "}
-        aug 2nd
+    <div className="mb-3 flex min-w-0 flex-1 flex-col items-center gap-0.5">
+      <div
+        className="h-1 w-full min-w-[8px] rounded-full"
+        style={{ backgroundColor: step.color.css() }}
+      />
+      <span className="text-[10px] font-medium leading-none text-labels-textDefault">
+        {step.label}
       </span>
     </div>
   );

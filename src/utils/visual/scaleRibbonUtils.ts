@@ -9,7 +9,6 @@ import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeFormatter } from "@/utils/formatters/ScaleDegreeFormatter";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { ColorUtils, intervalClassFromSemitones } from "@/utils/visual/ColorUtils";
-import { DEFAULT_INTERVAL_CLASS_COLOR } from "@/utils/visual/IntervalClassColors";
 import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 
 export type ScaleRibbonStep = {
@@ -42,8 +41,31 @@ export function buildScaleRibbonData(
   }
 }
 
+export function ribbonUsesStepSegments(scalePlaybackMode: ScalePlaybackMode): boolean {
+  return (
+    scalePlaybackMode !== ScalePlaybackMode.DronedSingleNote &&
+    scalePlaybackMode !== ScalePlaybackMode.Triad
+  );
+}
+
 export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
-  return buildStepSegments(getScalePatternOffsets(key));
+  return buildStepSegments(getScalePatternOffsets(key), stepLabelCanonical);
+}
+
+/** Distinct step distances in the scale, canonically labeled and sorted by ascending semitones. */
+export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonStep[] {
+  const offsets = getScalePatternOffsets(key);
+  const bySemitones = new Map<number, ScaleRibbonStep>();
+  offsets.forEach((_, i) => {
+    const semitones = getStepSemitonesBetween(offsets, i);
+    if (!bySemitones.has(semitones)) {
+      bySemitones.set(semitones, {
+        label: stepLabelCanonical(semitones),
+        color: stepColorForSemitones(semitones),
+      });
+    }
+  });
+  return [...bySemitones.entries()].sort(([a], [b]) => a - b).map(([, step]) => step);
 }
 
 export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroupingId> {
@@ -59,11 +81,16 @@ export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroup
   return types;
 }
 
-function stepLabelForSemitones(semitones: number): string {
+function stepLabelMnemonic(semitones: number): string {
   if (semitones === 1) return "H";
   if (semitones === 2) return "W";
   if (semitones === 3) return "1½";
   return `${semitones}`;
+}
+
+function stepLabelCanonical(semitones: number): string {
+  const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(semitones);
+  return type != null ? NoteGroupingLibrary.getGroupingById(type).shortForm : `${semitones}`;
 }
 
 function stepColorForSemitones(semitones: number): chroma.Color {
@@ -82,11 +109,14 @@ function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {
   return subChromatic(offsets[nextIndex], offsets[fromIndex]);
 }
 
-function buildStepSegments(offsets: number[]): ScaleRibbonStep[] {
+function buildStepSegments(
+  offsets: number[],
+  labelForSemitones: (semitones: number) => string,
+): ScaleRibbonStep[] {
   return offsets.map((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
     return {
-      label: stepLabelForSemitones(semitones),
+      label: labelForSemitones(semitones),
       color: stepColorForSemitones(semitones),
     };
   });
@@ -96,11 +126,10 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
   const offsets = getScalePatternOffsets(key);
   const notes: ScaleRibbonNote[] = offsets.map((_, i) => ({
     label: `${i + 1}`,
-    color: DEFAULT_INTERVAL_CLASS_COLOR,
   }));
-  notes.push({ label: "8", color: DEFAULT_INTERVAL_CLASS_COLOR });
+  notes.push({ label: "8" });
 
-  return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets) };
+  return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets, stepLabelMnemonic) };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {

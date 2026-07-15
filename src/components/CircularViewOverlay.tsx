@@ -2,14 +2,16 @@
 
 import { Suspense } from "react";
 
-import { ColorLegendOverlay } from "@/components/ColorLegend/ColorLegendOverlay";
+import { StaticColorLegendOverlay } from "@/components/ColorLegend/StaticColorLegendOverlay";
+import { SequenceLegendOverlay } from "@/components/ColorLegend/SequenceLegendOverlay";
 import { GlobalModeSelector } from "@/components/GlobalModeSelector";
 
 export function CircularViewOverlay() {
   return (
     <Suspense fallback={null}>
       <GlobalModeSelector />
-      <ColorLegendOverlay />
+      <StaticColorLegendOverlay />
+      <SequenceLegendOverlay />
     </Suspense>
   );
 }

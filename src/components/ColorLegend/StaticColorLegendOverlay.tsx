@@ -6,9 +6,9 @@ import { Button } from "@/components/Common/Button";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 
-import { ColorLegendPanel } from "./ColorLegendPanel";
+import { StaticColorLegendPanel } from "./StaticColorLegendPanel";
 
-export function ColorLegendOverlay() {
+export function StaticColorLegendOverlay() {
   const [open, setOpen] = useState(false);
   const trackAction = useTrack();
 
@@ -31,7 +31,7 @@ export function ColorLegendOverlay() {
       >
         {open ? "Hide legend" : "Legend"}
       </Button>
-      {open && <ColorLegendPanel />}
+      {open && <StaticColorLegendPanel />}
     </div>
   );
 }
