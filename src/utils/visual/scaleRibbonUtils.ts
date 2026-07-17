@@ -152,7 +152,7 @@ function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
 function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
   const notes: ScaleRibbonNote[] = Array.from({ length: key.scalePatternLength }, (_, i) => {
     const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
-    const roman = RomanChordFormatter.formatRomanChord(
+    const roman = RomanChordFormatter.formatRomanNumeralOnly(
       RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, key.scaleModeInfo),
     );
     return {
@@ -161,7 +161,7 @@ function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
     };
   });
   notes.push({
-    label: RomanChordFormatter.formatRomanChord(
+    label: RomanChordFormatter.formatRomanNumeralOnly(
       RomanChordFormatter.romanChordFromScaleDegree(
         key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(0)),
         key.scaleModeInfo,

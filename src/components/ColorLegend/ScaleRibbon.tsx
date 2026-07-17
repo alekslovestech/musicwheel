@@ -84,7 +84,9 @@ function RibbonNoteSwatch({
         }`}
         style={{ backgroundColor: note.color?.css() ?? "transparent" }}
       />
-      <span className="text-[10px] leading-none text-labels-textDefault">{note.label}</span>
+      <span className="w-full truncate text-center text-[9px] leading-none text-labels-textDefault opacity-60">
+        {note.label}
+      </span>
     </div>
   );
 }

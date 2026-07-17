@@ -45,4 +45,14 @@ export class RomanChordFormatter {
         : "";
     return `${accidentalString}${romanNumeralString}${chordPostfix}${bassSuffix}`;
   }
+
+  /**
+   * Numeral + case only (no quality postfix or bass), for compact UI where color
+   * already conveys chord quality (e.g. the sequence legend ribbon).
+   */
+  static formatRomanNumeralOnly(romanChord: RomanChord): string {
+    const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
+    const { isLowerCase } = getRomanQuality(romanChord.chordType);
+    return `${accidentalString}${formatNumeralForDegree(romanChord.scaleDegree, isLowerCase)}`;
+  }
 }
