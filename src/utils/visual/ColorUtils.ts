@@ -112,9 +112,6 @@ const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
   6: 1,
 };
 
-/** Staff scale playback highlight alpha applied to the mixed note color. */
-export const SCALE_STAFF_HIGHLIGHT_ALPHA = 0.32;
-
 export function intervalClassFromSemitones(semitone: number): IntervalClass {
   const mod = semitone % TWELVE;
   return ixIntervalClass(Math.min(mod, TWELVE - mod));

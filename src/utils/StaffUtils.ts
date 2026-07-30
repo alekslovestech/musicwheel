@@ -8,7 +8,7 @@ import { NoteIndices } from "@/types/IndexTypes";
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { SpellingContext, SpellingKind } from "@/utils/spelling/SpellingContext";
-import { SCALE_STAFF_HIGHLIGHT_ALPHA } from "@/utils/visual/ColorUtils";
+import { HIGHLIGHT_ALPHA } from "@/lib/design/palette";
 import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 import type { VexFlowDrawVoiceOptions } from "@/utils/VexFlowUtils";
 
@@ -84,7 +84,7 @@ export class StaffUtils {
     scalePlaybackMode: ScalePlaybackMode,
     stepIndex: number,
   ): string {
-    return noteHighlightColor(key, scalePlaybackMode, stepIndex).alpha(SCALE_STAFF_HIGHLIGHT_ALPHA).css();
+    return noteHighlightColor(key, scalePlaybackMode, stepIndex).alpha(HIGHLIGHT_ALPHA).css();
   }
 
   private static toDuratedScaleStaffStep(

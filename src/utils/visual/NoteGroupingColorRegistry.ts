@@ -5,8 +5,8 @@ import { SpecialType } from "@/types/enums/SpecialType";
 import { toNoteIndices } from "@/types/IndexTypes";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { DEFAULT_INTERVAL_CLASS_COLOR } from "@/utils/visual/IntervalClassColors";
+import { HIGHLIGHT_ALPHA } from "@/lib/design/palette";
 
-const CHORD_HIGHLIGHT_ALPHA = 0.32;
 const GROUPING_COLORS: ReadonlyMap<NoteGroupingId, chroma.Color> = buildGroupingColorMap();
 
 export function getColorForGrouping(id?: NoteGroupingId): chroma.Color {
@@ -15,7 +15,7 @@ export function getColorForGrouping(id?: NoteGroupingId): chroma.Color {
 
 /** Semi-transparent fill for active chord highlights (staff, progression cells, etc.). */
 export function chordActiveHighlightFor(id?: NoteGroupingId): chroma.Color {  
-  return getColorForGrouping(id).alpha(CHORD_HIGHLIGHT_ALPHA);
+  return getColorForGrouping(id).alpha(HIGHLIGHT_ALPHA);
 }
 
 /**

@@ -26,7 +26,7 @@ export function ProgressionNotebook({
         <div
           key={rowIndex}
           id={`progression-notebook-row-${rowIndex}`}
-          className="grid items-stretch border-b border-neutral-600/40 py-1 first:border-t"
+          className="grid items-stretch border-b border-containers-dividerStrong py-1 first:border-t"
           style={{
             gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
           }}

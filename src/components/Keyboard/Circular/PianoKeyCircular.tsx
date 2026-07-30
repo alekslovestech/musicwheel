@@ -126,7 +126,7 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
       className={`${allBaseClasses} !${keyColors.border} hover:[&_path]:opacity-80`}
       onClick={() => onKeyClick(actualIndex)}
     >
-      <path d={pathData} className={`${keyColors.primary} stroke-gray-400 stroke-1`} />
+      <path d={pathData} className={`${keyColors.primary} stroke-keys-strokeOutline stroke-1`} />
       <text
         x={textPoint.x}
         y={textPoint.y}

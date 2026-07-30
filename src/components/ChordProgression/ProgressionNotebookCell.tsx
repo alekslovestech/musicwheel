@@ -17,7 +17,7 @@ export function ProgressionNotebookCell({
     <div
       id={`progression-notebook-cell-${tokenIndex}`}
       data-active={isActive ? "true" : undefined}
-      className={`flex flex-col items-center justify-center gap-0.5 border-x border-neutral-600/40 px-2 py-0.5 ${
+      className={`flex flex-col items-center justify-center gap-0.5 border-x border-containers-dividerStrong px-2 py-0.5 ${
         isActive ? "ring-1 ring-inset ring-cp-highlight/40" : ""
       }`}
       style={{

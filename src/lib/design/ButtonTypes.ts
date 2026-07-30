@@ -10,7 +10,7 @@ export const VARIANTS: Record<ButtonVariant, string> = {
     "max-w-24 text-default self-center bg-buttons-actionBgDefault border-buttons-actionBorder text-buttons-actionText hover:bg-buttons-actionBgHover active:bg-buttons-actionBgActive shadow-md hover:shadow-lg active:shadow-sm transform hover:scale-105 active:scale-95", // More dynamic styling
   global:
     "!bg-buttons-bgSelected/20 !border-buttons-bgSelected/40 !text-buttons-bgSelected hover:!bg-buttons-bgSelected/30 hover:!border-buttons-bgSelected/60 whitespace-normal shadow-md hover:shadow-lg font-medium !rounded-full px-3 py-1 text-sm transition-all duration-200 transform hover:scale-105 !min-w-0 !max-w-none", // Using same blue family with opacity
-  vis: "rounded-none border-buttons-border fill-none stroke-[2px] stroke-black text-buttons-textDefault text-font-bold",
+  vis: "rounded-none border-buttons-border fill-none stroke-[2px] stroke-buttons-visStroke text-buttons-textDefault text-font-bold",
 };
 
 export const SIZES: Record<ButtonSize, string> = {
@@ -20,6 +20,6 @@ export const SIZES: Record<ButtonSize, string> = {
 };
 
 export const SELECTED_STYLES =
-  "!bg-buttons-bgSelected !border-buttons-borderSelected !text-buttons-textSelected fill-none stroke-[3px] stroke-white pointer-events-none shadow-inner"; // Added shadow-inner for "pressed in" look
+  "!bg-buttons-bgSelected !border-buttons-borderSelected !text-buttons-textSelected fill-none stroke-[3px] stroke-buttons-visStrokeSelected pointer-events-none shadow-inner"; // Added shadow-inner for "pressed in" look
 
 export const DISABLED_STYLES = "opacity-50 cursor-not-allowed bg-buttons-bgDisabled !shadow-none";

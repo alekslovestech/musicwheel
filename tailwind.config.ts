@@ -1,13 +1,12 @@
-// tailwind.config.js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "!./src/tests/**",
-  ],
+// tailwind.config.ts
+import type { Config } from "tailwindcss";
+
+import { INTERVAL_CLASS_PALETTE } from "./src/lib/design/palette";
+
+const config: Config = {
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}", "!./src/tests/**"],
   safelist: [
     // Force these classes to be generated
-    "bg-test",
     {
       pattern: /bg-keys-*/,
     },
@@ -33,8 +32,6 @@ module.exports = {
         "linear-key": "inset 0 0 0 1px rgba(0, 0, 0, 0.5)",
       },
       colors: {
-        test: "red",
-
         cp: {
           highlight: "rgb(245, 158, 66)", // Amber 500
         },
@@ -56,10 +53,14 @@ module.exports = {
           actionBgActive: "rgb(210, 204, 192)", // Even darker when actively pressed
           actionBorder: "rgba(60, 60, 60, 0.2)", // Stronger border for definition
           actionText: "rgb(50, 50, 50)", // Slightly different text color
+
+          // Stroke colors for the "vis" button variant's inline SVG glyphs
+          visStroke: "rgb(0, 0, 0)",
+          visStrokeSelected: "rgb(255, 255, 255)",
         },
         // New playback button colors
         playback: {
-          scalesMode: "rgb(37, 99, 235)", //#2563eb
+          scalesMode: INTERVAL_CLASS_PALETTE[5], // deliberately the P4/P5 blue #2563eb
           defaultMode: "rgb(59, 130, 246)", //#3b82f6
         },
 
@@ -75,8 +76,8 @@ module.exports = {
           textOnBlackSelected: "rgb(255, 255, 255)", // White for selected black keys
           textOnWhiteFaded: "rgba(100, 100, 110, 0.5)", //"#64646E",
           textOnBlackFaded: "rgba(200, 200, 210, 0.5)", //"#C8C8D2",
-          bgHover: "rgb(240, 240, 240)", //"#f0f0f0",
           borderColor: "rgb(110, 110, 110)", //"#6E6E6E",
+          strokeOutline: "rgb(156, 163, 175)", // Outline around circular key wedges
 
           bgHighlighted: "rgb(113, 182, 255)", //"#B0D6FD",
           bgHighlightedSelected: "rgb(59, 97, 222)", //"#3B61DE",
@@ -95,6 +96,8 @@ module.exports = {
           outline: "rgba(0,0,128,0.01)", // Default container border (fainter)
           outlineDebug: "rgba(0,0,0,0.5)", // Debug container border
           divider: "rgba(45, 45, 45, 0.15)",
+          dividerStrong: "rgba(82, 82, 82, 0.4)", // Bar/cell separators in the progression notebook
+          scrollbar: "rgb(115, 115, 115)",
         },
         canvas: {
           bgDefault: "rgb(212, 214, 216)", // Even darker gray than before
@@ -117,3 +120,5 @@ module.exports = {
     },
   },
 };
+
+export default config;
