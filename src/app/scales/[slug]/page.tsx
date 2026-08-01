@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 
 import { CircularViewOverlay } from "@/components/CircularViewOverlay";
+import { SequenceLegendPanel } from "@/components/ColorLegend/SequenceLegendPanel";
 import { SequenceViewPage } from "@/components/SequenceView/SequenceViewPage";
 import { ChordNameDisplay } from "@/components/ChordNameDisplay";
 import { KeyboardCircular } from "@/components/Keyboard/Circular/KeyboardCircular";
@@ -34,6 +35,7 @@ export default function ScalesSlugPage() {
         }
         circularOverlay={<CircularViewOverlay />}
         circular={<KeyboardCircular />}
+        circularFooter={<SequenceLegendPanel />}
         linear={<KeyboardLinear />}
         settings={<SettingsPanelScales />}
       />

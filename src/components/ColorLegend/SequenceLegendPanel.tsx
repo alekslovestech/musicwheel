@@ -8,7 +8,7 @@ import { StaffUtils } from "@/utils/StaffUtils";
 
 import { ScaleRibbon } from "./ScaleRibbon";
 
-export function SequenceLegendOverlay() {
+export function SequenceLegendPanel() {
   const isScalesMode = useIsScalePreviewMode();
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
   const { scalePlaybackMode, activeStepIndex, playbackState } = useAudio();
@@ -29,7 +29,7 @@ export function SequenceLegendOverlay() {
       );
 
   return (
-    <div className="absolute bottom-2 left-2 z-20 w-56 rounded border border-containers-divider bg-canvas-bgDefault/95 p-snug shadow-md">
+    <div className="mx-auto mt-tight w-full max-w-md rounded border border-containers-divider bg-canvas-bgDefault/95 p-snug">
       <ScaleRibbon ribbon={ribbon} activeNoteIndex={activeNoteIndex} />
     </div>
   );
