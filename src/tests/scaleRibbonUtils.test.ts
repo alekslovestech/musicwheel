@@ -1,5 +1,12 @@
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
-import { buildScaleRibbonData, ribbonUsesStepSegments } from "@/utils/visual/scaleRibbonUtils";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
+import {
+  buildScaleRibbonData,
+  getIntervalTypesForScaleFromRoot,
+  ribbonUsesStepSegments,
+} from "@/utils/visual/scaleRibbonUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
 describe("buildScaleRibbonData", () => {
@@ -51,6 +58,29 @@ describe("buildScaleRibbonData", () => {
     test("every degree carries a color", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
       expect(ribbon.notes.every((note) => note.color !== undefined)).toBe(true);
+    });
+  });
+
+  describe("getIntervalTypesForScaleFromRoot", () => {
+    const shortFormsFor = (key: MusicalKey): string[] =>
+      [...getIntervalTypesForScaleFromRoot(key)].map(
+        (id) => NoteGroupingLibrary.getGroupingById(id).shortForm,
+      );
+
+    // Regression: these were folded to interval class first, which replaced every interval
+    // above the tritone with its inversion - the drone legend advertised m2, M3 and P4 for a
+    // scale containing none of them.
+    test("names intervals above the tritone, not their inversions", () => {
+      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
+
+      // Hungarian Minor is [0, 2, 3, 6, 7, 8, 11] semitones from the root.
+      expect(shortFormsFor(hungarianMinor).sort()).toEqual(
+        ["M2", "m3", "TT", "P5", "m6", "M7"].sort(),
+      );
+    });
+
+    test("names the plain major scale's intervals", () => {
+      expect(shortFormsFor(cIonian).sort()).toEqual(["M2", "M3", "P4", "P5", "M6", "M7"].sort());
     });
   });
 

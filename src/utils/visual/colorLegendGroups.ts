@@ -84,10 +84,14 @@ function sortColorLegendGroups(groups: ColorLegendGroup[]): ColorLegendGroup[] {
 }
 
 /**
- * Intervals first, then both kinds by catalog {@link NoteGrouping.orderId} - which already
- * encodes the pedagogical order (triads, sus, sevenths, sixths, extended, exotic). Sorting
- * chords by `ChordType` declaration order instead used to strand sus4/sus2 after every
- * seventh chord, and put exotics like `Δ7♭5` ahead of plain `6`.
+ * Intervals first, ordered by distance from the root so they read as a ladder up the scale.
+ * Catalog {@link NoteGrouping.orderId} cannot do that job for them - it pairs each interval
+ * with its inversion (m2 beside M7), which scatters a scale's rungs.
+ *
+ * Chords have no such natural scalar, so they keep catalog order, which already encodes the
+ * pedagogical sequence (triads, sus, sevenths, sixths, extended, exotic). Sorting chords by
+ * `ChordType` declaration order instead used to strand sus4/sus2 after every seventh chord,
+ * and put exotics like `Δ7♭5` ahead of plain `6`.
  */
 function compareColorLegendGroupOrder(a: ColorLegendGroup, b: ColorLegendGroup): number {
   const aIsInterval = isIntervalLegendGroup(a);
@@ -97,7 +101,18 @@ function compareColorLegendGroupOrder(a: ColorLegendGroup, b: ColorLegendGroup):
     return aIsInterval ? -1 : 1;
   }
 
-  return minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
+  return aIsInterval
+    ? minSemitonesFromRoot(a.groupingIds) - minSemitonesFromRoot(b.groupingIds)
+    : minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
+}
+
+/** Interval groupings are `[0, semitones]`, so the second offset is the distance from root. */
+function minSemitonesFromRoot(ids: NoteGroupingId[]): number {
+  return Math.min(
+    ...ids.map(function semitonesForInterval(id) {
+      return NoteGroupingLibrary.getGroupingById(id).offsets[1];
+    }),
+  );
 }
 
 function minOrderId(ids: NoteGroupingId[]): number {

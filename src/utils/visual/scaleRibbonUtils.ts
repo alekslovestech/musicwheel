@@ -8,7 +8,7 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeFormatter } from "@/utils/formatters/ScaleDegreeFormatter";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
-import { ColorUtils, intervalClassFromSemitones } from "@/utils/visual/ColorUtils";
+import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 
 export type ScaleRibbonStep = {
@@ -67,14 +67,19 @@ export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonStep[] {
   return [...bySemitones.entries()].sort(([a], [b]) => a - b).map(([, step]) => step);
 }
 
+/**
+ * Matches the raw distance from the root, not its interval class: folding to a class turns
+ * every interval above the tritone into its inversion, so Hungarian Minor's ♭6 and 7 were
+ * labelled `M3` and `m2` - intervals the scale does not contain. Color still comes from the
+ * class (inversions share a hue), so only the label changes.
+ */
 export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroupingId> {
   const offsets = getScalePatternOffsets(key);
 
   const types = new Set<NoteGroupingId>();
   for (const offset of offsets) {
-    const intervalClass = intervalClassFromSemitones(offset);
-    if (intervalClass === 0) continue;
-    const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(intervalClass);
+    if (offset === 0) continue;
+    const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(offset);
     if (type != null) types.add(type);
   }
   return types;
