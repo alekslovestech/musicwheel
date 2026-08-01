@@ -1,7 +1,7 @@
 import { ChordType } from "@/types/enums/ChordType";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { RomanChord } from "@/types/RomanChord";
-import { getRomanQuality } from "@/types/RomanQualityRegistry";
+import { getRomanQuality, getRomanQualityForDisplay } from "@/types/RomanQualityRegistry";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
 import { formatNumeralForDegree } from "@/types/RomanTypes";
@@ -45,14 +45,30 @@ export class RomanChordFormatter {
    * @param includeBass When true, appends slash-bass (e.g. `/ii`). Default false for compact display.
    */
   static formatRomanChord(romanChord: RomanChord, includeBass = false): string {
+    return this.buildLabel(romanChord, getRomanQuality(romanChord.chordType), includeBass);
+  }
+
+  /**
+   * Same vocabulary as {@link formatRomanChord}, but exotic qualities show their compact
+   * stand-in (`sus2♯4` -> `sus2`), for the wheel where the full suffix does not fit and reads
+   * as notation found nowhere else. Display only - never round-tripped through the parser.
+   */
+  static formatRomanChordForDisplay(romanChord: RomanChord): string {
+    return this.buildLabel(romanChord, getRomanQualityForDisplay(romanChord.chordType), false);
+  }
+
+  private static buildLabel(
+    romanChord: RomanChord,
+    quality: { suffix: string; isLowerCase: boolean },
+    includeBass: boolean,
+  ): string {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
-    const { suffix: chordPostfix, isLowerCase } = getRomanQuality(romanChord.chordType);
-    const romanNumeralString = formatNumeralForDegree(romanChord.scaleDegree, isLowerCase);
+    const romanNumeralString = formatNumeralForDegree(romanChord.scaleDegree, quality.isLowerCase);
     const bassSuffix =
       includeBass && romanChord.bassDegree !== undefined
         ? `/${formatNumeralForDegree(romanChord.bassDegree, false)}`
         : "";
-    return `${accidentalString}${romanNumeralString}${chordPostfix}${bassSuffix}`;
+    return `${accidentalString}${romanNumeralString}${quality.suffix}${bassSuffix}`;
   }
 
   /**

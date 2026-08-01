@@ -58,9 +58,9 @@ export const ScalePlaybackModeSelect: React.FC = () => {
   };
 
   return (
-    <div className="playback-mode-select">
+    <div className="playback-mode-select flex flex-col items-center">
       <SectionTitle>Playback Mode</SectionTitle>
-      <div className="grid grid-cols-2 gap-2 justify-items-center">
+      <div id="scale-playback-modes" className="grid grid-cols-2 gap-[2px]">
         {SCALE_PLAYBACK_MODE_OPTIONS.map(({ id, mode, icon, description }) => (
           <Button
             key={id}

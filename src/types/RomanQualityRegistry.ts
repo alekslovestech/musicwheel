@@ -8,26 +8,53 @@ export const DEFAULT_ROMAN_QUALITY: RomanQualitySpec = {
 export function romanQuality(
   suffix: string,
   isLowerCase: boolean,
-  parseTokens?: readonly string[],
+  options?: RomanQualityOptions,
 ): RomanQualitySpec {
-  return parseTokens ? { suffix, isLowerCase, parseTokens } : { suffix, isLowerCase };
+  return { suffix, isLowerCase, ...options };
 }
 
 export function getRomanQuality(chordType: ChordType): RomanQualitySpec {
   return ROMAN_QUALITY[chordType] ?? DEFAULT_ROMAN_QUALITY;
 }
 
+/**
+ * Same numeral casing, but with exotic qualities reduced to their nearest standard symbol.
+ * Lossy on purpose - for space-constrained display only, never for anything that gets parsed
+ * back via {@link resolveRomanQuality}.
+ */
+export function getRomanQualityForDisplay(chordType: ChordType): RomanQualitySpec {
+  const spec = getRomanQuality(chordType);
+  return spec.displaySuffix === undefined ? spec : { ...spec, suffix: spec.displaySuffix };
+}
+
 export function resolveRomanQuality(isLowerCase: boolean, suffix: string): ChordType {
   return DECODE_MAP.get(decodeKey(isLowerCase, suffix)) ?? ChordType.Unknown;
 }
 
-type RomanQualitySpec = {
-  suffix: string;
-  isLowerCase: boolean;
+type RomanQualityOptions = {
   /** Alternate suffix tokens accepted when parsing (canonical encode uses `suffix`). */
   parseTokens?: readonly string[];
+  /**
+   * Compact stand-in for `suffix` in tight display (the wheel), where a full exotic quality
+   * either overflows or reads as notation the learner will not meet anywhere else. Excluded
+   * from the decode map and parse pattern, so simplifying here never weakens parsing.
+   */
+  displaySuffix?: string;
 };
-/** Progression roman quality: encode/decode via suffix + numeral case. */
+
+type RomanQualitySpec = RomanQualityOptions & {
+  suffix: string;
+  isLowerCase: boolean;
+};
+/**
+ * Progression roman quality: encode/decode via suffix + numeral case.
+ *
+ * `displaySuffix` follows one rule: a chord with no 3rd collapses to its base sus symbol,
+ * since the missing 3rd is the part worth reading and the rest (added 6th, ♯4, ♭5) is detail
+ * no learner meets as roman-numeral vocabulary. Chords that do have a 3rd keep their standard
+ * alteration notation (`♭5`, `7♭5`, `Δ7♭5`) - short already, and altering the 5th of a chord
+ * that has a real quality is not something to hide.
+ */
 const ROMAN_QUALITY: Partial<Record<ChordType, RomanQualitySpec>> = {
   [ChordType.Major]: romanQuality("", false),
   [ChordType.Minor]: romanQuality("", true),
@@ -36,20 +63,20 @@ const ROMAN_QUALITY: Partial<Record<ChordType, RomanQualitySpec>> = {
   [ChordType.Minor7]: romanQuality("7", true),
   [ChordType.Major6]: romanQuality("6", false),
   [ChordType.Minor6]: romanQuality("6", true),
-  [ChordType.Major7]: romanQuality("Δ7", false, ["maj7"]),
-  [ChordType.Diminished]: romanQuality("°", true, ["o", "dim"]),
-  [ChordType.Diminished7]: romanQuality("°7", true, ["o7", "dim7"]),
+  [ChordType.Major7]: romanQuality("Δ7", false, { parseTokens: ["maj7"] }),
+  [ChordType.Diminished]: romanQuality("°", true, { parseTokens: ["o", "dim"] }),
+  [ChordType.Diminished7]: romanQuality("°7", true, { parseTokens: ["o7", "dim7"] }),
   [ChordType.HalfDiminished]: romanQuality("ø7", true),
-  [ChordType.Augmented]: romanQuality("+", false, ["aug"]),
+  [ChordType.Augmented]: romanQuality("+", false, { parseTokens: ["aug"] }),
   [ChordType.MajFlat5]: romanQuality("♭5", false),
   [ChordType.Sus4]: romanQuality("sus", false),
-  [ChordType.Major7Sus4]: romanQuality("Δ7sus4", false),
-  [ChordType.Dominant7Sus2Flat5]: romanQuality("7sus2♭5", false),
+  [ChordType.Major7Sus4]: romanQuality("Δ7sus4", false, { displaySuffix: "sus" }),
+  [ChordType.Dominant7Sus2Flat5]: romanQuality("7sus2♭5", false, { displaySuffix: "sus2" }),
   [ChordType.Major7Flat5]: romanQuality("Δ7♭5", false),
-  [ChordType.Sus2Add6]: romanQuality("6sus2", false),
+  [ChordType.Sus2Add6]: romanQuality("6sus2", false, { displaySuffix: "sus2" }),
   [ChordType.Sus2]: romanQuality("sus2", false),
-  [ChordType.Sus2sharp4]: romanQuality("sus2♯4", false),
-  [ChordType.Sus2_4]: romanQuality("sus24", false),
+  [ChordType.Sus2sharp4]: romanQuality("sus2♯4", false, { displaySuffix: "sus2" }),
+  [ChordType.Sus2_4]: romanQuality("sus24", false, { displaySuffix: "sus2" }),
   [ChordType.Narrow_b3_4]: romanQuality("add4", true),
 };
 

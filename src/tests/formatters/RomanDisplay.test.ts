@@ -70,11 +70,13 @@ describe("Roman Mode Index Arrays", () => {
     },
     {
       mode: ScaleModeType.DoubleHarmonicMajor,
-      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VIIsus2♯4"],
+      // VII is Sus2sharp4: the wheel shows the simplified "sus2" (no 3rd is the readable part),
+      // while V keeps "♭5" - it has a 3rd, so its altered 5th stays visible.
+      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VIIsus2"],
     },
     {
       mode: ScaleModeType.PanthuVaraali,
-      expected: ["I", "♭IIsus", "iii", "♯IVsus2♯4", "V♭5", "♭VI+", "VIIsus2"],
+      expected: ["I", "♭IIsus", "iii", "♯IVsus2", "V♭5", "♭VI+", "VIIsus2"],
     },
   ];
 
