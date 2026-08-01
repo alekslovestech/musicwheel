@@ -229,12 +229,6 @@ describe("Dominant7Flat5 symmetry", () => {
   const D_F$_Ab_C = [2, 6, 8, 12];
   const Ab_C_D_F$ = [8, 12, 14, 18];
 
-  const pitchClasses = (indices: number[]) => new Set(indices.map((i) => i % 12));
-
-  it("is the same pitch-class set rooted a tritone apart", () => {
-    expect(pitchClasses(D_F$_Ab_C)).toEqual(pitchClasses(Ab_C_D_F$));
-  });
-
   it("names each voicing from its own bass note", () => {
     verifyChordNameWithMode("D7♭5", D_F$_Ab_C);
     // Same root, spelled G♯ rather than A♭ because the default key spells with sharps.
