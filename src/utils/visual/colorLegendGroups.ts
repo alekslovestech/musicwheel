@@ -27,7 +27,10 @@ function groupsForDisplayIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[
 
   const groups = [...fullMap.entries()]
     .filter(([bucketKey]) => displayBuckets.has(bucketKey))
-    .map(([, groupingIds]) => toColorLegendGroup(groupingIds));
+    // A color bucket can hold catalog-wide ids that share this color (e.g. Minor7 and
+    // Major6 render identically) but aren't all diatonic to the current scale/progression -
+    // only label the ones actually being displayed, or a row for "min7" alone shows "min7·6".
+    .map(([, groupingIds]) => toColorLegendGroup(groupingIds.filter((id) => displayIds.has(id))));
 
   return sortColorLegendGroups(groups, displayIds);
 }

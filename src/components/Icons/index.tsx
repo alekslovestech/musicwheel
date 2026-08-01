@@ -1,6 +1,7 @@
-interface IconProps {
+
+type IconProps = {
   className?: string;
-}
+};
 
 export const PlayIcon: React.FC<IconProps> = ({ className = "w-4 h-4" }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
@@ -30,3 +31,4 @@ export const ResumeIcon: React.FC<IconProps> = ({ className = "w-4 h-4" }) => (
     <path d="M10 8L16 12L10 16V8Z" fill="currentColor" />
   </svg>
 );
+
