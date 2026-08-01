@@ -1,6 +1,10 @@
 import { SEVEN, TWELVE } from "@/types/constants/NoteConstants";
+import { ixChromatic } from "@/types/ChromaticIndex";
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
+import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -127,5 +131,78 @@ describe("getScaleDegreeDisplayString", () => {
         });
       });
     });
+  });
+});
+
+describe("Roman Seventh label mode", () => {
+  const constants = GreekTestConstants.getInstance();
+
+  function verifySeventhDisplayStrings(greekMode: ScaleModeType, expectedNotes: string[]) {
+    expect(expectedNotes.length).toBe(SEVEN);
+    const romanDisplayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[greekMode],
+      KeyDisplayMode.RomanSeventh,
+    );
+    expect(romanDisplayStrings).toEqual(expectedNotes);
+  }
+
+  // Numeral only, no quality suffix: a bare "7" was tried and dropped - it misrepresented
+  // chords with no literal 7th (Minor6, AugMajor7, ...; see the Panthu Varaali case below).
+  // Full quality (Δ7, ø7, ...) is what formatRomanChord produces for the roomy contexts
+  // (chord display, legend) - this KeyDisplayMode only feeds the wheel.
+  it("shows numeral only for Ionian, not seventh quality", () => {
+    verifySeventhDisplayStrings(ScaleModeType.Ionian, ["I", "ii", "iii", "IV", "V", "vi", "vii"]);
+  });
+
+  it("shows numeral only for Aeolian, not seventh quality", () => {
+    verifySeventhDisplayStrings(ScaleModeType.Aeolian, [
+      "i",
+      "ii",
+      "♭III",
+      "iv",
+      "v",
+      "♭VI",
+      "♭VII",
+    ]);
+  });
+
+  it("matches Triad's numeral+case exactly, dropping only Roman's quality suffix", () => {
+    // Roman (Triad) shows full quality on the wheel ("vii°"); RomanSeventh now shows just
+    // the numeral+case portion of that same string, with nothing appended for Seventh mode.
+    const sevenths = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[ScaleModeType.Ionian],
+      KeyDisplayMode.RomanSeventh,
+    );
+    expect(sevenths).toEqual(["I", "ii", "iii", "IV", "V", "vi", "vii"]);
+  });
+
+  it("wheel uses roman labels for both chordal playback modes only", () => {
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.Triad)).toBe(true);
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.Seventh)).toBe(true);
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.SingleNote)).toBe(false);
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.DronedSingleNote)).toBe(false);
+  });
+
+  it("wheel keeps Triad's short quality symbol but drops it for Seventh", () => {
+    const key = constants.C_IONIAN_KEY;
+    // B is chromatic index 11 in C Ionian - the leading tone (vii), a diminished triad.
+    const labelIn = (mode: ScalePlaybackMode) =>
+      KeyboardUtils.getNoteText(KeyboardUIType.Circular, ixChromatic(11), true, key, mode);
+
+    expect(labelIn(ScalePlaybackMode.Triad)).toBe("vii°");
+    expect(labelIn(ScalePlaybackMode.Seventh)).toBe("vii");
+  });
+});
+
+describe("Panthu Varaali Roman Seventh labels (regression: bII7/#IV7/VII7 were Unknown)", () => {
+  it("labels the diatonic seventh on every degree - no chord left unresolved", () => {
+    const romanDisplayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[ScaleModeType.PanthuVaraali],
+      KeyDisplayMode.RomanSeventh,
+    );
+    // Numeral only (see "Roman Seventh label mode" above): regardless of the actual chord
+    // quality (Major7Sus4, Sus2Add6, ...), only the degree's numeral+case shows - this is
+    // what makes ♭VI legible here too, sidestepping the AugMajor7 roman-quality gap entirely.
+    expect(romanDisplayStrings).toEqual(["I", "♭II", "iii", "♯IV", "V", "♭VI", "VII"]);
   });
 });

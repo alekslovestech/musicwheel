@@ -27,14 +27,33 @@ export class ChordSetUtils {
     return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
   }
 
+  static getSeventhChordType(
+    scaleDegreeInfo: ScaleDegreeInfo,
+    scaleModeInfo: ScaleModeInfo,
+  ): ChordType {
+    const offsets = scaleModeInfo.getSeventhOffsets(scaleDegreeInfo);
+    return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
+  }
+
   /** Distinct diatonic triad qualities for each scale degree in {@link key}. */
   static triadTypesForKey(key: MusicalKey): Set<ChordType> {
+    return this.chordTypesForKey(key, false);
+  }
+
+  /** Distinct diatonic seventh qualities for each scale degree in {@link key}. */
+  static seventhTypesForKey(key: MusicalKey): Set<ChordType> {
+    return this.chordTypesForKey(key, true);
+  }
+
+  private static chordTypesForKey(key: MusicalKey, isSeventh: boolean): Set<ChordType> {
     const types = new Set<ChordType>();
     for (let i = 0; i < key.scalePatternLength; i++) {
       const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(
         ixScaleDegreeIndex(i),
       );
-      const chordType = this.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
+      const chordType = isSeventh
+        ? this.getSeventhChordType(scaleDegreeInfo, key.scaleModeInfo)
+        : this.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
       if (chordType !== ChordType.Unknown) {
         types.add(chordType);
       }

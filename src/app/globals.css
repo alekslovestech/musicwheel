@@ -26,7 +26,7 @@ select * {
 
 #progression-notebook-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgb(115 115 115) transparent;
+  scrollbar-color: theme(colors.containers.scrollbar) transparent;
 }
 
 #progression-notebook-scroll::-webkit-scrollbar {
@@ -34,6 +34,6 @@ select * {
 }
 
 #progression-notebook-scroll::-webkit-scrollbar-thumb {
-  background-color: rgb(115 115 115);
+  background-color: theme(colors.containers.scrollbar);
   border-radius: 4px;
 }

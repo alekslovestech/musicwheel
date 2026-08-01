@@ -113,10 +113,25 @@ export class KeyboardUtils {
     return classes.join(" ");
   }
 
-  private static resolveCircularScaleLabelMode(scalePlaybackMode: ScalePlaybackMode): KeyDisplayMode {
-    return scalePlaybackMode === ScalePlaybackMode.Triad
-      ? KeyDisplayMode.Roman
-      : KeyDisplayMode.ScaleDegree;
+  private static resolveCircularScaleLabelMode(
+    scalePlaybackMode: ScalePlaybackMode,
+  ): KeyDisplayMode {
+    switch (scalePlaybackMode) {
+      case ScalePlaybackMode.Triad:
+        return KeyDisplayMode.Roman;
+      case ScalePlaybackMode.Seventh:
+        return KeyDisplayMode.RomanSeventh;
+      case ScalePlaybackMode.DronedSingleNote:
+        return KeyDisplayMode.ScaleDegree;
+      default:
+        return KeyDisplayMode.NoteNames;
+    }
+  }
+
+  /** Roman-numeral wheel labels, i.e. the chordal playback modes. Single source for label styling. */
+  static usesRomanScaleLabels(scalePlaybackMode: ScalePlaybackMode): boolean {
+    const labelMode = this.resolveCircularScaleLabelMode(scalePlaybackMode);
+    return labelMode === KeyDisplayMode.Roman || labelMode === KeyDisplayMode.RomanSeventh;
   }
 
   static getNoteText(

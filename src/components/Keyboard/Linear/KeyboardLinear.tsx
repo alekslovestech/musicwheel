@@ -55,7 +55,7 @@ export const KeyboardLinear = () => {
           cy={circleCenterY}
           r={3}
           fill="none"
-          stroke="black"
+          className="stroke-keys-scaleBoundaryColor"
           vectorEffect="non-scaling-stroke"
         />
         <circle
@@ -64,7 +64,7 @@ export const KeyboardLinear = () => {
           cy={circleCenterY}
           r={3}
           fill="none"
-          stroke="black"
+          className="stroke-keys-scaleBoundaryColor"
           vectorEffect="non-scaling-stroke"
         />
       </svg>

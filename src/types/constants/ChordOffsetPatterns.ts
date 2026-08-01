@@ -11,12 +11,17 @@ export const CHORD_OFFSET_PATTERNS = {
   MAJOR7: [0, 4, 7, 11], //1-3-5-7
   MINOR7: [0, 3, 7, 10], //1-b3-5-b7
   HALF_DIMINISHED7: [0, 3, 6, 10], //1-b3-b5-b7
+  DOMINANT7_FLAT5: [0, 4, 6, 10], //1-3-b5-b7
   MINOR_MAJOR7: [0, 3, 7, 11], //1-b3-5-7
   DIMINISHED7: [0, 3, 6, 9], //1-b3-b5-bb7
 
   MAJOR6: [0, 4, 7, 9], //1-3-5-6
   MINOR6: [0, 3, 7, 9], //1-b3-5-6
   AUGMENTED_MAJOR7: [0, 4, 8, 11], //1-3-#5-7
+  MAJOR7_SUS4: [0, 5, 7, 11], //1-4-5-7
+  DOMINANT7_SUS2_FLAT5: [0, 2, 6, 10], //1-2-b5-b7
+  MAJOR7_FLAT5: [0, 4, 6, 11], //1-3-b5-7
+  SUS2_ADD6: [0, 2, 7, 9], //1-2-5-6
 
   ADD9: [0, 4, 7, 14], //1-3-5-9
   ADD2: [0, 2, 4, 7], //1-2-3-5

@@ -19,15 +19,24 @@ export class RomanChordFormatter {
     return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
   }
 
+  static getSeventhChordType(
+    scaleDegreeInfo: ScaleDegreeInfo,
+    scaleModeInfo: ScaleModeInfo,
+  ): ChordType {
+    const offsets = scaleModeInfo.getSeventhOffsets(scaleDegreeInfo);
+    return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
+  }
+
+  /** @param includeSeventh Build the 1-3-5-7 stack instead of the triad (Seventh playback mode). */
   static romanChordFromScaleDegree(
     scaleDegreeInfo: ScaleDegreeInfo,
     scaleModeInfo: ScaleModeInfo,
+    includeSeventh = false,
   ): RomanChord {
-    return new RomanChord(
-      scaleDegreeInfo.scaleDegree,
-      this.getTriadChordType(scaleDegreeInfo, scaleModeInfo),
-      scaleDegreeInfo.accidentalPrefix,
-    );
+    const chordType = includeSeventh
+      ? this.getSeventhChordType(scaleDegreeInfo, scaleModeInfo)
+      : this.getTriadChordType(scaleDegreeInfo, scaleModeInfo);
+    return new RomanChord(scaleDegreeInfo.scaleDegree, chordType, scaleDegreeInfo.accidentalPrefix);
   }
 
   /**
@@ -44,5 +53,17 @@ export class RomanChordFormatter {
         ? `/${formatNumeralForDegree(romanChord.bassDegree, false)}`
         : "";
     return `${accidentalString}${romanNumeralString}${chordPostfix}${bassSuffix}`;
+  }
+
+  /**
+   * Numeral + case only (no quality postfix or bass), for compact UI where color already
+   * conveys chord quality — e.g. the wheel and ribbon in Seventh playback mode, where a
+   * partial marker like a bare "7" would be actively wrong on chords like Minor6 or
+   * AugMajor7 that surface no literal 7th. Also used for Triad-mode ribbon labels.
+   */
+  static formatRomanNumeralOnly(romanChord: RomanChord): string {
+    const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
+    const { isLowerCase } = getRomanQuality(romanChord.chordType);
+    return `${accidentalString}${formatNumeralForDegree(romanChord.scaleDegree, isLowerCase)}`;
   }
 }

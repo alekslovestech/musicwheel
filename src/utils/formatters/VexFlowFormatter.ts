@@ -6,11 +6,26 @@ import { isMajor } from "@/types/enums/KeyType";
 import { type DuratedNoteChord, type NoteLength } from "@/types/Durated";
 
 import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
+import { AccidentalType } from "@/types/enums/AccidentalType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { NoteConverter } from "@/utils/NoteConverter";
 
 /** Semitones above C4 for B4 (the middle line of the treble clef). */
 const TREBLE_MIDDLE_LINE_SEMITONES = 11; // B4
+
+/** Tracks per-measure accidental state for a staff position (VexFlow note key, e.g. `d/4`). */
+export class StaffAccidentalCache {
+  private readonly active = new Map<string, AccidentalType>();
+
+  /** Returns whether an accidental modifier should be drawn; updates measure state. */
+  shouldDrawAccidental(staffPositionKey: string, accidental: AccidentalType): boolean {
+    const previous = this.active.get(staffPositionKey);
+    if (previous === accidental) return false;
+
+    this.active.set(staffPositionKey, accidental);
+    return accidental !== AccidentalType.None;
+  }
+}
 
 export class VexFlowFormatter {
   static formatNote(note: NoteWithOctave, baseOctave: number = 4): string {
@@ -51,14 +66,18 @@ export class VexFlowFormatter {
     return avg > TREBLE_MIDDLE_LINE_SEMITONES ? Stem.DOWN : Stem.UP;
   }
 
-  private static createStaveChordNote(step: DuratedNoteChord, factory: Factory): StaveNote {
+  private static createStaveChordNote(
+    step: DuratedNoteChord,
+    factory: Factory,
+    accidentalCache: StaffAccidentalCache,
+  ): StaveNote {
     const duration = VexFlowFormatter.noteLengthToVexDuration(
       step.noteLength ?? DEFAULT_CHORD_PROGRESSION_NOTE_LENGTH,
     );
     const dots = step.rhythmDots ?? 0;
     const keys = step.value.map((noteWithOctave, index) => ({
       key: VexFlowFormatter.formatNote(noteWithOctave),
-      accidentalSign: AccidentalFormatter.getAccidentalSignForEasyScore(noteWithOctave.accidental),
+      noteWithOctave,
       index,
     }));
 
@@ -76,8 +95,11 @@ export class VexFlowFormatter {
       }
     }
 
-    keys.forEach(({ accidentalSign, index }) => {
-      if (accidentalSign) {
+    keys.forEach(({ key, noteWithOctave, index }) => {
+      const accidentalSign = AccidentalFormatter.getAccidentalSignForEasyScore(
+        noteWithOctave.accidental,
+      );
+      if (accidentalSign && accidentalCache.shouldDrawAccidental(key, noteWithOctave.accidental)) {
         chordNote.addModifier(factory.Accidental({ type: accidentalSign }), index);
       }
     });
@@ -86,7 +108,10 @@ export class VexFlowFormatter {
   }
 
   static createStaveChordNotes(steps: DuratedNoteChord[], factory: Factory): StaveNote[] {
-    return steps.map((step) => VexFlowFormatter.createStaveChordNote(step, factory));
+    const accidentalCache = new StaffAccidentalCache();
+    return steps.map((step) =>
+      VexFlowFormatter.createStaveChordNote(step, factory, accidentalCache),
+    );
   }
 
   static getKeySignatureForVex(musicalKey: MusicalKey) {

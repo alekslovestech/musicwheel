@@ -3,29 +3,20 @@
 import { useState } from "react";
 
 import { Button } from "@/components/Common/Button";
-import { useAudio } from "@/contexts/AudioContext";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
-import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
-import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
-import { ColorLegendPanel } from "./ColorLegendPanel";
+import { StaticColorLegendPanel } from "./StaticColorLegendPanel";
 
-export function ColorLegendOverlay() {
+export function StaticColorLegendOverlay() {
   const [open, setOpen] = useState(false);
   const trackAction = useTrack();
-  const isScalesMode = useIsScalePreviewMode();
-  const { scalePlaybackMode } = useAudio();
 
   function handleLegendToggle() {
     setOpen((wasOpen) => {
       trackAction(TrackEvent.ColorLegendInteracted);
       return !wasOpen;
     });
-  }
-
-  if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.SingleNote) {
-    return null;
   }
 
   return (
@@ -40,7 +31,7 @@ export function ColorLegendOverlay() {
       >
         {open ? "Hide legend" : "Legend"}
       </Button>
-      {open && <ColorLegendPanel />}
+      {open && <StaticColorLegendPanel />}
     </div>
   );
 }

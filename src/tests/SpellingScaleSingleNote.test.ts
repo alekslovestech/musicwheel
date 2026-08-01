@@ -97,7 +97,7 @@ describe("SpellingScaleSingleNote", () => {
     expect(displayInfo.chordName).toBe("D♭");
   });
 
-  test("C double harmonic major b2 single-note spells Db with open C major staff key", () => {
+  test("C double harmonic major b2 single-note spells Db under best-fit staff key", () => {
     const key = MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor);
     const step = getScaleStepAtDegree(
       key,

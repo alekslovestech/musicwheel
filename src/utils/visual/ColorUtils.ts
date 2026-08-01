@@ -3,18 +3,24 @@ import { NoteIndices } from "@/types/IndexTypes";
 import { IntervalClass, IntervalDistance, ixIntervalClass } from "@/types/IntervalClass";
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IntervalUtils } from "@/utils/IntervalUtils";
-import { INTERVAL_CLASS_COLORS } from "@/utils/visual/IntervalClassColors";
+import { DEFAULT_INTERVAL_CLASS_COLOR, colorForIntervalClass } from "@/utils/visual/IntervalClassColors";
 
 export class ColorUtils {
-  static getColorForIndices(indices: NoteIndices): chroma.Color {    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
+  static getColorForIndices(indices: NoteIndices): chroma.Color {
+    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
     return this.mixChordColor(cyclicIntervals, "lch");
+  }
+
+  /** Single interval distance from root (or step size), without chord mixing. */
+  static getColorForSemitoneDistance(semitones: number): chroma.Color {
+    return colorForIntervalClass(intervalClassFromSemitones(semitones));
   }
 
   private static mixChordColor(
     intervals: IntervalDistance[],
     colorFormat: chroma.ColorFormat,
   ): chroma.Color {
-    if (intervals.length === 0) return INTERVAL_CLASS_COLORS[0];
+    if (intervals.length === 0) return DEFAULT_INTERVAL_CLASS_COLOR;
     const { colors, weights } = this.colorsAndWeightsForIntervals(intervals);
     return this.mixColors(colors, weights, colorFormat);
   }
@@ -28,8 +34,8 @@ export class ColorUtils {
     const weights: number[] = [];
 
     intervals.forEach((interval, i) => {
-      const ic = intervalClass(interval);
-      colors.push(INTERVAL_CLASS_COLORS[ic]);
+      const ic = intervalClassFromSemitones(interval);
+      colors.push(colorForIntervalClass(ic));
       const dissonance = INTERVAL_CLASS_DISSONANCE[ic];
       const dissonanceWeight = 1 + dissonance;
       const orderWeight = dissonance === 0 ? this.orderWeightForPosition(i, len) : 0;
@@ -51,7 +57,7 @@ export class ColorUtils {
     weights: number[],
     colorFormat: chroma.ColorFormat,
   ): chroma.Color {
-    if (colors.length === 0) return INTERVAL_CLASS_COLORS[0];
+    if (colors.length === 0) return DEFAULT_INTERVAL_CLASS_COLOR;
     if (colors.length === 1) return colors[0];
     return colorFormat === "lch"
       ? this.mixColorsLCH(colors, weights)
@@ -106,7 +112,7 @@ const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
   6: 1,
 };
 
-function intervalClass(semitone: number): IntervalClass {
+export function intervalClassFromSemitones(semitone: number): IntervalClass {
   const mod = semitone % TWELVE;
   return ixIntervalClass(Math.min(mod, TWELVE - mod));
 }

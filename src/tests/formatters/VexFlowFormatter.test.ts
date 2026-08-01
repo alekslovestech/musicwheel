@@ -1,7 +1,7 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { createNoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { NoteConverter } from "@/utils/NoteConverter";
-import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
+import { VexFlowFormatter, StaffAccidentalCache } from "@/utils/formatters/VexFlowFormatter";
 
 describe("NoteConverter.noteWithOctaveToActual", () => {
   it("returns chromatic index for a natural note in octave 0", () => {
@@ -37,5 +37,38 @@ describe("VexFlowFormatter.noteLengthToVexDuration", () => {
     expect(VexFlowFormatter.noteLengthToVexDuration(8)).toBe("8");
     expect(VexFlowFormatter.noteLengthToVexDuration(16)).toBe("16");
     expect(VexFlowFormatter.noteLengthToVexDuration(32)).toBe("32");
+  });
+});
+
+describe("StaffAccidentalCache", () => {
+  test("draws the first explicit accidental on a staff position", () => {
+    const cache = new StaffAccidentalCache();
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(true);
+  });
+
+  test("suppresses repeated accidentals on the same staff position", () => {
+    const cache = new StaffAccidentalCache();
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(true);
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(false);
+  });
+
+  test("does not draw when the note is diatonic to the key signature", () => {
+    const cache = new StaffAccidentalCache();
+    expect(cache.shouldDrawAccidental("c/4", AccidentalType.None)).toBe(false);
+    expect(cache.shouldDrawAccidental("c/4", AccidentalType.None)).toBe(false);
+  });
+
+  test("draws again when the alteration changes on the same staff position", () => {
+    const cache = new StaffAccidentalCache();
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(true);
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Natural)).toBe(true);
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(true);
+  });
+
+  test("tracks different staff positions independently", () => {
+    const cache = new StaffAccidentalCache();
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(true);
+    expect(cache.shouldDrawAccidental("d/5", AccidentalType.Flat)).toBe(true);
+    expect(cache.shouldDrawAccidental("d/4", AccidentalType.Flat)).toBe(false);
   });
 });

@@ -13,7 +13,9 @@ import { CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
 import { CircularVisualizations } from "./CircularVisualizations";
 import { PianoKeyCircular } from "./PianoKeyCircular";
 import { CircularVisMode } from "@/types/enums/SettingModes";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
+import { useAudio } from "@/contexts/AudioContext";
 
 const MAX_RADIUS = 100;
 const OUTER_RADIUS = 0.9 * MAX_RADIUS;
@@ -31,6 +33,9 @@ export const KeyboardCircular = () => {
         ? CircularVisMode.Radial
         : CircularVisMode.None;
   const isScales = useIsScalePreviewMode();
+  const { scalePlaybackMode } = useAudio();
+  const showScaleStepIntervals =
+    isScales && scalePlaybackMode === ScalePlaybackMode.SingleNote;
 
   const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + CIRCLE_RADIUS * 2;
   const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
@@ -104,6 +109,8 @@ export const KeyboardCircular = () => {
           />
         );
       })}
+      {showScaleStepIntervals &&
+        CircularVisualizations.drawScaleStepIntervals(selectedMusicalKey, INNER_RADIUS)}
       {CircularVisualizations.draw(
         selectedNoteIndices,
         circularVisMode,

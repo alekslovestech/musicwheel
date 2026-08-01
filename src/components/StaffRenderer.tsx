@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { Factory } from "vexflow";
 
-import { useAudio } from "@/contexts/AudioContext";
+import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { COMMON_STYLES } from "@/lib/design";
 import { useBorder } from "@/lib/hooks";
 import { useMusical } from "@/contexts/MusicalContext";
@@ -14,18 +14,24 @@ import { makeDurated } from "@/types/Durated";
 import { SpellingUtils } from "@/utils/SpellingUtils";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import { StaffUtils } from "@/utils/StaffUtils";
+import { StaffUtils, SCALE_STAFF_DRAW_OPTIONS } from "@/utils/StaffUtils";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
-import { useGlobalMode, useIsChordProgressionsMode } from "@/lib/hooks/useGlobalMode";
+import { useGlobalMode, useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { resolveSpellingContext } from "@/utils/spelling/SpellingContext";
 
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
-  const { selectedProgression, activeProgressionStepIndex } = useAudio();
+  const {
+    selectedProgression,
+    scalePlaybackMode,
+    activeStepIndex,
+    playbackState,
+  } = useAudio();
   const isChordProgressionsMode = useIsChordProgressionsMode();
+  const isScalesMode = useIsScalePreviewMode();
   const globalMode = useGlobalMode();
   const border = useBorder();
 
@@ -56,18 +62,18 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     stave.setContext(context).draw();
 
     const progressionBarMode =
-      isChordProgressionsMode && selectedProgression != null && activeProgressionStepIndex != null;
+      isChordProgressionsMode && selectedProgression != null && activeStepIndex != null;
 
     if (progressionBarMode) {
       const progression = ChordProgressionLibrary.getProgression(selectedProgression);
       const cpf = new ChordProgressionFormatter(progression);
-      const activeRoman = progression.progression[activeProgressionStepIndex]?.value;
+      const activeRoman = progression.progression[activeStepIndex]?.value;
       const activeChordBg = chordActiveHighlightFor(activeRoman?.chordType).css();
 
       const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
       const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
       const stepIndicesInRow = cpf.stepIndicesForDisplayRow(
-        activeProgressionStepIndex,
+        activeStepIndex,
         isCompact,
       );
 
@@ -79,7 +85,7 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
 
       if (steps.length === 0) return;
       const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
-      const highlightIndex = stepIndicesInRow.indexOf(activeProgressionStepIndex);
+      const highlightIndex = stepIndicesInRow.indexOf(activeStepIndex);
       if (highlightIndex >= 0) {
         VexFlowUtils.drawVoiceWithHighlights(
           factory,
@@ -90,6 +96,49 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
         );
       } else {
         VexFlowUtils.drawVoice(factory, stave, notes);
+      }
+
+      return;
+    }
+
+    if (isScalesMode) {
+      const steps = StaffUtils.buildDuratedScaleStepsForBar(
+        selectedMusicalKey,
+        scalePlaybackMode,
+        staffSpellingKey,
+      );
+
+      if (steps.length === 0) return;
+
+      const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
+
+      const isScalePlaybackActive =
+        playbackState === PlaybackState.SequencePlaying ||
+        playbackState === PlaybackState.SequencePaused;
+
+      const highlightIndex = isScalePlaybackActive
+        ? activeStepIndex
+        : StaffUtils.findScaleStepIndexForSelection(
+            selectedMusicalKey,
+            scalePlaybackMode,
+            selectedNoteIndices,
+          );
+
+      if (highlightIndex != null && highlightIndex >= 0) {
+        VexFlowUtils.drawVoiceWithHighlights(
+          factory,
+          stave,
+          notes,
+          highlightIndex,
+          StaffUtils.scaleStaffHighlightColor(
+            selectedMusicalKey,
+            scalePlaybackMode,
+            highlightIndex,
+          ),
+          SCALE_STAFF_DRAW_OPTIONS,
+        );
+      } else {
+        VexFlowUtils.drawVoice(factory, stave, notes, SCALE_STAFF_DRAW_OPTIONS);
       }
 
       return;
@@ -120,8 +169,12 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
     currentChordRef,
     globalMode,
     isChordProgressionsMode,
+    isScalesMode,
     selectedProgression,
-    activeProgressionStepIndex,
+    activeStepIndex,
+    scalePlaybackMode,
+    activeStepIndex,
+    playbackState,
   ]);
 
   return (

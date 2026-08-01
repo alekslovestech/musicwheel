@@ -73,6 +73,16 @@ class NoteGroupingLibrarySingleton {
     return Object.values(ChordType).includes(grouping.id as ChordType);
   }
 
+  /** Root-position reverse lookup against library interval entries (offsets = [0, semitones]). */
+  public matchIntervalTypeFromOffset(semitonesFromRoot: number): IntervalType | undefined {
+    const found = NoteGroupingLibrarySingleton.library.find(
+      (grouping) =>
+        grouping.numNotes === 2 &&
+        IndexUtils.areIndicesEqual(grouping.offsets, [0, semitonesFromRoot]),
+    );
+    return found?.id as IntervalType | undefined;
+  }
+
   private static instance: NoteGroupingLibrarySingleton;
 
   private constructor() {}
@@ -353,6 +363,63 @@ class NoteGroupingLibrarySingleton {
       "Minor Add 4 Chord",
       CHORD_OFFSET_PATTERNS.NARROW_3_FLAT_4,
       false,
+      false,
+    ),
+    // Detectable but not offered as a preset, like its triad sibling MajFlat5.
+    // Keeps inversions: it is a full 4-note chord, unlike the narrow voicings above.
+    NoteGrouping.createChord(
+      ChordType.Dominant7Flat5,
+      41,
+      "7♭5",
+      "7♭5",
+      "Dominant 7th Flat 5 Chord",
+      CHORD_OFFSET_PATTERNS.DOMINANT7_FLAT5,
+      true,
+      false,
+    ),
+    // No 3rd (sus4) but keeps the major 7th; surfaces as the diatonic ♭II7 in Panthu Varaali.
+    NoteGrouping.createChord(
+      ChordType.Major7Sus4,
+      42,
+      "maj7sus4",
+      "Δ7sus4",
+      "Major 7th Suspended 4th Chord",
+      CHORD_OFFSET_PATTERNS.MAJOR7_SUS4,
+      true,
+      false,
+    ),
+    // No 3rd (sus2); surfaces as the diatonic ♯IV7 in Panthu Varaali.
+    NoteGrouping.createChord(
+      ChordType.Dominant7Sus2Flat5,
+      43,
+      "7sus2♭5",
+      "7sus2♭5",
+      "Dominant 7th Suspended 2nd Flat 5 Chord",
+      CHORD_OFFSET_PATTERNS.DOMINANT7_SUS2_FLAT5,
+      true,
+      false,
+    ),
+    // Major 7th with a flat 5 - the major-quality counterpart to HalfDiminished (m7♭5);
+    // surfaces as the diatonic V7 in Panthu Varaali.
+    NoteGrouping.createChord(
+      ChordType.Major7Flat5,
+      44,
+      "maj7♭5",
+      "Δ7♭5",
+      "Major 7th Flat 5 Chord",
+      CHORD_OFFSET_PATTERNS.MAJOR7_FLAT5,
+      true,
+      false,
+    ),
+    // No 3rd (sus2), no 7th (6th instead); surfaces as the diatonic VII7 in Panthu Varaali.
+    NoteGrouping.createChord(
+      ChordType.Sus2Add6,
+      45,
+      "6sus2",
+      "6sus2",
+      "Suspended 2nd Add 6th Chord",
+      CHORD_OFFSET_PATTERNS.SUS2_ADD6,
+      true,
       false,
     ),
   ];
