@@ -146,44 +146,34 @@ describe("Roman Seventh label mode", () => {
     expect(romanDisplayStrings).toEqual(expectedNotes);
   }
 
-  // Compact form: numeral + bare "7", quality dropped (wheel has no room, color conveys it).
+  // Numeral only, no quality suffix: a bare "7" was tried and dropped - it misrepresented
+  // chords with no literal 7th (Minor6, AugMajor7, ...; see the Panthu Varaali case below).
   // Full quality (Δ7, ø7, ...) is what formatRomanChord produces for the roomy contexts
   // (chord display, legend) - this KeyDisplayMode only feeds the wheel.
-  it("shows numeral + 7 for Ionian, not full seventh quality", () => {
-    verifySeventhDisplayStrings(ScaleModeType.Ionian, [
-      "I7",
-      "ii7",
-      "iii7",
-      "IV7",
-      "V7",
-      "vi7",
-      "vii7",
-    ]);
+  it("shows numeral only for Ionian, not seventh quality", () => {
+    verifySeventhDisplayStrings(ScaleModeType.Ionian, ["I", "ii", "iii", "IV", "V", "vi", "vii"]);
   });
 
-  it("shows numeral + 7 for Aeolian, not full seventh quality", () => {
+  it("shows numeral only for Aeolian, not seventh quality", () => {
     verifySeventhDisplayStrings(ScaleModeType.Aeolian, [
-      "i7",
-      "ii7",
-      "♭III7",
-      "iv7",
-      "v7",
-      "♭VI7",
-      "♭VII7",
+      "i",
+      "ii",
+      "♭III",
+      "iv",
+      "v",
+      "♭VI",
+      "♭VII",
     ]);
   });
 
-  it("differs from the triad labels on the dominant", () => {
-    const triads = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
-      SCALE_MODE_REGISTRY[ScaleModeType.Ionian],
-      KeyDisplayMode.Roman,
-    );
+  it("matches Triad's numeral+case exactly, dropping only Roman's quality suffix", () => {
+    // Roman (Triad) shows full quality on the wheel ("vii°"); RomanSeventh now shows just
+    // the numeral+case portion of that same string, with nothing appended for Seventh mode.
     const sevenths = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
       SCALE_MODE_REGISTRY[ScaleModeType.Ionian],
       KeyDisplayMode.RomanSeventh,
     );
-    expect(triads[4]).toBe("V");
-    expect(sevenths[4]).toBe("V7");
+    expect(sevenths).toEqual(["I", "ii", "iii", "IV", "V", "vi", "vii"]);
   });
 
   it("wheel uses roman labels for both chordal playback modes only", () => {
@@ -193,14 +183,14 @@ describe("Roman Seventh label mode", () => {
     expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.DronedSingleNote)).toBe(false);
   });
 
-  it("wheel label text for the dominant carries the seventh in Seventh mode", () => {
+  it("wheel keeps Triad's short quality symbol but drops it for Seventh", () => {
     const key = constants.C_IONIAN_KEY;
-    // G is chromatic index 7 in C Ionian - the dominant.
+    // B is chromatic index 11 in C Ionian - the leading tone (vii), a diminished triad.
     const labelIn = (mode: ScalePlaybackMode) =>
-      KeyboardUtils.getNoteText(KeyboardUIType.Circular, ixChromatic(7), true, key, mode);
+      KeyboardUtils.getNoteText(KeyboardUIType.Circular, ixChromatic(11), true, key, mode);
 
-    expect(labelIn(ScalePlaybackMode.Triad)).toBe("V");
-    expect(labelIn(ScalePlaybackMode.Seventh)).toBe("V7");
+    expect(labelIn(ScalePlaybackMode.Triad)).toBe("vii°");
+    expect(labelIn(ScalePlaybackMode.Seventh)).toBe("vii");
   });
 });
 
@@ -210,9 +200,9 @@ describe("Panthu Varaali Roman Seventh labels (regression: bII7/#IV7/VII7 were U
       SCALE_MODE_REGISTRY[ScaleModeType.PanthuVaraali],
       KeyDisplayMode.RomanSeventh,
     );
-    // Compact form (see "Roman Seventh label mode" above): numeral + bare "7" everywhere,
-    // regardless of what the actual chord quality is (Major7Sus4, Sus2Add6, ...) - this is
-    // what makes ♭VI7 legible now too, sidestepping the AugMajor7 roman-quality gap entirely.
-    expect(romanDisplayStrings).toEqual(["I7", "♭II7", "iii7", "♯IV7", "V7", "♭VI7", "VII7"]);
+    // Numeral only (see "Roman Seventh label mode" above): regardless of the actual chord
+    // quality (Major7Sus4, Sus2Add6, ...), only the degree's numeral+case shows - this is
+    // what makes ♭VI legible here too, sidestepping the AugMajor7 roman-quality gap entirely.
+    expect(romanDisplayStrings).toEqual(["I", "♭II", "iii", "♯IV", "V", "♭VI", "VII"]);
   });
 });

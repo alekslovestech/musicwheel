@@ -3,8 +3,9 @@ export enum KeyDisplayMode {
   ScaleDegree = "Scale Degree",
   Roman = "Roman",
   /**
-   * Compact roman numeral + bare "7" (e.g. V7), quality dropped since the wheel has no room
-   * for it and color already conveys it. Derived from Seventh playback, not user-selectable.
+   * Roman numeral only, no quality suffix: the wheel has no room for full quality (e.g.
+   * "♭IIΔ7sus4"), and a bare "7" would misrepresent chords with no literal 7th. Color
+   * conveys quality instead. Derived from Seventh playback, not user-selectable.
    */
   RomanSeventh = "Roman Seventh",
 }

@@ -56,22 +56,14 @@ export class RomanChordFormatter {
   }
 
   /**
-   * Numeral + case only (no quality postfix or bass), for compact UI where color
-   * already conveys chord quality (e.g. the sequence legend ribbon).
+   * Numeral + case only (no quality postfix or bass), for compact UI where color already
+   * conveys chord quality — e.g. the wheel and ribbon in Seventh playback mode, where a
+   * partial marker like a bare "7" would be actively wrong on chords like Minor6 or
+   * AugMajor7 that surface no literal 7th. Also used for Triad-mode ribbon labels.
    */
   static formatRomanNumeralOnly(romanChord: RomanChord): string {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
     const { isLowerCase } = getRomanQuality(romanChord.chordType);
     return `${accidentalString}${formatNumeralForDegree(romanChord.scaleDegree, isLowerCase)}`;
-  }
-
-  /**
-   * Numeral + case, plus a bare "7" — the tight-space counterpart to {@link formatRomanChord}
-   * for seventh-chord degrees (e.g. `viiø7` becomes `vii7`). Full quality (Δ7, ø7, sus4, ♭5, ...)
-   * is dropped since color already conveys it in these contexts (wheel, ribbon); reserve
-   * {@link formatRomanChord} for chord display and the legend, where there is room for it.
-   */
-  static formatRomanNumeralWithSeventh(romanChord: RomanChord): string {
-    return `${this.formatRomanNumeralOnly(romanChord)}7`;
   }
 }

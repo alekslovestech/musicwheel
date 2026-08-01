@@ -11,32 +11,33 @@ describe("buildScaleRibbonData", () => {
     buildScaleRibbonData(key, mode).notes.map((note) => note.label);
 
   describe("Seventh mode", () => {
-    test("labels each degree with numeral + bare 7, not full quality (ribbon is tight on space)", () => {
+    test("labels each degree with numeral only, not full quality (ribbon is tight on space)", () => {
       // Textbook Ionian sevenths, plus the closing octave tonic. Compare to the Roman
-      // Seventh case in RomanDisplay.test.ts, which shows full quality (Δ7, ø7, ...)
-      // for the roomy contexts (chord display, legend).
+      // Seventh case in RomanDisplay.test.ts, which also drops quality on the wheel -
+      // formatRomanChord (full quality: Δ7, ø7, ...) is reserved for chord display and
+      // the legend, where there is room for it.
       expect(labelsFor(cIonian, ScalePlaybackMode.Seventh)).toEqual([
-        "I7",
-        "ii7",
-        "iii7",
-        "IV7",
-        "V7",
-        "vi7",
-        "vii7",
-        "I7",
+        "I",
+        "ii",
+        "iii",
+        "IV",
+        "V",
+        "vi",
+        "vii",
+        "I",
       ]);
     });
 
     test("labels natural minor sevenths, spelled relative to parallel major", () => {
       expect(labelsFor(aAeolian, ScalePlaybackMode.Seventh)).toEqual([
-        "i7",
-        "ii7",
-        "♭III7",
-        "iv7",
-        "v7",
-        "♭VI7",
-        "♭VII7",
-        "i7",
+        "i",
+        "ii",
+        "♭III",
+        "iv",
+        "v",
+        "♭VI",
+        "♭VII",
+        "i",
       ]);
     });
 
@@ -54,17 +55,10 @@ describe("buildScaleRibbonData", () => {
   });
 
   describe("mode-to-ribbon association", () => {
-    test("Triad stays numeral-only so sevenths remain visually distinct", () => {
-      expect(labelsFor(cIonian, ScalePlaybackMode.Triad)).toEqual([
-        "I",
-        "ii",
-        "iii",
-        "IV",
-        "V",
-        "vi",
-        "vii",
-        "I",
-      ]);
+    test("Triad and Seventh render identical numerals - only color and title distinguish them", () => {
+      const triadLabels = labelsFor(cIonian, ScalePlaybackMode.Triad);
+      expect(triadLabels).toEqual(["I", "ii", "iii", "IV", "V", "vi", "vii", "I"]);
+      expect(labelsFor(cIonian, ScalePlaybackMode.Seventh)).toEqual(triadLabels);
     });
 
     test("only single-note playback is shown as W-H steps", () => {

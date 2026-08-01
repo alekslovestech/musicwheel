@@ -164,12 +164,11 @@ function buildChordRibbon(
       key.scaleModeInfo,
       isSeventh,
     );
-    // The ribbon is tight on space, so both modes lean on color for quality: triads show a
-    // bare numeral, sevenths add "7" to distinguish from Triad at a glance. Full quality
-    // (Δ7, ø7, sus4, ...) is reserved for chord display and the legend, where there is room.
-    return isSeventh
-      ? RomanChordFormatter.formatRomanNumeralWithSeventh(romanChord)
-      : RomanChordFormatter.formatRomanNumeralOnly(romanChord);
+    // Numeral only in both modes: the ribbon is tight on space, and a quality marker
+    // (full or abbreviated) would either overflow or, for a bare "7", misrepresent chords
+    // with no literal 7th (e.g. Minor6, AugMajor7). Color carries quality here instead;
+    // full quality is reserved for chord display and the legend, where there is room.
+    return RomanChordFormatter.formatRomanNumeralOnly(romanChord);
   };
 
   const notes: ScaleRibbonNote[] = Array.from({ length: key.scalePatternLength }, (_, i) => ({

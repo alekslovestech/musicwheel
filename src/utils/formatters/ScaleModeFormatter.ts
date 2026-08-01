@@ -30,9 +30,11 @@ export class ScaleModeFormatter {
           RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo),
         );
       case KeyDisplayMode.RomanSeventh:
-        // Compact (numeral + bare "7"), not full quality: this feeds the wheel, where a label
-        // like "♭IIΔ7sus4" doesn't fit. Full quality lives in chord display and the legend.
-        return RomanChordFormatter.formatRomanNumeralWithSeventh(
+        // Numeral only, not full quality: this feeds the wheel, where a label like
+        // "♭IIΔ7sus4" doesn't fit, and a bare "7" would be wrong on chords with no
+        // literal 7th (e.g. Minor6, AugMajor7). Full quality lives in chord display and
+        // the legend; color still distinguishes this from Triad mode on the wheel itself.
+        return RomanChordFormatter.formatRomanNumeralOnly(
           RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo, true),
         );
       default:
