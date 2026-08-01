@@ -5,6 +5,8 @@ import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import {
   buildScaleRibbonData,
   getIntervalTypesForScaleFromRoot,
+  getStepColorLegendItems,
+  getStepSegmentsForScale,
   ribbonUsesStepSegments,
 } from "@/utils/visual/scaleRibbonUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
@@ -58,6 +60,41 @@ describe("buildScaleRibbonData", () => {
     test("every degree carries a color", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
       expect(ribbon.notes.every((note) => note.color !== undefined)).toBe(true);
+    });
+  });
+
+  describe("step labels", () => {
+    // Regression: steps were labelled with interval short forms, which name a harmonic
+    // function a step does not carry. Hungarian Minor's E♭-F♯ and A♭-B are augmented 2nds,
+    // spelled as 2nds; as "m3" they had the right size under the wrong name. W/H/1½ measure
+    // instead of spelling, so they stay true for any scale.
+    test("measures steps rather than spelling them as intervals", () => {
+      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
+      const labels = getStepSegmentsForScale(hungarianMinor).map((step) => step.label);
+
+      // C D E♭ F♯ G A♭ B, wrapping B->C: 2 1 3 1 1 3 1 semitones.
+      expect(labels).toEqual(["W", "H", "1½", "H", "H", "1½", "H"]);
+    });
+
+    test("labels the major scale's steps", () => {
+      expect(getStepSegmentsForScale(cIonian).map((step) => step.label)).toEqual([
+        "W",
+        "W",
+        "H",
+        "W",
+        "W",
+        "W",
+        "H",
+      ]);
+    });
+
+    test("legend uses the same vocabulary as the ribbon, distinct steps only", () => {
+      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
+      expect(getStepColorLegendItems(hungarianMinor).map((step) => step.label)).toEqual([
+        "H",
+        "W",
+        "1½",
+      ]);
     });
   });
 

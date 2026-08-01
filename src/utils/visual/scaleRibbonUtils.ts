@@ -48,10 +48,10 @@ export function ribbonUsesStepSegments(scalePlaybackMode: ScalePlaybackMode): bo
 }
 
 export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
-  return buildStepSegments(getScalePatternOffsets(key), stepLabelCanonical);
+  return buildStepSegments(getScalePatternOffsets(key));
 }
 
-/** Distinct step distances in the scale, canonically labeled and sorted by ascending semitones. */
+/** Distinct step distances in the scale, sorted by ascending semitones. */
 export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonStep[] {
   const offsets = getScalePatternOffsets(key);
   const bySemitones = new Map<number, ScaleRibbonStep>();
@@ -59,7 +59,7 @@ export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonStep[] {
     const semitones = getStepSemitonesBetween(offsets, i);
     if (!bySemitones.has(semitones)) {
       bySemitones.set(semitones, {
-        label: stepLabelCanonical(semitones),
+        label: stepLabel(semitones),
         color: stepColorForSemitones(semitones),
       });
     }
@@ -85,16 +85,16 @@ export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroup
   return types;
 }
 
-function stepLabelMnemonic(semitones: number): string {
+/**
+ * Steps are measured, not spelled. Interval names were tried here and dropped: they carry a
+ * harmonic function a step does not have, so Hungarian Minor's E♭-F♯ and A♭-B - augmented
+ * 2nds, spelled as 2nds - came out as `m3`, the right size under the wrong name.
+ */
+function stepLabel(semitones: number): string {
   if (semitones === 1) return "H";
   if (semitones === 2) return "W";
   if (semitones === 3) return "1½";
   return `${semitones}`;
-}
-
-function stepLabelCanonical(semitones: number): string {
-  const type = NoteGroupingLibrary.matchIntervalTypeFromOffset(semitones);
-  return type != null ? NoteGroupingLibrary.getGroupingById(type).shortForm : `${semitones}`;
 }
 
 function stepColorForSemitones(semitones: number): chroma.Color {
@@ -113,14 +113,11 @@ function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {
   return subChromatic(offsets[nextIndex], offsets[fromIndex]);
 }
 
-function buildStepSegments(
-  offsets: number[],
-  labelForSemitones: (semitones: number) => string,
-): ScaleRibbonStep[] {
+function buildStepSegments(offsets: number[]): ScaleRibbonStep[] {
   return offsets.map((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
     return {
-      label: labelForSemitones(semitones),
+      label: stepLabel(semitones),
       color: stepColorForSemitones(semitones),
     };
   });
@@ -133,7 +130,7 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
   }));
   notes.push({ label: "8" });
 
-  return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets, stepLabelMnemonic) };
+  return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets) };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
