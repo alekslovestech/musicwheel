@@ -29,6 +29,12 @@ export class ScaleModeFormatter {
         return RomanChordFormatter.formatRomanChord(
           RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo),
         );
+      case KeyDisplayMode.RomanSeventh:
+        // Compact (numeral + bare "7"), not full quality: this feeds the wheel, where a label
+        // like "♭IIΔ7sus4" doesn't fit. Full quality lives in chord display and the legend.
+        return RomanChordFormatter.formatRomanNumeralWithSeventh(
+          RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo, true),
+        );
       default:
         return "???";
     }

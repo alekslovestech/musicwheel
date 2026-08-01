@@ -1,6 +1,10 @@
 import { SEVEN, TWELVE } from "@/types/constants/NoteConstants";
+import { ixChromatic } from "@/types/ChromaticIndex";
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
+import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -127,5 +131,88 @@ describe("getScaleDegreeDisplayString", () => {
         });
       });
     });
+  });
+});
+
+describe("Roman Seventh label mode", () => {
+  const constants = GreekTestConstants.getInstance();
+
+  function verifySeventhDisplayStrings(greekMode: ScaleModeType, expectedNotes: string[]) {
+    expect(expectedNotes.length).toBe(SEVEN);
+    const romanDisplayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[greekMode],
+      KeyDisplayMode.RomanSeventh,
+    );
+    expect(romanDisplayStrings).toEqual(expectedNotes);
+  }
+
+  // Compact form: numeral + bare "7", quality dropped (wheel has no room, color conveys it).
+  // Full quality (Δ7, ø7, ...) is what formatRomanChord produces for the roomy contexts
+  // (chord display, legend) - this KeyDisplayMode only feeds the wheel.
+  it("shows numeral + 7 for Ionian, not full seventh quality", () => {
+    verifySeventhDisplayStrings(ScaleModeType.Ionian, [
+      "I7",
+      "ii7",
+      "iii7",
+      "IV7",
+      "V7",
+      "vi7",
+      "vii7",
+    ]);
+  });
+
+  it("shows numeral + 7 for Aeolian, not full seventh quality", () => {
+    verifySeventhDisplayStrings(ScaleModeType.Aeolian, [
+      "i7",
+      "ii7",
+      "♭III7",
+      "iv7",
+      "v7",
+      "♭VI7",
+      "♭VII7",
+    ]);
+  });
+
+  it("differs from the triad labels on the dominant", () => {
+    const triads = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[ScaleModeType.Ionian],
+      KeyDisplayMode.Roman,
+    );
+    const sevenths = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[ScaleModeType.Ionian],
+      KeyDisplayMode.RomanSeventh,
+    );
+    expect(triads[4]).toBe("V");
+    expect(sevenths[4]).toBe("V7");
+  });
+
+  it("wheel uses roman labels for both chordal playback modes only", () => {
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.Triad)).toBe(true);
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.Seventh)).toBe(true);
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.SingleNote)).toBe(false);
+    expect(KeyboardUtils.usesRomanScaleLabels(ScalePlaybackMode.DronedSingleNote)).toBe(false);
+  });
+
+  it("wheel label text for the dominant carries the seventh in Seventh mode", () => {
+    const key = constants.C_IONIAN_KEY;
+    // G is chromatic index 7 in C Ionian - the dominant.
+    const labelIn = (mode: ScalePlaybackMode) =>
+      KeyboardUtils.getNoteText(KeyboardUIType.Circular, ixChromatic(7), true, key, mode);
+
+    expect(labelIn(ScalePlaybackMode.Triad)).toBe("V");
+    expect(labelIn(ScalePlaybackMode.Seventh)).toBe("V7");
+  });
+});
+
+describe("Panthu Varaali Roman Seventh labels (regression: bII7/#IV7/VII7 were Unknown)", () => {
+  it("labels the diatonic seventh on every degree - no chord left unresolved", () => {
+    const romanDisplayStrings = ScaleModeFormatter.formatAllScaleDegreesForDisplay(
+      SCALE_MODE_REGISTRY[ScaleModeType.PanthuVaraali],
+      KeyDisplayMode.RomanSeventh,
+    );
+    // Compact form (see "Roman Seventh label mode" above): numeral + bare "7" everywhere,
+    // regardless of what the actual chord quality is (Major7Sus4, Sus2Add6, ...) - this is
+    // what makes ♭VI7 legible now too, sidestepping the AugMajor7 roman-quality gap entirely.
+    expect(romanDisplayStrings).toEqual(["I7", "♭II7", "iii7", "♯IV7", "V7", "♭VI7", "VII7"]);
   });
 });

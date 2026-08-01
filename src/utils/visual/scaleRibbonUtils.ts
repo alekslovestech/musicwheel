@@ -35,17 +35,16 @@ export function buildScaleRibbonData(
     case ScalePlaybackMode.DronedSingleNote:
       return buildFromRootRibbon(key);
     case ScalePlaybackMode.Triad:
-      return buildTriadsRibbon(key);
+    case ScalePlaybackMode.Seventh:
+      return buildChordRibbon(key, scalePlaybackMode);
     default:
       return buildStepsRibbon(key);
   }
 }
 
+/** Only melodic single-note playback is heard as steps between consecutive degrees. */
 export function ribbonUsesStepSegments(scalePlaybackMode: ScalePlaybackMode): boolean {
-  return (
-    scalePlaybackMode !== ScalePlaybackMode.DronedSingleNote &&
-    scalePlaybackMode !== ScalePlaybackMode.Triad
-  );
+  return scalePlaybackMode === ScalePlaybackMode.SingleNote;
 }
 
 export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
@@ -149,26 +148,38 @@ function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
   return { title: "From root (1–♭2…)", notes, steps: [] };
 }
 
-function buildTriadsRibbon(key: MusicalKey): ScaleRibbonData {
-  const notes: ScaleRibbonNote[] = Array.from({ length: key.scalePatternLength }, (_, i) => {
-    const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
-    const roman = RomanChordFormatter.formatRomanNumeralOnly(
-      RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, key.scaleModeInfo),
+/** Triad / Seventh: one chord stacked on each degree, labeled by its roman numeral. */
+function buildChordRibbon(
+  key: MusicalKey,
+  mode: ScalePlaybackMode.Triad | ScalePlaybackMode.Seventh,
+): ScaleRibbonData {
+  const isSeventh = mode === ScalePlaybackMode.Seventh;
+
+  const romanLabelAtDegree = (degreeIndex: number): string => {
+    const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(
+      ixScaleDegreeIndex(degreeIndex),
     );
-    return {
-      label: roman,
-      color: noteHighlightColor(key, ScalePlaybackMode.Triad, i),
-    };
-  });
+    const romanChord = RomanChordFormatter.romanChordFromScaleDegree(
+      scaleDegreeInfo,
+      key.scaleModeInfo,
+      isSeventh,
+    );
+    // The ribbon is tight on space, so both modes lean on color for quality: triads show a
+    // bare numeral, sevenths add "7" to distinguish from Triad at a glance. Full quality
+    // (Δ7, ø7, sus4, ...) is reserved for chord display and the legend, where there is room.
+    return isSeventh
+      ? RomanChordFormatter.formatRomanNumeralWithSeventh(romanChord)
+      : RomanChordFormatter.formatRomanNumeralOnly(romanChord);
+  };
+
+  const notes: ScaleRibbonNote[] = Array.from({ length: key.scalePatternLength }, (_, i) => ({
+    label: romanLabelAtDegree(i),
+    color: noteHighlightColor(key, mode, i),
+  }));
   notes.push({
-    label: RomanChordFormatter.formatRomanNumeralOnly(
-      RomanChordFormatter.romanChordFromScaleDegree(
-        key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(0)),
-        key.scaleModeInfo,
-      ),
-    ),
-    color: noteHighlightColor(key, ScalePlaybackMode.Triad, key.scalePatternLength),
+    label: romanLabelAtDegree(0),
+    color: noteHighlightColor(key, mode, key.scalePatternLength),
   });
 
-  return { title: "Triads", notes, steps: [] };
+  return { title: isSeventh ? "Sevenths" : "Triads", notes, steps: [] };
 }

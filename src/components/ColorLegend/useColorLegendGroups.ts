@@ -11,7 +11,7 @@ import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
-import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { isChordalScalePlaybackMode, ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 export function useColorLegendGroups(): {
   groups: ColorLegendGroup[];
@@ -31,8 +31,12 @@ export function useColorLegendGroups(): {
     };
   }
 
-  if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.Triad) {
-    const chordTypes = ChordSetUtils.triadTypesForKey(selectedMusicalKey);
+  // Triad and Seventh both scope the legend to the chord qualities this key actually contains.
+  if (isScalesMode && isChordalScalePlaybackMode(scalePlaybackMode)) {
+    const chordTypes =
+      scalePlaybackMode === ScalePlaybackMode.Seventh
+        ? ChordSetUtils.seventhTypesForKey(selectedMusicalKey)
+        : ChordSetUtils.triadTypesForKey(selectedMusicalKey);
     return {
       groups: getColorLegendGroupsForIds(chordTypes),
       chordsOnly: true,

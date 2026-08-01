@@ -71,3 +71,38 @@ describe("ChordTypeUtils.triadTypesForKey", () => {
     ]);
   });
 });
+
+describe("ChordTypeUtils.seventhTypesForKey", () => {
+  it("returns diatonic seventh types in Ionian", () => {
+    const key = MusicalKey.fromGreekMode("C", ScaleModeType.Ionian);
+    expectSetsEqual(ChordSetUtils.seventhTypesForKey(key), [
+      ChordType.Major7,
+      ChordType.Minor7,
+      ChordType.Dominant7,
+      ChordType.HalfDiminished,
+    ]);
+  });
+
+  it("returns the same set for every rotation of the major scale", () => {
+    // The seven diatonic modes share one pool of seventh qualities.
+    const aeolian = ChordSetUtils.seventhTypesForKey(
+      MusicalKey.fromGreekMode("A", ScaleModeType.Aeolian),
+    );
+    expectSetsEqual(aeolian, [
+      ChordType.Major7,
+      ChordType.Minor7,
+      ChordType.Dominant7,
+      ChordType.HalfDiminished,
+    ]);
+  });
+
+  it("differs from the triad set for the same key", () => {
+    const key = MusicalKey.fromGreekMode("C", ScaleModeType.Ionian);
+    const triads = ChordSetUtils.triadTypesForKey(key);
+    const sevenths = ChordSetUtils.seventhTypesForKey(key);
+
+    expect(triads.has(ChordType.Major)).toBe(true);
+    expect(sevenths.has(ChordType.Major)).toBe(false);
+    expect(sevenths.has(ChordType.Dominant7)).toBe(true);
+  });
+});

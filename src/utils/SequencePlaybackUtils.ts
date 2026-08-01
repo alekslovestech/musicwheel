@@ -5,7 +5,7 @@ import { ChordType } from "@/types/enums/ChordType";
 import { ActualIndex, ixInversion, NoteIndices, toNoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
-import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { isChordalScalePlaybackMode, ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ixScaleDegreeIndex, ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { IndexUtils } from "@/utils/IndexUtils";
@@ -21,7 +21,6 @@ export type ScaleStepAtDegree = {
 /** Null when the sequence is exhausted; `nextStepIndex` is undefined on the final step. */
 export type ScaleSequenceStep = { step: ScaleStepAtDegree; nextStepIndex?: number } | null;
 
-  
 /** One scale degree step (keyboard clicks, spelling, etc.). */
 export function getScaleStepAtDegree(
   key: MusicalKey,
@@ -35,15 +34,14 @@ export function getScaleStepAtDegree(
   };
 }
 
-
 /** Scale sequence index: 0..length-1 are degrees; length is the final octave tonic. */
 export function getScaleStepAtSequenceIndex(
   key: MusicalKey,
   stepIndex: number,
   scalePlaybackMode: ScalePlaybackMode,
 ): ScaleStepAtDegree {
-  if (stepIndex !== key.scalePatternLength) 
-    return getScaleStepAtDegree(key, ixScaleDegreeIndex(stepIndex), scalePlaybackMode);  
+  if (stepIndex !== key.scalePatternLength)
+    return getScaleStepAtDegree(key, ixScaleDegreeIndex(stepIndex), scalePlaybackMode);
 
   return getFinalStep(key, scalePlaybackMode);
 }
@@ -93,29 +91,33 @@ export function prepareChordProgressionSequence(
   };
 }
 
-function getScaleTriadChordRef(
+function getScaleChordRef(
   key: MusicalKey,
   scaleDegreeIndex: ScaleDegreeIndex,
   rootNote: ActualIndex,
+  isSeventh: boolean,
 ): ChordReference {
   const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
-  const chordType = ChordSetUtils.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
+  const chordType = isSeventh
+    ? ChordSetUtils.getSeventhChordType(scaleDegreeInfo, key.scaleModeInfo)
+    : ChordSetUtils.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
   return makeChordReference(rootNote, chordType, ixInversion(0));
 }
 
+/** Only the chordal playback modes name a chord; melodic modes have none to report. */
 function chordRefForScaleStep(
   key: MusicalKey,
   scaleDegreeIndex: ScaleDegreeIndex,
   noteIndices: NoteIndices,
   scalePlaybackMode: ScalePlaybackMode,
 ): ChordReference | undefined {
-  if (scalePlaybackMode !== ScalePlaybackMode.Triad || noteIndices.length === 0) {
+  if (!isChordalScalePlaybackMode(scalePlaybackMode) || noteIndices.length === 0) {
     return undefined;
   }
-  const chordRef = getScaleTriadChordRef(key, scaleDegreeIndex, noteIndices[0]);
+  const isSeventh = scalePlaybackMode === ScalePlaybackMode.Seventh;
+  const chordRef = getScaleChordRef(key, scaleDegreeIndex, noteIndices[0], isSeventh);
   return chordRef.id === ChordType.Unknown ? undefined : chordRef;
 }
-
 
 /** Final sequence step: the tonic notes for this mode, transposed up an octave. */
 function getFinalStep(key: MusicalKey, scalePlaybackMode: ScalePlaybackMode): ScaleStepAtDegree {
@@ -142,8 +144,14 @@ function getFinalDronedNotes(key: MusicalKey): NoteIndices {
 }
 
 /** Other modes: the whole tonic step transposed up an octave. */
-function getFinalOctaveTonicNotes(key: MusicalKey, scalePlaybackMode: ScalePlaybackMode): NoteIndices {
-  const tonicNotes = getScaleStepAtDegree(key, ixScaleDegreeIndex(0), scalePlaybackMode).notesToPlay;
+function getFinalOctaveTonicNotes(
+  key: MusicalKey,
+  scalePlaybackMode: ScalePlaybackMode,
+): NoteIndices {
+  const tonicNotes = getScaleStepAtDegree(
+    key,
+    ixScaleDegreeIndex(0),
+    scalePlaybackMode,
+  ).notesToPlay;
   return IndexUtils.transposeNotes(tonicNotes, TWELVE);
 }
-

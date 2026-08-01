@@ -4,7 +4,6 @@ import React from "react";
 import { actualToChromatic } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
-import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
@@ -83,11 +82,15 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
     scalePlaybackMode,
   );
 
-  const isRomanLabels = isScales && scalePlaybackMode === ScalePlaybackMode.Triad;
+  const isRomanLabels = isScales && KeyboardUtils.usesRomanScaleLabels(scalePlaybackMode);
   const romanLabelFit = isRomanLabels
     ? ArcPathVisualizer.getRomanLabelFit(noteText, outerRadius, innerRadius)
     : undefined;
-  const noteTextClass = romanLabelFit ? "font-bold" : isRomanLabels ? TYPOGRAPHY.circularRomanText : TYPOGRAPHY.circularNoteText;
+  const noteTextClass = romanLabelFit
+    ? "font-bold"
+    : isRomanLabels
+      ? TYPOGRAPHY.circularRomanText
+      : TYPOGRAPHY.circularNoteText;
 
   const renderAccidental = (
     accidental: AccidentalType,

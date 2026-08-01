@@ -77,9 +77,19 @@ export class ScaleModeInfo implements SluggedEntry {
   }
 
   public getTriadOffsets(scaleDegreeInfo: ScaleDegreeInfo): number[] {
-    const offsets135 = this.scalePattern.getOffsets135(
-      scaleDegreeToIndex(scaleDegreeInfo.scaleDegree),
+    return normalizeToChordRoot(
+      this.scalePattern.getOffsets135(scaleDegreeToIndex(scaleDegreeInfo.scaleDegree)),
     );
-    return offsets135.map((offset) => offset - offsets135[0]);
   }
+
+  /** 1-3-5-7 stack on this degree, normalized to the chord root (mirrors {@link getTriadOffsets}). */
+  public getSeventhOffsets(scaleDegreeInfo: ScaleDegreeInfo): number[] {
+    return normalizeToChordRoot(
+      this.scalePattern.getOffsets1357(scaleDegreeToIndex(scaleDegreeInfo.scaleDegree)),
+    );
+  }
+}
+
+function normalizeToChordRoot(offsets: number[]): number[] {
+  return offsets.map((offset) => offset - offsets[0]);
 }

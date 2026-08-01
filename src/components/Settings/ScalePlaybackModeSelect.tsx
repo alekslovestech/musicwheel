@@ -33,6 +33,12 @@ const SCALE_PLAYBACK_MODE_OPTIONS: PlaybackModeOption[] = [
     label: "♪♪♪",
     description: "Play triads (3-note chords)",
   },
+  {
+    id: "seventh",
+    mode: ScalePlaybackMode.Seventh,
+    label: "♪♪♪♪",
+    description: "Play sevenths (4-note chords)",
+  },
 ];
 
 export const ScalePlaybackModeSelect: React.FC = () => {

@@ -19,15 +19,24 @@ export class RomanChordFormatter {
     return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
   }
 
+  static getSeventhChordType(
+    scaleDegreeInfo: ScaleDegreeInfo,
+    scaleModeInfo: ScaleModeInfo,
+  ): ChordType {
+    const offsets = scaleModeInfo.getSeventhOffsets(scaleDegreeInfo);
+    return NoteGroupingLibrary.matchChordTypeFromOffsets(offsets);
+  }
+
+  /** @param includeSeventh Build the 1-3-5-7 stack instead of the triad (Seventh playback mode). */
   static romanChordFromScaleDegree(
     scaleDegreeInfo: ScaleDegreeInfo,
     scaleModeInfo: ScaleModeInfo,
+    includeSeventh = false,
   ): RomanChord {
-    return new RomanChord(
-      scaleDegreeInfo.scaleDegree,
-      this.getTriadChordType(scaleDegreeInfo, scaleModeInfo),
-      scaleDegreeInfo.accidentalPrefix,
-    );
+    const chordType = includeSeventh
+      ? this.getSeventhChordType(scaleDegreeInfo, scaleModeInfo)
+      : this.getTriadChordType(scaleDegreeInfo, scaleModeInfo);
+    return new RomanChord(scaleDegreeInfo.scaleDegree, chordType, scaleDegreeInfo.accidentalPrefix);
   }
 
   /**
@@ -54,5 +63,15 @@ export class RomanChordFormatter {
     const accidentalString = AccidentalFormatter.getAccidentalSignForDisplay(romanChord.accidental);
     const { isLowerCase } = getRomanQuality(romanChord.chordType);
     return `${accidentalString}${formatNumeralForDegree(romanChord.scaleDegree, isLowerCase)}`;
+  }
+
+  /**
+   * Numeral + case, plus a bare "7" — the tight-space counterpart to {@link formatRomanChord}
+   * for seventh-chord degrees (e.g. `viiø7` becomes `vii7`). Full quality (Δ7, ø7, sus4, ♭5, ...)
+   * is dropped since color already conveys it in these contexts (wheel, ribbon); reserve
+   * {@link formatRomanChord} for chord display and the legend, where there is room for it.
+   */
+  static formatRomanNumeralWithSeventh(romanChord: RomanChord): string {
+    return `${this.formatRomanNumeralOnly(romanChord)}7`;
   }
 }

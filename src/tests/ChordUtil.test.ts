@@ -97,6 +97,9 @@ describe("ChordUtils", () => {
       { expected: "C34", indices: [0, 4, 5] },
       { expected: "Csus2♯4", indices: [0, 2, 6] },
       { expected: "C♭5", indices: [0, 4, 6] },
+      { expected: "C7♭5", indices: [0, 4, 6, 10] },
+      // D-F#-Ab-C
+      { expected: "D7♭5", indices: [2, 6, 8, 12] },
     ];
 
     testCases.forEach(({ expected, indices, mode, key }) => {
@@ -111,6 +114,7 @@ describe("ChordUtils", () => {
       { expected: [0, 4, 7], type: ChordType.Major },
       { expected: [0, 3, 7], type: ChordType.Minor },
       { expected: [0, 4, 7, 10], type: ChordType.Dominant7 },
+      { expected: [0, 4, 6, 10], type: ChordType.Dominant7Flat5 },
       { expected: [0, 4, 7, 11], type: ChordType.Major7 },
       { expected: [0, 3, 7, 10], type: ChordType.Minor7 },
       { expected: [0, 3, 6], type: ChordType.Diminished },
@@ -216,5 +220,82 @@ describe("ChordUtils", () => {
       );
       expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(toNoteIndices([7, 12, 16]));
     });
+  });
+});
+
+describe("Dominant7Flat5 symmetry", () => {
+  // 7♭5 contains two tritones a major third apart, so transposing the set by a
+  // tritone maps it onto itself: D7♭5 and A♭7♭5 are the same four pitch classes.
+  const D_F$_Ab_C = [2, 6, 8, 12];
+  const Ab_C_D_F$ = [8, 12, 14, 18];
+
+  const pitchClasses = (indices: number[]) => new Set(indices.map((i) => i % 12));
+
+  it("is the same pitch-class set rooted a tritone apart", () => {
+    expect(pitchClasses(D_F$_Ab_C)).toEqual(pitchClasses(Ab_C_D_F$));
+  });
+
+  it("names each voicing from its own bass note", () => {
+    verifyChordNameWithMode("D7♭5", D_F$_Ab_C);
+    // Same root, spelled G♯ rather than A♭ because the default key spells with sharps.
+    verifyChordNameWithMode("G♯7♭5", Ab_C_D_F$);
+    verifyChordNameWithMode(
+      "A♭7♭5",
+      Ab_C_D_F$,
+      ChordDisplayMode.Letters,
+      MusicalKey.fromClassicalMode("Ab", KeyType.Major),
+    );
+  });
+
+  it("resolves both voicings to the same chord type", () => {
+    const typeOf = (indices: number[]) =>
+      MusicalDisplayFormatter.getChordReferenceFromIndices(toNoteIndices(indices))?.id;
+
+    expect(typeOf(D_F$_Ab_C)).toBe(ChordType.Dominant7Flat5);
+    expect(typeOf(Ab_C_D_F$)).toBe(ChordType.Dominant7Flat5);
+  });
+});
+
+describe("Major7Sus4 (Panthu Varaali diatonic bII7)", () => {
+  it("names the Panthu Varaali bII7 chord from its own bass note", () => {
+    // C Panthu Varaali (0,1,4,6,7,8,11), degree bII: C#-F#-Ab-C.
+    verifyChordNameWithMode("C♯maj7sus4", [1, 6, 8, 12]);
+  });
+
+  it("has no 3rd: sus4 with a major 7th on top", () => {
+    verifyOffsetsFromIdAndInversion([0, 5, 7, 11], ChordType.Major7Sus4);
+  });
+});
+
+describe("Dominant7Sus2Flat5 (Panthu Varaali diatonic #IV7)", () => {
+  it("names the Panthu Varaali #IV7 chord from its own bass note", () => {
+    // C Panthu Varaali, degree #IV (root F#): F#-G#-C-E.
+    verifyChordNameWithMode("F♯7sus2♭5", [6, 8, 12, 16]);
+  });
+
+  it("has no 3rd: sus2 dominant with a flat 5", () => {
+    verifyOffsetsFromIdAndInversion([0, 2, 6, 10], ChordType.Dominant7Sus2Flat5);
+  });
+});
+
+describe("Major7Flat5 (Panthu Varaali diatonic V7)", () => {
+  it("names the Panthu Varaali V7 chord from its own bass note", () => {
+    // C Panthu Varaali, degree V (root G): G-B-C#-F#.
+    verifyChordNameWithMode("Gmaj7♭5", [7, 11, 13, 18]);
+  });
+
+  it("is the major-quality counterpart to HalfDiminished (m7♭5)", () => {
+    verifyOffsetsFromIdAndInversion([0, 4, 6, 11], ChordType.Major7Flat5);
+  });
+});
+
+describe("Sus2Add6 (Panthu Varaali diatonic VII7)", () => {
+  it("names the Panthu Varaali VII7 chord from its own bass note", () => {
+    // C Panthu Varaali, degree VII (root B): B-C#-F#-G#.
+    verifyChordNameWithMode("B6sus2", [11, 13, 18, 20]);
+  });
+
+  it("has no 3rd and no 7th: sus2 with an added 6th", () => {
+    verifyOffsetsFromIdAndInversion([0, 2, 7, 9], ChordType.Sus2Add6);
   });
 });

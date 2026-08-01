@@ -1,3 +1,4 @@
+import { ChordType } from "@/types/enums/ChordType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { advanceScaleSequenceStep } from "@/utils/SequencePlaybackUtils";
@@ -59,5 +60,40 @@ describe("advanceScaleSequenceStep", () => {
       final.step.notesToPlay,
     );
     expect(staffStepIndex).toBe(length);
+  });
+
+  test("seventh mode plays four notes and names the chord on each degree", () => {
+    const key = constants.C_IONIAN_KEY;
+
+    for (let i = 0; i < key.scalePatternLength; i++) {
+      const step = advanceScaleSequenceStep(key, i, ScalePlaybackMode.Seventh)!.step;
+      expect(step.notesToPlay).toHaveLength(4);
+      expect(step.chordRef).toBeDefined();
+    }
+  });
+
+  test("seventh mode names diatonic seventh qualities, not triads", () => {
+    const key = constants.C_IONIAN_KEY;
+
+    const chordTypeAt = (degreeIndex: number, mode: ScalePlaybackMode) =>
+      advanceScaleSequenceStep(key, degreeIndex, mode)!.step.chordRef?.id;
+
+    // V: dominant seventh under Seventh mode, plain major under Triad.
+    expect(chordTypeAt(4, ScalePlaybackMode.Seventh)).toBe(ChordType.Dominant7);
+    expect(chordTypeAt(4, ScalePlaybackMode.Triad)).toBe(ChordType.Major);
+
+    expect(chordTypeAt(0, ScalePlaybackMode.Seventh)).toBe(ChordType.Major7);
+    expect(chordTypeAt(1, ScalePlaybackMode.Seventh)).toBe(ChordType.Minor7);
+    expect(chordTypeAt(6, ScalePlaybackMode.Seventh)).toBe(ChordType.HalfDiminished);
+  });
+
+  test("melodic modes report no chord", () => {
+    const key = constants.C_IONIAN_KEY;
+    expect(
+      advanceScaleSequenceStep(key, 0, ScalePlaybackMode.SingleNote)!.step.chordRef,
+    ).toBeUndefined();
+    expect(
+      advanceScaleSequenceStep(key, 0, ScalePlaybackMode.DronedSingleNote)!.step.chordRef,
+    ).toBeUndefined();
   });
 });

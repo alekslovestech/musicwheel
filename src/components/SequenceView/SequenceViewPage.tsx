@@ -15,6 +15,8 @@ interface SequenceViewPageProps {
   staffStyle?: CSSProperties;
   circularOverlay?: ReactNode;
   circular: ReactNode;
+  /** Rendered in flow beneath the wheel, which shrinks to make room. */
+  circularFooter?: ReactNode;
   linear: ReactNode;
   settings?: ReactNode;
 }
@@ -28,6 +30,7 @@ export function SequenceViewPage({
   staffStyle,
   circularOverlay,
   circular,
+  circularFooter,
   linear,
   settings,
 }: SequenceViewPageProps) {
@@ -71,14 +74,22 @@ export function SequenceViewPage({
             </div>
           )
         )}
+        {/* Column so circularFooter takes its space out of the wheel rather than overlapping it.
+            Applied here rather than in COMMON_STYLES: the harmony page reuses those classes
+            with a different child structure. */}
         <div
-          className={`${pageId}-circular ${COMMON_STYLES.circularContainer} ${border}`}
+          className={`${pageId}-circular ${COMMON_STYLES.circularContainer} flex flex-col ${border}`}
           style={{ gridArea: "circular" }}
         >
           {circularOverlay}
-          <div className={`${pageId}-circular-inner ${COMMON_STYLES.circularInner} ${border}`}>
+          <div
+            className={`${pageId}-circular-inner ${COMMON_STYLES.circularInner} min-h-0 flex-1 ${border}`}
+          >
             {circular}
           </div>
+          {circularFooter != null && (
+            <div className={`${pageId}-circular-footer shrink-0`}>{circularFooter}</div>
+          )}
         </div>
         <div
           className={`${pageId}-linear-container ${COMMON_STYLES.linearContainer} ${border}`}

@@ -10,10 +10,15 @@ export enum ChordType {
   Major7 = "Chord_Maj7",
   Minor7 = "Chord_Min7",
   Dominant7 = "Chord_Dom7",
+  Dominant7Flat5 = "Chord_Dom7b5", //C E G♭ B♭ - symmetric; enharmonic with the 7♭5 a tritone away
   MinorMajor7 = "Chord_MMaj7",
   HalfDiminished = "Chord_M7b5",
   Diminished7 = "Chord_Dim7",
   AugMajor7 = "Chord_AugMaj7",
+  Major7Sus4 = "Chord_Maj7Sus4", //C F G B - sus4 with major 7th, no 3rd
+  Dominant7Sus2Flat5 = "Chord_Dom7Sus2b5", //C D F# Bb - sus2 dominant 7th with flat 5, no 3rd
+  Major7Flat5 = "Chord_Maj7Flat5", //C E Gb B - major 7th with flat 5 (distinct from HalfDiminished, the minor version)
+  Sus2Add6 = "Chord_Sus2Add6", //C D G A - sus2 with added 6th, no 7th
 
   // Other
   Sus4 = "Chord_Sus4",
