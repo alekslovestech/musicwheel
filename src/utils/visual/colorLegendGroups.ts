@@ -32,7 +32,7 @@ function groupsForDisplayIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[
     // only label the ones actually being displayed, or a row for "min7" alone shows "min7·6".
     .map(([, groupingIds]) => toColorLegendGroup(groupingIds.filter((id) => displayIds.has(id))));
 
-  return sortColorLegendGroups(groups, displayIds);
+  return sortColorLegendGroups(groups);
 }
 
 function buildColorLegendMap(ids: Set<NoteGroupingId>): Map<string, NoteGroupingId[]> {
@@ -69,39 +69,27 @@ const COLOR_LEGEND_DISPLAY_IDS: Set<NoteGroupingId> = new Set(
   NoteGroupingLibrary.getAllIds().filter(isColorLegendId),
 );
 
-/** {@link ChordType} declaration order; Unknown omitted. */
-const CHORD_CATALOG_ORDER: readonly ChordType[] = (Object.values(ChordType) as ChordType[]).filter(
-  isNotUnknownChordType,
-);
-
 function isColorLegendId(id: NoteGroupingId): boolean {
   if (id === SpecialType.None || id === SpecialType.Note) return false;
   if (isIntervalType(id)) return id !== IntervalType.Octave;
   return !COLOR_LEGEND_EXCLUDED_CHORD_IDS.has(id);
 }
 
-function isNotUnknownChordType(id: ChordType): boolean {
-  return id !== ChordType.Unknown;
-}
-
 function isIntervalLegendGroup(group: ColorLegendGroup): boolean {
   return isIntervalType(group.groupingIds[0]!);
 }
 
-function sortColorLegendGroups(
-  groups: ColorLegendGroup[],
-  displayIdSet: Set<NoteGroupingId>,
-): ColorLegendGroup[] {
-  return [...groups].sort(function compareColorLegendGroups(a, b) {
-    return compareColorLegendGroupOrder(a, b, displayIdSet);
-  });
+function sortColorLegendGroups(groups: ColorLegendGroup[]): ColorLegendGroup[] {
+  return [...groups].sort(compareColorLegendGroupOrder);
 }
 
-function compareColorLegendGroupOrder(
-  a: ColorLegendGroup,
-  b: ColorLegendGroup,
-  displayIdSet: Set<NoteGroupingId>,
-): number {
+/**
+ * Intervals first, then both kinds by catalog {@link NoteGrouping.orderId} - which already
+ * encodes the pedagogical order (triads, sus, sevenths, sixths, extended, exotic). Sorting
+ * chords by `ChordType` declaration order instead used to strand sus4/sus2 after every
+ * seventh chord, and put exotics like `Δ7♭5` ahead of plain `6`.
+ */
+function compareColorLegendGroupOrder(a: ColorLegendGroup, b: ColorLegendGroup): number {
   const aIsInterval = isIntervalLegendGroup(a);
   const bIsInterval = isIntervalLegendGroup(b);
 
@@ -109,23 +97,7 @@ function compareColorLegendGroupOrder(
     return aIsInterval ? -1 : 1;
   }
 
-  if (aIsInterval) {
-    return minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
-  }
-
-  return catalogSortKey(a, displayIdSet) - catalogSortKey(b, displayIdSet);
-}
-
-function catalogSortKey(group: ColorLegendGroup, displayIdSet: Set<NoteGroupingId>): number {
-  const anchorIds = group.groupingIds.filter(function isDisplayId(id) {
-    return displayIdSet.has(id);
-  });
-  const ids = anchorIds.length > 0 ? anchorIds : group.groupingIds;
-  return Math.min(
-    ...ids.map(function catalogIndexForId(id) {
-      return CHORD_CATALOG_ORDER.indexOf(id as ChordType);
-    }),
-  );
+  return minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
 }
 
 function minOrderId(ids: NoteGroupingId[]): number {
@@ -172,5 +144,5 @@ function buildColorLegendGroups(): ColorLegendGroup[] {
     return toColorLegendGroup(sortIdsByOrder(groupingIds));
   });
 
-  return sortColorLegendGroups(groups, COLOR_LEGEND_DISPLAY_IDS);
+  return sortColorLegendGroups(groups);
 }

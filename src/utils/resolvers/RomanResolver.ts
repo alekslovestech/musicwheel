@@ -8,7 +8,7 @@ import { isNoteLength, makeDurated, type Durated, type NoteLength } from "@/type
 import { addChromatic } from "@/types/ChromaticIndex";
 import { scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
-import { resolveRomanQuality, ROMAN_CHORD_SUFFIX_PATTERN } from "@/types/RomanQualityRegistry";
+import { resolveRomanQuality, ROMAN_CHORD_SUFFIX_ALTERNATION } from "@/types/RomanQualityRegistry";
 import {
   isLowercaseRomanNumeral,
   scaleDegreeFromRomanNumeral,
@@ -91,7 +91,7 @@ interface ParsedRomanLexeme {
 const accidentalRegex: RegExp = /#|♯|b|♭/;
 const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
 const romanRegex: RegExp = new RegExp(
-  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${ROMAN_CHORD_SUFFIX_PATTERN.source})?(\/(${pureRomanRegex.source}))?$`,
+  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${ROMAN_CHORD_SUFFIX_ALTERNATION})?(\/(${pureRomanRegex.source}))?$`,
 );
 
 /**

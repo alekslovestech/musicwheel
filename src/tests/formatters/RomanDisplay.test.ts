@@ -70,13 +70,16 @@ describe("Roman Mode Index Arrays", () => {
     },
     {
       mode: ScaleModeType.DoubleHarmonicMajor,
-      // VII is Sus2sharp4: the wheel shows the simplified "sus2" (no 3rd is the readable part),
-      // while V keeps "♭5" - it has a 3rd, so its altered 5th stays visible.
-      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VIIsus2"],
+      // VII is Sus2sharp4 - no standard symbol, so it takes the exotic marker. V keeps "♭5":
+      // standard alteration notation on a chord that has a real major 3rd.
+      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VII*"],
     },
     {
       mode: ScaleModeType.PanthuVaraali,
-      expected: ["I", "♭IIsus", "iii", "♯IVsus2", "V♭5", "♭VI+", "VIIsus2"],
+      // ♯IV is Sus2sharp4 (1-2-♯4) and VII is a real Sus2 (1-2-5) - two different chords,
+      // both diatonic here, so they must not share a label. Abbreviating ♯IV to "sus2" once
+      // put the same string on both wheel positions; the marker keeps them apart.
+      expected: ["I", "♭IIsus", "iii", "♯IV*", "V♭5", "♭VI+", "VIIsus2"],
     },
   ];
 

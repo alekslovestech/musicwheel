@@ -1,6 +1,7 @@
 import { ChordType } from "@/types/enums/ChordType";
 import {
   DEFAULT_ROMAN_QUALITY,
+  EXOTIC_QUALITY_MARKER,
   getRomanQuality,
   getRomanQualityForDisplay,
   resolveRomanQuality,
@@ -48,19 +49,25 @@ describe("RomanQualityRegistry", () => {
     }
   });
 
-  it("simplifies third-less qualities for display, leaving the canonical suffix intact", () => {
-    const simplified: [ChordType, string, string][] = [
-      [ChordType.Sus2sharp4, "sus2♯4", "sus2"],
-      [ChordType.Sus2Add6, "6sus2", "sus2"],
-      [ChordType.Sus2_4, "sus24", "sus2"],
-      [ChordType.Dominant7Sus2Flat5, "7sus2♭5", "sus2"],
-      [ChordType.Major7Sus4, "Δ7sus4", "sus"],
+  it("marks qualities with no standard symbol, leaving the canonical suffix intact", () => {
+    const exotic: [ChordType, string][] = [
+      [ChordType.Sus2sharp4, "sus2♯4"],
+      [ChordType.Sus2_4, "sus24"],
+      [ChordType.Dominant7Sus2Flat5, "7sus2♭5"],
+      [ChordType.Major7Sus4, "Δ7sus4"],
+      [ChordType.Sus2Add6, "6sus2"],
     ];
 
-    for (const [chordType, canonical, display] of simplified) {
+    for (const [chordType, canonical] of exotic) {
       expect(getRomanQuality(chordType).suffix).toBe(canonical);
-      expect(getRomanQualityForDisplay(chordType).suffix).toBe(display);
+      expect(getRomanQualityForDisplay(chordType).suffix).toBe(EXOTIC_QUALITY_MARKER);
     }
+  });
+
+  it("leaves standard sus symbols unmarked", () => {
+    // The marker is for chords notation cannot name - a real sus4/sus2 is not one of them.
+    expect(getRomanQualityForDisplay(ChordType.Sus4).suffix).toBe("sus");
+    expect(getRomanQualityForDisplay(ChordType.Sus2).suffix).toBe("sus2");
   });
 
   it("keeps standard alteration notation on qualities that have a third", () => {
@@ -69,8 +76,34 @@ describe("RomanQualityRegistry", () => {
     }
   });
 
-  it("never decodes a simplified display suffix back to the exotic chord type", () => {
-    // Display simplification is lossy by design: "sus2" must stay Sus2, not become Sus2sharp4.
+  it("resolves every parseable token unambiguously", () => {
+    // resolveRomanQuality scans the table and takes the first match, so two qualities sharing
+    // a (case, token) pair would make one unreachable. Nothing warns if that happens - hence
+    // this check rather than a comment.
+    const seen = new Map<string, ChordType>();
+
+    for (const chordType of Object.values(ChordType)) {
+      const spec = getRomanQuality(chordType);
+      // Unmapped types all share the DEFAULT_ROMAN_QUALITY object, and would otherwise look
+      // like a pile of collisions on (false, ""). Identity separates them from real entries.
+      if (spec === DEFAULT_ROMAN_QUALITY) continue;
+
+      for (const token of [spec.suffix, ...(spec.parseTokens ?? [])]) {
+        const key = `${spec.isLowerCase}:${token}`;
+        expect([key, seen.get(key)]).toEqual([key, undefined]);
+        seen.set(key, chordType);
+        expect(resolveRomanQuality(spec.isLowerCase, token)).toBe(chordType);
+      }
+    }
+
+    expect(seen.size).toBeGreaterThan(20);
+  });
+
+  it("keeps the display marker out of the parser", () => {
+    // The marker is display-only and deliberately ambiguous - it must never resolve to a
+    // chord type, or parsing would silently pick one of the five exotics it stands for.
+    expect(resolveRomanQuality(false, EXOTIC_QUALITY_MARKER)).toBe(ChordType.Unknown);
+    expect(resolveRomanQuality(true, EXOTIC_QUALITY_MARKER)).toBe(ChordType.Unknown);
     expect(resolveRomanQuality(false, "sus2")).toBe(ChordType.Sus2);
     expect(resolveRomanQuality(false, "sus")).toBe(ChordType.Sus4);
   });
