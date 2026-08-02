@@ -53,19 +53,17 @@ function StepColorLegend({ steps }: { steps: ScaleRibbonStep[] }) {
       {steps.map((step) => (
         <LegendSwatchRow key={step.label} color={step.color} label={step.label} />
       ))}
-    </div>
+    </div> 
   );
 }
 
 function LegendSwatchRow({
   color,
   label,
-  degrees,
   id,
 }: {
   color: chroma.Color;
   label: string;
-  degrees?: string[];
   id?: string;
 }) {
   return (
@@ -74,9 +72,6 @@ function LegendSwatchRow({
         className="h-4 w-4 shrink-0 rounded-sm border border-containers-divider/40"
         style={{ backgroundColor: color.css() }}
       />
-      {degrees && (
-        <span className="shrink-0 text-sm leading-tight opacity-70">{degrees.join(",")}</span>
-      )}
       <span className="min-w-0 flex-1 text-sm leading-tight">{label}</span>
     </div>
   );
@@ -87,7 +82,6 @@ function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
     <LegendSwatchRow
       id={`color-legend-row-${group.groupingIds[0]}`}
       color={group.color}
-      degrees={group.degrees}
       label={legendLabelForGroup(group)}
     />
   );

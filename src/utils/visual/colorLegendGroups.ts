@@ -10,23 +10,22 @@ import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 export interface ColorLegendGroup {
   color: chroma.Color;
   groupingIds: NoteGroupingId[];
-  /** Scale degrees carrying this quality, on legends labelled by position rather than color. */
-  degrees?: string[];
+  /** Label with the chord symbol alone, no `shortForm (symbolForm)` pairing. */
+  symbolOnly?: boolean;
 }
 
 /**
- * Rows keyed by the degrees carrying each quality, kept in scale order. For Seventh mode,
- * where the wheel labels degrees with no quality at all - so a row's degrees are the only
- * thing tying it to a wheel position, and color, which converges as tetrads mix four interval
- * hues, cannot be the handle. Deliberately unsorted: scale order is the point.
+ * One row per quality, left in the order given rather than sorted - the caller orders by scale
+ * degree, so the rows run in the same direction as the ribbon. The degrees themselves are not
+ * shown, only the ordering they impose.
+ *
+ * Labels are chord symbols alone. Seventh names are the longest in the catalog, and a row of
+ * `maj7sus4 (Δ7sus4)` reads as noise where `Δ7sus4` reads as a chord.
  */
-export function getDegreeLabelledLegendGroups(
-  degreesByQuality: Map<ChordType, string[]>,
-): ColorLegendGroup[] {
-  return [...degreesByQuality].map(([chordType, degrees]) => ({
-    ...toColorLegendGroup([chordType]),
-    degrees,
-  }));
+export function getSeventhLegendGroups(orderedQualities: NoteGroupingId[]): ColorLegendGroup[] {
+  return orderedQualities
+    .filter(isColorLegendId)
+    .map((id) => ({ ...toColorLegendGroup([id]), symbolOnly: true }));
 }
 
 /**
@@ -81,10 +80,9 @@ const COLOR_LEGEND_EXCLUDED_CHORD_IDS: ReadonlySet<NoteGroupingId> = new Set([
  */
 export function legendLabelForGroup(group: ColorLegendGroup): string {
   const ids = distinctByShortForm(group.groupingIds);
-  // Degree-labelled rows carry chord-symbol notation alone (`Δ7`, not `Maj7 (Δ7)`): the
-  // parenthetical bridges a legend row to the symbol on the wheel, and Seventh mode shows
-  // none there, so it would teach a mapping with nothing on the other end.
-  if (group.degrees) return NoteGroupingLibrary.getGroupingById(ids[0]!).symbolForm;
+  // Safe to use bare: every seventh quality has a non-empty symbolForm, unlike Major, whose
+  // chord symbol is the empty suffix - and only sevenths reach here.
+  if (group.symbolOnly) return NoteGroupingLibrary.getGroupingById(ids[0]!).symbolForm;
   if (ids.length === 1) return labelWithChordSymbol(ids[0]!);
   return ids.map((id) => NoteGroupingLibrary.getGroupingById(id).shortForm).join("·");
 }

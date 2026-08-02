@@ -3,8 +3,8 @@
 import {
   ColorLegendGroup,
   getColorLegendGroupsForIds,
-  getDegreeLabelledLegendGroups,
   getJoinedColorLegendGroupsForIds,
+  getSeventhLegendGroups,
 } from "@/utils/visual/colorLegendGroups";
 import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
@@ -36,12 +36,14 @@ export function useColorLegendGroups(): {
     };
   }
 
-  // Seventh labels rows by degree: its wheel shows numerals without quality, so the degree is
-  // the only thing linking a row to a position. Triad's wheel does show quality (vii°), so a
-  // plain quality legend still reads there.
+  // Seventh orders its rows by the degree each quality first appears on, so the legend runs in
+  // the same direction as the ribbon beneath the wheel. The degrees themselves stay off the
+  // rows - the ribbon already lays them out, and repeating them here only added clutter.
   if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.Seventh) {
     return {
-      groups: getDegreeLabelledLegendGroups(ChordSetUtils.seventhsByDegree(selectedMusicalKey)),
+      groups: getSeventhLegendGroups([
+        ...ChordSetUtils.seventhsByDegree(selectedMusicalKey).keys(),
+      ]),
       chordsOnly: true,
     };
   }

@@ -1,8 +1,8 @@
 import { ChordType } from "@/types/enums/ChordType";
 import {
   getColorLegendGroupsForIds,
-  getDegreeLabelledLegendGroups,
   getJoinedColorLegendGroupsForIds,
+  getSeventhLegendGroups,
   legendLabelForGroup,
 } from "@/utils/visual/colorLegendGroups";
 import { getIntervalTypesForScaleFromRoot } from "@/utils/visual/scaleRibbonUtils";
@@ -113,49 +113,59 @@ describe("getColorLegendGroupsForIds", () => {
     expect(rows).not.toContain(ChordType.Sus2sharp4);
   });
 
-  describe("getDegreeLabelledLegendGroups", () => {
-    const degreeRows = (mode: ScaleModeType) =>
-      getDegreeLabelledLegendGroups(
-        ChordSetUtils.seventhsByDegree(MusicalKey.fromGreekMode("C", mode)),
-      ).map((group) => `${group.degrees!.join(",")} ${legendLabelForGroup(group)}`);
+  describe("Seventh-mode legend", () => {
+    const seventhsByDegree = (mode: ScaleModeType) =>
+      ChordSetUtils.seventhsByDegree(MusicalKey.fromGreekMode("C", mode));
 
-    it("keeps scale order and groups degrees sharing a quality", () => {
-      // The wheel shows I ii iii IV V vi vii with no quality in Seventh mode, so these rows
-      // are the only thing saying what sits on each degree. ii/iii/vi share one row rather
-      // than repeating an identical swatch three times.
-      expect(degreeRows(ScaleModeType.Ionian)).toEqual([
-        "I,IV Δ7",
-        "ii,iii,vi m7",
-        "V 7",
-        "vii ø7",
+    const legendRows = (mode: ScaleModeType) =>
+      getSeventhLegendGroups([...seventhsByDegree(mode).keys()]).map(legendLabelForGroup);
+
+    it("orders rows by the degree each quality first appears on", () => {
+      // Scale order, not catalog order, so the rows run in the same direction as the ribbon.
+      // The degrees themselves are not rendered - only the ordering they impose survives.
+      expect(legendRows(ScaleModeType.Ionian)).toEqual(["Δ7", "m7", "7", "ø7"]);
+    });
+
+    it("labels with the chord symbol alone - seventh names are the catalog's longest", () => {
+      // "maj7sus4 (Δ7sus4)" is the shape this replaces.
+      expect(legendRows(ScaleModeType.PanthuVaraali)).toEqual([
+        "Δ7",
+        "Δ7sus4",
+        "m6",
+        "7sus2♭5",
+        "Δ7♭5",
+        "+Δ7",
+        "6sus2",
       ]);
     });
 
-    it("labels with chord symbols, not preset short forms", () => {
-      // Δ7 over Maj7, ø7 over m7♭5 - shorter, and the notation chord names already use.
-      const panthuVaraali = degreeRows(ScaleModeType.PanthuVaraali);
-      expect(panthuVaraali).toContain("I Δ7");
-      expect(panthuVaraali).toContain("♭II Δ7sus4");
-      expect(panthuVaraali).toContain("♯IV 7sus2♭5");
+    it("collects the degrees that share a quality", () => {
+      expect(seventhsByDegree(ScaleModeType.Ionian).get(ChordType.Minor7)).toEqual([
+        "ii",
+        "iii",
+        "vi",
+      ]);
     });
 
-    it("names inverted stacks by their quality, without flagging the inversion", () => {
+    it("resolves inverted stacks that root-position lookup cannot", () => {
       // Hungarian Minor's ♯IV stacks to F♯ A♭ C E♭ = [0,2,6,9] - A♭7 voiced from its 7th, so
-      // root-position lookup called it Unknown and dropped the row entirely. The inversion
-      // itself goes unmentioned: it changes neither the quality nor the swatch color.
-      expect(degreeRows(ScaleModeType.HungarianMinor)).toContain("♯IV 7");
-      expect(degreeRows(ScaleModeType.DoubleHarmonicMajor)).toContain("VII 7");
+      // it once resolved to Unknown and vanished from the legend entirely.
+      expect(seventhsByDegree(ScaleModeType.HungarianMinor).get(ChordType.Dominant7)).toEqual([
+        "♯IV",
+      ]);
+      expect(seventhsByDegree(ScaleModeType.DoubleHarmonicMajor).get(ChordType.Dominant7)).toEqual([
+        "VII",
+      ]);
     });
 
-    it("accounts for every degree of the scale", () => {
+    it("maps every degree of the scale to some quality", () => {
       for (const mode of [
         ScaleModeType.Ionian,
         ScaleModeType.HungarianMinor,
         ScaleModeType.DoubleHarmonicMajor,
         ScaleModeType.PanthuVaraali,
       ]) {
-        const degrees = degreeRows(mode).flatMap((row) => row.split(" ")[0]!.split(","));
-        expect(degrees).toHaveLength(7);
+        expect([...seventhsByDegree(mode).values()].flat()).toHaveLength(7);
       }
     });
   });
