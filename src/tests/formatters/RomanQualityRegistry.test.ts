@@ -10,6 +10,22 @@ import { makeRomanChord } from "../utils/RomanTestUtils";
 import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
 
+/**
+ * Qualities outside roman-numeral vocabulary. The last four are writable as chord symbols,
+ * but nobody analyses a progression as `V♭5` or `i(add4)` - see the rule on ROMAN_QUALITY.
+ */
+const EXOTIC_TYPES: ChordType[] = [
+  ChordType.Sus2sharp4,
+  ChordType.Sus2_4,
+  ChordType.Dominant7Sus2Flat5,
+  ChordType.Major7Sus4,
+  ChordType.Sus2Add6,
+  ChordType.MajFlat5,
+  ChordType.Dominant7Flat5,
+  ChordType.Major7Flat5,
+  ChordType.Narrow_b3_4,
+];
+
 describe("RomanQualityRegistry", () => {
   it("encodes and decodes major/minor triads via case", () => {
     expect(getRomanQuality(ChordType.Major)).toEqual({ suffix: "", isLowerCase: false });
@@ -49,46 +65,44 @@ describe("RomanQualityRegistry", () => {
     }
   });
 
-  it("marks everything outside roman vocabulary, leaving the canonical suffix intact", () => {
-    const exotic: [ChordType, string][] = [
-      [ChordType.Sus2sharp4, "sus2♯4"],
-      [ChordType.Sus2_4, "sus24"],
-      [ChordType.Dominant7Sus2Flat5, "7sus2♭5"],
-      [ChordType.Major7Sus4, "Δ7sus4"],
-      [ChordType.Sus2Add6, "6sus2"],
-      // Writable as chord symbols, but no one analyses a progression as "V♭5" or "i(add4)".
-      [ChordType.MajFlat5, "♭5"],
-      [ChordType.Dominant7Flat5, "7♭5"],
-      [ChordType.Major7Flat5, "Δ7♭5"],
-      [ChordType.Narrow_b3_4, "add4"],
-    ];
+  it("marks exactly the qualities outside roman vocabulary - no more, no fewer", () => {
+    const marked = Object.values(ChordType).filter(
+      (chordType) => getRomanQualityForDisplay(chordType).suffix === EXOTIC_QUALITY_MARKER,
+    );
 
-    for (const [chordType, canonical] of exotic) {
-      expect(getRomanQuality(chordType).suffix).toBe(canonical);
-      expect(getRomanQualityForDisplay(chordType).suffix).toBe(EXOTIC_QUALITY_MARKER);
-    }
+    expect(marked.sort()).toEqual([...EXOTIC_TYPES].sort());
+  });
+
+  it("marks for display only, leaving the suffix that encodes and parses untouched", () => {
+    expect(EXOTIC_TYPES.map((chordType) => getRomanQuality(chordType).suffix)).toEqual([
+      "sus2♯4",
+      "sus24",
+      "7sus2♭5",
+      "Δ7sus4",
+      "6sus2",
+      "♭5",
+      "7♭5",
+      "Δ7♭5",
+      "add4",
+    ]);
   });
 
   it("keeps the qualities roman analysis actually names", () => {
-    const named: [ChordType, string][] = [
-      [ChordType.Major, ""],
-      [ChordType.Minor, ""],
-      [ChordType.Diminished, "°"],
-      [ChordType.Augmented, "+"],
-      [ChordType.Dominant7, "7"],
-      [ChordType.Major7, "Δ7"],
-      [ChordType.HalfDiminished, "ø7"],
-      [ChordType.Diminished7, "°7"],
-      [ChordType.Major6, "6"],
-      // Not classical vocabulary, but "no 3rd" is a real category - and a genuine sus2 has to
-      // stay distinguishable from the exotics sharing its wheel.
-      [ChordType.Sus4, "sus"],
-      [ChordType.Sus2, "sus2"],
-    ];
+    const shown = (chordType: ChordType) => getRomanQualityForDisplay(chordType).suffix;
 
-    for (const [chordType, symbol] of named) {
-      expect(getRomanQualityForDisplay(chordType).suffix).toBe(symbol);
-    }
+    expect(shown(ChordType.Major)).toBe("");
+    expect(shown(ChordType.Minor)).toBe("");
+    expect(shown(ChordType.Diminished)).toBe("°");
+    expect(shown(ChordType.Augmented)).toBe("+");
+    expect(shown(ChordType.Dominant7)).toBe("7");
+    expect(shown(ChordType.Major7)).toBe("Δ7");
+    expect(shown(ChordType.HalfDiminished)).toBe("ø7");
+    expect(shown(ChordType.Diminished7)).toBe("°7");
+    expect(shown(ChordType.Major6)).toBe("6");
+    // Not classical vocabulary, but "no 3rd" is a real category - and a genuine sus2 has to
+    // stay distinguishable from the exotics sharing its wheel.
+    expect(shown(ChordType.Sus4)).toBe("sus");
+    expect(shown(ChordType.Sus2)).toBe("sus2");
   });
 
   it("resolves every parseable token unambiguously", () => {

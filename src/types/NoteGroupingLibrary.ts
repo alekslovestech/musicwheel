@@ -50,6 +50,13 @@ class NoteGroupingLibrarySingleton {
     return NoteGroupingLibrarySingleton.library.map((grouping) => grouping.id) as NoteGroupingId[];
   }
 
+  /** The preset picker's vocabulary: {@link IntervalOrChordIds} minus ids hidden from it. */
+  public getVisiblePresetIds(isInterval: boolean): NoteGroupingId[] {
+    return this.IntervalOrChordIds(isInterval).filter(
+      (id) => this.getGroupingById(id).isVisiblePreset,
+    );
+  }
+
   public IntervalOrChordIds(isInterval: boolean): NoteGroupingId[] {
     return NoteGroupingLibrarySingleton.library
       .filter((grouping) => (isInterval ? grouping.numNotes === 2 : grouping.numNotes > 2))

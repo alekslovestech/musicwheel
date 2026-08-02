@@ -1,7 +1,7 @@
 import { ChordType } from "@/types/enums/ChordType";
 import {
-  getColorLegendGroups,
   getColorLegendGroupsForIds,
+  getJoinedColorLegendGroupsForIds,
   legendLabelForGroup,
 } from "@/utils/visual/colorLegendGroups";
 import { getIntervalTypesForScaleFromRoot } from "@/utils/visual/scaleRibbonUtils";
@@ -9,6 +9,10 @@ import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { ChordSetUtils } from "@/utils/ChordSetUtils";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+
+/** What harmony mode's Chords legend shows: the preset buttons, joined by color. */
+const chordPresetLegend = () =>
+  getJoinedColorLegendGroupsForIds(new Set(NoteGroupingLibrary.getVisiblePresetIds(false)));
 
 describe("getColorLegendGroupsForIds", () => {
   // Minor7 and Major6 render as the same color (a catalog-wide coincidence), and so do
@@ -26,10 +30,14 @@ describe("getColorLegendGroupsForIds", () => {
     expect(groups[0]!.groupingIds).toEqual([ChordType.HalfDiminished]);
   });
 
-  it("still joins Minor7 and Major6 when both are actually present", () => {
+  it("gives same-colored qualities separate rows when both are present", () => {
+    // A scale or progression names a short, known list, so each quality is spelled out even
+    // where two share a swatch. Only the full catalog legend joins them.
     const groups = getColorLegendGroupsForIds(new Set([ChordType.Minor7, ChordType.Major6]));
-    expect(groups).toHaveLength(1);
-    expect(groups[0]!.groupingIds).toEqual([ChordType.Minor7, ChordType.Major6]);
+    expect(groups.map((group) => group.groupingIds)).toEqual([
+      [ChordType.Minor7],
+      [ChordType.Major6],
+    ]);
   });
 
   describe("legendLabelForGroup", () => {
@@ -51,9 +59,16 @@ describe("getColorLegendGroupsForIds", () => {
       expect(labelFor(ChordType.Sus2)).toEqual(["sus2"]);
     });
 
-    it("leaves rows holding several same-colored qualities short-form only", () => {
-      // Minor7 and Major6 share a color, so they share a row; "min7 (m7)·6" would be noise.
-      expect(labelFor(ChordType.Minor7, ChordType.Major6)).toEqual(["min7·6"]);
+    it("spells out both when a scale holds two same-colored qualities", () => {
+      // Split rows are what let each carry its symbol; Major6 writes "6" either way.
+      expect(labelFor(ChordType.Minor7, ChordType.Major6)).toEqual(["min7 (m7)", "6"]);
+    });
+
+    it("leaves the preset legend's joined rows short-form only", () => {
+      // The preset legends are the only ones that still join, and "min7 (m7)·6" reads as noise.
+      const presetLegend = chordPresetLegend().map(legendLabelForGroup);
+      expect(presetLegend).toContain("min7·6");
+      expect(presetLegend).toContain("dim (°)");
     });
   });
 
@@ -75,18 +90,26 @@ describe("getColorLegendGroupsForIds", () => {
   // after every seventh chord and put exotics like Δ7♭5 ahead of them. Catalog orderId groups
   // them with the triads they belong to.
   it("orders sus triads with the triads, ahead of sevenths and exotics", () => {
-    const indexOfRowContaining = (id: ChordType) =>
-      getColorLegendGroups().findIndex((g) => g.groupingIds.includes(id));
+    const groups = getColorLegendGroupsForIds(
+      new Set([ChordType.Major7Flat5, ChordType.Dominant7, ChordType.Sus4, ChordType.Augmented]),
+    );
 
-    expect(indexOfRowContaining(ChordType.Sus4)).toBeGreaterThan(
-      indexOfRowContaining(ChordType.Augmented),
-    );
-    expect(indexOfRowContaining(ChordType.Sus4)).toBeLessThan(
-      indexOfRowContaining(ChordType.Dominant7),
-    );
-    expect(indexOfRowContaining(ChordType.Sus4)).toBeLessThan(
-      indexOfRowContaining(ChordType.Major7Flat5),
-    );
+    expect(groups.map((group) => group.groupingIds[0])).toEqual([
+      ChordType.Augmented,
+      ChordType.Sus4,
+      ChordType.Dominant7,
+      ChordType.Major7Flat5,
+    ]);
+  });
+
+  it("scopes the harmony-mode legend to the preset buttons", () => {
+    const rows = chordPresetLegend().flatMap((group) => group.groupingIds);
+
+    expect(rows).toContain(ChordType.Major);
+    expect(rows).toContain(ChordType.Diminished);
+    // Hidden from the preset picker, so the legend explaining that picker must not list it.
+    expect(rows).not.toContain(ChordType.Major7Flat5);
+    expect(rows).not.toContain(ChordType.Sus2sharp4);
   });
 
   it("C Ionian's diatonic sevenths each get their own row (regression case)", () => {

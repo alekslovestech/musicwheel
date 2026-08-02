@@ -2,13 +2,16 @@
 
 import {
   ColorLegendGroup,
-  getColorLegendGroups,
   getColorLegendGroupsForIds,
+  getJoinedColorLegendGroupsForIds,
 } from "@/utils/visual/colorLegendGroups";
+import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { ChordSetUtils } from "@/utils/ChordSetUtils";
 import { getIntervalTypesForScaleFromRoot } from "@/utils/visual/scaleRibbonUtils";
 import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
+import { useChordPresets } from "@/contexts/ChordPresetContext";
 import { useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { isChordalScalePlaybackMode, ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
@@ -21,6 +24,7 @@ export function useColorLegendGroups(): {
   const isScalesMode = useIsScalePreviewMode();
   const { selectedProgression, scalePlaybackMode } = useAudio();
   const { selectedMusicalKey } = useMusical();
+  const { harmonyInputMode } = useChordPresets();
 
   if (isProgressionsMode && selectedProgression != null) {
     const progression = ChordProgressionLibrary.getProgression(selectedProgression);
@@ -58,8 +62,25 @@ export function useColorLegendGroups(): {
     };
   }
 
-  return {
-    groups: getColorLegendGroups(),
-    chordsOnly: false,
-  };
+  // Harmony mode: the legend explains the preset buttons, so it mirrors them exactly - and
+  // stays empty in the modes that offer no presets, where there would be nothing to explain.
+  if (harmonyInputMode === HarmonyInputMode.ChordPresets) {
+    return {
+      groups: getJoinedColorLegendGroupsForIds(
+        new Set(NoteGroupingLibrary.getVisiblePresetIds(false)),
+      ),
+      chordsOnly: true,
+    };
+  }
+
+  if (harmonyInputMode === HarmonyInputMode.IntervalPresets) {
+    return {
+      groups: getJoinedColorLegendGroupsForIds(
+        new Set(NoteGroupingLibrary.getVisiblePresetIds(true)),
+      ),
+      chordsOnly: false,
+    };
+  }
+
+  return { groups: [], chordsOnly: true };
 }

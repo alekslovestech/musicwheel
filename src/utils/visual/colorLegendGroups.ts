@@ -12,44 +12,33 @@ export interface ColorLegendGroup {
   groupingIds: NoteGroupingId[];
 }
 
-export function getColorLegendGroups(): ColorLegendGroup[] {
-  return buildColorLegendGroups();
-}
-
-/** Subset of the full legend: one row per color bucket that matches any of {@link displayIds}. */
+/**
+ * One row per id. A scale or progression holds a short, known list of qualities, so each is
+ * worth naming even where two of them share a color - and being alone on a row is what lets a
+ * quality carry its chord symbol (`m7♭5 (ø7)`).
+ */
 export function getColorLegendGroupsForIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
-  return groupsForDisplayIds(displayIds);
-}
-
-function groupsForDisplayIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
-  const fullMap = buildColorLegendMap(COLOR_LEGEND_DISPLAY_IDS);
-  const displayBuckets = new Set([...displayIds].map(legendBucketKey));
-
-  const groups = [...fullMap.entries()]
-    .filter(([bucketKey]) => displayBuckets.has(bucketKey))
-    // A color bucket can hold catalog-wide ids that share this color (e.g. Minor7 and
-    // Major6 render identically) but aren't all diatonic to the current scale/progression -
-    // only label the ones actually being displayed, or a row for "min7" alone shows "min7·6".
-    .map(([, groupingIds]) => toColorLegendGroup(groupingIds.filter((id) => displayIds.has(id))));
-
+  const groups = [...displayIds].filter(isColorLegendId).map((id) => toColorLegendGroup([id]));
   return sortColorLegendGroups(groups);
 }
 
-function buildColorLegendMap(ids: Set<NoteGroupingId>): Map<string, NoteGroupingId[]> {
-  const map = new Map<string, NoteGroupingId[]>();
-
-  for (const id of ids) {
+/**
+ * One row per color, same-colored qualities sharing it. For the preset legends, where the list
+ * runs long enough that a row each would swamp the panel, and where joining is itself worth
+ * seeing - it is how the legend shows that inversions (m2·M7) resolve to one color.
+ */
+export function getJoinedColorLegendGroupsForIds(
+  displayIds: Set<NoteGroupingId>,
+): ColorLegendGroup[] {
+  const byColor = new Map<string, NoteGroupingId[]>();
+  for (const id of displayIds) {
+    if (!isColorLegendId(id)) continue;
     const key = legendBucketKey(id);
-    const group = map.get(key) ?? [];
-    group.push(id);
-    map.set(key, group);
+    byColor.set(key, [...(byColor.get(key) ?? []), id]);
   }
 
-  for (const [key, group] of map) {
-    map.set(key, sortIdsByOrder(group));
-  }
-
-  return map;
+  const groups = [...byColor.values()].map((ids) => toColorLegendGroup(sortIdsByOrder(ids)));
+  return sortColorLegendGroups(groups);
 }
 
 /** Spread, narrow, and hidden voicings omitted from the chord legend. */
@@ -64,10 +53,6 @@ const COLOR_LEGEND_EXCLUDED_CHORD_IDS: ReadonlySet<NoteGroupingId> = new Set([
   ChordType.Add2,
   ChordType.Seven13,
 ]);
-
-const COLOR_LEGEND_DISPLAY_IDS: Set<NoteGroupingId> = new Set(
-  NoteGroupingLibrary.getAllIds().filter(isColorLegendId),
-);
 
 /**
  * Row text for a legend entry. A lone quality spells out its chord symbol - `dim (°)` - since
@@ -177,19 +162,3 @@ function toColorLegendGroup(groupingIds: NoteGroupingId[]): ColorLegendGroup {
   };
 }
 
-function buildColorLegendGroups(): ColorLegendGroup[] {
-  const map = new Map<string, NoteGroupingId[]>();
-
-  for (const id of COLOR_LEGEND_DISPLAY_IDS) {
-    const key = legendBucketKey(id);
-    const group = map.get(key) ?? [];
-    group.push(id);
-    map.set(key, group);
-  }
-
-  const groups = [...map.values()].map(function toSortedColorLegendGroup(groupingIds) {
-    return toColorLegendGroup(sortIdsByOrder(groupingIds));
-  });
-
-  return sortColorLegendGroups(groups);
-}
