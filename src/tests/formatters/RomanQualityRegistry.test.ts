@@ -49,13 +49,18 @@ describe("RomanQualityRegistry", () => {
     }
   });
 
-  it("marks qualities with no standard symbol, leaving the canonical suffix intact", () => {
+  it("marks everything outside roman vocabulary, leaving the canonical suffix intact", () => {
     const exotic: [ChordType, string][] = [
       [ChordType.Sus2sharp4, "sus2♯4"],
       [ChordType.Sus2_4, "sus24"],
       [ChordType.Dominant7Sus2Flat5, "7sus2♭5"],
       [ChordType.Major7Sus4, "Δ7sus4"],
       [ChordType.Sus2Add6, "6sus2"],
+      // Writable as chord symbols, but no one analyses a progression as "V♭5" or "i(add4)".
+      [ChordType.MajFlat5, "♭5"],
+      [ChordType.Dominant7Flat5, "7♭5"],
+      [ChordType.Major7Flat5, "Δ7♭5"],
+      [ChordType.Narrow_b3_4, "add4"],
     ];
 
     for (const [chordType, canonical] of exotic) {
@@ -64,15 +69,25 @@ describe("RomanQualityRegistry", () => {
     }
   });
 
-  it("leaves standard sus symbols unmarked", () => {
-    // The marker is for chords notation cannot name - a real sus4/sus2 is not one of them.
-    expect(getRomanQualityForDisplay(ChordType.Sus4).suffix).toBe("sus");
-    expect(getRomanQualityForDisplay(ChordType.Sus2).suffix).toBe("sus2");
-  });
+  it("keeps the qualities roman analysis actually names", () => {
+    const named: [ChordType, string][] = [
+      [ChordType.Major, ""],
+      [ChordType.Minor, ""],
+      [ChordType.Diminished, "°"],
+      [ChordType.Augmented, "+"],
+      [ChordType.Dominant7, "7"],
+      [ChordType.Major7, "Δ7"],
+      [ChordType.HalfDiminished, "ø7"],
+      [ChordType.Diminished7, "°7"],
+      [ChordType.Major6, "6"],
+      // Not classical vocabulary, but "no 3rd" is a real category - and a genuine sus2 has to
+      // stay distinguishable from the exotics sharing its wheel.
+      [ChordType.Sus4, "sus"],
+      [ChordType.Sus2, "sus2"],
+    ];
 
-  it("keeps standard alteration notation on qualities that have a third", () => {
-    for (const chordType of [ChordType.MajFlat5, ChordType.Dominant7Flat5, ChordType.Major7Flat5]) {
-      expect(getRomanQualityForDisplay(chordType).suffix).toBe(getRomanQuality(chordType).suffix);
+    for (const [chordType, symbol] of named) {
+      expect(getRomanQualityForDisplay(chordType).suffix).toBe(symbol);
     }
   });
 
