@@ -50,15 +50,19 @@ describe("buildScaleRibbonData", () => {
       ]);
     });
 
-    test("is a chord ribbon, not a step ribbon", () => {
+    test("is a swatch ribbon, not a tick ribbon - no step segments at all", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
       expect(ribbon.title).toBe("Sevenths");
-      expect(ribbon.steps).toHaveLength(0);
+      // "swatches" ribbons carry no `steps` field - there is nothing to have length 0.
+      expect(ribbon.kind).toBe("swatches");
       expect(ribbonUsesStepSegments(ScalePlaybackMode.Seventh)).toBe(false);
     });
 
     test("every degree carries a color", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
+      // The "swatches" type guarantees every note has a color; this pins the builder to that
+      // variant rather than "ticks", where the compiler would not require one.
+      if (ribbon.kind !== "swatches") throw new Error("expected a swatches ribbon");
       expect(ribbon.notes.every((note) => note.color !== undefined)).toBe(true);
     });
   });
@@ -133,9 +137,10 @@ describe("buildScaleRibbonData", () => {
       expect(ribbonUsesStepSegments(ScalePlaybackMode.Triad)).toBe(false);
       expect(ribbonUsesStepSegments(ScalePlaybackMode.DronedSingleNote)).toBe(false);
 
-      expect(
-        buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote).steps.length,
-      ).toBeGreaterThan(0);
+      const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
+      expect(ribbon.kind).toBe("ticks");
+      if (ribbon.kind !== "ticks") throw new Error("expected a ticks ribbon");
+      expect(ribbon.steps.length).toBeGreaterThan(0);
     });
   });
 });

@@ -11,21 +11,29 @@ import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 
-export type ScaleRibbonStep = {
+/** A labeled, colored ribbon mark - a step segment, or a note whose color is shown. */
+export type ScaleRibbonMark = {
   label: string;
   color: chroma.Color;
 };
 
-export type ScaleRibbonNote = {
+/** A degree marker with no color of its own - Steps mode; color lives on the segments between ticks. */
+export type ScaleRibbonTick = {
   label: string;
-  color?: chroma.Color;
 };
 
-export type ScaleRibbonData = {
-  title: string;
-  notes: ScaleRibbonNote[];
-  steps: ScaleRibbonStep[];
-};
+/**
+ * A ribbon has one of two real shapes, not one shape with an optional field: Steps mode marks
+ * bare degree ticks connected by colored segments ("ticks"); every other mode marks colored
+ * swatches with no segments between them ("swatches"). Modeling this as a union - rather than
+ * `color?` on notes and an always-present-but-sometimes-empty `steps` array - means a "ticks"
+ * ribbon's notes can never claim a color nobody reads, and a "swatches" ribbon's notes can
+ * never omit a color the layout needs; {@link ScaleRibbon} switches on `kind` instead of
+ * sniffing `steps.length > 0`.
+ */
+export type ScaleRibbonData =
+  | { title: string; kind: "ticks"; notes: ScaleRibbonTick[]; steps: ScaleRibbonMark[] }
+  | { title: string; kind: "swatches"; notes: ScaleRibbonMark[] };
 
 export function buildScaleRibbonData(
   key: MusicalKey,
@@ -47,14 +55,14 @@ export function ribbonUsesStepSegments(scalePlaybackMode: ScalePlaybackMode): bo
   return scalePlaybackMode === ScalePlaybackMode.SingleNote;
 }
 
-export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonStep[] {
+export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonMark[] {
   return buildStepSegments(getScalePatternOffsets(key));
 }
 
 /** Distinct step distances in the scale, sorted by ascending semitones. */
-export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonStep[] {
+export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonMark[] {
   const offsets = getScalePatternOffsets(key);
-  const bySemitones = new Map<number, ScaleRibbonStep>();
+  const bySemitones = new Map<number, ScaleRibbonMark>();
   offsets.forEach((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
     if (!bySemitones.has(semitones)) {
@@ -113,7 +121,7 @@ function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {
   return subChromatic(offsets[nextIndex], offsets[fromIndex]);
 }
 
-function buildStepSegments(offsets: number[]): ScaleRibbonStep[] {
+function buildStepSegments(offsets: number[]): ScaleRibbonMark[] {
   return offsets.map((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
     return {
@@ -125,17 +133,17 @@ function buildStepSegments(offsets: number[]): ScaleRibbonStep[] {
 
 function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
   const offsets = getScalePatternOffsets(key);
-  const notes: ScaleRibbonNote[] = offsets.map((_, i) => ({
+  const notes: ScaleRibbonTick[] = offsets.map((_, i) => ({
     label: `${i + 1}`,
   }));
   notes.push({ label: "8" });
 
-  return { title: "Steps (W–H)", notes, steps: buildStepSegments(offsets) };
+  return { title: "Steps (W–H)", kind: "ticks", notes, steps: buildStepSegments(offsets) };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
   const offsets = getScalePatternOffsets(key);
-  const notes: ScaleRibbonNote[] = offsets.map((_, i) => {
+  const notes: ScaleRibbonMark[] = offsets.map((_, i) => {
     const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
     return {
       label: ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo),
@@ -147,7 +155,7 @@ function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
     color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, key.scalePatternLength),
   });
 
-  return { title: "From root (1–♭2…)", notes, steps: [] };
+  return { title: "From root (1–♭2…)", kind: "swatches", notes };
 }
 
 /** Triad / Seventh: one chord stacked on each degree, labeled by its roman numeral. */
@@ -173,7 +181,7 @@ function buildChordRibbon(
     return RomanChordFormatter.formatRomanNumeralOnly(romanChord);
   };
 
-  const notes: ScaleRibbonNote[] = Array.from({ length: key.scalePatternLength }, (_, i) => ({
+  const notes: ScaleRibbonMark[] = Array.from({ length: key.scalePatternLength }, (_, i) => ({
     label: romanLabelAtDegree(i),
     color: noteHighlightColor(key, mode, i),
   }));
@@ -182,5 +190,5 @@ function buildChordRibbon(
     color: noteHighlightColor(key, mode, key.scalePatternLength),
   });
 
-  return { title: isSeventh ? "Sevenths" : "Triads", notes, steps: [] };
+  return { title: isSeventh ? "Sevenths" : "Triads", kind: "swatches", notes };
 }

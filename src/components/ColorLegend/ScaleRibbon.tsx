@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 
-import { ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
+import { ScaleRibbonData, ScaleRibbonMark, ScaleRibbonTick } from "@/utils/visual/scaleRibbonUtils";
 
 export function ScaleRibbon({
   ribbon,
@@ -14,15 +14,13 @@ export function ScaleRibbon({
   /** Selects the degree at this sequence index; omit to render the ribbon read-only. */
   onSelectStep?: (stepIndex: number) => void;
 }) {
-  const hasSteps = ribbon.steps.length > 0;
-
   return (
     <div id="scale-ribbon" className="flex flex-col gap-tight">
       <div className="text-xs font-medium uppercase tracking-wide text-labels-textDefault opacity-70">
         {ribbon.title}
       </div>
 
-      {hasSteps ? (
+      {ribbon.kind === "ticks" ? (
         <StepsRibbonLayout
           notes={ribbon.notes}
           steps={ribbon.steps}
@@ -45,7 +43,7 @@ function NotesRibbonLayout({
   activeNoteIndex,
   onSelectStep,
 }: {
-  notes: ScaleRibbonData["notes"];
+  notes: ScaleRibbonMark[];
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
@@ -69,8 +67,8 @@ function StepsRibbonLayout({
   activeNoteIndex,
   onSelectStep,
 }: {
-  notes: ScaleRibbonData["notes"];
-  steps: ScaleRibbonData["steps"];
+  notes: ScaleRibbonTick[];
+  steps: ScaleRibbonMark[];
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
@@ -106,10 +104,19 @@ function RibbonNoteCell({
   className: string;
   children: React.ReactNode;
 }) {
-  if (!onSelect) return <div className={className}>{children}</div>;
+  // Degree labels (roman numerals, scale-step numbers) are unique within one ribbon.
+  const id = `scale-ribbon-note-${label}`;
+
+  if (!onSelect)
+    return (
+      <div id={id} className={className}>
+        {children}
+      </div>
+    );
 
   return (
     <button
+      id={id}
       type="button"
       onClick={onSelect}
       aria-label={`Select scale degree ${label}`}
@@ -125,7 +132,7 @@ function RibbonNoteSwatch({
   isActive,
   onSelect,
 }: {
-  note: ScaleRibbonData["notes"][number];
+  note: ScaleRibbonMark;
   isActive: boolean;
   onSelect?: () => void;
 }) {
@@ -139,7 +146,7 @@ function RibbonNoteSwatch({
         className={`h-4 w-4 shrink-0 rounded-sm border border-containers-divider/40 ${
           isActive ? "ring-2 ring-keys-scaleBoundaryColor ring-offset-1" : ""
         }`}
-        style={{ backgroundColor: note.color?.css() ?? "transparent" }}
+        style={{ backgroundColor: note.color.css() }}
       />
       <span className="w-full truncate text-center text-[9px] leading-none text-labels-textDefault opacity-60">
         {note.label}
@@ -153,7 +160,7 @@ function RibbonNoteTick({
   isActive,
   onSelect,
 }: {
-  note: ScaleRibbonData["notes"][number];
+  note: ScaleRibbonTick;
   isActive: boolean;
   onSelect?: () => void;
 }) {
@@ -179,7 +186,7 @@ function RibbonNoteTick({
   );
 }
 
-function RibbonStepConnector({ step }: { step: ScaleRibbonData["steps"][number] }) {
+function RibbonStepConnector({ step }: { step: ScaleRibbonMark }) {
   return (
     <div className="mb-3 flex min-w-0 flex-1 flex-col items-center gap-0.5">
       <div

@@ -10,7 +10,7 @@ import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import {
   getStepColorLegendItems,
   ribbonUsesStepSegments,
-  ScaleRibbonStep,
+  ScaleRibbonMark,
 } from "@/utils/visual/scaleRibbonUtils";
 import { useColorLegendGroups } from "./useColorLegendGroups";
 
@@ -44,7 +44,7 @@ export function StaticColorLegendPanel() {
   );
 }
 
-function StepColorLegend({ steps }: { steps: ScaleRibbonStep[] }) {
+function StepColorLegend({ steps }: { steps: ScaleRibbonMark[] }) {
   return (
     <div id="color-legend-section-Steps" className="flex flex-col gap-tight">
       <div className="text-xs font-medium uppercase tracking-wide text-labels-textDefault opacity-70">
@@ -53,7 +53,7 @@ function StepColorLegend({ steps }: { steps: ScaleRibbonStep[] }) {
       {steps.map((step) => (
         <LegendSwatchRow key={step.label} color={step.color} label={step.label} />
       ))}
-    </div> 
+    </div>
   );
 }
 
