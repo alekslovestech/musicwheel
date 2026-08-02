@@ -6,11 +6,7 @@ const WHEEL_ICON_CENTER = 12;
 const WHEEL_ICON_RADIUS = 9;
 const WHEEL_ICON_DOT_RADIUS = 1.25;
 
-interface IconProps {
-  className?: string;
-}
-
-interface WheelShapeIconProps extends IconProps {
+interface WheelShapeIconProps {
   /** Wheel positions the shape connects, e.g. [0,4,8] for a triangle or [0,4] for an interval. */
   indices: number[];
   /** Polygon closes into a shape (a triad/seventh); Radial draws spokes from the center (an interval). */
@@ -28,12 +24,7 @@ interface WheelShapeIconProps extends IconProps {
  * Radial mode's raw output (center, point, center, point, ...) feeds a `<polyline>` directly:
  * it retraces the first spoke on the way back through center, which just overlaps invisibly.
  */
-export function WheelShapeIcon({
-  indices,
-  mode,
-  dotIndices = [],
-  className = "w-4 h-4",
-}: WheelShapeIconProps) {
+export function WheelShapeIcon({ indices, mode, dotIndices = [] }: WheelShapeIconProps) {
   const visualizer = new NoteIndexVisualizer(WHEEL_ICON_RADIUS, {
     x: WHEEL_ICON_CENTER,
     y: WHEEL_ICON_CENTER,
@@ -51,7 +42,7 @@ export function WheelShapeIcon({
   };
 
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
       <circle
         cx={WHEEL_ICON_CENTER}
         cy={WHEEL_ICON_CENTER}
