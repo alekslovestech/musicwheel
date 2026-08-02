@@ -6,18 +6,19 @@ type RomanQualitySpec = {
   suffix: string;
   /** Lowercase numeral, carrying the minor quality that `suffix` then leaves unsaid. */
   isLowerCase: boolean;
-  /** Further suffixes parsing accepts; encoding still writes `suffix`. */
-  parseTokens?: readonly string[];
   /**
    * Outside roman-numeral vocabulary: displays as {@link EXOTIC_QUALITY_MARKER} instead of
    * `suffix`. Display only - `suffix` is still what encoding writes and parsing reads.
    */
-  isExotic?: boolean;
+  isExotic: boolean;
+  /** Further suffixes parsing accepts; encoding still writes `suffix`. */
+  parseTokens?: readonly string[];
 };
 
 export const DEFAULT_ROMAN_QUALITY: RomanQualitySpec = {
   suffix: "",
   isLowerCase: false,
+  isExotic: false,
 };
 
 /**
@@ -30,9 +31,17 @@ export const EXOTIC_QUALITY_MARKER = "*";
 export function romanQuality(
   suffix: string,
   isLowerCase: boolean,
-  extras?: Omit<RomanQualitySpec, "suffix" | "isLowerCase">,
+  parseTokens?: readonly string[],
 ): RomanQualitySpec {
-  return { suffix, isLowerCase, ...extras };
+  return { suffix, isLowerCase, isExotic: false, ...(parseTokens ? { parseTokens } : {}) };
+}
+
+/**
+ * A quality roman-numeral analysis has no name for. Its own factory rather than a third
+ * boolean argument: `romanQuality("Δ7", false, false)` gives no clue which flag is which.
+ */
+export function exoticQuality(suffix: string, isLowerCase: boolean): RomanQualitySpec {
+  return { suffix, isLowerCase, isExotic: true };
 }
 
 export function getRomanQuality(chordType: ChordType): RomanQualitySpec {
@@ -74,25 +83,26 @@ const ROMAN_QUALITY: Partial<Record<ChordType, RomanQualitySpec>> = {
   [ChordType.Major]: romanQuality("", false),
   [ChordType.Minor]: romanQuality("", true),
   [ChordType.Dominant7]: romanQuality("7", false),
-  [ChordType.Dominant7Flat5]: romanQuality("7♭5", false, { isExotic: true }),
   [ChordType.Minor7]: romanQuality("7", true),
   [ChordType.Major6]: romanQuality("6", false),
   [ChordType.Minor6]: romanQuality("6", true),
-  [ChordType.Major7]: romanQuality("Δ7", false, { parseTokens: ["maj7"] }),
-  [ChordType.Diminished]: romanQuality("°", true, { parseTokens: ["o", "dim"] }),
-  [ChordType.Diminished7]: romanQuality("°7", true, { parseTokens: ["o7", "dim7"] }),
+  [ChordType.Major7]: romanQuality("Δ7", false, ["maj7"]),
+  [ChordType.Diminished]: romanQuality("°", true, ["o", "dim"]),
+  [ChordType.Diminished7]: romanQuality("°7", true, ["o7", "dim7"]),
   [ChordType.HalfDiminished]: romanQuality("ø7", true),
-  [ChordType.Augmented]: romanQuality("+", false, { parseTokens: ["aug"] }),
-  [ChordType.MajFlat5]: romanQuality("♭5", false, { isExotic: true }),
+  [ChordType.Augmented]: romanQuality("+", false, ["aug"]),
   [ChordType.Sus4]: romanQuality("sus", false),
-  [ChordType.Major7Sus4]: romanQuality("Δ7sus4", false, { isExotic: true }),
-  [ChordType.Dominant7Sus2Flat5]: romanQuality("7sus2♭5", false, { isExotic: true }),
-  [ChordType.Major7Flat5]: romanQuality("Δ7♭5", false, { isExotic: true }),
-  [ChordType.Sus2Add6]: romanQuality("6sus2", false, { isExotic: true }),
   [ChordType.Sus2]: romanQuality("sus2", false),
-  [ChordType.Sus2sharp4]: romanQuality("sus2♯4", false, { isExotic: true }),
-  [ChordType.Sus2_4]: romanQuality("sus24", false, { isExotic: true }),
-  [ChordType.Narrow_b3_4]: romanQuality("add4", true, { isExotic: true }),
+
+  [ChordType.MajFlat5]: exoticQuality("♭5", false),
+  [ChordType.Dominant7Flat5]: exoticQuality("7♭5", false),
+  [ChordType.Major7Sus4]: exoticQuality("Δ7sus4", false),
+  [ChordType.Dominant7Sus2Flat5]: exoticQuality("7sus2♭5", false),
+  [ChordType.Major7Flat5]: exoticQuality("Δ7♭5", false),
+  [ChordType.Sus2Add6]: exoticQuality("6sus2", false),
+  [ChordType.Sus2sharp4]: exoticQuality("sus2♯4", false),
+  [ChordType.Sus2_4]: exoticQuality("sus24", false),
+  [ChordType.Narrow_b3_4]: exoticQuality("add4", true),
 };
 
 /** `Object.entries` widens the key to `string`; the table is keyed by {@link ChordType}. */

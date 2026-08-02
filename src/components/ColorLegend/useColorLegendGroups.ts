@@ -3,6 +3,7 @@
 import {
   ColorLegendGroup,
   getColorLegendGroupsForIds,
+  getDegreeLabelledLegendGroups,
   getJoinedColorLegendGroupsForIds,
 } from "@/utils/visual/colorLegendGroups";
 import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
@@ -35,14 +36,19 @@ export function useColorLegendGroups(): {
     };
   }
 
-  // Triad and Seventh both scope the legend to the chord qualities this key actually contains.
-  if (isScalesMode && isChordalScalePlaybackMode(scalePlaybackMode)) {
-    const chordTypes =
-      scalePlaybackMode === ScalePlaybackMode.Seventh
-        ? ChordSetUtils.seventhTypesForKey(selectedMusicalKey)
-        : ChordSetUtils.triadTypesForKey(selectedMusicalKey);
+  // Seventh labels rows by degree: its wheel shows numerals without quality, so the degree is
+  // the only thing linking a row to a position. Triad's wheel does show quality (vii°), so a
+  // plain quality legend still reads there.
+  if (isScalesMode && scalePlaybackMode === ScalePlaybackMode.Seventh) {
     return {
-      groups: getColorLegendGroupsForIds(chordTypes),
+      groups: getDegreeLabelledLegendGroups(ChordSetUtils.seventhsByDegree(selectedMusicalKey)),
+      chordsOnly: true,
+    };
+  }
+
+  if (isScalesMode && isChordalScalePlaybackMode(scalePlaybackMode)) {
+    return {
+      groups: getColorLegendGroupsForIds(ChordSetUtils.triadTypesForKey(selectedMusicalKey)),
       chordsOnly: true,
     };
   }

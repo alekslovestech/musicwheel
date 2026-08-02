@@ -10,6 +10,23 @@ import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 export interface ColorLegendGroup {
   color: chroma.Color;
   groupingIds: NoteGroupingId[];
+  /** Scale degrees carrying this quality, on legends labelled by position rather than color. */
+  degrees?: string[];
+}
+
+/**
+ * Rows keyed by the degrees carrying each quality, kept in scale order. For Seventh mode,
+ * where the wheel labels degrees with no quality at all - so a row's degrees are the only
+ * thing tying it to a wheel position, and color, which converges as tetrads mix four interval
+ * hues, cannot be the handle. Deliberately unsorted: scale order is the point.
+ */
+export function getDegreeLabelledLegendGroups(
+  degreesByQuality: Map<ChordType, string[]>,
+): ColorLegendGroup[] {
+  return [...degreesByQuality].map(([chordType, degrees]) => ({
+    ...toColorLegendGroup([chordType]),
+    degrees,
+  }));
 }
 
 /**
@@ -64,6 +81,10 @@ const COLOR_LEGEND_EXCLUDED_CHORD_IDS: ReadonlySet<NoteGroupingId> = new Set([
  */
 export function legendLabelForGroup(group: ColorLegendGroup): string {
   const ids = distinctByShortForm(group.groupingIds);
+  // Degree-labelled rows carry chord-symbol notation alone (`Δ7`, not `Maj7 (Δ7)`): the
+  // parenthetical bridges a legend row to the symbol on the wheel, and Seventh mode shows
+  // none there, so it would teach a mapping with nothing on the other end.
+  if (group.degrees) return NoteGroupingLibrary.getGroupingById(ids[0]!).symbolForm;
   if (ids.length === 1) return labelWithChordSymbol(ids[0]!);
   return ids.map((id) => NoteGroupingLibrary.getGroupingById(id).shortForm).join("·");
 }
@@ -161,4 +182,3 @@ function toColorLegendGroup(groupingIds: NoteGroupingId[]): ColorLegendGroup {
     groupingIds,
   };
 }
-

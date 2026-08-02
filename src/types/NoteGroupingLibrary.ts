@@ -64,6 +64,34 @@ class NoteGroupingLibrarySingleton {
       .map((grouping) => grouping.id);
   }
 
+  /**
+   * Reverse lookup that also recognises rotations. {@link matchChordTypeFromOffsets} sees root
+   * position only, which leaves a diatonic stack like `[0,2,6,9]` unnamed - Hungarian Minor's
+   * ♯IV and Double Harmonic Major's VII, both a dominant 7th voiced from its own 7th (A♭7/G♭
+   * and D♭7/C♭). They are not new chords, so catalog entries for them would duplicate
+   * `Dominant7`'s third inversion.
+   *
+   * Which rotation matched is not reported: it changes neither the quality nor the color
+   * (`getColorForIndices` returns the same value for a stack and its inversions), so nothing
+   * downstream can act on it.
+   */
+  public matchChordTypeAllowingInversions(offsetsFromRoot: number[]): ChordType {
+    const rootPosition = this.matchChordTypeFromOffsets(offsetsFromRoot);
+    if (rootPosition !== ChordType.Unknown) return rootPosition;
+
+    for (const grouping of NoteGroupingLibrarySingleton.library) {
+      if (!this.isChordGrouping(grouping)) continue;
+      if (grouping.numNotes !== offsetsFromRoot.length) continue;
+
+      for (let i = 1; i < grouping.inversions.length; i++) {
+        const rotated = IndexUtils.normalizeIndices(grouping.inversions[i]);
+        if (IndexUtils.areIndicesEqual(rotated, offsetsFromRoot)) return grouping.id as ChordType;
+      }
+    }
+
+    return ChordType.Unknown;
+  }
+
   /** Root-position reverse lookup against library chord entries. */
   public matchChordTypeFromOffsets(offsetsFromRoot: number[]): ChordType {
     for (const grouping of NoteGroupingLibrarySingleton.library) {

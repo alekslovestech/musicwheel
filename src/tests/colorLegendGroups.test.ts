@@ -1,6 +1,7 @@
 import { ChordType } from "@/types/enums/ChordType";
 import {
   getColorLegendGroupsForIds,
+  getDegreeLabelledLegendGroups,
   getJoinedColorLegendGroupsForIds,
   legendLabelForGroup,
 } from "@/utils/visual/colorLegendGroups";
@@ -110,6 +111,53 @@ describe("getColorLegendGroupsForIds", () => {
     // Hidden from the preset picker, so the legend explaining that picker must not list it.
     expect(rows).not.toContain(ChordType.Major7Flat5);
     expect(rows).not.toContain(ChordType.Sus2sharp4);
+  });
+
+  describe("getDegreeLabelledLegendGroups", () => {
+    const degreeRows = (mode: ScaleModeType) =>
+      getDegreeLabelledLegendGroups(
+        ChordSetUtils.seventhsByDegree(MusicalKey.fromGreekMode("C", mode)),
+      ).map((group) => `${group.degrees!.join(",")} ${legendLabelForGroup(group)}`);
+
+    it("keeps scale order and groups degrees sharing a quality", () => {
+      // The wheel shows I ii iii IV V vi vii with no quality in Seventh mode, so these rows
+      // are the only thing saying what sits on each degree. ii/iii/vi share one row rather
+      // than repeating an identical swatch three times.
+      expect(degreeRows(ScaleModeType.Ionian)).toEqual([
+        "I,IV Δ7",
+        "ii,iii,vi m7",
+        "V 7",
+        "vii ø7",
+      ]);
+    });
+
+    it("labels with chord symbols, not preset short forms", () => {
+      // Δ7 over Maj7, ø7 over m7♭5 - shorter, and the notation chord names already use.
+      const panthuVaraali = degreeRows(ScaleModeType.PanthuVaraali);
+      expect(panthuVaraali).toContain("I Δ7");
+      expect(panthuVaraali).toContain("♭II Δ7sus4");
+      expect(panthuVaraali).toContain("♯IV 7sus2♭5");
+    });
+
+    it("names inverted stacks by their quality, without flagging the inversion", () => {
+      // Hungarian Minor's ♯IV stacks to F♯ A♭ C E♭ = [0,2,6,9] - A♭7 voiced from its 7th, so
+      // root-position lookup called it Unknown and dropped the row entirely. The inversion
+      // itself goes unmentioned: it changes neither the quality nor the swatch color.
+      expect(degreeRows(ScaleModeType.HungarianMinor)).toContain("♯IV 7");
+      expect(degreeRows(ScaleModeType.DoubleHarmonicMajor)).toContain("VII 7");
+    });
+
+    it("accounts for every degree of the scale", () => {
+      for (const mode of [
+        ScaleModeType.Ionian,
+        ScaleModeType.HungarianMinor,
+        ScaleModeType.DoubleHarmonicMajor,
+        ScaleModeType.PanthuVaraali,
+      ]) {
+        const degrees = degreeRows(mode).flatMap((row) => row.split(" ")[0]!.split(","));
+        expect(degrees).toHaveLength(7);
+      }
+    });
   });
 
   it("C Ionian's diatonic sevenths each get their own row (regression case)", () => {

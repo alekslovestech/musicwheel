@@ -1,4 +1,5 @@
 import { ChordType } from "@/types/enums/ChordType";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import {
   DEFAULT_ROMAN_QUALITY,
   EXOTIC_QUALITY_MARKER,
@@ -26,10 +27,42 @@ const EXOTIC_TYPES: ChordType[] = [
   ChordType.Narrow_b3_4,
 ];
 
+describe("matchChordTypeAllowingInversions", () => {
+  it("recognises a rotation that root-position lookup cannot", () => {
+    // [0,2,6,9] is Hungarian Minor's ♯IV and Double Harmonic Major's VII: a dominant 7th
+    // voiced from its own 7th. Not a new chord, so it must resolve to Dominant7 rather than
+    // earning a catalog entry that would duplicate that chord's third inversion.
+    expect(NoteGroupingLibrary.matchChordTypeFromOffsets([0, 2, 6, 9])).toBe(ChordType.Unknown);
+    expect(NoteGroupingLibrary.matchChordTypeAllowingInversions([0, 2, 6, 9])).toBe(
+      ChordType.Dominant7,
+    );
+  });
+
+  it("agrees with root-position lookup where that already matches", () => {
+    expect(NoteGroupingLibrary.matchChordTypeAllowingInversions([0, 4, 7, 10])).toBe(
+      ChordType.Dominant7,
+    );
+  });
+
+  it("still returns Unknown for a stack no rotation matches", () => {
+    expect(NoteGroupingLibrary.matchChordTypeAllowingInversions([0, 1, 2, 3])).toBe(
+      ChordType.Unknown,
+    );
+  });
+});
+
 describe("RomanQualityRegistry", () => {
   it("encodes and decodes major/minor triads via case", () => {
-    expect(getRomanQuality(ChordType.Major)).toEqual({ suffix: "", isLowerCase: false });
-    expect(getRomanQuality(ChordType.Minor)).toEqual({ suffix: "", isLowerCase: true });
+    expect(getRomanQuality(ChordType.Major)).toEqual({
+      suffix: "",
+      isLowerCase: false,
+      isExotic: false,
+    });
+    expect(getRomanQuality(ChordType.Minor)).toEqual({
+      suffix: "",
+      isLowerCase: true,
+      isExotic: false,
+    });
     expect(resolveRomanQuality(false, "")).toBe(ChordType.Major);
     expect(resolveRomanQuality(true, "")).toBe(ChordType.Minor);
   });
