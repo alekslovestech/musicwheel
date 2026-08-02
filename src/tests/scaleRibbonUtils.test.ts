@@ -1,5 +1,14 @@
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
-import { buildScaleRibbonData, ribbonUsesStepSegments } from "@/utils/visual/scaleRibbonUtils";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
+import {
+  buildScaleRibbonData,
+  getIntervalTypesForScaleFromRoot,
+  getStepColorLegendItems,
+  getStepSegmentsForScale,
+  ribbonUsesStepSegments,
+} from "@/utils/visual/scaleRibbonUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
 describe("buildScaleRibbonData", () => {
@@ -41,16 +50,78 @@ describe("buildScaleRibbonData", () => {
       ]);
     });
 
-    test("is a chord ribbon, not a step ribbon", () => {
+    test("is a swatch ribbon, not a tick ribbon - no step segments at all", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
       expect(ribbon.title).toBe("Sevenths");
-      expect(ribbon.steps).toHaveLength(0);
+      // "swatches" ribbons carry no `steps` field - there is nothing to have length 0.
+      expect(ribbon.kind).toBe("swatches");
       expect(ribbonUsesStepSegments(ScalePlaybackMode.Seventh)).toBe(false);
     });
 
     test("every degree carries a color", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
+      // The "swatches" type guarantees every note has a color; this pins the builder to that
+      // variant rather than "ticks", where the compiler would not require one.
+      if (ribbon.kind !== "swatches") throw new Error("expected a swatches ribbon");
       expect(ribbon.notes.every((note) => note.color !== undefined)).toBe(true);
+    });
+  });
+
+  describe("step labels", () => {
+    // Regression: steps were labelled with interval short forms, which name a harmonic
+    // function a step does not carry. Hungarian Minor's E♭-F♯ and A♭-B are augmented 2nds,
+    // spelled as 2nds; as "m3" they had the right size under the wrong name. W/H/1½ measure
+    // instead of spelling, so they stay true for any scale.
+    test("measures steps rather than spelling them as intervals", () => {
+      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
+      const labels = getStepSegmentsForScale(hungarianMinor).map((step) => step.label);
+
+      // C D E♭ F♯ G A♭ B, wrapping B->C: 2 1 3 1 1 3 1 semitones.
+      expect(labels).toEqual(["W", "H", "1½", "H", "H", "1½", "H"]);
+    });
+
+    test("labels the major scale's steps", () => {
+      expect(getStepSegmentsForScale(cIonian).map((step) => step.label)).toEqual([
+        "W",
+        "W",
+        "H",
+        "W",
+        "W",
+        "W",
+        "H",
+      ]);
+    });
+
+    test("legend uses the same vocabulary as the ribbon, distinct steps only", () => {
+      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
+      expect(getStepColorLegendItems(hungarianMinor).map((step) => step.label)).toEqual([
+        "H",
+        "W",
+        "1½",
+      ]);
+    });
+  });
+
+  describe("getIntervalTypesForScaleFromRoot", () => {
+    const shortFormsFor = (key: MusicalKey): string[] =>
+      [...getIntervalTypesForScaleFromRoot(key)].map(
+        (id) => NoteGroupingLibrary.getGroupingById(id).shortForm,
+      );
+
+    // Regression: these were folded to interval class first, which replaced every interval
+    // above the tritone with its inversion - the drone legend advertised m2, M3 and P4 for a
+    // scale containing none of them.
+    test("names intervals above the tritone, not their inversions", () => {
+      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
+
+      // Hungarian Minor is [0, 2, 3, 6, 7, 8, 11] semitones from the root.
+      expect(shortFormsFor(hungarianMinor).sort()).toEqual(
+        ["M2", "m3", "TT", "P5", "m6", "M7"].sort(),
+      );
+    });
+
+    test("names the plain major scale's intervals", () => {
+      expect(shortFormsFor(cIonian).sort()).toEqual(["M2", "M3", "P4", "P5", "M6", "M7"].sort());
     });
   });
 
@@ -66,9 +137,10 @@ describe("buildScaleRibbonData", () => {
       expect(ribbonUsesStepSegments(ScalePlaybackMode.Triad)).toBe(false);
       expect(ribbonUsesStepSegments(ScalePlaybackMode.DronedSingleNote)).toBe(false);
 
-      expect(
-        buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote).steps.length,
-      ).toBeGreaterThan(0);
+      const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
+      expect(ribbon.kind).toBe("ticks");
+      if (ribbon.kind !== "ticks") throw new Error("expected a ticks ribbon");
+      expect(ribbon.steps.length).toBeGreaterThan(0);
     });
   });
 });

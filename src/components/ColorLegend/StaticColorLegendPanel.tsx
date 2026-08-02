@@ -2,16 +2,15 @@
 
 import chroma from "chroma-js";
 
-import { ColorLegendGroup } from "@/utils/visual/colorLegendGroups";
+import { ColorLegendGroup, legendLabelForGroup } from "@/utils/visual/colorLegendGroups";
 import { isIntervalType } from "@/types/NoteGroupingId";
-import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useAudio } from "@/contexts/AudioContext";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import {
   getStepColorLegendItems,
   ribbonUsesStepSegments,
-  ScaleRibbonStep,
+  ScaleRibbonMark,
 } from "@/utils/visual/scaleRibbonUtils";
 import { useColorLegendGroups } from "./useColorLegendGroups";
 
@@ -45,7 +44,7 @@ export function StaticColorLegendPanel() {
   );
 }
 
-function StepColorLegend({ steps }: { steps: ScaleRibbonStep[] }) {
+function StepColorLegend({ steps }: { steps: ScaleRibbonMark[] }) {
   return (
     <div id="color-legend-section-Steps" className="flex flex-col gap-tight">
       <div className="text-xs font-medium uppercase tracking-wide text-labels-textDefault opacity-70">
@@ -78,16 +77,6 @@ function LegendSwatchRow({
   );
 }
 
-function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
-  return (
-    <LegendSwatchRow
-      id={`color-legend-row-${group.groupingIds[0]}`}
-      color={group.color}
-      label={legendLabelsForGroup(group)}
-    />
-  );
-}
-
 function ColorLegendSection({ title, groups }: { title: string; groups: ColorLegendGroup[] }) {
   if (groups.length === 0) return null;
 
@@ -100,23 +89,15 @@ function ColorLegendSection({ title, groups }: { title: string; groups: ColorLeg
         {title}
       </div>
       {groups.map((group) => (
-        <ColorLegendRow key={group.groupingIds.map((id) => id).join("-")} group={group} />
+        <LegendSwatchRow
+          key={group.groupingIds.map((id) => id).join("-")}
+          id={`color-legend-row-${group.groupingIds[0]}`}
+          color={group.color}
+          label={legendLabelForGroup(group)}
+        />
       ))}
     </div>
   );
-}
-
-function legendLabelsForGroup(group: ColorLegendGroup): string {
-  const seen = new Set<string>();
-  const labels: string[] = [];
-  for (const id of group.groupingIds) {
-    const label = NoteGroupingLibrary.getGroupingById(id).shortForm;
-    const dedupeKey = label.toLowerCase();
-    if (seen.has(dedupeKey)) continue;
-    seen.add(dedupeKey);
-    labels.push(label);
-  }
-  return labels.join("·");
 }
 
 function partitionColorLegendGroupsForDisplay(groups: ColorLegendGroup[]): {

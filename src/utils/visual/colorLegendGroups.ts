@@ -10,43 +10,51 @@ import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 export interface ColorLegendGroup {
   color: chroma.Color;
   groupingIds: NoteGroupingId[];
+  /** Label with the chord symbol alone, no `shortForm (symbolForm)` pairing. */
+  symbolOnly?: boolean;
 }
 
-export function getColorLegendGroups(): ColorLegendGroup[] {
-  return buildColorLegendGroups();
+/**
+ * One row per quality, left in the order given rather than sorted - the caller orders by scale
+ * degree, so the rows run in the same direction as the ribbon. The degrees themselves are not
+ * shown, only the ordering they impose.
+ *
+ * Labels are chord symbols alone. Seventh names are the longest in the catalog, and a row of
+ * `maj7sus4 (Δ7sus4)` reads as noise where `Δ7sus4` reads as a chord.
+ */
+export function getSeventhLegendGroups(orderedQualities: NoteGroupingId[]): ColorLegendGroup[] {
+  return orderedQualities
+    .filter(isColorLegendId)
+    .map((id) => ({ ...toColorLegendGroup([id]), symbolOnly: true }));
 }
 
-/** Subset of the full legend: one row per color bucket that matches any of {@link displayIds}. */
+/**
+ * One row per id. A scale or progression holds a short, known list of qualities, so each is
+ * worth naming even where two of them share a color - and being alone on a row is what lets a
+ * quality carry its chord symbol (`m7♭5 (ø7)`).
+ */
 export function getColorLegendGroupsForIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
-  return groupsForDisplayIds(displayIds);
+  const groups = [...displayIds].filter(isColorLegendId).map((id) => toColorLegendGroup([id]));
+  return sortColorLegendGroups(groups);
 }
 
-function groupsForDisplayIds(displayIds: Set<NoteGroupingId>): ColorLegendGroup[] {
-  const fullMap = buildColorLegendMap(COLOR_LEGEND_DISPLAY_IDS);
-  const displayBuckets = new Set([...displayIds].map(legendBucketKey));
-
-  const groups = [...fullMap.entries()]
-    .filter(([bucketKey]) => displayBuckets.has(bucketKey))
-    .map(([, groupingIds]) => toColorLegendGroup(groupingIds));
-
-  return sortColorLegendGroups(groups, displayIds);
-}
-
-function buildColorLegendMap(ids: Set<NoteGroupingId>): Map<string, NoteGroupingId[]> {
-  const map = new Map<string, NoteGroupingId[]>();
-
-  for (const id of ids) {
+/**
+ * One row per color, same-colored qualities sharing it. For the preset legends, where the list
+ * runs long enough that a row each would swamp the panel, and where joining is itself worth
+ * seeing - it is how the legend shows that inversions (m2·M7) resolve to one color.
+ */
+export function getJoinedColorLegendGroupsForIds(
+  displayIds: Set<NoteGroupingId>,
+): ColorLegendGroup[] {
+  const byColor = new Map<string, NoteGroupingId[]>();
+  for (const id of displayIds) {
+    if (!isColorLegendId(id)) continue;
     const key = legendBucketKey(id);
-    const group = map.get(key) ?? [];
-    group.push(id);
-    map.set(key, group);
+    byColor.set(key, [...(byColor.get(key) ?? []), id]);
   }
 
-  for (const [key, group] of map) {
-    map.set(key, sortIdsByOrder(group));
-  }
-
-  return map;
+  const groups = [...byColor.values()].map((ids) => toColorLegendGroup(sortIdsByOrder(ids)));
+  return sortColorLegendGroups(groups);
 }
 
 /** Spread, narrow, and hidden voicings omitted from the chord legend. */
@@ -62,14 +70,40 @@ const COLOR_LEGEND_EXCLUDED_CHORD_IDS: ReadonlySet<NoteGroupingId> = new Set([
   ChordType.Seven13,
 ]);
 
-const COLOR_LEGEND_DISPLAY_IDS: Set<NoteGroupingId> = new Set(
-  NoteGroupingLibrary.getAllIds().filter(isColorLegendId),
-);
+/**
+ * Row text for a legend entry. A lone quality spells out its chord symbol - `dim (°)` - since
+ * bridging the legend's `shortForm` to the `symbolForm` shown on the wheel and in chord names
+ * is the whole point of the legend, and a side panel has room the wheel does not.
+ *
+ * Rows holding several same-colored qualities stay short-form only: stacking parentheticals
+ * (`min7 (m7)·6`) reads as noise, and which symbol belongs to which name stops being obvious.
+ */
+export function legendLabelForGroup(group: ColorLegendGroup): string {
+  const ids = distinctByShortForm(group.groupingIds);
+  // Safe to use bare: every seventh quality has a non-empty symbolForm, unlike Major, whose
+  // chord symbol is the empty suffix - and only sevenths reach here.
+  if (group.symbolOnly) return NoteGroupingLibrary.getGroupingById(ids[0]!).symbolForm;
+  if (ids.length === 1) return labelWithChordSymbol(ids[0]!);
+  return ids.map((id) => NoteGroupingLibrary.getGroupingById(id).shortForm).join("·");
+}
 
-/** {@link ChordType} declaration order; Unknown omitted. */
-const CHORD_CATALOG_ORDER: readonly ChordType[] = (Object.values(ChordType) as ChordType[]).filter(
-  isNotUnknownChordType,
-);
+function labelWithChordSymbol(id: NoteGroupingId): string {
+  const { shortForm, symbolForm } = NoteGroupingLibrary.getGroupingById(id);
+  // Intervals set both forms alike, and Major's symbol is the empty suffix - neither has a
+  // second spelling to teach, so neither takes a parenthetical.
+  const addsSomething = symbolForm.length > 0 && symbolForm !== shortForm;
+  return addsSomething ? `${shortForm} (${symbolForm})` : shortForm;
+}
+
+function distinctByShortForm(ids: NoteGroupingId[]): NoteGroupingId[] {
+  const seen = new Set<string>();
+  return ids.filter(function isFirstWithShortForm(id) {
+    const key = NoteGroupingLibrary.getGroupingById(id).shortForm.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 
 function isColorLegendId(id: NoteGroupingId): boolean {
   if (id === SpecialType.None || id === SpecialType.Note) return false;
@@ -77,28 +111,25 @@ function isColorLegendId(id: NoteGroupingId): boolean {
   return !COLOR_LEGEND_EXCLUDED_CHORD_IDS.has(id);
 }
 
-function isNotUnknownChordType(id: ChordType): boolean {
-  return id !== ChordType.Unknown;
-}
-
 function isIntervalLegendGroup(group: ColorLegendGroup): boolean {
   return isIntervalType(group.groupingIds[0]!);
 }
 
-function sortColorLegendGroups(
-  groups: ColorLegendGroup[],
-  displayIdSet: Set<NoteGroupingId>,
-): ColorLegendGroup[] {
-  return [...groups].sort(function compareColorLegendGroups(a, b) {
-    return compareColorLegendGroupOrder(a, b, displayIdSet);
-  });
+function sortColorLegendGroups(groups: ColorLegendGroup[]): ColorLegendGroup[] {
+  return [...groups].sort(compareColorLegendGroupOrder);
 }
 
-function compareColorLegendGroupOrder(
-  a: ColorLegendGroup,
-  b: ColorLegendGroup,
-  displayIdSet: Set<NoteGroupingId>,
-): number {
+/**
+ * Intervals first, ordered by distance from the root so they read as a ladder up the scale.
+ * Catalog {@link NoteGrouping.orderId} cannot do that job for them - it pairs each interval
+ * with its inversion (m2 beside M7), which scatters a scale's rungs.
+ *
+ * Chords have no such natural scalar, so they keep catalog order, which already encodes the
+ * pedagogical sequence (triads, sus, sevenths, sixths, extended, exotic). Sorting chords by
+ * `ChordType` declaration order instead used to strand sus4/sus2 after every seventh chord,
+ * and put exotics like `Δ7♭5` ahead of plain `6`.
+ */
+function compareColorLegendGroupOrder(a: ColorLegendGroup, b: ColorLegendGroup): number {
   const aIsInterval = isIntervalLegendGroup(a);
   const bIsInterval = isIntervalLegendGroup(b);
 
@@ -106,21 +137,16 @@ function compareColorLegendGroupOrder(
     return aIsInterval ? -1 : 1;
   }
 
-  if (aIsInterval) {
-    return minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
-  }
-
-  return catalogSortKey(a, displayIdSet) - catalogSortKey(b, displayIdSet);
+  return aIsInterval
+    ? minSemitonesFromRoot(a.groupingIds) - minSemitonesFromRoot(b.groupingIds)
+    : minOrderId(a.groupingIds) - minOrderId(b.groupingIds);
 }
 
-function catalogSortKey(group: ColorLegendGroup, displayIdSet: Set<NoteGroupingId>): number {
-  const anchorIds = group.groupingIds.filter(function isDisplayId(id) {
-    return displayIdSet.has(id);
-  });
-  const ids = anchorIds.length > 0 ? anchorIds : group.groupingIds;
+/** Interval groupings are `[0, semitones]`, so the second offset is the distance from root. */
+function minSemitonesFromRoot(ids: NoteGroupingId[]): number {
   return Math.min(
-    ...ids.map(function catalogIndexForId(id) {
-      return CHORD_CATALOG_ORDER.indexOf(id as ChordType);
+    ...ids.map(function semitonesForInterval(id) {
+      return NoteGroupingLibrary.getGroupingById(id).offsets[1];
     }),
   );
 }
@@ -153,21 +179,4 @@ function toColorLegendGroup(groupingIds: NoteGroupingId[]): ColorLegendGroup {
     color: getColorForGrouping(groupingIds[0]!),
     groupingIds,
   };
-}
-
-function buildColorLegendGroups(): ColorLegendGroup[] {
-  const map = new Map<string, NoteGroupingId[]>();
-
-  for (const id of COLOR_LEGEND_DISPLAY_IDS) {
-    const key = legendBucketKey(id);
-    const group = map.get(key) ?? [];
-    group.push(id);
-    map.set(key, group);
-  }
-
-  const groups = [...map.values()].map(function toSortedColorLegendGroup(groupingIds) {
-    return toColorLegendGroup(sortIdsByOrder(groupingIds));
-  });
-
-  return sortColorLegendGroups(groups, COLOR_LEGEND_DISPLAY_IDS);
 }

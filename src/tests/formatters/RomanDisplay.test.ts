@@ -70,11 +70,16 @@ describe("Roman Mode Index Arrays", () => {
     },
     {
       mode: ScaleModeType.DoubleHarmonicMajor,
-      expected: ["I", "♭II", "iii", "iv", "V♭5", "♭VI+", "VIIsus2♯4"],
+      // V is MajFlat5 and VII is Sus2sharp4: both outside roman vocabulary, both marked. The
+      // degree still separates them, and ♭VI keeps "+" because augmented is roman vocabulary.
+      expected: ["I", "♭II", "iii", "iv", "V*", "♭VI+", "VII*"],
     },
     {
       mode: ScaleModeType.PanthuVaraali,
-      expected: ["I", "♭IIsus", "iii", "♯IVsus2♯4", "V♭5", "♭VI+", "VIIsus2"],
+      // ♯IV is Sus2sharp4 (1-2-♯4) and VII is a real Sus2 (1-2-5) - two different chords,
+      // both diatonic here, so they must not share a label. Abbreviating ♯IV to "sus2" once
+      // put the same string on both wheel positions; the marker keeps them apart.
+      expected: ["I", "♭IIsus", "iii", "♯IV*", "V*", "♭VI+", "VIIsus2"],
     },
   ];
 

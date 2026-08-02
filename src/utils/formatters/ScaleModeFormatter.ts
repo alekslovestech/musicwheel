@@ -26,7 +26,10 @@ export class ScaleModeFormatter {
       case KeyDisplayMode.ScaleDegree:
         return ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo);
       case KeyDisplayMode.Roman:
-        return RomanChordFormatter.formatRomanChord(
+        // Simplified quality: this feeds the wheel, where a label like "VIIsus2♯4" both
+        // overflows and teaches notation the learner meets nowhere else. Full quality stays
+        // in chord display and the progression UI, which have room for it.
+        return RomanChordFormatter.formatRomanChordForDisplay(
           RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo),
         );
       case KeyDisplayMode.RomanSeventh:

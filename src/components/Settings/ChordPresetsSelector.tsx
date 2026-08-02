@@ -48,43 +48,39 @@ export const ChordPresetSelector: React.FC = () => {
   };
 
   const renderIntervalPresetButtons = () => {
-    const presets = NoteGroupingLibrary.IntervalOrChordIds(true);
+    const presets = NoteGroupingLibrary.getVisiblePresetIds(true);
     return (
       <div
         className={`preset-buttons-grid grid gap-tight w-full ${border}`}
         style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
       >
-        {presets
-          .filter((preset) => NoteGroupingLibrary.getGroupingById(preset).isVisiblePreset)
-          .map((presetId) => (
-            <ChordPresetButton
-              key={presetId}
-              presetId={presetId}
-              selected={presetId === currentChordRef?.id}
-              onClick={handlePresetChange}
-            />
-          ))}
+        {presets.map((presetId) => (
+          <ChordPresetButton
+            key={presetId}
+            presetId={presetId}
+            selected={presetId === currentChordRef?.id}
+            onClick={handlePresetChange}
+          />
+        ))}
       </div>
     );
   };
 
   const renderChordPresetButtons = () => {
-    const presets = NoteGroupingLibrary.IntervalOrChordIds(false);
+    const presets = NoteGroupingLibrary.getVisiblePresetIds(false);
     return (
       <div
         className={`preset-buttons-grid grid gap-tight w-full ${border}`}
         style={{ gridTemplateColumns: "repeat(4, 1fr)" }}
       >
-        {presets
-          .filter((preset) => NoteGroupingLibrary.getGroupingById(preset).isVisiblePreset)
-          .map((presetId) => (
-            <ChordPresetButton
-              key={presetId}
-              presetId={presetId}
-              selected={presetId === currentChordRef?.id}
-              onClick={handlePresetChange}
-            />
-          ))}
+        {presets.map((presetId) => (
+          <ChordPresetButton
+            key={presetId}
+            presetId={presetId}
+            selected={presetId === currentChordRef?.id}
+            onClick={handlePresetChange}
+          />
+        ))}
       </div>
     );
   };
