@@ -2,9 +2,8 @@
 
 import chroma from "chroma-js";
 
-import { ColorLegendGroup } from "@/utils/visual/colorLegendGroups";
+import { ColorLegendGroup, legendLabelForGroup } from "@/utils/visual/colorLegendGroups";
 import { isIntervalType } from "@/types/NoteGroupingId";
-import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useAudio } from "@/contexts/AudioContext";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
@@ -83,7 +82,7 @@ function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
     <LegendSwatchRow
       id={`color-legend-row-${group.groupingIds[0]}`}
       color={group.color}
-      label={legendLabelsForGroup(group)}
+      label={legendLabelForGroup(group)}
     />
   );
 }
@@ -104,19 +103,6 @@ function ColorLegendSection({ title, groups }: { title: string; groups: ColorLeg
       ))}
     </div>
   );
-}
-
-function legendLabelsForGroup(group: ColorLegendGroup): string {
-  const seen = new Set<string>();
-  const labels: string[] = [];
-  for (const id of group.groupingIds) {
-    const label = NoteGroupingLibrary.getGroupingById(id).shortForm;
-    const dedupeKey = label.toLowerCase();
-    if (seen.has(dedupeKey)) continue;
-    seen.add(dedupeKey);
-    labels.push(label);
-  }
-  return labels.join("·");
 }
 
 function partitionColorLegendGroupsForDisplay(groups: ColorLegendGroup[]): {

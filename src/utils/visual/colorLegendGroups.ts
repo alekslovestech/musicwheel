@@ -69,6 +69,38 @@ const COLOR_LEGEND_DISPLAY_IDS: Set<NoteGroupingId> = new Set(
   NoteGroupingLibrary.getAllIds().filter(isColorLegendId),
 );
 
+/**
+ * Row text for a legend entry. A lone quality spells out its chord symbol - `dim (°)` - since
+ * bridging the legend's `shortForm` to the `symbolForm` shown on the wheel and in chord names
+ * is the whole point of the legend, and a side panel has room the wheel does not.
+ *
+ * Rows holding several same-colored qualities stay short-form only: stacking parentheticals
+ * (`min7 (m7)·6`) reads as noise, and which symbol belongs to which name stops being obvious.
+ */
+export function legendLabelForGroup(group: ColorLegendGroup): string {
+  const ids = distinctByShortForm(group.groupingIds);
+  if (ids.length === 1) return labelWithChordSymbol(ids[0]!);
+  return ids.map((id) => NoteGroupingLibrary.getGroupingById(id).shortForm).join("·");
+}
+
+function labelWithChordSymbol(id: NoteGroupingId): string {
+  const { shortForm, symbolForm } = NoteGroupingLibrary.getGroupingById(id);
+  // Intervals set both forms alike, and Major's symbol is the empty suffix - neither has a
+  // second spelling to teach, so neither takes a parenthetical.
+  const addsSomething = symbolForm.length > 0 && symbolForm !== shortForm;
+  return addsSomething ? `${shortForm} (${symbolForm})` : shortForm;
+}
+
+function distinctByShortForm(ids: NoteGroupingId[]): NoteGroupingId[] {
+  const seen = new Set<string>();
+  return ids.filter(function isFirstWithShortForm(id) {
+    const key = NoteGroupingLibrary.getGroupingById(id).shortForm.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function isColorLegendId(id: NoteGroupingId): boolean {
   if (id === SpecialType.None || id === SpecialType.Note) return false;
   if (isIntervalType(id)) return id !== IntervalType.Octave;

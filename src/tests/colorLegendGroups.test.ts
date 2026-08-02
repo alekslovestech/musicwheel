@@ -1,5 +1,9 @@
 import { ChordType } from "@/types/enums/ChordType";
-import { getColorLegendGroups, getColorLegendGroupsForIds } from "@/utils/visual/colorLegendGroups";
+import {
+  getColorLegendGroups,
+  getColorLegendGroupsForIds,
+  legendLabelForGroup,
+} from "@/utils/visual/colorLegendGroups";
 import { getIntervalTypesForScaleFromRoot } from "@/utils/visual/scaleRibbonUtils";
 import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import { ChordSetUtils } from "@/utils/ChordSetUtils";
@@ -26,6 +30,31 @@ describe("getColorLegendGroupsForIds", () => {
     const groups = getColorLegendGroupsForIds(new Set([ChordType.Minor7, ChordType.Major6]));
     expect(groups).toHaveLength(1);
     expect(groups[0]!.groupingIds).toEqual([ChordType.Minor7, ChordType.Major6]);
+  });
+
+  describe("legendLabelForGroup", () => {
+    const labelFor = (...ids: ChordType[]) =>
+      getColorLegendGroupsForIds(new Set(ids)).map(legendLabelForGroup);
+
+    it("spells out the chord symbol a lone quality is written with elsewhere", () => {
+      expect(labelFor(ChordType.Diminished)).toEqual(["dim (°)"]);
+      expect(labelFor(ChordType.Augmented)).toEqual(["Aug (+)"]);
+      expect(labelFor(ChordType.HalfDiminished)).toEqual(["m7♭5 (ø7)"]);
+      expect(labelFor(ChordType.Major7)).toEqual(["Maj7 (Δ7)"]);
+    });
+
+    it("adds nothing when there is no second spelling to teach", () => {
+      // Major's chord symbol is the empty suffix, and Dominant7/Sus2 write the same either
+      // way - a parenthetical there would just repeat the row.
+      expect(labelFor(ChordType.Major)).toEqual(["Maj"]);
+      expect(labelFor(ChordType.Dominant7)).toEqual(["7"]);
+      expect(labelFor(ChordType.Sus2)).toEqual(["sus2"]);
+    });
+
+    it("leaves rows holding several same-colored qualities short-form only", () => {
+      // Minor7 and Major6 share a color, so they share a row; "min7 (m7)·6" would be noise.
+      expect(labelFor(ChordType.Minor7, ChordType.Major6)).toEqual(["min7·6"]);
+    });
   });
 
   // Regression: intervals sorted by catalog orderId, which pairs each with its inversion
