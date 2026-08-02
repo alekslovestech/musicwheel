@@ -77,16 +77,6 @@ function LegendSwatchRow({
   );
 }
 
-function ColorLegendRow({ group }: { group: ColorLegendGroup }) {
-  return (
-    <LegendSwatchRow
-      id={`color-legend-row-${group.groupingIds[0]}`}
-      color={group.color}
-      label={legendLabelForGroup(group)}
-    />
-  );
-}
-
 function ColorLegendSection({ title, groups }: { title: string; groups: ColorLegendGroup[] }) {
   if (groups.length === 0) return null;
 
@@ -99,7 +89,12 @@ function ColorLegendSection({ title, groups }: { title: string; groups: ColorLeg
         {title}
       </div>
       {groups.map((group) => (
-        <ColorLegendRow key={group.groupingIds.map((id) => id).join("-")} group={group} />
+        <LegendSwatchRow
+          key={group.groupingIds.map((id) => id).join("-")}
+          id={`color-legend-row-${group.groupingIds[0]}`}
+          color={group.color}
+          label={legendLabelForGroup(group)}
+        />
       ))}
     </div>
   );
