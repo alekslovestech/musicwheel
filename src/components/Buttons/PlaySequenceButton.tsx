@@ -2,7 +2,7 @@
 
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { Button } from "../Common/Button";
-import { PlayIcon, StopIcon } from "../Icons";
+import { PlayIcon, StopIcon } from "../Icons/PlaybackIcons";
 import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";

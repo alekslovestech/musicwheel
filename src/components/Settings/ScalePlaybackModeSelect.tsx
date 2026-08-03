@@ -6,7 +6,7 @@ import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";
-import { WheelShapeIcon } from "../Icons/wheel";
+import { WheelShapeIcon } from "../Icons/WheelShapeIcon";
 import { CircularVisMode } from "@/types/enums/SettingModes";
 
 interface PlaybackModeOption {
@@ -27,7 +27,7 @@ const SCALE_PLAYBACK_MODE_OPTIONS: PlaybackModeOption[] = [
     id: "droned-single-note",
     mode: ScalePlaybackMode.DronedSingleNote,
     // C to E: a Major 3rd, symbolic (not a tritone); dot marks the tonic
-    icon: <WheelShapeIcon indices={[0, 4]} mode={CircularVisMode.Radial} dotIndices={[0]} />,
+    icon: <WheelShapeIcon indices={[0, 4]} mode={CircularVisMode.Radial} dotIndex={0} />,
     description: "Play single notes with a tonic drone",
   },
   {

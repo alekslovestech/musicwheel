@@ -11,8 +11,8 @@ interface WheelShapeIconProps {
   indices: number[];
   /** Polygon closes into a shape (a triad/seventh); Radial draws spokes from the center (an interval). */
   mode: CircularVisMode.Polygon | CircularVisMode.Radial;
-  /** Which of {@link indices} get a filled marker dot, e.g. just the tonic - default none. */
-  dotIndices?: number[];
+  /** Which of {@link indices} gets a filled marker dot, e.g. the tonic - default none. */
+  dotIndex?: number;
 }
 
 /**
@@ -24,7 +24,7 @@ interface WheelShapeIconProps {
  * Radial mode's raw output (center, point, center, point, ...) feeds a `<polyline>` directly:
  * it retraces the first spoke on the way back through center, which just overlaps invisibly.
  */
-export function WheelShapeIcon({ indices, mode, dotIndices = [] }: WheelShapeIconProps) {
+export function WheelShapeIcon({ indices, mode, dotIndex }: WheelShapeIconProps) {
   const visualizer = new NoteIndexVisualizer(WHEEL_ICON_RADIUS, {
     x: WHEEL_ICON_CENTER,
     y: WHEEL_ICON_CENTER,
@@ -33,7 +33,10 @@ export function WheelShapeIcon({ indices, mode, dotIndices = [] }: WheelShapeIco
     .getVisualization(toNoteIndices(indices), mode)
     .map((p) => `${p.x},${p.y}`)
     .join(" ");
-  const dots = visualizer.getVisualization(toNoteIndices(dotIndices), CircularVisMode.Polygon);
+  const dot =
+    dotIndex !== undefined
+      ? visualizer.getVisualization(toNoteIndices([dotIndex]), CircularVisMode.Polygon)[0]
+      : undefined;
   const shapeStyle = {
     stroke: "currentColor",
     strokeWidth: 1.75,
@@ -56,9 +59,7 @@ export function WheelShapeIcon({ indices, mode, dotIndices = [] }: WheelShapeIco
       ) : (
         <polyline points={shapePoints} {...shapeStyle} />
       )}
-      {dots.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r={WHEEL_ICON_DOT_RADIUS} fill="currentColor" />
-      ))}
+      {dot && <circle cx={dot.x} cy={dot.y} r={WHEEL_ICON_DOT_RADIUS} fill="currentColor" />}
     </svg>
   );
 }
