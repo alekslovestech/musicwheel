@@ -51,8 +51,11 @@ export const ScalePlaybackModeSelect: React.FC = () => {
   const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } = useAudio();
 
   const handleModeChange = (newMode: ScalePlaybackMode) => {
-    if (newMode === scalePlaybackMode) return;
+    // Fires on every click, including re-clicking the already-selected mode - a bare
+    // "interacted" ping would tell us people touch this widget but not what they picked.
+    // Same event name and payload as before; it just now also covers no-op re-clicks.
     trackAction(TrackEvent.ScalePlaybackModeChanged, { scale_playback_mode: newMode });
+    if (newMode === scalePlaybackMode) return;
     setScalePlaybackMode(newMode);
     startSequencePlayback({ scalePlaybackMode: newMode });
   };

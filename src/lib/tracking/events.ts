@@ -4,6 +4,7 @@ export const TrackEvent = {
   SequencePlaybackInteracted: "sequence_playback_interacted",
   ColorLegendInteracted: "color_legend_interacted",
   ScaleTonicInteracted: "scale_tonic_interacted", // tonic dropdown
+  ScaleRibbonStepInteracted: "scale_ribbon_step_interacted",
 
   ScaleTypeChanged: "scale_type_changed", //scale dropdown
   ScalePlaybackModeChanged: "scale_playback_mode_changed",

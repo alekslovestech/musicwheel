@@ -2,6 +2,8 @@
 
 import { Fragment } from "react";
 
+import { TrackEvent } from "@/lib/tracking/events";
+import { useTrack } from "@/lib/tracking/useTrack";
 import { ScaleRibbonData, ScaleRibbonMark, ScaleRibbonTick } from "@/utils/visual/scaleRibbonUtils";
 
 export function ScaleRibbon({
@@ -106,6 +108,7 @@ function RibbonNoteCell({
 }) {
   // Degree labels (roman numerals, scale-step numbers) are unique within one ribbon.
   const id = `scale-ribbon-note-${label}`;
+  const trackAction = useTrack();
 
   if (!onSelect)
     return (
@@ -114,11 +117,17 @@ function RibbonNoteCell({
       </div>
     );
 
+  const handleClick = () => {
+    // No step index in the payload - what matters is that people click around here at all.
+    trackAction(TrackEvent.ScaleRibbonStepInteracted);
+    onSelect();
+  };
+
   return (
     <button
       id={id}
       type="button"
-      onClick={onSelect}
+      onClick={handleClick}
       aria-label={`Select scale degree ${label}`}
       className={`${className} cursor-pointer rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-keys-scaleBoundaryColor`}
     >
