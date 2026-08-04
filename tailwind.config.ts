@@ -22,9 +22,6 @@ const config: Config = {
     {
       pattern: /border-containers-*/,
     },
-    {
-      pattern: /text-playback-*/,
-    },
   ],
   theme: {
     extend: {
@@ -58,11 +55,9 @@ const config: Config = {
           visStroke: "rgb(0, 0, 0)",
           visStrokeSelected: "rgb(255, 255, 255)",
         },
-        // New playback button colors
-        playback: {
-          scalesMode: INTERVAL_CLASS_PALETTE[5], // deliberately the P4/P5 blue #2563eb
-          defaultMode: "rgb(59, 130, 246)", //#3b82f6
-        },
+        // Playback icon color. Uses the same blue as interval class 5 (P4/P5) so it reads
+        // as part of that color language wherever it appears alongside interval-colored UI.
+        playback: INTERVAL_CLASS_PALETTE[5],
 
         labels: {
           textDefault: "rgb(31, 31, 31)", //"#1f1f1f",

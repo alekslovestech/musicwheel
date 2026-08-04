@@ -3,7 +3,6 @@
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { Button } from "../Common/Button";
 import { PlayIcon, StopIcon } from "../Icons/PlaybackIcons";
-import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 
@@ -26,11 +25,7 @@ export const PlaySequenceButton: React.FC = () => {
 
   return (
     <Button id="play-stop-sequence-button" size="md" variant="action" onClick={handleClick}>
-      {isPlayingOrPaused() ? (
-        <StopIcon className={PLAYBACK_BUTTON_STYLES.scalesMode} />
-      ) : (
-        <PlayIcon className={PLAYBACK_BUTTON_STYLES.scalesMode} />
-      )}
+      {isPlayingOrPaused() ? <StopIcon /> : <PlayIcon />}
     </Button>
   );
 };

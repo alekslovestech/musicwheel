@@ -1,14 +1,13 @@
 import { usePlaySelectedNotes } from "@/components/AudioPlayer";
 import { Button } from "../Common/Button";
 import { PlayIcon } from "../Icons/PlaybackIcons";
-import { PLAYBACK_BUTTON_STYLES } from "@/lib/design/PlaybackButtonStyles";
 
 export const PlayNotesButton: React.FC = () => {
   const playSelectedNotes = usePlaySelectedNotes();
 
   return (
     <Button size="sm" variant="action" onClick={playSelectedNotes}>
-      <PlayIcon className={PLAYBACK_BUTTON_STYLES.defaultMode} />
+      <PlayIcon />
     </Button>
   );
 };
