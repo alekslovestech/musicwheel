@@ -24,7 +24,6 @@ const INNER_RADIUS = 0.5 * MAX_RADIUS;
 export const KeyboardCircular = () => {
   const { onCircularKeyClick, checkIsBassNote } = useKeyboardHandlers();
   const { selectedNoteIndices, selectedMusicalKey } = useMusical();
-  //const { circularVisMode } = useDisplay();
   const circularVisMode = circularVisModeForNoteCount(selectedNoteIndices.length);
   const isScales = useIsScalePreviewMode();
   const { scalePlaybackMode } = useAudio();

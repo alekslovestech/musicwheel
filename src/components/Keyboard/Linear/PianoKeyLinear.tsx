@@ -17,7 +17,6 @@ import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { useMusical } from "@/contexts/MusicalContext";
-import { useDisplay } from "@/contexts/DisplayContext";
 
 interface PianoKeyLinearProps extends PianoKeyBaseProps {
   doDisplayText: boolean;
@@ -30,7 +29,6 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   onKeyClick,
 }) => {
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
-  const { monochromeMode } = useDisplay();
 
   const chromaticIndex = actualToChromatic(actualIndex);
   const isShortKey = BlackKeyUtils.isBlackKey(chromaticIndex);
@@ -61,7 +59,6 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     chromaticIndex,
     isScales,
     selectedMusicalKey,
-    monochromeMode,
     isBassNote,
     isShortKey,
     isSelected,
@@ -85,7 +82,8 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     selectedMusicalKey,
   );
 
-  const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {    const isSharp = accidental === AccidentalType.Sharp;
+  const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {
+    const isSharp = accidental === AccidentalType.Sharp;
     const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(
       isSelected,
       false, // isBlack: Accidentals are on white keys in linear keyboard
