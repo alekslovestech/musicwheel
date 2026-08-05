@@ -7,7 +7,6 @@ import React, {
   ReactNode,
   useEffect,
   useCallback,
-  useRef,
 } from "react";
 
 import { ChordType } from "@/types/enums/ChordType";
@@ -36,8 +35,8 @@ export interface MusicalSettings {
   toggleNote: (note: ActualIndex) => void;
   clearNotes: () => void;
   setNotesDirectly: (notes: NoteIndices) => void; // For transpose, etc.
-  /** Deferred note selection (e.g. scale sequence steps) so visuals and audio update together. */
-  setSelectedNotesFromSequence: (notes: NoteIndices) => void;
+  /** One sequence step's chord identity and notes, applied together - see the implementation. */
+  setSelectionFromSequence: (notes: NoteIndices, chordRef?: ChordReference) => void;
 }
 
 const MusicalContext = createContext<MusicalSettings | null>(null);
@@ -51,11 +50,6 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({ children })
   );
   const [selectedNoteIndices, setSelectedNoteIndices] = useState<NoteIndices>([]);
   const [selectedMusicalKey, setSelectedMusicalKey] = useState<MusicalKey>(DEFAULT_MUSICAL_KEY);
-  const noteSelectionGenerationRef = useRef(0);
-  const [noteSelectionFromSequence, setNoteSelectionFromSequence] = useState<{
-    generation: number;
-    notes: NoteIndices;
-  } | null>(null);
 
   const setChordRootNote = (rootNote: ActualIndex) => {
     if (!currentChordRef) return;
@@ -112,12 +106,15 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({ children })
     setSelectedNoteIndices(notes);
   }, []);
 
-  const setSelectedNotesFromSequence = useCallback((notes: NoteIndices) => {
-    noteSelectionGenerationRef.current += 1;
-    setNoteSelectionFromSequence({
-      generation: noteSelectionGenerationRef.current,
-      notes,
-    });
+  /**
+   * Chord identity and notes in a single commit, so one playback step is one render: the staff
+   * rebuilds once, and the audio - keyed off the notes - fires in the same commit that paints
+   * them. Both must stay plain setState calls here; routing either through an intermediate
+   * state or an effect splits the step across two commits and the sound leads the picture.
+   */
+  const setSelectionFromSequence = useCallback((notes: NoteIndices, chordRef?: ChordReference) => {
+    setCurrentChordRef(chordRef);
+    setSelectedNoteIndices(notes);
   }, []);
 
   const value: MusicalSettings = {
@@ -133,22 +130,19 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({ children })
     toggleNote,
     clearNotes,
     setNotesDirectly,
-    setSelectedNotesFromSequence,
+    setSelectionFromSequence,
   };
 
-  useEffect(() => {
-    if (!noteSelectionFromSequence) return;
-
-    setCurrentChordRef(undefined);
-    setSelectedNoteIndices(noteSelectionFromSequence.notes);
-  }, [noteSelectionFromSequence]);
-
-  // This useEffect will automatically calculate note indices from chord reference
+  // Derives note indices from a chord reference, for the paths that set only the chord (presets,
+  // inversion changes). Bails out when the notes already match, so a sequence step that set both
+  // at once does not pay a second commit here - which would also re-trigger playback audio.
   useEffect(() => {
     if (!currentChordRef) return;
 
     const updatedIndices = ChordUtils.calculateChordNotesFromChordReference(currentChordRef);
-    setSelectedNoteIndices(updatedIndices);
+    setSelectedNoteIndices((prev) =>
+      IndexUtils.areIndicesEqual(prev, updatedIndices) ? prev : updatedIndices,
+    );
   }, [currentChordRef]);
 
   return <MusicalContext.Provider value={value}>{children}</MusicalContext.Provider>;

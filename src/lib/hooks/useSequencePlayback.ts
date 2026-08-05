@@ -38,8 +38,13 @@ export const useSequencePlayback = ({
   playbackState,
   setPlaybackState,
 }: UseSequencePlaybackProps) => {
-  const { selectedMusicalKey, setNotesDirectly, setSelectedNotesFromSequence, setCurrentChordRef, clearNotes } =
-    useMusical();
+  const {
+    selectedMusicalKey,
+    setNotesDirectly,
+    setSelectionFromSequence,
+    setCurrentChordRef,
+    clearNotes,
+  } = useMusical();
   const globalMode = useGlobalMode();
 
   // Scale-specific state
@@ -126,22 +131,15 @@ export const useSequencePlayback = ({
 
       const mode = modeOverride ?? scalePlaybackMode;
       const currentStepIndex = scaleIndexRef.current;
-      const sequenceStep = advanceScaleSequenceStep(
-        selectedMusicalKey,
-        currentStepIndex,
-        mode,
-      );
+      const sequenceStep = advanceScaleSequenceStep(selectedMusicalKey, currentStepIndex, mode);
 
       if (sequenceStep === null) return;
 
-      setActiveStepIndex(currentStepIndex);
-
+      // Step index, chord identity and notes in one batch, so the ribbon, staff, wheel and the
+      // audio (which is keyed off the notes) all land in the same render.
       const { notesToPlay, chordRef } = sequenceStep.step;
-      if (chordRef !== undefined) {
-        setCurrentChordRef(chordRef);
-      } else {
-        setSelectedNotesFromSequence(notesToPlay);
-      }
+      setActiveStepIndex(currentStepIndex);
+      setSelectionFromSequence(notesToPlay, chordRef);
 
       if (sequenceStep.nextStepIndex === undefined) {
         stopAllTimers();
@@ -154,8 +152,7 @@ export const useSequencePlayback = ({
     [
       selectedMusicalKey,
       scalePlaybackMode,
-      setSelectedNotesFromSequence,
-      setCurrentChordRef,
+      setSelectionFromSequence,
       stopAllTimers,
       scheduleSequenceCompletion,
       getPlaybackDuration,
@@ -206,11 +203,7 @@ export const useSequencePlayback = ({
       const previousStep = nextIndex > 0 ? steps?.[nextIndex - 1] : undefined;
       const delayBeforeNextChord =
         previousStep != null && tempo != null
-          ? RhythmUtils.chordDurationMs(
-              tempo,
-              previousStep.noteLength,
-              previousStep.rhythmDots,
-            )
+          ? RhythmUtils.chordDurationMs(tempo, previousStep.noteLength, previousStep.rhythmDots)
           : 0;
       const generationWhenScheduled = chordPlaybackGenerationRef.current;
       sequenceTimerRef.current = setTimeout(() => {
