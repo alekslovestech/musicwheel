@@ -107,10 +107,10 @@ export const MusicalProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, []);
 
   /**
-   * Chord identity and notes in a single commit. Routing the notes through an intermediate
-   * state + effect instead landed them one commit *after* the step index, so every playback
-   * step rendered twice: the staff rebuilt on both, and the audio - keyed off the notes - fired
-   * in the later render, reaching the speakers before the browser had painted.
+   * Chord identity and notes in a single commit, so one playback step is one render: the staff
+   * rebuilds once, and the audio - keyed off the notes - fires in the same commit that paints
+   * them. Both must stay plain setState calls here; routing either through an intermediate
+   * state or an effect splits the step across two commits and the sound leads the picture.
    */
   const setSelectionFromSequence = useCallback((notes: NoteIndices, chordRef?: ChordReference) => {
     setCurrentChordRef(chordRef);
