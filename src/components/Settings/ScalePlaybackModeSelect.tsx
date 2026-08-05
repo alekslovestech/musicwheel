@@ -7,7 +7,6 @@ import { useTrack } from "@/lib/tracking/useTrack";
 import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";
 import { WheelShapeIcon } from "../Icons/WheelShapeIcon";
-import { CircularVisMode } from "@/types/enums/SettingModes";
 
 interface PlaybackModeOption {
   id: string;
@@ -27,21 +26,21 @@ const SCALE_PLAYBACK_MODE_OPTIONS: PlaybackModeOption[] = [
     id: "droned-single-note",
     mode: ScalePlaybackMode.DronedSingleNote,
     // C to E: a Major 3rd, symbolic (not a tritone); dot marks the tonic
-    icon: <WheelShapeIcon indices={[0, 4]} mode={CircularVisMode.Radial} dotIndex={0} />,
+    icon: <WheelShapeIcon indices={[0, 4]} dotIndex={0} />,
     description: "Play single notes with a tonic drone",
   },
   {
     id: "triad",
     mode: ScalePlaybackMode.Triad,
     // evenly spaced (not a real triad's actual notes) so the shape reads as a clean triangle
-    icon: <WheelShapeIcon indices={[0, 4, 8]} mode={CircularVisMode.Polygon} />,
+    icon: <WheelShapeIcon indices={[0, 4, 8]} />,
     description: "Play triads (3-note chords)",
   },
   {
     id: "seventh",
     mode: ScalePlaybackMode.Seventh,
     // rooted at 1, not 0, so the shape sits flat-top rather than as a diamond
-    icon: <WheelShapeIcon indices={[1, 4, 7, 10]} mode={CircularVisMode.Polygon} />,
+    icon: <WheelShapeIcon indices={[1, 4, 7, 10]} />,
     description: "Play sevenths (4-note chords)",
   },
 ];

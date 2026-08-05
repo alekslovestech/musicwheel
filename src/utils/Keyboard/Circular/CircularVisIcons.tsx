@@ -1,6 +1,6 @@
 import { toNoteIndices } from "@/types/IndexTypes";
 import { CircularVisMode } from "@/types/enums/SettingModes";
-import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
+import { CartesianPoint, toSvgPointsString } from "@/types/interfaces/CartesianPoint";
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
 
 import type { JSX } from "react";
@@ -29,7 +29,6 @@ export class CircularVisIcons {
 
   private renderPoints = (mode: CircularVisMode): JSX.Element => {
     const points = this.visualizer.getVisualization(toNoteIndices([11, 3, 7]), mode);
-    const pointsString = points.map((p) => `${p.x},${p.y}`).join(" ");
-    return <polygon points={pointsString} />;
+    return <polygon points={toSvgPointsString(points)} />;
   };
 }
