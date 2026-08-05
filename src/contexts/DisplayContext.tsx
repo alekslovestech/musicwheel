@@ -5,18 +5,13 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
-import { CircularVisMode } from "@/types/enums/SettingModes";
 import { ChordDisplayMode } from "@/types/enums/SettingModes";
 
 export interface DisplaySettings {
-  circularVisMode: CircularVisMode;
-  monochromeMode: boolean;
   scalePreviewMode: boolean;
   keyTextMode: KeyDisplayMode;
   chordDisplayMode: ChordDisplayMode;
   showBassInRomanNotation: boolean;
-  setCircularVisMode: (mode: CircularVisMode) => void;
-  setMonochromeMode: (mode: boolean) => void;
   setScalePreviewMode: (mode: boolean) => void;
   setKeyTextMode: (mode: KeyDisplayMode) => void;
   setChordDisplayMode: (mode: ChordDisplayMode) => void;
@@ -28,9 +23,6 @@ const DisplayContext = createContext<DisplaySettings | null>(null);
 export const DisplayProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isScales = useIsScalePreviewMode();
 
-  const [circularVisMode, setCircularVisMode] = useState<CircularVisMode>(
-    isScales ? CircularVisMode.Polygon : CircularVisMode.None,
-  );
   const [scalePreviewMode, setScalePreviewMode] = useState<boolean>(isScales);
   const [keyTextMode, setKeyTextMode] = useState<KeyDisplayMode>(
     isScales ? KeyDisplayMode.ScaleDegree : KeyDisplayMode.NoteNames,
@@ -40,17 +32,11 @@ export const DisplayProvider: React.FC<{ children: ReactNode }> = ({ children })
   );
   const [showBassInRomanNotation, setShowBassInRomanNotation] = useState<boolean>(false);
 
-  const [monochromeMode, setMonochromeMode] = useState<boolean>(isScales);
-
   const value: DisplaySettings = {
-    circularVisMode,
-    monochromeMode,
     scalePreviewMode,
     keyTextMode,
     chordDisplayMode,
     showBassInRomanNotation,
-    setCircularVisMode,
-    setMonochromeMode,
     setScalePreviewMode,
     setKeyTextMode,
     setChordDisplayMode,

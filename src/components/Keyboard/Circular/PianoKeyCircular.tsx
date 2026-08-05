@@ -18,7 +18,6 @@ import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { useMusical } from "@/contexts/MusicalContext";
-import { useDisplay } from "@/contexts/DisplayContext";
 import { useAudio } from "@/contexts/AudioContext";
 
 interface PianoKeyCircularProps extends PianoKeyBaseProps {
@@ -34,7 +33,6 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
   onKeyClick,
 }) => {
   const { selectedMusicalKey, selectedNoteIndices } = useMusical();
-  const { monochromeMode } = useDisplay();
   const { scalePlaybackMode } = useAudio();
   const chromaticIndex = actualToChromatic(actualIndex);
   const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
@@ -57,7 +55,6 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
     chromaticIndex,
     isScales,
     selectedMusicalKey,
-    monochromeMode,
     false,
     isBlack,
     isSelected,
@@ -97,11 +94,9 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
     textPoint: CartesianPoint,
     isSelected: boolean,
   ) => {
-    // Account for monochrome mode: in monochrome mode, black keys are treated as white
-    const effectiveIsBlack = isBlack && !monochromeMode;
     const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(
       isSelected,
-      effectiveIsBlack,
+      isBlack,
       true, // isSvg
     );
     return (

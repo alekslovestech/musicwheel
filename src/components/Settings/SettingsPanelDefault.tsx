@@ -17,9 +17,6 @@ export const SettingsPanelDefault = () => {
       id="settings-panel-default"
       className={`${LAYOUT_PATTERNS.centerFlexCol} ${settingsGap} ${border} h-full`}
     >
-      {/*<CircularVisModeSelect />*/}
-
-      {/*<MonochromeModeToggle />*/}
       <div className="flex flex-col max-w-xs self-center gap-snug">
         <PlayNotesButton />
         <div className="transpose-widget-container">

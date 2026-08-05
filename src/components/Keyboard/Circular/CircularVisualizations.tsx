@@ -2,7 +2,7 @@ import React, { type JSX } from "react";
 import { ActualIndex, ixActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { CircularVisMode } from "@/types/enums/SettingModes";
-import { CartesianPoint } from "@/types/interfaces/CartesianPoint";
+import { CartesianPoint, toSvgPointsString } from "@/types/interfaces/CartesianPoint";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
 import { NoteIndexVisualizer } from "@/utils/Keyboard/Circular/NoteIndexVisualizer";
 import { getStepSegmentsForScale } from "@/utils/visual/scaleRibbonUtils";
@@ -87,15 +87,12 @@ export class CircularVisualizations {
         key={key}
         stroke={color}
         strokeWidth={4}
-        points={points.map((p) => `${p.x},${p.y}`).join(" ")}
+        points={toSvgPointsString(points)}
       />
     );
   }
 
-  private static drawBaseNoteDot(
-    baseIndex: ActualIndex,
-    innerRadius: number,
-  ): JSX.Element {
+  private static drawBaseNoteDot(baseIndex: ActualIndex, innerRadius: number): JSX.Element {
     return this.drawNoteDot(
       baseIndex,
       innerRadius,

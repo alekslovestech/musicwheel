@@ -12,7 +12,6 @@ export class VisualStateUtils {
     chromaticIndex: ChromaticIndex,
     isScales: boolean,
     musicalKey: MusicalKey,
-    monochromeMode: boolean,
     isRootNote: boolean,
     isBlack: boolean,
     isSelected: boolean,
@@ -28,7 +27,7 @@ export class VisualStateUtils {
       ? isDiatonic
         ? "Highlighted"
         : "Muted"
-      : isBlack && !monochromeMode
+      : isBlack
         ? "Black"
         : "White";
 
@@ -50,15 +49,12 @@ export class VisualStateUtils {
       text = `${textPrefix}-keys-textOn${stateColor}`;
     } else {
       // Non-scale mode: always use Selected or Faded variant
-      const effectiveIsBlack = isBlack && !monochromeMode;
-      text = this.getTextColorClassForNonScaleMode(isSelected, effectiveIsBlack, isSvg);
+      text = this.getTextColorClassForNonScaleMode(isSelected, isBlack, isSvg);
     }
 
     return { primary, text, border };
   }
 
-  // Get text color class for non-scale mode
-  // isBlack should be the effective value (already accounting for monochrome mode if needed)
   static getTextColorClassForNonScaleMode(
     isSelected: boolean,
     isBlack: boolean,
