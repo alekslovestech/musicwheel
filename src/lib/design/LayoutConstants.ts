@@ -98,6 +98,9 @@ export const LAYOUT_CONFIGS = {
 } as const;
 
 export const NOTATION_LAYOUT = {
-  gridTemplateColumns: "3fr 1fr",
+  // minmax(0, 1fr) rather than a bare 1fr: `1fr` means `minmax(auto, 1fr)`, so the chord-name
+  // track could not shrink below its own min-content width and a long name widened the column,
+  // stealing space from the staff. The 0 minimum makes the split proportional as intended.
+  gridTemplateColumns: "3fr minmax(0, 1fr)",
   gap: "0.5rem",
 } as const;

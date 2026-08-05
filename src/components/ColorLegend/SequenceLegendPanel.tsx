@@ -11,7 +11,7 @@ import { ScaleRibbon } from "./ScaleRibbon";
 
 export function SequenceLegendPanel() {
   const isScalesMode = useIsScalePreviewMode();
-  const { selectedMusicalKey, selectedNoteIndices, setSelectedNotesFromSequence } = useMusical();
+  const { selectedMusicalKey, selectedNoteIndices, setSelectionFromSequence } = useMusical();
   const { scalePlaybackMode, activeStepIndex, playbackState } = useAudio();
 
   if (!isScalesMode) return null;
@@ -19,12 +19,12 @@ export function SequenceLegendPanel() {
   // Same setter the sequence player uses, so a click lands the notes on the wheel, staff and
   // audio exactly as stepping to that degree would.
   const selectStep = (stepIndex: number) => {
-    const { notesToPlay } = getScaleStepAtSequenceIndex(
+    const { notesToPlay, chordRef } = getScaleStepAtSequenceIndex(
       selectedMusicalKey,
       stepIndex,
       scalePlaybackMode,
     );
-    setSelectedNotesFromSequence(notesToPlay);
+    setSelectionFromSequence(notesToPlay, chordRef);
   };
 
   const ribbon = buildScaleRibbonData(selectedMusicalKey, scalePlaybackMode);

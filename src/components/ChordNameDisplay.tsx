@@ -5,17 +5,14 @@ import { ChordDisplayInfo } from "@/types/interfaces/ChordDisplayInfo";
 import { ChordDisplayMode } from "@/types/enums/SettingModes";
 
 import { MusicalDisplayFormatter } from "@/utils/formatters/MusicalDisplayFormatter";
-import {
-  ChordDisplayKind,
-  resolveChordDisplayContext,
-} from "@/utils/spelling/ChordDisplayContext";
+import { ChordDisplayKind, resolveChordDisplayContext } from "@/utils/spelling/ChordDisplayContext";
 
 import { useMusical } from "@/contexts/MusicalContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { useChordPresets } from "@/contexts/ChordPresetContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 
-import { TYPOGRAPHY } from "@/lib/design";
+import { chordNameFontSize, TYPOGRAPHY } from "@/lib/design";
 import { LAYOUT_PATTERNS } from "@/lib/design/LayoutPatterns";
 import { useBorder } from "@/lib/hooks";
 
@@ -59,8 +56,7 @@ export const ChordNameDisplay: React.FC<{ idPrefix?: string }> = ({ idPrefix }) 
     }
 
     const useScaleNoteSpelling =
-      displayContext.kind === ChordDisplayKind.FromIndices &&
-      displayContext.useScaleNoteSpelling;
+      displayContext.kind === ChordDisplayKind.FromIndices && displayContext.useScaleNoteSpelling;
 
     return MusicalDisplayFormatter.getDisplayInfoFromIndices(
       selectedNoteIndices,
@@ -96,7 +92,10 @@ export const ChordNameDisplay: React.FC<{ idPrefix?: string }> = ({ idPrefix }) 
         </div>
         <div
           id={chordNameElementId("value", idPrefix)}
-          className={`${TYPOGRAPHY.chordNameText} max-w-full text-center break-words`}
+          className="font-bold max-w-full text-center break-words"
+          // Sized off `chordName`, not `chordNameDisplay`: the latter may carry an injected
+          // zero-width break character, which would count as a glyph and undersize the name.
+          style={{ fontSize: chordNameFontSize(chordName.length) }}
         >
           {chordNameDisplay}
         </div>
@@ -107,7 +106,9 @@ export const ChordNameDisplay: React.FC<{ idPrefix?: string }> = ({ idPrefix }) 
   return (
     <div
       id={chordNameElementId("display", idPrefix)}
-      className={`${LAYOUT_PATTERNS.fullSize} ${border}`}
+      // `min-w-0` lets this shrink inside its grid/flex parent; the container query then gives
+      // the name a width to size against, so the text scales to the box instead of setting it.
+      className={`${LAYOUT_PATTERNS.fullSize} min-w-0 [container-type:inline-size] ${border}`}
     >
       <div
         onClick={toggleChordDisplayMode}
