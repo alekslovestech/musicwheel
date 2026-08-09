@@ -5,6 +5,7 @@ export const TrackEvent = {
   ColorLegendInteracted: "color_legend_interacted",
   ScaleTonicInteracted: "scale_tonic_interacted", // tonic dropdown
   ScaleRibbonStepInteracted: "scale_ribbon_step_interacted",
+  ScaleStepAnnotationsToggled: "scale_step_annotations_toggled", // W-H overlay on the Notes ribbon
 
   ScaleTypeChanged: "scale_type_changed", //scale dropdown
   ScalePlaybackModeChanged: "scale_playback_mode_changed",

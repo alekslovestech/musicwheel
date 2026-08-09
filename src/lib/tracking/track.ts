@@ -18,6 +18,7 @@ export type TrackCtx = {
   scale_playback_mode?: ScalePlaybackMode;
   preset_id?: NoteGroupingId;
   transpose_target?: TransposeTarget;
+  show_step_annotations?: boolean;
 };
 
 type ModeContextInput = {

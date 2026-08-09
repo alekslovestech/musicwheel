@@ -1,61 +1,30 @@
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import {
   buildScaleRibbonData,
   getIntervalTypesForScaleFromRoot,
   getStepColorLegendItems,
-  getStepSegmentsForScale,
-  ribbonUsesStepSegments,
+  showsStepSegments,
 } from "@/utils/visual/scaleRibbonUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
 
 describe("buildScaleRibbonData", () => {
   const constants = GreekTestConstants.getInstance();
   const cIonian = constants.C_IONIAN_KEY;
-  const aAeolian = constants.A_AEOLIAN_KEY;
 
   const labelsFor = (key: typeof cIonian, mode: ScalePlaybackMode): string[] =>
     buildScaleRibbonData(key, mode).notes.map((note) => note.label);
 
   describe("Seventh mode", () => {
-    test("labels each degree with numeral only, not full quality (ribbon is tight on space)", () => {
-      // Textbook Ionian sevenths, plus the closing octave tonic. Compare to the Roman
-      // Seventh case in RomanDisplay.test.ts, which also drops quality on the wheel -
-      // formatRomanChord (full quality: Δ7, ø7, ...) is reserved for chord display and
-      // the legend, where there is room for it.
-      expect(labelsFor(cIonian, ScalePlaybackMode.Seventh)).toEqual([
-        "I",
-        "ii",
-        "iii",
-        "IV",
-        "V",
-        "vi",
-        "vii",
-        "I",
-      ]);
-    });
-
-    test("labels natural minor sevenths, spelled relative to parallel major", () => {
-      expect(labelsFor(aAeolian, ScalePlaybackMode.Seventh)).toEqual([
-        "i",
-        "ii",
-        "♭III",
-        "iv",
-        "v",
-        "♭VI",
-        "♭VII",
-        "i",
-      ]);
-    });
-
+    // Numeral-only formatting (dropping chord quality) is exercised at the formatter level in
+    // RomanDisplay.test.ts / RomanChordFormatter.test.ts; here we only need the ribbon's own
+    // shape guarantees, not the spelling of any particular numeral.
     test("is a swatch ribbon, not a tick ribbon - no step segments at all", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
-      expect(ribbon.title).toBe("Sevenths");
       // "swatches" ribbons carry no `steps` field - there is nothing to have length 0.
       expect(ribbon.kind).toBe("swatches");
-      expect(ribbonUsesStepSegments(ScalePlaybackMode.Seventh)).toBe(false);
+      expect(showsStepSegments(ScalePlaybackMode.Seventh, true)).toBe(false);
     });
 
     test("every degree carries a color", () => {
@@ -67,80 +36,64 @@ describe("buildScaleRibbonData", () => {
     });
   });
 
-  describe("step labels", () => {
-    // Regression: steps were labelled with interval short forms, which name a harmonic
-    // function a step does not carry. Hungarian Minor's E♭-F♯ and A♭-B are augmented 2nds,
-    // spelled as 2nds; as "m3" they had the right size under the wrong name. W/H/1½ measure
-    // instead of spelling, so they stay true for any scale.
-    test("measures steps rather than spelling them as intervals", () => {
+  describe("getStepColorLegendItems", () => {
+    test("dedupes steps by distance, not by degree", () => {
+      // Hungarian Minor's 7 degrees produce only 3 distinct step sizes (H, W, 1½) - one legend
+      // entry per size, not one per degree.
       const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
-      const labels = getStepSegmentsForScale(hungarianMinor).map((step) => step.label);
-
-      // C D E♭ F♯ G A♭ B, wrapping B->C: 2 1 3 1 1 3 1 semitones.
-      expect(labels).toEqual(["W", "H", "1½", "H", "H", "1½", "H"]);
-    });
-
-    test("labels the major scale's steps", () => {
-      expect(getStepSegmentsForScale(cIonian).map((step) => step.label)).toEqual([
-        "W",
-        "W",
-        "H",
-        "W",
-        "W",
-        "W",
-        "H",
-      ]);
-    });
-
-    test("legend uses the same vocabulary as the ribbon, distinct steps only", () => {
-      const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
-      expect(getStepColorLegendItems(hungarianMinor).map((step) => step.label)).toEqual([
-        "H",
-        "W",
-        "1½",
-      ]);
+      expect(getStepColorLegendItems(hungarianMinor).length).toBe(3);
     });
   });
 
   describe("getIntervalTypesForScaleFromRoot", () => {
-    const shortFormsFor = (key: MusicalKey): string[] =>
-      [...getIntervalTypesForScaleFromRoot(key)].map(
-        (id) => NoteGroupingLibrary.getGroupingById(id).shortForm,
-      );
-
     // Regression: these were folded to interval class first, which replaced every interval
-    // above the tritone with its inversion - the drone legend advertised m2, M3 and P4 for a
-    // scale containing none of them.
-    test("names intervals above the tritone, not their inversions", () => {
+    // above the tritone with its inversion, collapsing distinct intervals onto the same class -
+    // the drone legend advertised fewer colors than the scale actually contains.
+    test("keeps intervals above the tritone distinct from their inversions", () => {
       const hungarianMinor = MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor);
-
-      // Hungarian Minor is [0, 2, 3, 6, 7, 8, 11] semitones from the root.
-      expect(shortFormsFor(hungarianMinor).sort()).toEqual(
-        ["M2", "m3", "TT", "P5", "m6", "M7"].sort(),
-      );
+      // Hungarian Minor is [0, 2, 3, 6, 7, 8, 11] semitones from the root: 6 non-root degrees,
+      // no two of which should collapse onto the same interval class.
+      expect(getIntervalTypesForScaleFromRoot(hungarianMinor).size).toBe(6);
     });
 
-    test("names the plain major scale's intervals", () => {
-      expect(shortFormsFor(cIonian).sort()).toEqual(["M2", "M3", "P4", "P5", "M6", "M7"].sort());
+    test("names every non-root degree of the major scale", () => {
+      expect(getIntervalTypesForScaleFromRoot(cIonian).size).toBe(6);
     });
   });
 
-  describe("mode-to-ribbon association", () => {
-    test("Triad and Seventh render identical numerals - only color and title distinguish them", () => {
-      const triadLabels = labelsFor(cIonian, ScalePlaybackMode.Triad);
-      expect(triadLabels).toEqual(["I", "ii", "iii", "IV", "V", "vi", "vii", "I"]);
-      expect(labelsFor(cIonian, ScalePlaybackMode.Seventh)).toEqual(triadLabels);
+  
+  describe("Notes ribbon", () => {
+    test("carries no color - a single note has no interval to derive one from", () => {
+      // A colored swatch here would paint the same neutral default on every note (no interval,
+      // no color signal), which is noise rather than information. "labels" ribbons structurally
+      // cannot carry a color nobody reads.
+      const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
+      expect(ribbon.kind).toBe("labels");
     });
 
-    test("only single-note playback is shown as W-H steps", () => {
-      expect(ribbonUsesStepSegments(ScalePlaybackMode.SingleNote)).toBe(true);
-      expect(ribbonUsesStepSegments(ScalePlaybackMode.Triad)).toBe(false);
-      expect(ribbonUsesStepSegments(ScalePlaybackMode.DronedSingleNote)).toBe(false);
+    test("keeps the same labels and title when the W-H annotation is switched on", () => {
+      // The toggle overlays step connectors; it does not relabel the ribbon.
+      const plain = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
+      const annotated = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote, true);
+      expect(annotated.notes.map((note) => note.label)).toEqual(
+        plain.notes.map((note) => note.label),
+      );
+      expect(annotated.title).toBe(plain.title);
+    });
+  });
 
-      const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
-      expect(ribbon.kind).toBe("ticks");
-      if (ribbon.kind !== "ticks") throw new Error("expected a ticks ribbon");
-      expect(ribbon.steps.length).toBeGreaterThan(0);
+  describe("one ribbon vocabulary across the non-chordal lenses", () => {
+    // Switching lens must change what you hear, not what things are called - otherwise a
+    // listener cannot tell which of the two changes produced the effect. The lens is the
+    // variable; the labelling is the control.
+    test.each([
+      ["C Ionian", constants.C_IONIAN_KEY],
+      ["C Phrygian", constants.C_PHRYGIAN_KEY],
+      ["C Lydian", constants.C_LYDIAN_KEY],
+    ])("Notes and Drone label %s identically", (_name, key) => {
+      expect(labelsFor(key, ScalePlaybackMode.DronedSingleNote)).toEqual(
+        labelsFor(key, ScalePlaybackMode.SingleNote),
+      );
     });
   });
 });

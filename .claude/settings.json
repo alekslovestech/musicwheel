@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npx prettier --write \"src/tests/scaleRibbonUtils.test.ts\")",
+      "PowerShell(npx eslint \"src/tests/scaleRibbonUtils.test.ts\" --max-warnings=0)"
+    ]
+  }
+}

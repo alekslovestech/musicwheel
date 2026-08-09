@@ -23,21 +23,25 @@ export type ScaleRibbonTick = {
 };
 
 /**
- * A ribbon has one of two real shapes, not one shape with an optional field: Steps mode marks
- * bare degree ticks connected by colored segments ("ticks"); every other mode marks colored
- * swatches with no segments between them ("swatches"). Modeling this as a union - rather than
- * `color?` on notes and an always-present-but-sometimes-empty `steps` array - means a "ticks"
- * ribbon's notes can never claim a color nobody reads, and a "swatches" ribbon's notes can
- * never omit a color the layout needs; {@link ScaleRibbon} switches on `kind` instead of
- * sniffing `steps.length > 0`.
+ * A ribbon has one of three real shapes, not one shape with optional fields: Steps mode marks
+ * bare degree ticks connected by colored segments ("ticks"); the plain Notes baseline marks bare
+ * labels with nothing to color them by ("labels" - a single note has no interval to derive a
+ * color from, so every swatch would paint the same neutral default); every other mode marks
+ * colored swatches with no segments between them ("swatches"). Modeling this as a union - rather
+ * than `color?` on notes and an always-present-but-sometimes-empty `steps` array - means a
+ * "ticks" ribbon's notes can never claim a color nobody reads, a "labels" ribbon can never carry
+ * a color that isn't real, and a "swatches" ribbon's notes can never omit a color the layout
+ * needs; {@link ScaleRibbon} switches on `kind` instead of sniffing `steps.length > 0`.
  */
 export type ScaleRibbonData =
   | { title: string; kind: "ticks"; notes: ScaleRibbonTick[]; steps: ScaleRibbonMark[] }
+  | { title: string; kind: "labels"; notes: ScaleRibbonTick[] }
   | { title: string; kind: "swatches"; notes: ScaleRibbonMark[] };
 
 export function buildScaleRibbonData(
   key: MusicalKey,
   scalePlaybackMode: ScalePlaybackMode,
+  showStepAnnotations = false,
 ): ScaleRibbonData {
   switch (scalePlaybackMode) {
     case ScalePlaybackMode.DronedSingleNote:
@@ -46,13 +50,22 @@ export function buildScaleRibbonData(
     case ScalePlaybackMode.Seventh:
       return buildChordRibbon(key, scalePlaybackMode);
     default:
-      return buildStepsRibbon(key);
+      return showStepAnnotations ? buildStepsRibbon(key) : buildNotesRibbon(key);
   }
 }
 
-/** Only melodic single-note playback is heard as steps between consecutive degrees. */
-export function ribbonUsesStepSegments(scalePlaybackMode: ScalePlaybackMode): boolean {
-  return scalePlaybackMode === ScalePlaybackMode.SingleNote;
+/**
+ * Step segments are an opt-in annotation on the Notes ribbon, not a mode of their own. W-H is a
+ * third measuring frame - each note against its neighbour - competing with the two the app is
+ * actually built to teach (each note against the tonic; each note against its chord tones), so
+ * it stays off by default rather than greeting every first-time user. No other lens is heard as
+ * steps between consecutive degrees, so the toggle has no effect outside Notes.
+ */
+export function showsStepSegments(
+  scalePlaybackMode: ScalePlaybackMode,
+  showStepAnnotations: boolean,
+): boolean {
+  return showStepAnnotations && scalePlaybackMode === ScalePlaybackMode.SingleNote;
 }
 
 export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonMark[] {
@@ -131,31 +144,58 @@ function buildStepSegments(offsets: number[]): ScaleRibbonMark[] {
   });
 }
 
-function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
-  const offsets = getScalePatternOffsets(key);
-  const notes: ScaleRibbonTick[] = offsets.map((_, i) => ({
-    label: `${i + 1}`,
-  }));
-  notes.push({ label: "8" });
+/**
+ * Scale degrees with their accidentals - `1 ♭2 ♭3 4 5 ♭6 ♭7 8` for Phrygian - closing on the
+ * octave tonic.
+ *
+ * Every non-chordal lens uses these same labels, deliberately. Switching lens should change what
+ * you *hear*, not what things are *called*: if the ribbon renumbered itself between Notes and
+ * Drone, a listener could not tell which of the two changes produced the effect. Plain ordinals
+ * (`1 2 3...`) were tried for the Notes baseline and dropped - they count positions without
+ * saying anything about the notes, the same emptiness as W-H one layer down, and in Phrygian the
+ * third degree really is flat. The parallel-mode comparison this notation exists for is made by
+ * switching *key* within one lens (C Ionian `1 2 3 4 5 6 7` against C Phrygian `1 ♭2 ♭3 4 5 ♭6
+ * ♭7`), where the mode is the only variable.
+ *
+ * Letter names live on the keyboards, which carry the absolute axis; the ribbon carries the
+ * relative one, and neither repeats the other.
+ */
+function scaleDegreeLabels(key: MusicalKey): string[] {
+  const degrees = Array.from({ length: key.scalePatternLength }, (_, i) =>
+    ScaleDegreeFormatter.formatForDisplay(
+      key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i)),
+    ),
+  );
+  return [...degrees, "8"];
+}
 
-  return { title: "Steps (W–H)", kind: "ticks", notes, steps: buildStepSegments(offsets) };
+function degreeTicks(key: MusicalKey): ScaleRibbonTick[] {
+  return scaleDegreeLabels(key).map((label) => ({ label }));
+}
+
+function buildNotesRibbon(key: MusicalKey): ScaleRibbonData {
+  return { title: "Notes", kind: "labels", notes: degreeTicks(key) };
+}
+
+/** The Notes ribbon with W-H connectors drawn in; the degree labels stay, color joins the steps. */
+function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
+  return {
+    title: "Notes",
+    kind: "ticks",
+    notes: degreeTicks(key),
+    steps: getStepSegmentsForScale(key),
+  };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
-  const offsets = getScalePatternOffsets(key);
-  const notes: ScaleRibbonMark[] = offsets.map((_, i) => {
-    const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
-    return {
-      label: ScaleDegreeFormatter.formatForDisplay(scaleDegreeInfo),
-      color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, i),
-    };
-  });
-  notes.push({
-    label: "8",
-    color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, key.scalePatternLength),
-  });
+  // Same labels as the Notes ribbon; only the color is new, and it is the thing the drone adds -
+  // each degree colored by the interval it forms against the pedal tone.
+  const notes: ScaleRibbonMark[] = scaleDegreeLabels(key).map((label, i) => ({
+    label,
+    color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, i),
+  }));
 
-  return { title: "From root (1–♭2…)", kind: "swatches", notes };
+  return { title: "Drone", kind: "swatches", notes };
 }
 
 /** Triad / Seventh: one chord stacked on each degree, labeled by its roman numeral. */

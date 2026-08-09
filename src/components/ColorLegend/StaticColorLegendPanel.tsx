@@ -6,11 +6,12 @@ import { ColorLegendGroup, legendLabelForGroup } from "@/utils/visual/colorLegen
 import { isIntervalType } from "@/types/NoteGroupingId";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useAudio } from "@/contexts/AudioContext";
+import { useDisplay } from "@/contexts/DisplayContext";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import {
   getStepColorLegendItems,
-  ribbonUsesStepSegments,
   ScaleRibbonMark,
+  showsStepSegments,
 } from "@/utils/visual/scaleRibbonUtils";
 import { useColorLegendGroups } from "./useColorLegendGroups";
 
@@ -21,9 +22,12 @@ export function StaticColorLegendPanel() {
     : partitionColorLegendGroupsForDisplay(groups);
   const isScalesMode = useIsScalePreviewMode();
   const { scalePlaybackMode } = useAudio();
+  const { showStepAnnotations } = useDisplay();
   const { selectedMusicalKey } = useMusical();
+  // Follows the ribbon's W-H toggle: with the annotation off there are no step colors on screen
+  // for this section to explain.
   const stepLegendItems =
-    isScalesMode && ribbonUsesStepSegments(scalePlaybackMode)
+    isScalesMode && showsStepSegments(scalePlaybackMode, showStepAnnotations)
       ? getStepColorLegendItems(selectedMusicalKey)
       : [];
 
