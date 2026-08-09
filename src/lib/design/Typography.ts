@@ -10,6 +10,11 @@ export const TYPOGRAPHY = {
   circularAccidental: "text-base",
   linearNoteText: "text-lg font-bold",
   linearAccidental: "text-lg",
+
+  // Scale ribbon: "1 ♭2 ♭3..." has to read identically in Notes, Drone, and Notes-with-W-H, and
+  // also covers Chords' roman numerals (same swatch component) - one numeral style everywhere on
+  // the ribbon rather than several that happen to look similar.
+  degreeLabelText: "text-xs font-medium leading-none text-labels-textDefault",
 } as const;
 
 /** Longest chord name that still gets full size - "Absus2", "C#m7b5" and the like. */
