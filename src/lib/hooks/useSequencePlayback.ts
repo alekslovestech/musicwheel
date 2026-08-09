@@ -21,7 +21,6 @@ import {
   buildScaleSchedule,
   type SequenceStepVisual,
 } from "@/lib/audio/sequenceSchedules";
-import { markStepStart } from "@/lib/audio/stepRenderProbe";
 import { prepareChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 
 interface UseSequencePlaybackProps {
@@ -76,7 +75,6 @@ export const useSequencePlayback = ({
 
   const showScaleStep = useCallback<SequenceStepVisual>(
     (stepIndex, notes, chordRef) => {
-      markStepStart();
       setActiveStepIndex(stepIndex);
       setSelectionFromSequence(notes, chordRef);
     },
@@ -85,7 +83,6 @@ export const useSequencePlayback = ({
 
   const showProgressionStep = useCallback<SequenceStepVisual>(
     (stepIndex, notes) => {
-      markStepStart();
       setActiveStepIndex(stepIndex);
       setNotesDirectly(notes);
     },

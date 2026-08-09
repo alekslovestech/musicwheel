@@ -19,7 +19,6 @@ import { StaffHighlightOverlay, VexFlowUtils } from "@/utils/VexFlowUtils";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 import { useGlobalMode, useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { resolveSpellingContext } from "@/utils/spelling/SpellingContext";
-import { useStepRenderProbe } from "@/lib/audio/stepRenderProbe";
 
 /** Where the active-step background sits, and what colour it takes. */
 type StaffHighlight = { index: number | null; fill?: string };
@@ -41,10 +40,6 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
   const isScalesMode = useIsScalePreviewMode();
   const globalMode = useGlobalMode();
   const border = useBorder();
-
-  // Lives here because the staff is the heaviest thing a step redraws, and it is mounted on
-  // every page that plays a sequence. The frame it measures is the whole app's, not just this.
-  useStepRenderProbe();
 
   /**
    * Step indices making up the bar on screen. This changes only when playback crosses into

@@ -13,7 +13,7 @@ import { setSequenceEnvelope, triggerSequenceNotes } from "@/lib/audio/polySynth
  * to commit and paint a step, and overshooting costs nothing perceptible.
  *
  * What this cannot absorb is a render cost that varies between steps, which is why the per-step
- * render work is kept small and predictable. See useStepRenderProbe for measuring it.
+ * render work is kept small and predictable.
  */
 const VISUAL_LEAD_SEC = 0.06;
 
