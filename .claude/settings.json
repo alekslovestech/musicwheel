@@ -5,8 +5,7 @@
       "PowerShell(npx eslint *)",
       "Bash(npx prettier *)",
       "Bash(npx eslint *)",
-      "PowerShell(npx prettier --write \"src/components/Settings/ScalePlaybackModeSelect.tsx\")",
-      "PowerShell(npx eslint \"src/components/Settings/ScalePlaybackModeSelect.tsx\" --max-warnings=0)"
+      "Bash(git stash *)"
     ]
   }
 }
