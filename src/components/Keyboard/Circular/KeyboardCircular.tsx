@@ -1,6 +1,8 @@
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ixActual } from "@/types/IndexTypes";
+import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
@@ -101,6 +103,14 @@ export const KeyboardCircular = () => {
             onKeyClick={onCircularKeyClick}
             outerRadius={OUTER_RADIUS}
             innerRadius={INNER_RADIUS}
+            isSelected={KeyboardUtils.isKeySelected(
+              actualIndex,
+              selectedNoteIndices,
+              KeyboardUIType.Circular,
+            )}
+            isScales={isScales}
+            selectedMusicalKey={selectedMusicalKey}
+            scalePlaybackMode={scalePlaybackMode}
           />
         );
       })}

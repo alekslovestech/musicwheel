@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import {
   ActualIndex,
   actualIndexToChromaticAndOctave,
@@ -88,8 +88,56 @@ export const useKeyboardHandlers = () => {
     setCurrentChordRef,
   } = useMusical();
 
+  /**
+   * Read at click time rather than closed over, so the returned handlers keep a stable identity.
+   * Sequence playback rewrites currentChordRef on every step; closing over it would churn these
+   * handlers at the same rate and defeat the memoized keys they are passed to.
+   */
+  const latest = useRef({
+    trackAction,
+    isFreeformMode,
+    isScalesMode,
+    playbackState,
+    scalePlaybackMode,
+    selectedMusicalKey,
+    currentChordRef,
+    toggleNote,
+    setChordRootNote,
+    setChordBassNote,
+    setNotesDirectly,
+    setCurrentChordRef,
+  });
+  latest.current = {
+    trackAction,
+    isFreeformMode,
+    isScalesMode,
+    playbackState,
+    scalePlaybackMode,
+    selectedMusicalKey,
+    currentChordRef,
+    toggleNote,
+    setChordRootNote,
+    setChordBassNote,
+    setNotesDirectly,
+    setCurrentChordRef,
+  };
+
   const handleKeyClick = useCallback(
     (clickedIndex: ActualIndex, keyboardUI: KeyboardUIType) => {
+      const {
+        isFreeformMode,
+        isScalesMode,
+        playbackState,
+        scalePlaybackMode,
+        selectedMusicalKey,
+        currentChordRef,
+        toggleNote,
+        setChordRootNote,
+        setChordBassNote,
+        setNotesDirectly,
+        setCurrentChordRef,
+      } = latest.current;
+
       if (isScalesMode) {
         if (playbackState === PlaybackState.SequencePlaying) return;
 
@@ -126,45 +174,35 @@ export const useKeyboardHandlers = () => {
         }
       }
     },
-    [
-      isScalesMode,
-      playbackState,
-      selectedMusicalKey,
-      scalePlaybackMode,
-      setCurrentChordRef,
-      setNotesDirectly,
-      toggleNote,
-      currentChordRef,
-      setChordRootNote,
-      setChordBassNote,
-      isFreeformMode,
-    ],
+    [],
   );
 
-  const checkIsBassNote = useCallback(
-    (index: ActualIndex) => {
-      if (isFreeformMode || !currentChordRef || !ChordUtils.hasInversions(currentChordRef.id)) {
-        return false;
-      }
-      return index === currentChordRef.rootNote;
-    },
-    [currentChordRef, isFreeformMode],
-  );
+  const checkIsBassNote = useCallback((index: ActualIndex) => {
+    const { isFreeformMode, currentChordRef } = latest.current;
+    if (isFreeformMode || !currentChordRef || !ChordUtils.hasInversions(currentChordRef.id)) {
+      return false;
+    }
+    return index === currentChordRef.rootNote;
+  }, []);
 
   const onLinearKeyClick = useCallback(
     (index: ActualIndex) => {
-      trackAction(TrackEvent.KeyboardInteracted, { keyboard_ui: KeyboardUIType.Linear });
+      latest.current.trackAction(TrackEvent.KeyboardInteracted, {
+        keyboard_ui: KeyboardUIType.Linear,
+      });
       handleKeyClick(index, KeyboardUIType.Linear);
     },
-    [trackAction, handleKeyClick],
+    [handleKeyClick],
   );
 
   const onCircularKeyClick = useCallback(
     (index: ActualIndex) => {
-      trackAction(TrackEvent.KeyboardInteracted, { keyboard_ui: KeyboardUIType.Circular });
+      latest.current.trackAction(TrackEvent.KeyboardInteracted, {
+        keyboard_ui: KeyboardUIType.Circular,
+      });
       handleKeyClick(index, KeyboardUIType.Circular);
     },
-    [trackAction, handleKeyClick],
+    [handleKeyClick],
   );
 
   return {

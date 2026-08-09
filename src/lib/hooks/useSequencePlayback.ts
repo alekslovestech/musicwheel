@@ -10,6 +10,7 @@ import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
+import { markStepStart } from "@/lib/audio/stepRenderProbe";
 import {
   advanceScaleSequenceStep,
   prepareChordProgressionSequence,
@@ -138,6 +139,7 @@ export const useSequencePlayback = ({
       // Step index, chord identity and notes in one batch, so the ribbon, staff, wheel and the
       // audio (which is keyed off the notes) all land in the same render.
       const { notesToPlay, chordRef } = sequenceStep.step;
+      markStepStart();
       setActiveStepIndex(currentStepIndex);
       setSelectionFromSequence(notesToPlay, chordRef);
 
@@ -166,6 +168,7 @@ export const useSequencePlayback = ({
 
     const i = chordIndexRef.current;
     const step = steps[i];
+    markStepStart();
     setActiveStepIndex(i);
     setNotesDirectly(step.value);
 

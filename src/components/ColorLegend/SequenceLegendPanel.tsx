@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useMusical } from "@/contexts/MusicalContext";
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { useDisplay } from "@/contexts/DisplayContext";
@@ -17,6 +19,13 @@ export function SequenceLegendPanel() {
   const { scalePlaybackMode, activeStepIndex, playbackState } = useAudio();
   const { showStepAnnotations, setShowStepAnnotations } = useDisplay();
 
+  // The ribbon itself is the same for every step of a scale - only which cell is active moves -
+  // so rebuilding it on each playback step is work the step does not need to pay for.
+  const ribbon = useMemo(
+    () => buildScaleRibbonData(selectedMusicalKey, scalePlaybackMode, showStepAnnotations),
+    [selectedMusicalKey, scalePlaybackMode, showStepAnnotations],
+  );
+
   if (!isScalesMode) return null;
 
   // Same setter the sequence player uses, so a click lands the notes on the wheel, staff and
@@ -29,8 +38,6 @@ export function SequenceLegendPanel() {
     );
     setSelectionFromSequence(notesToPlay, chordRef);
   };
-
-  const ribbon = buildScaleRibbonData(selectedMusicalKey, scalePlaybackMode, showStepAnnotations);
 
   const isScalePlaybackActive =
     playbackState === PlaybackState.SequencePlaying ||
