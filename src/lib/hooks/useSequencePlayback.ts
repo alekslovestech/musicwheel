@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
@@ -10,19 +10,19 @@ import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
 import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
+import {
+  pauseScheduledSequence,
+  resumeScheduledSequence,
+  startScheduledSequence,
+  stopScheduledSequence,
+} from "@/lib/audio/sequenceScheduler";
+import {
+  buildProgressionSchedule,
+  buildScaleSchedule,
+  type SequenceStepVisual,
+} from "@/lib/audio/sequenceSchedules";
 import { markStepStart } from "@/lib/audio/stepRenderProbe";
-import {
-  advanceScaleSequenceStep,
-  prepareChordProgressionSequence,
-  type PreparedChordStep,
-} from "@/utils/SequencePlaybackUtils";
-import { RhythmUtils } from "@/utils/RhythmUtils";
-import {
-  SCALE_AUDIO_WARMUP_MS,
-  SCALE_STEP_MS_DRONED,
-  SCALE_STEP_MS_SINGLE_NOTE,
-  SCALE_STEP_MS_TRIAD,
-} from "@/lib/audio/playbackDurations";
+import { prepareChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 
 interface UseSequencePlaybackProps {
   isAudioInitialized: boolean;
@@ -34,6 +34,12 @@ export type StartSequencePlaybackOptions = {
   scalePlaybackMode?: ScalePlaybackMode;
 };
 
+/**
+ * Owns what plays and when, but not the playing: a run is laid out as a schedule and handed to
+ * the Web Audio clock in one go (see sequenceScheduler). The callbacks below are the UI half of
+ * each step, invoked on the draw loop just ahead of the note they belong to - so a slow render
+ * can arrive late without dragging the note along with it.
+ */
 export const useSequencePlayback = ({
   isAudioInitialized,
   playbackState,
@@ -48,208 +54,67 @@ export const useSequencePlayback = ({
   } = useMusical();
   const globalMode = useGlobalMode();
 
-  // Scale-specific state
   const [scalePlaybackMode, setScalePlaybackMode] = useState<ScalePlaybackMode>(
     ScalePlaybackMode.SingleNote,
   );
-  const scaleIndexRef = useRef<number>(0);
-  const sequenceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const completionTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Chord progression-specific state
   const [selectedProgression, setSelectedProgression] = useState<ChordProgressionType | null>(null);
-  const chordIndexRef = useRef<number>(0);
-  const preparedProgressionStepsRef = useRef<PreparedChordStep[] | null>(null);
-  const chordProgressionTempoRef = useRef<number | null>(null);
-  /** Bumped when starting/stopping chord playback so stale setTimeouts no-op. */
-  const chordPlaybackGenerationRef = useRef(0);
   /** Index of the currently sounding step, for UI highlight (progression grid or scale staff).
    * Meaning depends on globalMode; null when playback isn't active in that mode. */
   const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);
-
-  // Helper functions - define these first
-  const stopAllTimers = useCallback(() => {
-    if (sequenceTimerRef.current !== null) {
-      clearTimeout(sequenceTimerRef.current);
-      sequenceTimerRef.current = null;
-    }
-    if (completionTimerRef.current !== null) {
-      clearTimeout(completionTimerRef.current);
-      completionTimerRef.current = null;
-    }
-  }, []);
-
-  const getPlaybackDuration = useCallback((mode: ScalePlaybackMode) => {
-    switch (mode) {
-      case ScalePlaybackMode.SingleNote:
-        return SCALE_STEP_MS_SINGLE_NOTE;
-      case ScalePlaybackMode.DronedSingleNote:
-        return SCALE_STEP_MS_DRONED;
-      default:
-        return SCALE_STEP_MS_TRIAD;
-    }
-  }, []);
 
   const clearSequenceSelection = useCallback(() => {
     setCurrentChordRef(undefined);
     clearNotes();
   }, [setCurrentChordRef, clearNotes]);
 
-  const abortPlayback = useCallback(
-    ({ clearSelection = false, releaseVoices = false } = {}) => {
-      stopAllTimers();
-      if (releaseVoices) {
-        chordPlaybackGenerationRef.current += 1;
-        releasePolySynthVoicesNow();
-      }
-      if (clearSelection) {
-        clearSequenceSelection();
-      }
-    },
-    [stopAllTimers, clearSequenceSelection],
-  );
+  const handleSequenceComplete = useCallback(() => {
+    stopScheduledSequence();
+    setPlaybackState(PlaybackState.SequenceComplete);
+    setActiveStepIndex(null);
+    clearSequenceSelection();
+  }, [setPlaybackState, clearSequenceSelection]);
 
-  /** After the final step plays for one interval, mark complete and clear selection. */
-  const scheduleSequenceCompletion = useCallback(
-    (delayMs: number) => {
-      if (completionTimerRef.current !== null) {
-        clearTimeout(completionTimerRef.current);
-      }
-      completionTimerRef.current = setTimeout(() => {
-        completionTimerRef.current = null;
-        setPlaybackState(PlaybackState.SequenceComplete);
-        setActiveStepIndex(null);
-        clearSequenceSelection();
-      }, delayMs);
-    },
-    [setPlaybackState, clearSequenceSelection],
-  );
-
-  // Step functions - define these before the start functions
-  const playScaleStep = useCallback(
-    (modeOverride?: ScalePlaybackMode) => {
-      if (!selectedMusicalKey) return;
-
-      const mode = modeOverride ?? scalePlaybackMode;
-      const currentStepIndex = scaleIndexRef.current;
-      const sequenceStep = advanceScaleSequenceStep(selectedMusicalKey, currentStepIndex, mode);
-
-      if (sequenceStep === null) return;
-
-      // Step index, chord identity and notes in one batch, so the ribbon, staff, wheel and the
-      // audio (which is keyed off the notes) all land in the same render.
-      const { notesToPlay, chordRef } = sequenceStep.step;
+  const showScaleStep = useCallback<SequenceStepVisual>(
+    (stepIndex, notes, chordRef) => {
       markStepStart();
-      setActiveStepIndex(currentStepIndex);
-      setSelectionFromSequence(notesToPlay, chordRef);
-
-      if (sequenceStep.nextStepIndex === undefined) {
-        stopAllTimers();
-        scheduleSequenceCompletion(getPlaybackDuration(mode));
-        return;
-      }
-
-      scaleIndexRef.current = sequenceStep.nextStepIndex;
+      setActiveStepIndex(stepIndex);
+      setSelectionFromSequence(notes, chordRef);
     },
-    [
-      selectedMusicalKey,
-      scalePlaybackMode,
-      setSelectionFromSequence,
-      stopAllTimers,
-      scheduleSequenceCompletion,
-      getPlaybackDuration,
-    ],
+    [setSelectionFromSequence],
   );
 
-  const playProgressionStep = useCallback(() => {
-    const steps = preparedProgressionStepsRef.current;
-    const tempo = chordProgressionTempoRef.current;
-    if (!steps?.length || tempo == null) return;
+  const showProgressionStep = useCallback<SequenceStepVisual>(
+    (stepIndex, notes) => {
+      markStepStart();
+      setActiveStepIndex(stepIndex);
+      setNotesDirectly(notes);
+    },
+    [setNotesDirectly],
+  );
 
-    const i = chordIndexRef.current;
-    const step = steps[i];
-    markStepStart();
-    setActiveStepIndex(i);
-    setNotesDirectly(step.value);
-
-    const isLastChord = i === steps.length - 1;
-    if (isLastChord) {
-      stopAllTimers();
-      scheduleSequenceCompletion(
-        RhythmUtils.chordDurationMs(tempo, step.noteLength, step.rhythmDots),
-      );
-      return;
-    }
-
-    chordIndexRef.current = i + 1;
-    const delayAfterThisChord = RhythmUtils.chordDurationMs(
-      tempo,
-      step.noteLength,
-      step.rhythmDots,
-    );
-    stopAllTimers();
-    const generationWhenScheduled = chordPlaybackGenerationRef.current;
-    sequenceTimerRef.current = setTimeout(() => {
-      if (chordPlaybackGenerationRef.current !== generationWhenScheduled) return;
-      playProgressionStep();
-    }, delayAfterThisChord);
-  }, [setNotesDirectly, stopAllTimers, scheduleSequenceCompletion]);
-
-  const resumeCurrentPlayback = useCallback(() => {
-    const playbackDuration = getPlaybackDuration(scalePlaybackMode);
-    if (globalMode === GlobalMode.Scales) {
-      sequenceTimerRef.current = setInterval(() => playScaleStep(), playbackDuration);
-    } else if (globalMode === GlobalMode.ChordProgressions) {
-      const steps = preparedProgressionStepsRef.current;
-      const tempo = chordProgressionTempoRef.current;
-      const nextIndex = chordIndexRef.current;
-      const previousStep = nextIndex > 0 ? steps?.[nextIndex - 1] : undefined;
-      const delayBeforeNextChord =
-        previousStep != null && tempo != null
-          ? RhythmUtils.chordDurationMs(tempo, previousStep.noteLength, previousStep.rhythmDots)
-          : 0;
-      const generationWhenScheduled = chordPlaybackGenerationRef.current;
-      sequenceTimerRef.current = setTimeout(() => {
-        if (chordPlaybackGenerationRef.current !== generationWhenScheduled) return;
-        playProgressionStep();
-      }, delayBeforeNextChord);
-    }
-    setPlaybackState(PlaybackState.SequencePlaying);
-  }, [
-    globalMode,
-    playScaleStep,
-    playProgressionStep,
-    setPlaybackState,
-    scalePlaybackMode,
-    getPlaybackDuration,
-  ]);
-
-  // Start functions - define these after step functions
   const startScalePlayback = useCallback(
     (modeOverride?: ScalePlaybackMode) => {
       if (!selectedMusicalKey || !isAudioInitialized) return;
-
       const mode = modeOverride ?? scalePlaybackMode;
 
-      abortPlayback({ clearSelection: true });
+      stopScheduledSequence();
+      releasePolySynthVoicesNow();
       setActiveStepIndex(null);
-      scaleIndexRef.current = 0;
+      clearSequenceSelection();
       setPlaybackState(PlaybackState.SequencePlaying);
 
-      const playbackDuration = getPlaybackDuration(mode);
-      sequenceTimerRef.current = setTimeout(() => {
-        playScaleStep(mode);
-        sequenceTimerRef.current = setInterval(() => playScaleStep(), playbackDuration);
-      }, SCALE_AUDIO_WARMUP_MS);
+      startScheduledSequence(
+        buildScaleSchedule(selectedMusicalKey, mode, showScaleStep, handleSequenceComplete),
+      );
     },
     [
       selectedMusicalKey,
       isAudioInitialized,
-      setPlaybackState,
-      playScaleStep,
       scalePlaybackMode,
-      getPlaybackDuration,
-      abortPlayback,
+      clearSequenceSelection,
+      setPlaybackState,
+      showScaleStep,
+      handleSequenceComplete,
     ],
   );
 
@@ -257,22 +122,29 @@ export const useSequencePlayback = ({
     if (!selectedProgression || !selectedMusicalKey) return;
 
     const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
-    preparedProgressionStepsRef.current = prepared.steps;
-    chordProgressionTempoRef.current = prepared.tempo;
 
-    abortPlayback({ releaseVoices: true });
-    chordIndexRef.current = 0;
-    playProgressionStep();
+    stopScheduledSequence();
+    releasePolySynthVoicesNow();
+    setActiveStepIndex(null);
     setPlaybackState(PlaybackState.SequencePlaying);
+
+    startScheduledSequence(
+      buildProgressionSchedule(
+        prepared,
+        scalePlaybackMode,
+        showProgressionStep,
+        handleSequenceComplete,
+      ),
+    );
   }, [
     selectedProgression,
     selectedMusicalKey,
+    scalePlaybackMode,
     setPlaybackState,
-    playProgressionStep,
-    abortPlayback,
+    showProgressionStep,
+    handleSequenceComplete,
   ]);
 
-  // Unified playback functions - define these last
   const startSequencePlayback = useCallback(
     (options?: StartSequencePlaybackOptions) => {
       if (globalMode === GlobalMode.Scales) {
@@ -285,23 +157,29 @@ export const useSequencePlayback = ({
   );
 
   const pauseSequencePlayback = useCallback(() => {
-    if (playbackState === PlaybackState.SequencePlaying) {
-      stopAllTimers();
-      setPlaybackState(PlaybackState.SequencePaused);
-    }
-  }, [playbackState, stopAllTimers, setPlaybackState]);
+    if (playbackState !== PlaybackState.SequencePlaying) return;
+    // Notes already inside the scheduler's lookahead window are committed to the audio graph and
+    // will still sound; the alternative, cutting them off, is the more jarring of the two.
+    pauseScheduledSequence();
+    setPlaybackState(PlaybackState.SequencePaused);
+  }, [playbackState, setPlaybackState]);
 
   const resumeSequencePlayback = useCallback(() => {
-    if (playbackState === PlaybackState.SequencePaused) {
-      resumeCurrentPlayback();
-    }
-  }, [playbackState, resumeCurrentPlayback]);
+    if (playbackState !== PlaybackState.SequencePaused) return;
+    resumeScheduledSequence();
+    setPlaybackState(PlaybackState.SequencePlaying);
+  }, [playbackState, setPlaybackState]);
 
   const stopSequencePlayback = useCallback(() => {
-    abortPlayback({ clearSelection: true, releaseVoices: true });
+    stopScheduledSequence();
+    releasePolySynthVoicesNow();
     setActiveStepIndex(null);
+    clearSequenceSelection();
     setPlaybackState(PlaybackState.SequenceComplete);
-  }, [abortPlayback, setPlaybackState]);
+  }, [clearSequenceSelection, setPlaybackState]);
+
+  /** The Transport outlives this hook, so an unmount mid-run would otherwise keep playing. */
+  useEffect(() => stopScheduledSequence, []);
 
   useEffect(() => {
     if (selectedProgression == null) {

@@ -50,6 +50,20 @@ jest.mock("tone", () => ({
       value: 0,
     },
   }),
+  // Singleton-like, as in Tone itself: every call hands back the same transport/draw.
+  getTransport: jest.fn().mockReturnValue({
+    start: jest.fn(),
+    pause: jest.fn(),
+    stop: jest.fn(),
+    cancel: jest.fn(),
+    scheduleOnce: jest.fn(),
+    position: 0,
+  }),
+  getDraw: jest.fn().mockReturnValue({
+    anticipation: 0.008,
+    schedule: jest.fn(),
+  }),
+  now: jest.fn().mockReturnValue(0),
   start: jest.fn().mockResolvedValue(undefined),
 }));
 
