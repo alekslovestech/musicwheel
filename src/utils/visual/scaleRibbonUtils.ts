@@ -23,15 +23,10 @@ export type ScaleRibbonTick = {
 };
 
 /**
- * A ribbon has one of three real shapes, not one shape with optional fields: Steps mode marks
- * bare degree ticks connected by colored segments ("ticks"); the plain Notes baseline marks bare
- * labels with nothing to color them by ("labels" - a single note has no interval to derive a
- * color from, so every swatch would paint the same neutral default); every other mode marks
- * colored swatches with no segments between them ("swatches"). Modeling this as a union - rather
- * than `color?` on notes and an always-present-but-sometimes-empty `steps` array - means a
- * "ticks" ribbon's notes can never claim a color nobody reads, a "labels" ribbon can never carry
- * a color that isn't real, and a "swatches" ribbon's notes can never omit a color the layout
- * needs; {@link ScaleRibbon} switches on `kind` instead of sniffing `steps.length > 0`.
+ * Three shapes, not one shape with optional fields: bare ticks plus colored segments ("ticks");
+ * bare labels with no color to show ("labels" - a single note has no interval to derive one
+ * from); colored swatches with no segments ("swatches"). The union means a ribbon can't claim a
+ * color it doesn't have or omit one the layout needs.
  */
 export type ScaleRibbonData =
   | { title: string; kind: "ticks"; notes: ScaleRibbonTick[]; steps: ScaleRibbonMark[] }
@@ -54,13 +49,7 @@ export function buildScaleRibbonData(
   }
 }
 
-/**
- * Step segments are an opt-in annotation on the Notes ribbon, not a mode of their own. W-H is a
- * third measuring frame - each note against its neighbour - competing with the two the app is
- * actually built to teach (each note against the tonic; each note against its chord tones), so
- * it stays off by default rather than greeting every first-time user. No other lens is heard as
- * steps between consecutive degrees, so the toggle has no effect outside Notes.
- */
+/** Step segments are an opt-in annotation on the Notes ribbon only, off by default. */
 export function showsStepSegments(
   scalePlaybackMode: ScalePlaybackMode,
   showStepAnnotations: boolean,
@@ -88,12 +77,8 @@ export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonMark[] {
   return [...bySemitones.entries()].sort(([a], [b]) => a - b).map(([, step]) => step);
 }
 
-/**
- * Matches the raw distance from the root, not its interval class: folding to a class turns
- * every interval above the tritone into its inversion, so Hungarian Minor's ♭6 and 7 were
- * labelled `M3` and `m2` - intervals the scale does not contain. Color still comes from the
- * class (inversions share a hue), so only the label changes.
- */
+/** Raw distance from the root, not its interval class - folding to a class would relabel
+ *  intervals above the tritone as their inversions. */
 export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroupingId> {
   const offsets = getScalePatternOffsets(key);
 
@@ -106,11 +91,8 @@ export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroup
   return types;
 }
 
-/**
- * Steps are measured, not spelled. Interval names were tried here and dropped: they carry a
- * harmonic function a step does not have, so Hungarian Minor's E♭-F♯ and A♭-B - augmented
- * 2nds, spelled as 2nds - came out as `m3`, the right size under the wrong name.
- */
+/** Steps are measured, not spelled - interval names would carry a harmonic function a step
+ *  doesn't have (e.g. an augmented 2nd mislabeled `m3`, the right size under the wrong name). */
 function stepLabel(semitones: number): string {
   if (semitones === 1) return "H";
   if (semitones === 2) return "W";
@@ -146,19 +128,8 @@ function buildStepSegments(offsets: number[]): ScaleRibbonMark[] {
 
 /**
  * Scale degrees with their accidentals - `1 ♭2 ♭3 4 5 ♭6 ♭7 8` for Phrygian - closing on the
- * octave tonic.
- *
- * Every non-chordal lens uses these same labels, deliberately. Switching lens should change what
- * you *hear*, not what things are *called*: if the ribbon renumbered itself between Notes and
- * Drone, a listener could not tell which of the two changes produced the effect. Plain ordinals
- * (`1 2 3...`) were tried for the Notes baseline and dropped - they count positions without
- * saying anything about the notes, the same emptiness as W-H one layer down, and in Phrygian the
- * third degree really is flat. The parallel-mode comparison this notation exists for is made by
- * switching *key* within one lens (C Ionian `1 2 3 4 5 6 7` against C Phrygian `1 ♭2 ♭3 4 5 ♭6
- * ♭7`), where the mode is the only variable.
- *
- * Letter names live on the keyboards, which carry the absolute axis; the ribbon carries the
- * relative one, and neither repeats the other.
+ * octave tonic. Every non-chordal lens uses these same labels: switching lens should change what
+ * you hear, not what things are called.
  */
 function scaleDegreeLabels(key: MusicalKey): string[] {
   const degrees = Array.from({ length: key.scalePatternLength }, (_, i) =>
@@ -188,8 +159,7 @@ function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
-  // Same labels as the Notes ribbon; only the color is new, and it is the thing the drone adds -
-  // each degree colored by the interval it forms against the pedal tone.
+  // Same labels as the Notes ribbon; color is the only thing the drone adds.
   const notes: ScaleRibbonMark[] = scaleDegreeLabels(key).map((label, i) => ({
     label,
     color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, i),
@@ -214,10 +184,7 @@ function buildChordRibbon(
       key.scaleModeInfo,
       isSeventh,
     );
-    // Numeral only in both modes: the ribbon is tight on space, and a quality marker
-    // (full or abbreviated) would either overflow or, for a bare "7", misrepresent chords
-    // with no literal 7th (e.g. Minor6, AugMajor7). Color carries quality here instead;
-    // full quality is reserved for chord display and the legend, where there is room.
+    // Numeral only - the ribbon is tight on space; color carries quality instead.
     return RomanChordFormatter.formatRomanNumeralOnly(romanChord);
   };
 

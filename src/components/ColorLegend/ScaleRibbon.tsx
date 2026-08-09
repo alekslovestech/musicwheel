@@ -65,11 +65,6 @@ export function ScaleRibbon({
   );
 }
 
-/**
- * A ghost affordance rather than a mode button: W-H is an annotation on the Notes ribbon, and
- * headlining it would put the neighbour-relative frame in front of the two frames that carry the
- * teaching. Available for comparing scale shapes independent of key; not the first thing seen.
- */
 function StepAnnotationToggle({
   checked,
   onChange,
@@ -111,11 +106,8 @@ function NotesRibbonLayout({
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
-  // No outer gap: every ribbon layout gives its notes equal-width flex-1 cells with zero gap
-  // between them, so a note's horizontal center is always index+0.5 slots across the row. That
-  // arithmetic has to hold identically here, in LabelsRibbonLayout, and in the tick cells inside
-  // StepsRibbonLayout - it's what lets the connector overlay there compute positions that line up
-  // with swatch and label centers with no toggle-dependent drift.
+  // No outer gap - every layout uses equal-width flex-1 cells with zero gap, so a note's center
+  // is always at index+0.5 slots. See StepsRibbonLayout, which depends on that being exact.
   return (
     <div className="flex items-end">
       {notes.map((note, index) => (
@@ -131,13 +123,7 @@ function NotesRibbonLayout({
   );
 }
 
-/**
- * The plain baseline: the same tick-and-circle treatment as the W-H view, minus the connector
- * row above it. A single note has no interval to derive a color from, so there's nothing to
- * annotate - but the active step still deserves the same circled callout it gets everywhere
- * else, rather than reverting to flat text the moment W-H is off. Turning W-H on adds the
- * connector row (see StepsRibbonLayout); it doesn't change how a note itself is drawn.
- */
+/** The plain baseline - same tick-and-circle treatment as the W-H view, minus the connector row. */
 function LabelsRibbonLayout({
   notes,
   activeNoteIndex,
@@ -153,20 +139,12 @@ function LabelsRibbonLayout({
 }
 
 /**
- * Notes sit in equal-width flex-1 cells, exactly like NotesRibbonLayout and LabelsRibbonLayout -
- * that's what makes note i's center land at the same x position in every layout. Connectors
- * can't be additional flex siblings interleaved between notes (that would make this row 2N-1
- * cells instead of N, shrinking every cell and shifting every center relative to the other two
- * layouts); instead they're an absolutely positioned overlay, one per step, each spanning exactly
- * from note index's center to note (index+1)'s center: with N equal zero-gap cells, note k's
- * center sits at (k+0.5)/N of the row's width, so a box positioned at left=(index+0.5)/N with
- * width=1/N starts precisely on one note's center and ends precisely on the next's - no
- * measurement of the actual note row required, only the count.
- *
- * The colored segment isn't given a row of its own: it's pinned to the same top edge the tick
- * marks start from, so it reads as sitting directly between two tick marks rather than as a
- * whole separate block stacked above them. Only the interval label ("W"/"H"/"1½") - now above
- * the segment rather than below it - costs real extra height; the segment itself is free.
+ * Connectors can't be flex siblings interleaved between notes - that would make this row 2N-1
+ * cells instead of N and shift every center relative to the other layouts. Instead each is an
+ * absolute box at left=(index+0.5)/N, width=1/N: with N equal zero-gap cells, that starts exactly
+ * on one note's center and ends exactly on the next's. It's pinned to the same top edge the tick
+ * marks start from rather than given a row of its own, so only the interval label above it costs
+ * real height.
  */
 function StepsRibbonLayout({
   notes,
@@ -223,7 +201,6 @@ function StepsRibbonLayout({
   );
 }
 
-/** The note row shared by LabelsRibbonLayout and StepsRibbonLayout - same ticks either way. */
 function NoteTickRow({
   notes,
   activeNoteIndex,
@@ -233,7 +210,6 @@ function NoteTickRow({
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
-  // No outer gap - see the note on NotesRibbonLayout.
   return (
     <div className="flex items-end">
       {notes.map((note, index) => (
@@ -339,9 +315,7 @@ function RibbonNoteTick({
   isActive: boolean;
   onSelect?: () => void;
 }) {
-  // Same min-w-0 flex-1 cell as RibbonNoteSwatch and RibbonNoteLabel - a note's center has to
-  // land in the same place whether the note holds a swatch, a bare label, or this tick, since
-  // that's the position the connector overlay in StepsRibbonLayout is computed against.
+  // Same min-w-0 flex-1 cell as RibbonNoteSwatch - centers must match across layouts.
   return (
     <RibbonNoteCell
       onSelect={onSelect}
