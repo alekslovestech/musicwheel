@@ -11,27 +11,15 @@ import { RomanChordFormatter } from "@/utils/formatters/RomanChordFormatter";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { noteHighlightColor } from "@/utils/visual/noteHighlightColor";
 
-/** A labeled, colored ribbon mark - a step segment, or a note whose color is shown. */
-export type ScaleRibbonMark = {
+/** A step segment, or a note whose color is shown. */
+export type LabelWithColor = {
   label: string;
   color: chroma.Color;
 };
 
-/** A degree marker with no color of its own - Steps mode; color lives on the segments between ticks. */
-export type ScaleRibbonTick = {
-  label: string;
-};
-
-/**
- * Three shapes, not one shape with optional fields: bare ticks plus colored segments ("ticks");
- * bare labels with no color to show ("labels" - a single note has no interval to derive one
- * from); colored swatches with no segments ("swatches"). The union means a ribbon can't claim a
- * color it doesn't have or omit one the layout needs.
- */
 export type ScaleRibbonData =
-  | { title: string; kind: "ticks"; notes: ScaleRibbonTick[]; steps: ScaleRibbonMark[] }
-  | { title: string; kind: "labels"; notes: ScaleRibbonTick[] }
-  | { title: string; kind: "swatches"; notes: ScaleRibbonMark[] };
+  | { title: string; kind: "labels"; notes: string[]; steps?: LabelWithColor[] }
+  | { title: string; kind: "swatches"; notes: LabelWithColor[] };
 
 export function buildScaleRibbonData(
   key: MusicalKey,
@@ -45,7 +33,7 @@ export function buildScaleRibbonData(
     case ScalePlaybackMode.Seventh:
       return buildChordRibbon(key, scalePlaybackMode);
     default:
-      return showStepAnnotations ? buildStepsRibbon(key) : buildNotesRibbon(key);
+      return buildNotesRibbon(key, showStepAnnotations);
   }
 }
 
@@ -57,14 +45,14 @@ export function showsStepSegments(
   return showStepAnnotations && scalePlaybackMode === ScalePlaybackMode.SingleNote;
 }
 
-export function getStepSegmentsForScale(key: MusicalKey): ScaleRibbonMark[] {
+export function getStepSegmentsForScale(key: MusicalKey): LabelWithColor[] {
   return buildStepSegments(getScalePatternOffsets(key));
 }
 
 /** Distinct step distances in the scale, sorted by ascending semitones. */
-export function getStepColorLegendItems(key: MusicalKey): ScaleRibbonMark[] {
+export function getStepColorLegendItems(key: MusicalKey): LabelWithColor[] {
   const offsets = getScalePatternOffsets(key);
-  const bySemitones = new Map<number, ScaleRibbonMark>();
+  const bySemitones = new Map<number, LabelWithColor>();
   offsets.forEach((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
     if (!bySemitones.has(semitones)) {
@@ -116,7 +104,7 @@ function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {
   return subChromatic(offsets[nextIndex], offsets[fromIndex]);
 }
 
-function buildStepSegments(offsets: number[]): ScaleRibbonMark[] {
+function buildStepSegments(offsets: number[]): LabelWithColor[] {
   return offsets.map((_, i) => {
     const semitones = getStepSemitonesBetween(offsets, i);
     return {
@@ -140,27 +128,15 @@ function scaleDegreeLabels(key: MusicalKey): string[] {
   return [...degrees, "8"];
 }
 
-function degreeTicks(key: MusicalKey): ScaleRibbonTick[] {
-  return scaleDegreeLabels(key).map((label) => ({ label }));
-}
-
-function buildNotesRibbon(key: MusicalKey): ScaleRibbonData {
-  return { title: "Notes", kind: "labels", notes: degreeTicks(key) };
-}
-
-/** The Notes ribbon with W-H connectors drawn in; the degree labels stay, color joins the steps. */
-function buildStepsRibbon(key: MusicalKey): ScaleRibbonData {
-  return {
-    title: "Notes",
-    kind: "ticks",
-    notes: degreeTicks(key),
-    steps: getStepSegmentsForScale(key),
-  };
+function buildNotesRibbon(key: MusicalKey, showStepAnnotations: boolean): ScaleRibbonData {
+  const notes = scaleDegreeLabels(key);
+  if (!showStepAnnotations) return { title: "Notes", kind: "labels", notes };
+  return { title: "Notes", kind: "labels", notes, steps: getStepSegmentsForScale(key) };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
   // Same labels as the Notes ribbon; color is the only thing the drone adds.
-  const notes: ScaleRibbonMark[] = scaleDegreeLabels(key).map((label, i) => ({
+  const notes: LabelWithColor[] = scaleDegreeLabels(key).map((label, i) => ({
     label,
     color: noteHighlightColor(key, ScalePlaybackMode.DronedSingleNote, i),
   }));
@@ -188,7 +164,7 @@ function buildChordRibbon(
     return RomanChordFormatter.formatRomanNumeralOnly(romanChord);
   };
 
-  const notes: ScaleRibbonMark[] = Array.from({ length: key.scalePatternLength }, (_, i) => ({
+  const notes: LabelWithColor[] = Array.from({ length: key.scalePatternLength }, (_, i) => ({
     label: romanLabelAtDegree(i),
     color: noteHighlightColor(key, mode, i),
   }));

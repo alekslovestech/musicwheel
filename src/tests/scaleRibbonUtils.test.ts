@@ -5,22 +5,28 @@ import {
   buildScaleRibbonData,
   getIntervalTypesForScaleFromRoot,
   getStepColorLegendItems,
+  LabelWithColor,
   showsStepSegments,
 } from "@/utils/visual/scaleRibbonUtils";
 import { GreekTestConstants } from "@/tests/utils/GreekTestConstants";
+
+// "labels" ribbons carry bare label strings (with or without step annotations); "swatches"
+// ribbons carry {label, color}.
+const noteLabel = (note: string | LabelWithColor): string =>
+  typeof note === "string" ? note : note.label;
 
 describe("buildScaleRibbonData", () => {
   const constants = GreekTestConstants.getInstance();
   const cIonian = constants.C_IONIAN_KEY;
 
   const labelsFor = (key: typeof cIonian, mode: ScalePlaybackMode): string[] =>
-    buildScaleRibbonData(key, mode).notes.map((note) => note.label);
+    buildScaleRibbonData(key, mode).notes.map(noteLabel);
 
   describe("Seventh mode", () => {
     // Numeral-only formatting (dropping chord quality) is exercised at the formatter level in
     // RomanDisplay.test.ts / RomanChordFormatter.test.ts; here we only need the ribbon's own
     // shape guarantees, not the spelling of any particular numeral.
-    test("is a swatch ribbon, not a tick ribbon - no step segments at all", () => {
+    test("is a swatch ribbon - no step segments at all", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
       // "swatches" ribbons carry no `steps` field - there is nothing to have length 0.
       expect(ribbon.kind).toBe("swatches");
@@ -30,7 +36,7 @@ describe("buildScaleRibbonData", () => {
     test("every degree carries a color", () => {
       const ribbon = buildScaleRibbonData(cIonian, ScalePlaybackMode.Seventh);
       // The "swatches" type guarantees every note has a color; this pins the builder to that
-      // variant rather than "ticks", where the compiler would not require one.
+      // variant rather than "labels", where color is optional and lives on steps instead.
       if (ribbon.kind !== "swatches") throw new Error("expected a swatches ribbon");
       expect(ribbon.notes.every((note) => note.color !== undefined)).toBe(true);
     });
@@ -61,7 +67,6 @@ describe("buildScaleRibbonData", () => {
     });
   });
 
-  
   describe("Notes ribbon", () => {
     test("carries no color - a single note has no interval to derive one from", () => {
       // A colored swatch here would paint the same neutral default on every note (no interval,
@@ -75,10 +80,18 @@ describe("buildScaleRibbonData", () => {
       // The toggle overlays step connectors; it does not relabel the ribbon.
       const plain = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
       const annotated = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote, true);
-      expect(annotated.notes.map((note) => note.label)).toEqual(
-        plain.notes.map((note) => note.label),
-      );
+      expect(annotated.notes.map(noteLabel)).toEqual(plain.notes.map(noteLabel));
       expect(annotated.title).toBe(plain.title);
+    });
+
+    test("populates steps only when the W-H annotation is on", () => {
+      const plain = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote);
+      const annotated = buildScaleRibbonData(cIonian, ScalePlaybackMode.SingleNote, true);
+      if (plain.kind !== "labels" || annotated.kind !== "labels") {
+        throw new Error("expected labels ribbons");
+      }
+      expect(plain.steps).toBeUndefined();
+      expect(annotated.steps).toHaveLength(plain.notes.length - 1);
     });
   });
 
