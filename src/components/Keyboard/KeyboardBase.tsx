@@ -65,7 +65,7 @@ function applyScaleStepAtDegree(
   }
 }
 
-export const CIRCLE_RADIUS = 5;
+export const SCALE_BOUNDARY_CIRCLE_RADIUS = 5;
 
 export interface PianoKeyBaseProps {
   actualIndex: ActualIndex;

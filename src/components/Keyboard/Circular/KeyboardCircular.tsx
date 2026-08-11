@@ -10,7 +10,7 @@ import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/Cartesian
 
 import { useMusical } from "@/contexts/MusicalContext";
 
-import { CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
+import { SCALE_BOUNDARY_CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
 
 import { CircularVisualizations } from "./CircularVisualizations";
 import { PianoKeyCircular } from "./PianoKeyCircular";
@@ -34,7 +34,7 @@ export const KeyboardCircular = () => {
   const showScaleStepIntervals =
     isScales && showsStepSegments(scalePlaybackMode, showStepAnnotations);
 
-  const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + CIRCLE_RADIUS * 2;
+  const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + SCALE_BOUNDARY_CIRCLE_RADIUS * 2;
   const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
   const coords = [-VIEWPORT_RADIUS, -VIEWPORT_RADIUS, VIEWPORT_RADIUS * 2, VIEWPORT_RADIUS * 2];
   const chordColor = ColorUtils.getColorForIndices(selectedNoteIndices);
@@ -73,7 +73,7 @@ export const KeyboardCircular = () => {
       selectedMusicalKey.tonicIndex,
     );
     const point_end_circle = PolarMath.getCartesianFromPolar(
-      OUTER_RADIUS + CIRCLE_RADIUS,
+      OUTER_RADIUS + SCALE_BOUNDARY_CIRCLE_RADIUS,
       startOfTonicAngle,
       true,
     );
@@ -81,7 +81,7 @@ export const KeyboardCircular = () => {
     return [
       <g className="stroke-keys-scaleBoundaryColor stroke-2" key="scale-boundrary-circular">
         <line x1={line.start.x} y1={line.start.y} x2={line.end.x} y2={line.end.y} />
-        <circle cx={point_end_circle.x} cy={point_end_circle.y} r={CIRCLE_RADIUS} fill="none" />
+        <circle cx={point_end_circle.x} cy={point_end_circle.y} r={SCALE_BOUNDARY_CIRCLE_RADIUS} fill="none" />
       </g>,
     ];
   };
