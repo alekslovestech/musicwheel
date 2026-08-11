@@ -4,7 +4,8 @@
       "PowerShell(npx prettier *)",
       "PowerShell(npx eslint *)",
       "Bash(npx prettier *)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(git stash *)"
     ]
   }
 }

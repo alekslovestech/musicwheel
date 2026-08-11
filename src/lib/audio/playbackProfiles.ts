@@ -1,6 +1,6 @@
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
-type SynthEnvelope = {
+export type SynthEnvelope = {
   attack: number;
   decay: number;
   sustain: number;

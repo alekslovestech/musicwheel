@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { Factory } from "vexflow";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Factory, type BoundingBox, type Stave } from "vexflow";
 
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { COMMON_STYLES } from "@/lib/design";
@@ -15,14 +15,20 @@ import { SpellingUtils } from "@/utils/SpellingUtils";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { StaffUtils, SCALE_STAFF_DRAW_OPTIONS } from "@/utils/StaffUtils";
-import { VexFlowUtils } from "@/utils/VexFlowUtils";
+import { StaffHighlightOverlay, VexFlowUtils } from "@/utils/VexFlowUtils";
 import { chordActiveHighlightFor } from "@/utils/visual/NoteGroupingColorRegistry";
 import { useGlobalMode, useIsChordProgressionsMode, useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { resolveSpellingContext } from "@/utils/spelling/SpellingContext";
 
+/** Where the active-step background sits, and what colour it takes. */
+type StaffHighlight = { index: number | null; fill?: string };
+
+const NO_HIGHLIGHT: StaffHighlight = { index: null };
+
 export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
   const staffDivRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<StaffHighlightOverlay | null>(null);
   const { selectedNoteIndices, selectedMusicalKey, currentChordRef } = useMusical();
   const {
     selectedProgression,
@@ -35,70 +41,124 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
   const globalMode = useGlobalMode();
   const border = useBorder();
 
-  useEffect(() => {
-    if (!staffDivRef.current || !containerRef.current) return;
+  /**
+   * Step indices making up the bar on screen. This changes only when playback crosses into
+   * another display row, so keying the score rebuild off it - rather than off activeStepIndex -
+   * skips the rebuild for every step within a bar.
+   */
+  const progressionRow = useMemo(() => {
+    if (!isChordProgressionsMode || selectedProgression == null || activeStepIndex == null) {
+      return null;
+    }
+    const progression = ChordProgressionLibrary.getProgression(selectedProgression);
+    const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
+    return new ChordProgressionFormatter(progression).stepIndicesForDisplayRow(
+      activeStepIndex,
+      isCompact,
+    );
+  }, [isChordProgressionsMode, selectedProgression, activeStepIndex]);
 
-    const staffDiv = staffDivRef.current;
-    staffDiv.innerHTML = "";
+  const { index: highlightIndex, fill: highlightFill } = useMemo<StaffHighlight>(() => {
+    if (progressionRow && selectedProgression != null && activeStepIndex != null) {
+      const progression = ChordProgressionLibrary.getProgression(selectedProgression);
+      const activeRoman = progression.progression[activeStepIndex]?.value;
+      return {
+        index: progressionRow.indexOf(activeStepIndex),
+        fill: chordActiveHighlightFor(activeRoman?.chordType).css(),
+      };
+    }
 
-    const containerWidth = containerRef.current.clientWidth;
-    const containerHeight = containerRef.current.clientHeight;
+    if (isScalesMode) {
+      const isScalePlaybackActive =
+        playbackState === PlaybackState.SequencePlaying ||
+        playbackState === PlaybackState.SequencePaused;
 
-    const factory = new Factory({
-      renderer: {
-        elementId: staffDiv.id,
-        width: containerWidth,
-        height: containerHeight,
-      },
-    });
+      const stepIndex = isScalePlaybackActive
+        ? activeStepIndex
+        : StaffUtils.findScaleStepIndexForSelection(
+            selectedMusicalKey,
+            scalePlaybackMode,
+            selectedNoteIndices,
+          );
 
+      if (stepIndex == null || stepIndex < 0) return NO_HIGHLIGHT;
+      return {
+        index: stepIndex,
+        fill: StaffUtils.scaleStaffHighlightColor(selectedMusicalKey, scalePlaybackMode, stepIndex),
+      };
+    }
+
+    return NO_HIGHLIGHT;
+  }, [
+    progressionRow,
+    selectedProgression,
+    activeStepIndex,
+    isScalesMode,
+    playbackState,
+    selectedMusicalKey,
+    scalePlaybackMode,
+    selectedNoteIndices,
+  ]);
+
+  /**
+   * Everything the drawn score is made of, and nothing the highlight alone depends on. In scales
+   * mode the bar is the whole scale, so stepping through it leaves this untouched and the score
+   * survives the step - only the overlay moves.
+   */
+  const scoreKey = useMemo(() => {
+    if (progressionRow) {
+      return `progression|${selectedProgression}|${selectedMusicalKey}|${progressionRow.join(",")}`;
+    }
+    if (isScalesMode) {
+      return `scale|${selectedMusicalKey}|${scalePlaybackMode}`;
+    }
+    const chordRefKey = currentChordRef
+      ? `${currentChordRef.rootNote}:${currentChordRef.id}:${currentChordRef.inversionIndex}`
+      : "";
+    return `freeform|${globalMode}|${selectedMusicalKey}|${selectedNoteIndices.join(",")}|${chordRefKey}`;
+  }, [
+    progressionRow,
+    selectedProgression,
+    isScalesMode,
+    selectedMusicalKey,
+    scalePlaybackMode,
+    globalMode,
+    selectedNoteIndices,
+    currentChordRef,
+  ]);
+
+  /**
+   * Read through refs by the rebuild effect, which keys off {@link scoreKey} alone: the closure
+   * changes every render, but only a scoreKey change means a different score.
+   */
+  const drawScoreRef = useRef<(factory: Factory, stave: Stave) => (BoundingBox | null)[] | null>(
+    () => null,
+  );
+  const highlightRef = useRef<StaffHighlight>(NO_HIGHLIGHT);
+  highlightRef.current = { index: highlightIndex, fill: highlightFill };
+
+  drawScoreRef.current = (factory, stave) => {
     const context = factory.getContext();
-
-    const stave = VexFlowUtils.createStaveForContainer(factory, containerWidth);
-
     const staffSpellingKey = selectedMusicalKey.getStaffSpellingKey();
-    const keySignature = VexFlowFormatter.getKeySignatureForVex(staffSpellingKey);
-    stave.addClef("treble").addKeySignature(keySignature);
+    stave.addClef("treble").addKeySignature(
+      VexFlowFormatter.getKeySignatureForVex(staffSpellingKey),
+    );
     stave.setContext(context).draw();
 
-    const progressionBarMode =
-      isChordProgressionsMode && selectedProgression != null && activeStepIndex != null;
-
-    if (progressionBarMode) {
-      const progression = ChordProgressionLibrary.getProgression(selectedProgression);
-      const cpf = new ChordProgressionFormatter(progression);
-      const activeRoman = progression.progression[activeStepIndex]?.value;
-      const activeChordBg = chordActiveHighlightFor(activeRoman?.chordType).css();
-
-      const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
-      const isCompact = PROGRESSION_REGISTRY[selectedProgression].isPattern;
-      const stepIndicesInRow = cpf.stepIndicesForDisplayRow(
-        activeStepIndex,
-        isCompact,
-      );
-
+    if (progressionRow) {
+      const prepared = prepareChordProgressionSequence(selectedProgression!, selectedMusicalKey);
       const steps = StaffUtils.buildDuratedChordStepsForBar(
         prepared,
-        stepIndicesInRow,
+        progressionRow,
         staffSpellingKey,
       );
 
-      if (steps.length === 0) return;
-      const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
-      const highlightIndex = stepIndicesInRow.indexOf(activeStepIndex);
-      if (highlightIndex >= 0) {
-        VexFlowUtils.drawVoiceWithHighlights(
-          factory,
-          stave,
-          notes,
-          highlightIndex,
-          activeChordBg,
-        );
-      } else {
-        VexFlowUtils.drawVoice(factory, stave, notes);
-      }
-
-      return;
+      if (steps.length === 0) return null;
+      return VexFlowUtils.drawVoice(
+        factory,
+        stave,
+        VexFlowFormatter.createStaveChordNotes(steps, factory),
+      );
     }
 
     if (isScalesMode) {
@@ -108,43 +168,16 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
         staffSpellingKey,
       );
 
-      if (steps.length === 0) return;
-
-      const notes = VexFlowFormatter.createStaveChordNotes(steps, factory);
-
-      const isScalePlaybackActive =
-        playbackState === PlaybackState.SequencePlaying ||
-        playbackState === PlaybackState.SequencePaused;
-
-      const highlightIndex = isScalePlaybackActive
-        ? activeStepIndex
-        : StaffUtils.findScaleStepIndexForSelection(
-            selectedMusicalKey,
-            scalePlaybackMode,
-            selectedNoteIndices,
-          );
-
-      if (highlightIndex != null && highlightIndex >= 0) {
-        VexFlowUtils.drawVoiceWithHighlights(
-          factory,
-          stave,
-          notes,
-          highlightIndex,
-          StaffUtils.scaleStaffHighlightColor(
-            selectedMusicalKey,
-            scalePlaybackMode,
-            highlightIndex,
-          ),
-          SCALE_STAFF_DRAW_OPTIONS,
-        );
-      } else {
-        VexFlowUtils.drawVoice(factory, stave, notes, SCALE_STAFF_DRAW_OPTIONS);
-      }
-
-      return;
+      if (steps.length === 0) return null;
+      return VexFlowUtils.drawVoice(
+        factory,
+        stave,
+        VexFlowFormatter.createStaveChordNotes(steps, factory),
+        SCALE_STAFF_DRAW_OPTIONS,
+      );
     }
 
-    if (selectedNoteIndices.length === 0) return;
+    if (selectedNoteIndices.length === 0) return null;
 
     const spelling = resolveSpellingContext({
       globalMode,
@@ -157,25 +190,62 @@ export const StaffRenderer: React.FC<{ style?: React.CSSProperties }> = ({ style
       spelling,
     );
 
-    const notes = VexFlowFormatter.createStaveChordNotes(
-      [makeDurated(notesWithOctaves, 1)],
+    return VexFlowUtils.drawVoice(
       factory,
+      stave,
+      VexFlowFormatter.createStaveChordNotes([makeDurated(notesWithOctaves, 1)], factory),
     );
+  };
 
-    VexFlowUtils.drawVoice(factory, stave, notes);
-  }, [
-    selectedNoteIndices,
-    selectedMusicalKey,
-    currentChordRef,
-    globalMode,
-    isChordProgressionsMode,
-    isScalesMode,
-    selectedProgression,
-    activeStepIndex,
-    scalePlaybackMode,
-    activeStepIndex,
-    playbackState,
-  ]);
+  /** The score is laid out against the container width, so a resize has to rebuild it. */
+  const [resizeGeneration, setResizeGeneration] = useState(0);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+
+    let lastWidth = container.clientWidth;
+    let lastHeight = container.clientHeight;
+    const observer = new ResizeObserver(() => {
+      if (container.clientWidth === lastWidth && container.clientHeight === lastHeight) return;
+      lastWidth = container.clientWidth;
+      lastHeight = container.clientHeight;
+      setResizeGeneration((generation) => generation + 1);
+    });
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!staffDivRef.current || !containerRef.current) return;
+
+    const staffDiv = staffDivRef.current;
+    staffDiv.innerHTML = "";
+    overlayRef.current = null;
+
+    const containerWidth = containerRef.current.clientWidth;
+    const containerHeight = containerRef.current.clientHeight;
+
+    const factory = new Factory({
+      renderer: {
+        elementId: staffDiv.id,
+        width: containerWidth,
+        height: containerHeight,
+      },
+    });
+
+    const stave = VexFlowUtils.createStaveForContainer(factory, containerWidth);
+    const highlightBoxes = drawScoreRef.current(factory, stave);
+    if (!highlightBoxes) return;
+
+    overlayRef.current = StaffHighlightOverlay.create(factory.getContext(), highlightBoxes);
+    // A fresh score starts blank, so it has to be told where the highlight already is.
+    overlayRef.current?.apply(highlightRef.current.index, highlightRef.current.fill);
+  }, [scoreKey, resizeGeneration]);
+
+  useEffect(() => {
+    overlayRef.current?.apply(highlightIndex, highlightFill);
+  }, [highlightIndex, highlightFill]);
 
   return (
     <div

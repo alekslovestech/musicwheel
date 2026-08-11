@@ -6,7 +6,8 @@ import * as Tone from "tone";
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { frequencyFromIndex } from "@/lib/audio/toneFrequency";
-import { setPolySynthVoiceReleaser } from "@/lib/audio/polySynthVoiceBridge";
+import { setSequenceSynth } from "@/lib/audio/polySynthVoiceBridge";
+import { INTERACTIVE_LOOKAHEAD_SEC, setLookAhead } from "@/lib/audio/sequenceScheduler";
 import { resolvePlaybackProfile } from "@/lib/audio/playbackProfiles";
 import { createPolySynth } from "@/lib/audio/toneSynthFactory";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
@@ -22,14 +23,9 @@ export function useAudioPlayer() {
   usePauseSequenceOnHide(playbackState, pauseSequencePlayback);
   usePolySynthVoiceBridge(synthRef);
   usePolySynthLifecycle(synthRef, isAudioInitialized);
-  const { playNote, playSelectedNotes } = useNotePlayback(
-    synthRef,
-    selectedNoteIndices,
-    isAudioInitialized,
-  );
+  const { playSelectedNotes } = useNotePlayback(synthRef, selectedNoteIndices, isAudioInitialized);
 
   return {
-    playNote,
     playSelectedNotes,
     isAudioInitialized,
   };
@@ -41,7 +37,10 @@ async function ensureToneContextRunning(): Promise<boolean> {
     if (context.state === "running") {
       return true;
     }
-    context.lookAhead = 0.05;
+    // The sequence scheduler owns this while a run is in flight and restores it on stop, so this
+    // only ever applies to a cold start. It used to be the sole assignment, which meant it never
+    // applied at all once the context was already running.
+    setLookAhead(INTERACTIVE_LOOKAHEAD_SEC);
     await Tone.start();
     return Tone.getContext().state === "running";
   } catch (error) {
@@ -135,8 +134,21 @@ function usePauseSequenceOnHide(
 
 function usePolySynthVoiceBridge(synthRef: RefObject<Tone.PolySynth | null>) {
   useEffect(() => {
-    setPolySynthVoiceReleaser(() => synthRef.current?.releaseAll());
-    return () => setPolySynthVoiceReleaser(null);
+    setSequenceSynth({
+      releaseAll: () => synthRef.current?.releaseAll(),
+      setEnvelope: (envelope) => synthRef.current?.set({ envelope }),
+      triggerNotes: (indices, durationSec, time) => {
+        if (indices.length === 0) return;
+        // One triggerAttackRelease for the whole step, at the instant the scheduler named: the
+        // notes of a chord must share an onset, and the onset must not be "whenever this ran".
+        synthRef.current?.triggerAttackRelease(
+          indices.map(frequencyFromIndex),
+          durationSec,
+          time,
+        );
+      },
+    });
+    return () => setSequenceSynth(null);
   }, []);
 }
 
@@ -171,22 +183,6 @@ function useNotePlayback(
   const isScalesMode = useIsScalePreviewMode();
   const { playbackState, scalePlaybackMode } = useAudio();
 
-  const playNote = useCallback(
-    async (index: ActualIndex, durationSec: number) => {
-      if (!synthRef.current || !isAudioInitialized) return;
-
-      const running = await ensureToneContextRunning();
-      if (!running || !synthRef.current) return;
-
-      try {
-        synthRef.current.triggerAttackRelease(frequencyFromIndex(index), durationSec);
-      } catch (error) {
-        console.error("Failed to play note:", error);
-      }
-    },
-    [isAudioInitialized],
-  );
-
   const playSelectedNotes = useCallback(async () => {
     if (!synthRef.current || !isAudioInitialized) return;
 
@@ -196,23 +192,29 @@ function useNotePlayback(
     const isScaleClick = isScalesMode && playbackState !== PlaybackState.SequencePlaying;
     const profile = resolvePlaybackProfile(scalePlaybackMode, isScaleClick);
 
+    // An empty selection means nothing is highlighted, not "cut the sound". Releasing here
+    // clipped the last note of every sequence, which ends by clearing the selection. Deliberate
+    // stops go through releasePolySynthVoicesNow instead.
+    if (selectedNoteIndices.length === 0) return;
+
     synthRef.current.set({ envelope: profile.envelope });
     synthRef.current.releaseAll();
-    for (const index of selectedNoteIndices) {
-      await playNote(index, profile.durationSec);
-    }
-  }, [
-    selectedNoteIndices,
-    playNote,
-    isAudioInitialized,
-    isScalesMode,
-    playbackState,
-    scalePlaybackMode,
-  ]);
+
+    // One clock instant for the whole selection. Awaiting each note in turn put every attack on
+    // its own microtask, which spread the notes of a chord across several milliseconds.
+    synthRef.current.triggerAttackRelease(
+      selectedNoteIndices.map(frequencyFromIndex),
+      profile.durationSec,
+      Tone.now(),
+    );
+  }, [selectedNoteIndices, isAudioInitialized, isScalesMode, playbackState, scalePlaybackMode]);
 
   useEffect(() => {
+    // During a sequence the scheduler has already queued these notes on the audio clock; playing
+    // them again off the render that displays them is exactly the coupling this avoids.
+    if (playbackState === PlaybackState.SequencePlaying) return;
     void playSelectedNotes();
-  }, [selectedNoteIndices, playSelectedNotes]);
+  }, [selectedNoteIndices, playSelectedNotes, playbackState]);
 
-  return { playNote, playSelectedNotes };
+  return { playSelectedNotes };
 }

@@ -1,4 +1,4 @@
-import { BoundingBox, type Factory, type RenderContext, type Stave, type StaveNote } from "vexflow";
+import { BoundingBox, SVGContext, type Factory, type RenderContext, type Stave, type StaveNote } from "vexflow";
 
 const CHORD_HIGHLIGHT_PAD_X = 6;
 const CHORD_HIGHLIGHT_PAD_Y = 5;
@@ -32,28 +32,15 @@ export class VexFlowUtils {
   }
 
   /**
-   * Formats and draws a single voice.
+   * Formats and draws a single voice, returning the highlight box of each tick so a caller can
+   * drive a {@link StaffHighlightOverlay} without re-running this layout pass.
    */
   static drawVoice(
     factory: Factory,
     stave: Stave,
     tickables: StaveNote[],
     options?: VexFlowDrawVoiceOptions,
-  ) {
-    VexFlowUtils.drawVoiceWithHighlights(factory, stave, tickables, undefined, undefined, options);
-  }
-
-  /**
-   * Formats a single voice, optionally draws a chord background behind one tick, then draws the voice.
-   */
-  static drawVoiceWithHighlights(
-    factory: Factory,
-    stave: Stave,
-    tickables: StaveNote[],
-    backgroundNoteIndex?: number,
-    backgroundFill?: string,
-    options?: VexFlowDrawVoiceOptions,
-  ) {
+  ): (BoundingBox | null)[] {
     const context = factory.getContext();
     if (!context) {
       throw new Error("VexFlowUtils.drawVoice: Factory has no render context");
@@ -68,12 +55,14 @@ export class VexFlowUtils {
     }
     VexFlowUtils.enforceTrailingPadding(stave, tickables);
 
-    if (backgroundFill && backgroundNoteIndex != null && backgroundNoteIndex >= 0) {
-      const n = tickables[backgroundNoteIndex];
-      if (n) VexFlowUtils.drawActiveChordBackground(context, n, backgroundFill);
-    }
+    // After formatting, before drawing: positions are final here, and every subsequent highlight
+    // move is then a handful of attribute writes instead of another layout.
+    const highlightBoxes = tickables.map((note) =>
+      VexFlowUtils.getStaveNoteHighlightBoundingBox(note),
+    );
 
     voice.draw(context, stave);
+    return highlightBoxes;
   }
 
   /** Stave-aware justification; trailing padding enforced after format via {@link enforceTrailingPadding}. */
@@ -128,12 +117,51 @@ export class VexFlowUtils {
     );
   }
 
-  private static drawActiveChordBackground(context: RenderContext, note: StaveNote, fill: string) {
-    const rect = this.getStaveNoteHighlightBoundingBox(note);
-    if (!rect) return;
-    context.save();
-    context.setFillStyle(fill);
-    context.fillRect(rect.x, rect.y, rect.w, rect.h);
-    context.restore();
+}
+
+/**
+ * The active-step background, as one reusable `<rect>` behind the score.
+ *
+ * Playback moves this highlight several times per second. Redrawing the score to move it costs a
+ * full VexFlow layout pass, and that cost - being variable on slower devices - is what shows up
+ * as uneven timing. Repositioning one element instead keeps the per-step render cost flat.
+ */
+export class StaffHighlightOverlay {
+  private constructor(
+    private readonly rect: SVGRectElement,
+    private readonly boxes: readonly (BoundingBox | null)[],
+  ) {}
+
+  /** Null for non-SVG backends, which have no element to reposition. */
+  static create(
+    context: RenderContext,
+    highlightBoxes: readonly (BoundingBox | null)[],
+  ): StaffHighlightOverlay | null {
+    if (!(context instanceof SVGContext)) return null;
+
+    const rect = context.create("rect");
+    rect.setAttribute("stroke", "none");
+    rect.setAttribute("visibility", "hidden");
+    // First child of the root svg: VexFlow scales via viewBox rather than a group transform, so
+    // this shares the score's coordinate space, and document order puts it behind the notes.
+    context.svg.insertBefore(rect, context.svg.firstChild);
+
+    return new StaffHighlightOverlay(rect, highlightBoxes);
+  }
+
+  /** Hides the highlight when the index is absent, out of range, or has no fill. */
+  apply(index: number | null | undefined, fill: string | undefined) {
+    const box = index == null || index < 0 ? null : this.boxes[index];
+    if (!box || !fill) {
+      this.rect.setAttribute("visibility", "hidden");
+      return;
+    }
+
+    this.rect.setAttribute("x", String(box.x));
+    this.rect.setAttribute("y", String(box.y));
+    this.rect.setAttribute("width", String(box.w));
+    this.rect.setAttribute("height", String(box.h));
+    this.rect.setAttribute("fill", fill);
+    this.rect.setAttribute("visibility", "visible");
   }
 }

@@ -8,7 +8,6 @@ import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
-import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { TYPOGRAPHY } from "@/lib/design/Typography";
 
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
@@ -17,34 +16,40 @@ import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
-import { useMusical } from "@/contexts/MusicalContext";
-import { useAudio } from "@/contexts/AudioContext";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 interface PianoKeyCircularProps extends PianoKeyBaseProps {
   outerRadius: number;
   innerRadius: number;
+  /**
+   * Selection, key and playback mode arrive as props rather than from context: a memoized
+   * component still re-renders whenever a context it consumes changes, and during sequence
+   * playback that would be every step, for all twelve keys. As props, only the one or two keys
+   * whose selection actually flipped re-render.
+   */
+  isSelected: boolean;
+  isScales: boolean;
+  selectedMusicalKey: MusicalKey;
+  scalePlaybackMode: ScalePlaybackMode;
 }
 
-export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
+const PianoKeyCircularBase: React.FC<PianoKeyCircularProps> = ({
   actualIndex,
   isBassNote,
   outerRadius,
   innerRadius,
   onKeyClick,
+  isSelected,
+  isScales,
+  selectedMusicalKey,
+  scalePlaybackMode,
 }) => {
-  const { selectedMusicalKey, selectedNoteIndices } = useMusical();
-  const { scalePlaybackMode } = useAudio();
   const chromaticIndex = actualToChromatic(actualIndex);
   const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
   const textPoint = ArcPathVisualizer.getTextPoint(chromaticIndex, outerRadius, innerRadius);
 
   const baseClasses = ["key-base"];
-  const isSelected = KeyboardUtils.isKeySelected(
-    actualIndex,
-    selectedNoteIndices,
-    KeyboardUIType.Circular,
-  );
-  const isScales = useIsScalePreviewMode();
   const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
   const isDiatonicInScale =
     !isScales ||
@@ -146,3 +151,5 @@ export const PianoKeyCircular: React.FC<PianoKeyCircularProps> = ({
     </g>
   );
 };
+
+export const PianoKeyCircular = React.memo(PianoKeyCircularBase);

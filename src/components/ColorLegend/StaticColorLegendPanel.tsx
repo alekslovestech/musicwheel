@@ -10,7 +10,7 @@ import { useDisplay } from "@/contexts/DisplayContext";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import {
   getStepColorLegendItems,
-  ScaleRibbonMark,
+  LabelWithColor,
   showsStepSegments,
 } from "@/utils/visual/scaleRibbonUtils";
 import { useColorLegendGroups } from "./useColorLegendGroups";
@@ -48,7 +48,7 @@ export function StaticColorLegendPanel() {
   );
 }
 
-function StepColorLegend({ steps }: { steps: ScaleRibbonMark[] }) {
+function StepColorLegend({ steps }: { steps: LabelWithColor[] }) {
   return (
     <div id="color-legend-section-Steps" className="flex flex-col gap-tight">
       <div className="text-xs font-medium uppercase tracking-wide text-labels-textDefault opacity-70">

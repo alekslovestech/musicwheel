@@ -1,6 +1,8 @@
 import { TWELVE } from "@/types/constants/NoteConstants";
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ixActual } from "@/types/IndexTypes";
+import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
@@ -8,7 +10,7 @@ import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/Cartesian
 
 import { useMusical } from "@/contexts/MusicalContext";
 
-import { CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
+import { SCALE_BOUNDARY_CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
 
 import { CircularVisualizations } from "./CircularVisualizations";
 import { PianoKeyCircular } from "./PianoKeyCircular";
@@ -22,6 +24,37 @@ const MAX_RADIUS = 100;
 const OUTER_RADIUS = 0.9 * MAX_RADIUS;
 const INNER_RADIUS = 0.5 * MAX_RADIUS;
 
+// Viewport: sized to fit the widest thing drawn, the scale-boundary marker circle.
+const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + SCALE_BOUNDARY_CIRCLE_RADIUS * 2;
+const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
+const VIEWPORT_COORDS = [
+  -VIEWPORT_RADIUS,
+  -VIEWPORT_RADIUS,
+  VIEWPORT_RADIUS * 2,
+  VIEWPORT_RADIUS * 2,
+];
+
+// Scale-boundary line + end-cap circle marking the tonic.
+const SCALE_BOUNDARY_LINE_STRETCH = 1.05; // overshoots both ends of the [inner, outer] key ring
+const SCALE_BOUNDARY_LINE_OUTER_RADIUS = OUTER_RADIUS * 0.95; // stops just inside the outer ring
+const SCALE_BOUNDARY_MARKER_RADIUS = OUTER_RADIUS + SCALE_BOUNDARY_CIRCLE_RADIUS;
+
+function getScaleBoundaryLine(tonicIndex: ChromaticIndex): CartesianPointPair {
+  const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(tonicIndex);
+  const start: CartesianPoint = PolarMath.getCartesianFromPolar(
+    INNER_RADIUS / SCALE_BOUNDARY_LINE_STRETCH,
+    startOfTonicAngle,
+    true,
+  );
+  const end: CartesianPoint = PolarMath.getCartesianFromPolar(
+    SCALE_BOUNDARY_LINE_OUTER_RADIUS * SCALE_BOUNDARY_LINE_STRETCH,
+    startOfTonicAngle,
+    true,
+  );
+
+  return { start, end };
+}
+
 export const KeyboardCircular = () => {
   const { onCircularKeyClick, checkIsBassNote } = useKeyboardHandlers();
   const { selectedNoteIndices, selectedMusicalKey } = useMusical();
@@ -32,46 +65,17 @@ export const KeyboardCircular = () => {
   const showScaleStepIntervals =
     isScales && showsStepSegments(scalePlaybackMode, showStepAnnotations);
 
-  const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + CIRCLE_RADIUS * 2;
-  const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
-  const coords = [-VIEWPORT_RADIUS, -VIEWPORT_RADIUS, VIEWPORT_RADIUS * 2, VIEWPORT_RADIUS * 2];
   const chordColor = ColorUtils.getColorForIndices(selectedNoteIndices);
-
-  const getLineCartesianPoints = (
-    tonicIndex: ChromaticIndex,
-    innerRadius: number,
-    outerRadius: number,
-  ): CartesianPointPair => {
-    const COEFF = 1.05;
-    const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(tonicIndex);
-    const start: CartesianPoint = PolarMath.getCartesianFromPolar(
-      innerRadius / COEFF,
-      startOfTonicAngle,
-      true,
-    );
-
-    const end: CartesianPoint = PolarMath.getCartesianFromPolar(
-      outerRadius * COEFF,
-      startOfTonicAngle,
-      true,
-    );
-
-    return { start, end };
-  };
 
   const renderScaleBoundary = () => {
     if (!isScales) return null;
-    const line = getLineCartesianPoints(
-      selectedMusicalKey.tonicIndex,
-      INNER_RADIUS,
-      OUTER_RADIUS * 0.95,
-    );
+    const line = getScaleBoundaryLine(selectedMusicalKey.tonicIndex);
 
     const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(
       selectedMusicalKey.tonicIndex,
     );
     const point_end_circle = PolarMath.getCartesianFromPolar(
-      OUTER_RADIUS + CIRCLE_RADIUS,
+      SCALE_BOUNDARY_MARKER_RADIUS,
       startOfTonicAngle,
       true,
     );
@@ -79,14 +83,19 @@ export const KeyboardCircular = () => {
     return [
       <g className="stroke-keys-scaleBoundaryColor stroke-2" key="scale-boundrary-circular">
         <line x1={line.start.x} y1={line.start.y} x2={line.end.x} y2={line.end.y} />
-        <circle cx={point_end_circle.x} cy={point_end_circle.y} r={CIRCLE_RADIUS} fill="none" />
+        <circle
+          cx={point_end_circle.x}
+          cy={point_end_circle.y}
+          r={SCALE_BOUNDARY_CIRCLE_RADIUS}
+          fill="none"
+        />
       </g>,
     ];
   };
 
   return (
     <svg
-      viewBox={coords.join(" ")}
+      viewBox={VIEWPORT_COORDS.join(" ")}
       className="flex w-full max-w-[800px] h-full aspect-square p-[5px] justify-center items-center [container-type:inline-size]"
     >
       {Array.from({ length: TWELVE }).map((_, index) => {
@@ -101,6 +110,14 @@ export const KeyboardCircular = () => {
             onKeyClick={onCircularKeyClick}
             outerRadius={OUTER_RADIUS}
             innerRadius={INNER_RADIUS}
+            isSelected={KeyboardUtils.isKeySelected(
+              actualIndex,
+              selectedNoteIndices,
+              KeyboardUIType.Circular,
+            )}
+            isScales={isScales}
+            selectedMusicalKey={selectedMusicalKey}
+            scalePlaybackMode={scalePlaybackMode}
           />
         );
       })}

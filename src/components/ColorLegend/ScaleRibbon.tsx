@@ -3,7 +3,7 @@
 import { TYPOGRAPHY } from "@/lib/design";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
-import { ScaleRibbonData, ScaleRibbonMark, ScaleRibbonTick } from "@/utils/visual/scaleRibbonUtils";
+import { LabelWithColor, ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 export function ScaleRibbon({
   ribbon,
@@ -30,17 +30,10 @@ export function ScaleRibbon({
         {stepAnnotations && <StepAnnotationToggle {...stepAnnotations} />}
       </div>
 
-      {ribbon.kind === "ticks" && (
-        <StepsRibbonLayout
-          notes={ribbon.notes}
-          steps={ribbon.steps}
-          activeNoteIndex={activeNoteIndex}
-          onSelectStep={onSelectStep}
-        />
-      )}
       {ribbon.kind === "labels" && (
         <LabelsRibbonLayout
           notes={ribbon.notes}
+          steps={ribbon.steps}
           activeNoteIndex={activeNoteIndex}
           onSelectStep={onSelectStep}
         />
@@ -102,12 +95,12 @@ function NotesRibbonLayout({
   activeNoteIndex,
   onSelectStep,
 }: {
-  notes: ScaleRibbonMark[];
+  notes: LabelWithColor[];
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
   // No outer gap - every layout uses equal-width flex-1 cells with zero gap, so a note's center
-  // is always at index+0.5 slots. See StepsRibbonLayout, which depends on that being exact.
+  // is always at index+0.5 slots. See LabelsRibbonLayout, which depends on that being exact.
   return (
     <div className="flex items-end">
       {notes.map((note, index) => (
@@ -123,40 +116,32 @@ function NotesRibbonLayout({
   );
 }
 
-/** The plain baseline - same tick-and-circle treatment as the W-H view, minus the connector row. */
-function LabelsRibbonLayout({
-  notes,
-  activeNoteIndex,
-  onSelectStep,
-}: {
-  notes: ScaleRibbonTick[];
-  activeNoteIndex: number | null;
-  onSelectStep?: (stepIndex: number) => void;
-}) {
-  return (
-    <NoteTickRow notes={notes} activeNoteIndex={activeNoteIndex} onSelectStep={onSelectStep} />
-  );
-}
-
 /**
- * Connectors can't be flex siblings interleaved between notes - that would make this row 2N-1
- * cells instead of N and shift every center relative to the other layouts. Instead each is an
- * absolute box at left=(index+0.5)/N, width=1/N: with N equal zero-gap cells, that starts exactly
- * on one note's center and ends exactly on the next's. It's pinned to the same top edge the tick
- * marks start from rather than given a row of its own, so only the interval label above it costs
- * real height.
+ * Bare tick-and-circle notes, same treatment as the W-H view, plus an optional connector overlay
+ * when steps are given. Connectors can't be flex siblings interleaved between notes - that would
+ * make the note row 2N-1 cells instead of N and shift every center relative to the other layouts
+ * (NotesRibbonLayout). Instead each is an absolute box at left=(index+0.5)/N, width=1/N: with N
+ * equal zero-gap cells, that starts exactly on one note's center and ends exactly on the next's.
+ * It's pinned to the same top edge the tick marks start from rather than given a row of its own,
+ * so only the interval label above it costs real height.
  */
-function StepsRibbonLayout({
+function LabelsRibbonLayout({
   notes,
   steps,
   activeNoteIndex,
   onSelectStep,
 }: {
-  notes: ScaleRibbonTick[];
-  steps: ScaleRibbonMark[];
+  notes: string[];
+  steps?: LabelWithColor[];
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
+  if (!steps) {
+    return (
+      <NoteTickRow notes={notes} activeNoteIndex={activeNoteIndex} onSelectStep={onSelectStep} />
+    );
+  }
+
   const cellWidthPercent = 100 / notes.length;
 
   return (
@@ -206,16 +191,16 @@ function NoteTickRow({
   activeNoteIndex,
   onSelectStep,
 }: {
-  notes: ScaleRibbonTick[];
+  notes: string[];
   activeNoteIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
   return (
     <div className="flex items-end">
-      {notes.map((note, index) => (
+      {notes.map((label, index) => (
         <RibbonNoteTick
-          key={`${note.label}-${index}`}
-          note={note}
+          key={`${label}-${index}`}
+          label={label}
           stepIndex={index}
           isActive={index === activeNoteIndex}
           onSelect={onSelectStep && (() => onSelectStep(index))}
@@ -279,7 +264,7 @@ function RibbonNoteSwatch({
   isActive,
   onSelect,
 }: {
-  note: ScaleRibbonMark;
+  note: LabelWithColor;
   stepIndex: number;
   isActive: boolean;
   onSelect?: () => void;
@@ -305,12 +290,12 @@ function RibbonNoteSwatch({
 }
 
 function RibbonNoteTick({
-  note,
+  label,
   stepIndex,
   isActive,
   onSelect,
 }: {
-  note: ScaleRibbonTick;
+  label: string;
   stepIndex: number;
   isActive: boolean;
   onSelect?: () => void;
@@ -320,7 +305,7 @@ function RibbonNoteTick({
     <RibbonNoteCell
       onSelect={onSelect}
       stepIndex={stepIndex}
-      label={note.label}
+      label={label}
       className="flex min-w-0 flex-1 flex-col items-center gap-0.5"
     >
       <div
@@ -333,7 +318,7 @@ function RibbonNoteTick({
           isActive ? "rounded-full border-2 border-keys-scaleBoundaryColor" : ""
         }`}
       >
-        {note.label}
+        {label}
       </span>
     </RibbonNoteCell>
   );

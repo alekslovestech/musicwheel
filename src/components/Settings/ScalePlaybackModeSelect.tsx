@@ -8,31 +8,17 @@ import { Button } from "@/components/Common/Button";
 import { SectionTitle } from "@/components/Common/SectionTitle";
 import { WheelShapeIcon } from "../Icons/WheelShapeIcon";
 
-interface ChordDensityOption {
-  mode: ScalePlaybackMode.Triad | ScalePlaybackMode.Seventh;
-  label: string;
-  description: string;
-}
-
-const CHORD_DENSITY_OPTIONS: ChordDensityOption[] = [
-  { mode: ScalePlaybackMode.Triad, label: "3", description: "Triads (3-note chords)" },
-  { mode: ScalePlaybackMode.Seventh, label: "4", description: "Sevenths (4-note chords)" },
-];
-
-const DEFAULT_CHORD_DENSITY = ScalePlaybackMode.Triad;
-
 export const ScalePlaybackModeSelect: React.FC = () => {
   const trackAction = useTrack();
   const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } = useAudio();
   // Remembered so leaving Chords and coming back returns you to the density you were on,
   // rather than silently demoting your sevenths to triads.
-  const [lastChordDensity, setLastChordDensity] = useState<
-    ScalePlaybackMode.Triad | ScalePlaybackMode.Seventh
-  >(
-    isChordalScalePlaybackMode(scalePlaybackMode)
-      ? (scalePlaybackMode as ScalePlaybackMode.Triad | ScalePlaybackMode.Seventh)
-      : DEFAULT_CHORD_DENSITY,
+  const [lastDensityIsSeventh, setLastDensityIsSeventh] = useState(
+    scalePlaybackMode === ScalePlaybackMode.Seventh,
   );
+  const lastChordDensity = lastDensityIsSeventh
+    ? ScalePlaybackMode.Seventh
+    : ScalePlaybackMode.Triad;
 
   const isChordsSelected = isChordalScalePlaybackMode(scalePlaybackMode);
 
@@ -45,9 +31,9 @@ export const ScalePlaybackModeSelect: React.FC = () => {
     startSequencePlayback({ scalePlaybackMode: newMode });
   };
 
-  const handleDensityChange = (mode: ScalePlaybackMode.Triad | ScalePlaybackMode.Seventh) => {
-    setLastChordDensity(mode);
-    selectMode(mode);
+  const selectDensity = (isSeventh: boolean) => {
+    setLastDensityIsSeventh(isSeventh);
+    selectMode(isSeventh ? ScalePlaybackMode.Seventh : ScalePlaybackMode.Triad);
   };
 
   return (
@@ -90,16 +76,22 @@ export const ScalePlaybackModeSelect: React.FC = () => {
       {/* Height is reserved even while empty, so picking Chords doesn't shove the transport
           controls below it down the panel. */}
       <div id="chord-density-select" className="mt-tight flex h-6 items-center gap-[2px]">
-        {isChordsSelected &&
-          CHORD_DENSITY_OPTIONS.map(({ mode, label, description }) => (
+        {isChordsSelected && (
+          <>
             <ChordDensityChip
-              key={label}
-              label={label}
-              description={description}
-              selected={scalePlaybackMode === mode}
-              onClick={() => handleDensityChange(mode)}
+              label="3"
+              description="Triads (3-note chords)"
+              selected={scalePlaybackMode === ScalePlaybackMode.Triad}
+              onClick={() => selectDensity(false)}
             />
-          ))}
+            <ChordDensityChip
+              label="4"
+              description="Sevenths (4-note chords)"
+              selected={scalePlaybackMode === ScalePlaybackMode.Seventh}
+              onClick={() => selectDensity(true)}
+            />
+          </>
+        )}
       </div>
     </div>
   );
