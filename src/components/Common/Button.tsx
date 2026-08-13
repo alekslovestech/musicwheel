@@ -39,6 +39,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       id={propsId}
+      disabled={disabled}
       className={`${BASE_STYLES} ${TYPOGRAPHY.buttonText} ${SIZES[size]} ${VARIANTS[variant]} ${selectedStyles} ${disabledStyles} ${className}`}
       {...propsWithoutId}
     >

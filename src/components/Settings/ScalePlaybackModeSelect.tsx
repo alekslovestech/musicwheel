@@ -37,8 +37,8 @@ export const ScalePlaybackModeSelect: React.FC = () => {
   };
 
   return (
-    <div className="playback-mode-select flex flex-col items-center">
-      <SectionTitle>Playback Mode</SectionTitle>
+    <div id="playback-mode-select" className="playback-mode-select flex flex-col items-center">
+      <SectionTitle className="whitespace-nowrap">Playback Mode</SectionTitle>
       <div id="scale-playback-modes" className="flex gap-[2px]">
         <Button
           id="playback-notes"
@@ -73,26 +73,22 @@ export const ScalePlaybackModeSelect: React.FC = () => {
           <WheelShapeIcon indices={[0, 4, 8]} />
         </Button>
       </div>
-      {/* Height is reserved even while empty, so picking Chords doesn't shove the transport
-          controls below it down the panel. */}
-      <div id="chord-density-select" className="mt-tight flex h-6 items-center gap-[2px]">
-        {isChordsSelected && (
-          <>
-            <ChordDensityChip
-              label="3"
-              description="Triads (3-note chords)"
-              selected={scalePlaybackMode === ScalePlaybackMode.Triad}
-              onClick={() => selectDensity(false)}
-            />
-            <ChordDensityChip
-              label="4"
-              description="Sevenths (4-note chords)"
-              selected={scalePlaybackMode === ScalePlaybackMode.Seventh}
-              onClick={() => selectDensity(true)}
-            />
-          </>
-        )}
-      </div>
+      {isChordsSelected && (
+        <div id="chord-density-select" className="mt-tight flex h-6 items-center gap-[2px]">
+          <ChordDensityChip
+            label="3"
+            description="Triads (3-note chords)"
+            selected={scalePlaybackMode === ScalePlaybackMode.Triad}
+            onClick={() => selectDensity(false)}
+          />
+          <ChordDensityChip
+            label="4"
+            description="Sevenths (4-note chords)"
+            selected={scalePlaybackMode === ScalePlaybackMode.Seventh}
+            onClick={() => selectDensity(true)}
+          />
+        </div>
+      )}
     </div>
   );
 };
