@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
-const DEFAULT_SITE_URL = "https://musicwheel.vercel.app";
+const DEFAULT_SITE_URL = "https://musicwheel.app";
 
 /** Canonical site origin for metadata and OG URLs. */
 export function getSiteUrl(): string {
