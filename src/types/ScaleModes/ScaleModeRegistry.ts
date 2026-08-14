@@ -96,6 +96,12 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     SCALE_MODE_PATTERNS.MIXOLYDIAN_B2,
     5,
   ),
+  [ScaleModeType.MelodicMinor]: new ScaleModeInfo(
+    ScaleModeType.MelodicMinor,
+    "melodic-minor",
+    SCALE_MODE_PATTERNS.MELODIC_MINOR,
+    1,
+  ), // Melodic minor (ascending form)
 };
 
 export const SCALE_SLUG_MAP = buildSlugMap(SCALE_MODE_REGISTRY);

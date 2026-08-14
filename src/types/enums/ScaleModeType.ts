@@ -16,6 +16,7 @@ export enum ScaleModeType {
   DoubleHarmonicMajor = "Double Harmonic Major",
   HungarianMinor = "Hungarian Minor",
 
+  MelodicMinor = "Melodic Minor",
   PanthuVaraali = "Panthu Varaali",
   UkrainianDorian = "Ukrainian Dorian",
 }
