@@ -74,54 +74,29 @@ export const ScalePlaybackModeSelect: React.FC = () => {
         </Button>
       </div>
       {isChordsSelected && (
-        <div id="chord-density-select" className="mt-tight flex h-6 items-center gap-[2px]">
-          <ChordDensityChip
-            label="3"
-            description="Triads (3-note chords)"
+        <div id="chord-density-select" className="mt-tight flex gap-[2px]">
+          <Button
+            id="chord-density-3"
+            variant="option"
+            size="sm"
             selected={scalePlaybackMode === ScalePlaybackMode.Triad}
             onClick={() => selectDensity(false)}
-          />
-          <ChordDensityChip
-            label="4"
-            description="Sevenths (4-note chords)"
+            title="Triads (3-note chords)"
+          >
+            3
+          </Button>
+          <Button
+            id="chord-density-4"
+            variant="option"
+            size="sm"
             selected={scalePlaybackMode === ScalePlaybackMode.Seventh}
             onClick={() => selectDensity(true)}
-          />
+            title="Sevenths (4-note chords)"
+          >
+            4
+          </Button>
         </div>
       )}
     </div>
   );
 };
-
-/**
- * Deliberately smaller and flatter than the mode buttons: triads and sevenths are two densities
- * of one idea, not a fourth peer mode, and the control should read as subordinate to Chords.
- */
-function ChordDensityChip({
-  label,
-  description,
-  selected,
-  onClick,
-}: {
-  label: string;
-  description: string;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  const selectedStyles = selected
-    ? "bg-buttons-bgSelected border-buttons-borderSelected text-buttons-textSelected"
-    : "bg-buttons-bgDefault border-buttons-border text-labels-textDefault hover:bg-buttons-bgHover";
-
-  return (
-    <button
-      id={`chord-density-${label}`}
-      type="button"
-      aria-pressed={selected}
-      onClick={onClick}
-      title={description}
-      className={`h-6 min-w-6 rounded-md border px-snug text-xs transition-colors ${selectedStyles}`}
-    >
-      {label}
-    </button>
-  );
-}
