@@ -6,11 +6,11 @@ import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
-import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
+import { toSvgPointsString } from "@/types/interfaces/CartesianPoint";
 
 import { useMusical } from "@/contexts/MusicalContext";
 
-import { SCALE_BOUNDARY_CIRCLE_RADIUS, useKeyboardHandlers } from "../KeyboardBase";
+import { SCALE_BOUNDARY_MARKER_SIZE, useKeyboardHandlers } from "../KeyboardBase";
 
 import { CircularVisualizations } from "./CircularVisualizations";
 import { PianoKeyCircular } from "./PianoKeyCircular";
@@ -24,8 +24,8 @@ const MAX_RADIUS = 100;
 const OUTER_RADIUS = 0.9 * MAX_RADIUS;
 const INNER_RADIUS = 0.5 * MAX_RADIUS;
 
-// Viewport: sized to fit the widest thing drawn, the scale-boundary marker circle.
-const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + SCALE_BOUNDARY_CIRCLE_RADIUS * 2;
+// Viewport: sized to fit the widest thing drawn, the scale-boundary marker.
+const SCALE_BOUNDARY_EXTENT = OUTER_RADIUS + SCALE_BOUNDARY_MARKER_SIZE * 2;
 const VIEWPORT_RADIUS = Math.max(SCALE_BOUNDARY_EXTENT, MAX_RADIUS);
 const VIEWPORT_COORDS = [
   -VIEWPORT_RADIUS,
@@ -34,25 +34,39 @@ const VIEWPORT_COORDS = [
   VIEWPORT_RADIUS * 2,
 ];
 
-// Scale-boundary line + end-cap circle marking the tonic.
-const SCALE_BOUNDARY_LINE_STRETCH = 1.05; // overshoots both ends of the [inner, outer] key ring
-const SCALE_BOUNDARY_LINE_OUTER_RADIUS = OUTER_RADIUS * 0.95; // stops just inside the outer ring
-const SCALE_BOUNDARY_MARKER_RADIUS = OUTER_RADIUS + SCALE_BOUNDARY_CIRCLE_RADIUS;
+// Scale-boundary marker: a single flag-on-a-flagpole polygon marking the tonic. The pole runs
+// from the inner key ring to the outer one; the flag - the clockwise-pointing tip, the direction
+// the scale runs from its tonic - sits on top of it, past the outer ring. Its back edge (pole and
+// flag both) is the straight radial line readers expect. One polygon rather than a stroked line
+// plus a separately filled arrowhead, so there's no seam between two differently-rendered shapes
+// to line up.
+const SCALE_BOUNDARY_STRETCH = 1.05; // overshoots the inner key ring
+const SCALE_BOUNDARY_INNER_RADIUS = INNER_RADIUS / SCALE_BOUNDARY_STRETCH;
+const SCALE_BOUNDARY_MARKER_RADIUS = OUTER_RADIUS + SCALE_BOUNDARY_MARKER_SIZE;
+const SCALE_BOUNDARY_FAR_RADIUS = SCALE_BOUNDARY_MARKER_RADIUS + SCALE_BOUNDARY_MARKER_SIZE;
+const SCALE_BOUNDARY_TIP_ARC = 2 * SCALE_BOUNDARY_MARKER_SIZE; // clockwise offset of the tip
+const SCALE_BOUNDARY_POLE_WIDTH = 2; // matches the old line's stroke width
 
-function getScaleBoundaryLine(tonicIndex: ChromaticIndex): CartesianPointPair {
-  const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(tonicIndex);
-  const start: CartesianPoint = PolarMath.getCartesianFromPolar(
-    INNER_RADIUS / SCALE_BOUNDARY_LINE_STRETCH,
-    startOfTonicAngle,
-    true,
-  );
-  const end: CartesianPoint = PolarMath.getCartesianFromPolar(
-    SCALE_BOUNDARY_LINE_OUTER_RADIUS * SCALE_BOUNDARY_LINE_STRETCH,
-    startOfTonicAngle,
-    true,
-  );
+// Perimeter walk as (radius, clockwise arc-length offset from the boundary line) pairs: up the
+// flush back edge (pole then flag, collinear so together they're one straight edge), out to the
+// tip, back down to where the flag meets the pole, then down the pole's offset front edge.
+const SCALE_BOUNDARY_PERIMETER: [number, number][] = [
+  [SCALE_BOUNDARY_INNER_RADIUS, 0],
+  [SCALE_BOUNDARY_FAR_RADIUS, 0],
+  [SCALE_BOUNDARY_MARKER_RADIUS, SCALE_BOUNDARY_TIP_ARC],
+  [OUTER_RADIUS, SCALE_BOUNDARY_POLE_WIDTH],
+  [SCALE_BOUNDARY_INNER_RADIUS, SCALE_BOUNDARY_POLE_WIDTH],
+];
 
-  return { start, end };
+function getScaleBoundaryPoints(tonicIndex: ChromaticIndex): string {
+  const { startAngle } = PolarMath.NoteIndexToAngleRange(tonicIndex);
+
+  // Rotated about the wheel's center rather than offset in a flat plane, so every corner lands
+  // exactly on its arc instead of drifting outward by the error a linear approximation adds.
+  const points = SCALE_BOUNDARY_PERIMETER.map(([radius, arcOffset]) =>
+    PolarMath.getCartesianFromPolar(radius, startAngle + arcOffset / radius, true),
+  );
+  return toSvgPointsString(points);
 }
 
 export const KeyboardCircular = () => {
@@ -69,28 +83,15 @@ export const KeyboardCircular = () => {
 
   const renderScaleBoundary = () => {
     if (!isScales) return null;
-    const line = getScaleBoundaryLine(selectedMusicalKey.tonicIndex);
 
-    const { startAngle: startOfTonicAngle } = PolarMath.NoteIndexToAngleRange(
-      selectedMusicalKey.tonicIndex,
+    return (
+      <polygon
+        id = "scale-boundary-marker"        
+        points={getScaleBoundaryPoints(selectedMusicalKey.tonicIndex)}
+        className="fill-keys-scaleBoundaryColor"
+        stroke="none"
+      />
     );
-    const point_end_circle = PolarMath.getCartesianFromPolar(
-      SCALE_BOUNDARY_MARKER_RADIUS,
-      startOfTonicAngle,
-      true,
-    );
-
-    return [
-      <g className="stroke-keys-scaleBoundaryColor stroke-2" key="scale-boundrary-circular">
-        <line x1={line.start.x} y1={line.start.y} x2={line.end.x} y2={line.end.y} />
-        <circle
-          cx={point_end_circle.x}
-          cy={point_end_circle.y}
-          r={SCALE_BOUNDARY_CIRCLE_RADIUS}
-          fill="none"
-        />
-      </g>,
-    ];
   };
 
   return (
