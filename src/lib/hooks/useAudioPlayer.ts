@@ -5,25 +5,24 @@ import * as Tone from "tone";
 
 import { PlaybackState, useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
-import { frequencyFromIndex } from "@/lib/audio/toneFrequency";
-import { setSequenceSynth } from "@/lib/audio/polySynthVoiceBridge";
+import { setSequenceSynth } from "@/lib/audio/sequenceVoiceBridge";
 import { INTERACTIVE_LOOKAHEAD_SEC, setLookAhead } from "@/lib/audio/sequenceScheduler";
-import { resolvePlaybackProfile } from "@/lib/audio/playbackProfiles";
-import { createPolySynth } from "@/lib/audio/toneSynthFactory";
+import { resolveClickProfile } from "@/lib/audio/playbackProfiles";
+import { VoicePool } from "@/lib/audio/voicePool";
 import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
 import { ActualIndex } from "@/types/IndexTypes";
 
 export function useAudioPlayer() {
-  const synthRef = useRef<Tone.PolySynth | null>(null);
+  const poolRef = useRef<VoicePool | null>(null);
   const { isAudioInitialized, setAudioInitialized, playbackState, pauseSequencePlayback } =
     useAudio();
   const { selectedNoteIndices } = useMusical();
 
   useToneContextInit(setAudioInitialized);
   usePauseSequenceOnHide(playbackState, pauseSequencePlayback);
-  usePolySynthVoiceBridge(synthRef);
-  usePolySynthLifecycle(synthRef, isAudioInitialized);
-  const { playSelectedNotes } = useNotePlayback(synthRef, selectedNoteIndices, isAudioInitialized);
+  useVoicePoolBridge(poolRef);
+  useVoicePoolLifecycle(poolRef, isAudioInitialized);
+  const { playSelectedNotes } = useNotePlayback(poolRef, selectedNoteIndices, isAudioInitialized);
 
   return {
     playSelectedNotes,
@@ -38,8 +37,7 @@ async function ensureToneContextRunning(): Promise<boolean> {
       return true;
     }
     // The sequence scheduler owns this while a run is in flight and restores it on stop, so this
-    // only ever applies to a cold start. It used to be the sole assignment, which meant it never
-    // applied at all once the context was already running.
+    // only ever applies to a cold start.
     setLookAhead(INTERACTIVE_LOOKAHEAD_SEC);
     await Tone.start();
     return Tone.getContext().state === "running";
@@ -132,51 +130,48 @@ function usePauseSequenceOnHide(
   }, [pauseSequencePlayback]);
 }
 
-function usePolySynthVoiceBridge(synthRef: RefObject<Tone.PolySynth | null>) {
+function useVoicePoolBridge(poolRef: RefObject<VoicePool | null>) {
   useEffect(() => {
     setSequenceSynth({
-      releaseAll: () => synthRef.current?.releaseAll(),
-      setEnvelope: (envelope) => synthRef.current?.set({ envelope }),
+      releaseAll: () => poolRef.current?.releaseAll(),
+      setEnvelope: (envelope) => poolRef.current?.setEnvelope(envelope),
       triggerNotes: (indices, durationSec, time) => {
         if (indices.length === 0) return;
-        // One triggerAttackRelease for the whole step, at the instant the scheduler named: the
-        // notes of a chord must share an onset, and the onset must not be "whenever this ran".
-        synthRef.current?.triggerAttackRelease(
-          indices.map(frequencyFromIndex),
-          durationSec,
-          time,
-        );
+        // At the instant the scheduler named, not "whenever this ran": the notes of a chord must
+        // share an onset, and the pool places both ends of each note on the clock up front.
+        poolRef.current?.triggerNotes(indices, durationSec, time);
       },
     });
     return () => setSequenceSynth(null);
   }, []);
 }
 
-function usePolySynthLifecycle(
-  synthRef: MutableRefObject<Tone.PolySynth | null>,
+function useVoicePoolLifecycle(
+  poolRef: MutableRefObject<VoicePool | null>,
   isAudioInitialized: boolean,
 ) {
   useEffect(() => {
     if (!isAudioInitialized) return;
-    if (synthRef.current) return;
+    if (poolRef.current) return;
 
     try {
-      synthRef.current = createPolySynth();
+      // Every voice is built here, once, so that no step of a sequence ever pays for one.
+      poolRef.current = new VoicePool();
     } catch (error) {
       console.error("Failed to initialize synth:", error);
     }
 
     return () => {
-      if (synthRef.current) {
-        synthRef.current.dispose();
-        synthRef.current = null;
+      if (poolRef.current) {
+        poolRef.current.dispose();
+        poolRef.current = null;
       }
     };
   }, [isAudioInitialized]);
 }
 
 function useNotePlayback(
-  synthRef: RefObject<Tone.PolySynth | null>,
+  poolRef: RefObject<VoicePool | null>,
   selectedNoteIndices: ActualIndex[],
   isAudioInitialized: boolean,
 ) {
@@ -184,29 +179,25 @@ function useNotePlayback(
   const { playbackState, scalePlaybackMode } = useAudio();
 
   const playSelectedNotes = useCallback(async () => {
-    if (!synthRef.current || !isAudioInitialized) return;
+    if (!poolRef.current || !isAudioInitialized) return;
 
     const running = await ensureToneContextRunning();
-    if (!running || !synthRef.current) return;
+    if (!running || !poolRef.current) return;
 
     const isScaleClick = isScalesMode && playbackState !== PlaybackState.SequencePlaying;
-    const profile = resolvePlaybackProfile(scalePlaybackMode, isScaleClick);
+    const profile = resolveClickProfile(scalePlaybackMode, isScaleClick);
 
-    // An empty selection means nothing is highlighted, not "cut the sound". Releasing here
-    // clipped the last note of every sequence, which ends by clearing the selection. Deliberate
-    // stops go through releasePolySynthVoicesNow instead.
+    // An empty selection means nothing is highlighted, not "cut the sound": releasing here would
+    // clip the last note of every sequence, which ends by clearing the selection. Deliberate
+    // stops go through releaseSequenceVoicesNow instead.
     if (selectedNoteIndices.length === 0) return;
 
-    synthRef.current.set({ envelope: profile.envelope });
-    synthRef.current.releaseAll();
+    poolRef.current.setEnvelope(profile.envelope);
+    poolRef.current.releaseAll();
 
-    // One clock instant for the whole selection. Awaiting each note in turn put every attack on
-    // its own microtask, which spread the notes of a chord across several milliseconds.
-    synthRef.current.triggerAttackRelease(
-      selectedNoteIndices.map(frequencyFromIndex),
-      profile.durationSec,
-      Tone.now(),
-    );
+    // One clock instant for the whole selection: triggering notes individually would put each
+    // attack on its own microtask, spreading a chord's onset across several milliseconds.
+    poolRef.current.triggerNotes(selectedNoteIndices, profile.durationSec, Tone.now());
   }, [selectedNoteIndices, isAudioInitialized, isScalesMode, playbackState, scalePlaybackMode]);
 
   useEffect(() => {

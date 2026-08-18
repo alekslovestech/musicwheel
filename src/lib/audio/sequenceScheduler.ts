@@ -2,7 +2,7 @@ import * as Tone from "tone";
 
 import type { ActualIndex } from "@/types/IndexTypes";
 import type { SynthEnvelope } from "@/lib/audio/playbackProfiles";
-import { setSequenceEnvelope, triggerSequenceNotes } from "@/lib/audio/polySynthVoiceBridge";
+import { setSequenceEnvelope, triggerSequenceNotes } from "@/lib/audio/sequenceVoiceBridge";
 
 /**
  * How far ahead of its note each visual update is started.
@@ -40,20 +40,26 @@ export type ScheduledStep = {
   /** Seconds from the start of the sequence. */
   atSec: number;
   indices: readonly ActualIndex[];
+  /**
+   * How long this step's notes are held before the envelope releases. Per step rather than per
+   * schedule, because a progression's steps are as long as their notated rhythm says and a hold
+   * that outlasts its own step is what puts the release inside the following note.
+   */
+  durationSec: number;
   /** Runs on the draw loop, timed to land with the note rather than to cause it. */
   onVisual: () => void;
 };
 
 export type SequenceSchedule = {
   steps: readonly ScheduledStep[];
-  /** How long each step's notes are held before the envelope releases. */
-  noteDurationSec: number;
   envelope: SynthEnvelope;
   /** Seconds from the start at which the sequence has finished sounding. */
   endsAtSec: number;
   onComplete: () => void;
 };
 
+/** Tone derives `updateInterval` from this - half of it - so this also sets how coarsely the
+ * main-thread ticker runs, and with it how late a Transport callback can arrive. */
 export function setLookAhead(seconds: number) {
   Tone.getContext().lookAhead = seconds;
 }
@@ -64,7 +70,7 @@ export function setLookAhead(seconds: number) {
  * Each note is placed at a named instant on the audio clock, so no amount of render jank can
  * move it; the matching UI update is handed to Tone.Draw for the same instant, started early by
  * {@link VISUAL_LEAD_SEC} so that it has paint by the time the note sounds. The visuals follow
- * the audio here - the audio no longer waits on a React commit to know when to fire.
+ * the audio: the audio does not wait on a React commit to know when to fire.
  */
 export function startScheduledSequence(schedule: SequenceSchedule): void {
   // Before raising the lookahead, since stopping restores the interactive one.
@@ -79,7 +85,7 @@ export function startScheduledSequence(schedule: SequenceSchedule): void {
 
   for (const step of schedule.steps) {
     transport.scheduleOnce((time) => {
-      triggerSequenceNotes(step.indices, schedule.noteDurationSec, time);
+      triggerSequenceNotes(step.indices, step.durationSec, time);
       draw.schedule(step.onVisual, time);
     }, step.atSec);
   }

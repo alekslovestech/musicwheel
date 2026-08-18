@@ -14,7 +14,7 @@ import {
   SCALE_STEP_MS_SINGLE_NOTE,
   SCALE_STEP_MS_TRIAD,
 } from "@/lib/audio/playbackDurations";
-import { resolvePlaybackProfile } from "@/lib/audio/playbackProfiles";
+import { SEQUENCE_PLAYBACK, stepNoteDurationSec } from "@/lib/audio/playbackProfiles";
 import type { ScheduledStep, SequenceSchedule } from "@/lib/audio/sequenceScheduler";
 
 /** Runs on the draw loop when a step is due, so the UI follows the note rather than causing it. */
@@ -40,7 +40,7 @@ export function scaleStepMs(mode: ScalePlaybackMode): number {
  * lets it be handed to the audio clock in one go: from then on no step costs the main thread
  * anything, so nothing the main thread does can move one.
  *
- * The key is read once here, matching the previous behaviour of freezing it for the run.
+ * The key is read once here and frozen for the whole run.
  */
 export function buildScaleSchedule(
   key: MusicalKey,
@@ -50,9 +50,7 @@ export function buildScaleSchedule(
 ): SequenceSchedule {
   const stepSec = scaleStepMs(mode) / 1000;
   const warmupSec = SCALE_AUDIO_WARMUP_MS / 1000;
-  // Sequence playback holds every step for the same length, scales and progressions alike; the
-  // shorter per-mode profiles apply to clicking a single degree.
-  const profile = resolvePlaybackProfile(mode, false);
+  const durationSec = stepNoteDurationSec(SEQUENCE_PLAYBACK, stepSec);
 
   const steps: ScheduledStep[] = [];
   for (let stepIndex = 0; ; stepIndex++) {
@@ -64,6 +62,7 @@ export function buildScaleSchedule(
     steps.push({
       atSec: warmupSec + index * stepSec,
       indices: notesToPlay,
+      durationSec,
       onVisual: () => onStep(index, notesToPlay, chordRef),
     });
 
@@ -72,38 +71,39 @@ export function buildScaleSchedule(
 
   return {
     steps,
-    noteDurationSec: profile.durationSec,
-    envelope: profile.envelope,
+    envelope: SEQUENCE_PLAYBACK.envelope,
     // The final step gets a full interval of its own before the run is called finished.
     endsAtSec: warmupSec + steps.length * stepSec,
     onComplete,
   };
 }
 
-/** As {@link buildScaleSchedule}, but step spacing comes from each chord's notated rhythm. */
+/**
+ * As {@link buildScaleSchedule}, but step spacing comes from each chord's notated rhythm - so each
+ * step's hold is clamped to its own length rather than to one length shared by the run.
+ */
 export function buildProgressionSchedule(
   prepared: PreparedChordProgressionSequence,
-  mode: ScalePlaybackMode,
   onStep: SequenceStepVisual,
   onComplete: () => void,
 ): SequenceSchedule {
-  const profile = resolvePlaybackProfile(mode, false);
-
   const steps: ScheduledStep[] = [];
   let atSec = 0;
   prepared.steps.forEach((step, stepIndex) => {
+    const stepSec =
+      RhythmUtils.chordDurationMs(prepared.tempo, step.noteLength, step.rhythmDots) / 1000;
     steps.push({
       atSec,
       indices: step.value,
+      durationSec: stepNoteDurationSec(SEQUENCE_PLAYBACK, stepSec),
       onVisual: () => onStep(stepIndex, step.value),
     });
-    atSec += RhythmUtils.chordDurationMs(prepared.tempo, step.noteLength, step.rhythmDots) / 1000;
+    atSec += stepSec;
   });
 
   return {
     steps,
-    noteDurationSec: profile.durationSec,
-    envelope: profile.envelope,
+    envelope: SEQUENCE_PLAYBACK.envelope,
     endsAtSec: atSec,
     onComplete,
   };
