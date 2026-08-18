@@ -32,9 +32,3 @@ export const StopIcon: React.FC = () => (
   </IconBase>
 );
 
-export const ResumeIcon: React.FC = () => (
-  <IconBase>
-    <path d="M10 8L16 12L10 16V8Z" fill="currentColor" />
-  </IconBase>
-);
-

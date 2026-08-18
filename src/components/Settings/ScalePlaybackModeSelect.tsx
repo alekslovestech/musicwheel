@@ -37,8 +37,8 @@ export const ScalePlaybackModeSelect: React.FC = () => {
   };
 
   return (
-    <div className="playback-mode-select flex flex-col items-center">
-      <SectionTitle>Playback Mode</SectionTitle>
+    <div id="playback-mode-select" className="playback-mode-select flex flex-col items-center">
+      <SectionTitle className="whitespace-nowrap">Playback Mode</SectionTitle>
       <div id="scale-playback-modes" className="flex gap-[2px]">
         <Button
           id="playback-notes"
@@ -73,59 +73,30 @@ export const ScalePlaybackModeSelect: React.FC = () => {
           <WheelShapeIcon indices={[0, 4, 8]} />
         </Button>
       </div>
-      {/* Height is reserved even while empty, so picking Chords doesn't shove the transport
-          controls below it down the panel. */}
-      <div id="chord-density-select" className="mt-tight flex h-6 items-center gap-[2px]">
-        {isChordsSelected && (
-          <>
-            <ChordDensityChip
-              label="3"
-              description="Triads (3-note chords)"
-              selected={scalePlaybackMode === ScalePlaybackMode.Triad}
-              onClick={() => selectDensity(false)}
-            />
-            <ChordDensityChip
-              label="4"
-              description="Sevenths (4-note chords)"
-              selected={scalePlaybackMode === ScalePlaybackMode.Seventh}
-              onClick={() => selectDensity(true)}
-            />
-          </>
-        )}
-      </div>
+      {isChordsSelected && (
+        <div id="chord-density-select" className="mt-tight flex gap-[2px]">
+          <Button
+            id="chord-density-3"
+            variant="option"
+            size="sm"
+            selected={scalePlaybackMode === ScalePlaybackMode.Triad}
+            onClick={() => selectDensity(false)}
+            title="Triads (3-note chords)"
+          >
+            3
+          </Button>
+          <Button
+            id="chord-density-4"
+            variant="option"
+            size="sm"
+            selected={scalePlaybackMode === ScalePlaybackMode.Seventh}
+            onClick={() => selectDensity(true)}
+            title="Sevenths (4-note chords)"
+          >
+            4
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
-
-/**
- * Deliberately smaller and flatter than the mode buttons: triads and sevenths are two densities
- * of one idea, not a fourth peer mode, and the control should read as subordinate to Chords.
- */
-function ChordDensityChip({
-  label,
-  description,
-  selected,
-  onClick,
-}: {
-  label: string;
-  description: string;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  const selectedStyles = selected
-    ? "bg-buttons-bgSelected border-buttons-borderSelected text-buttons-textSelected"
-    : "bg-buttons-bgDefault border-buttons-border text-labels-textDefault hover:bg-buttons-bgHover";
-
-  return (
-    <button
-      id={`chord-density-${label}`}
-      type="button"
-      aria-pressed={selected}
-      onClick={onClick}
-      title={description}
-      className={`h-6 min-w-6 rounded-md border px-snug text-xs transition-colors ${selectedStyles}`}
-    >
-      {label}
-    </button>
-  );
-}

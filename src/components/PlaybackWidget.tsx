@@ -1,12 +1,9 @@
 import React from "react";
 import { LAYOUT_PATTERNS } from "@/lib/design";
-import { PlaySequenceButton } from "./Buttons/PlaySequenceButton";
-import { PauseSequenceButton } from "./Buttons/PauseSequenceButton";
-import { PlaybackState, useAudio } from "@/contexts/AudioContext";
+import { PlayPauseSequenceButton } from "./Buttons/PlayPauseSequenceButton";
+import { StopSequenceButton } from "./Buttons/StopSequenceButton";
 
 export const PlaybackWidget: React.FC<{ coupled?: boolean }> = ({ coupled = false }) => {
-  const { playbackState } = useAudio();
-
   return (
     <div
       id="playback-widget"
@@ -14,8 +11,8 @@ export const PlaybackWidget: React.FC<{ coupled?: boolean }> = ({ coupled = fals
         coupled ? LAYOUT_PATTERNS.coupledActionSlot : ""
       }`}
     >
-      <PlaySequenceButton />
-      <PauseSequenceButton visible={playbackState !== PlaybackState.SequenceComplete} />
+      <PlayPauseSequenceButton />
+      <StopSequenceButton />
     </div>
   );
 };
