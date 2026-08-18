@@ -2,6 +2,7 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ChordType } from "@/types/enums/ChordType";
 import { RomanChord } from "@/types/RomanChord";
 import { RomanResolver } from "@/utils/resolvers/RomanResolver";
+import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 import { makeRomanChord } from "../utils/RomanTestUtils";
 
@@ -111,15 +112,15 @@ describe("RomanNumeral chord tests", () => {
         },
         {
           numeral: "I/V",
-          expected: makeRomanChord(1, ChordType.Major, AccidentalType.None, 5),
+          expected: makeRomanChord(1, ChordType.Major, AccidentalType.None, ixScaleDegree(5)),
         },
         {
           numeral: "I/v",
-          expected: makeRomanChord(1, ChordType.Major, AccidentalType.None, 5),
+          expected: makeRomanChord(1, ChordType.Major, AccidentalType.None, ixScaleDegree(5)),
         },
         {
           numeral: "i/V",
-          expected: makeRomanChord(1, ChordType.Minor, AccidentalType.None, 5),
+          expected: makeRomanChord(1, ChordType.Minor, AccidentalType.None, ixScaleDegree(5)),
         },
       ],
     },
