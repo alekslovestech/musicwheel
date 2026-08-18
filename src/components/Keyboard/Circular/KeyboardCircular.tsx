@@ -7,6 +7,7 @@ import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 import { ColorUtils } from "@/utils/visual/ColorUtils";
 import { PolarMath } from "@/utils/Keyboard/Circular/PolarMath";
 import { toSvgPointsString } from "@/types/interfaces/CartesianPoint";
+import { PolarPoint } from "@/types/interfaces/PolarPoint";
 
 import { useMusical } from "@/contexts/MusicalContext";
 
@@ -61,11 +62,14 @@ const SCALE_BOUNDARY_PERIMETER: [number, number][] = [
 function getScaleBoundaryPoints(tonicIndex: ChromaticIndex): string {
   const { startAngle } = PolarMath.NoteIndexToAngleRange(tonicIndex);
 
+  const polarPoints: PolarPoint[] = SCALE_BOUNDARY_PERIMETER.map(([radius, arcOffset]) => ({
+    r: radius,
+    azimuth: startAngle + arcOffset / radius,
+  }));
+
   // Rotated about the wheel's center rather than offset in a flat plane, so every corner lands
   // exactly on its arc instead of drifting outward by the error a linear approximation adds.
-  const points = SCALE_BOUNDARY_PERIMETER.map(([radius, arcOffset]) =>
-    PolarMath.getCartesianFromPolar(radius, startAngle + arcOffset / radius, true),
-  );
+  const points = polarPoints.map(p => PolarMath.getCartesianFromPolar(p, true));
   return toSvgPointsString(points);
 }
 
