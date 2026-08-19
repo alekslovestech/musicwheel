@@ -2,6 +2,7 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
 import { SCALE_AUDIO_WARMUP_MS } from "@/lib/audio/playbackDurations";
+import { SEQUENCE_PLAYBACK } from "@/lib/audio/playbackProfiles";
 import {
   buildProgressionSchedule,
   buildScaleSchedule,
@@ -48,6 +49,30 @@ describe("buildScaleSchedule", () => {
     expect(schedule.endsAtSec - lastStep.atSec).toBeCloseTo(scaleStepMs(mode) / 1000, 10);
   });
 
+  test.each([
+    ScalePlaybackMode.SingleNote,
+    ScalePlaybackMode.DronedSingleNote,
+    ScalePlaybackMode.Triad,
+  ])("releases each note before the next step attacks in %s", (mode) => {
+    const key = constants.C_IONIAN_KEY;
+    const schedule = buildScaleSchedule(key, mode, noop, noop);
+    const stepSec = scaleStepMs(mode) / 1000;
+
+    schedule.steps.forEach((step) => {
+      expect(step.durationSec).toBeLessThan(stepSec);
+      expect(step.durationSec).toBeLessThanOrEqual(SEQUENCE_PLAYBACK.durationSec);
+    });
+  });
+
+  test("clamps to the step only when the step is shorter than the profile allows", () => {
+    const key = constants.C_IONIAN_KEY;
+    const shortStep = buildScaleSchedule(key, ScalePlaybackMode.SingleNote, noop, noop);
+    const longStep = buildScaleSchedule(key, ScalePlaybackMode.Triad, noop, noop);
+
+    expect(shortStep.steps[0].durationSec).toBeLessThan(SEQUENCE_PLAYBACK.durationSec);
+    expect(longStep.steps[0].durationSec).toBeCloseTo(SEQUENCE_PLAYBACK.durationSec, 10);
+  });
+
   test("reports the step index and notes it scheduled", () => {
     const key = constants.C_IONIAN_KEY;
     const seen: number[] = [];
@@ -71,12 +96,7 @@ describe("buildProgressionSchedule", () => {
       ChordProgressionType.Fifties_Progression,
       constants.C_IONIAN_KEY,
     );
-    const schedule = buildProgressionSchedule(
-      prepared,
-      ScalePlaybackMode.SingleNote,
-      noop,
-      noop,
-    );
+    const schedule = buildProgressionSchedule(prepared, noop, noop);
 
     expect(schedule.steps).toHaveLength(prepared.steps.length);
 
@@ -88,5 +108,19 @@ describe("buildProgressionSchedule", () => {
     });
 
     expect(schedule.endsAtSec).toBeCloseTo(expectedAtSec, 10);
+  });
+
+  test("holds each chord clear of the chord that follows it", () => {
+    const prepared = prepareChordProgressionSequence(
+      ChordProgressionType.Fifties_Progression,
+      constants.C_IONIAN_KEY,
+    );
+    const schedule = buildProgressionSchedule(prepared, noop, noop);
+
+    schedule.steps.forEach((step, index) => {
+      const nextAtSec = schedule.steps[index + 1]?.atSec ?? schedule.endsAtSec;
+      expect(step.atSec + step.durationSec).toBeLessThan(nextAtSec);
+      expect(step.durationSec).toBeLessThanOrEqual(SEQUENCE_PLAYBACK.durationSec);
+    });
   });
 });

@@ -2,9 +2,9 @@ import type { ActualIndex } from "@/types/IndexTypes";
 import type { SynthEnvelope } from "@/lib/audio/playbackProfiles";
 
 /**
- * Bridges Tone.PolySynth (AudioPlayer) and sequence playback (useSequencePlayback), which owns
- * the schedule but not the synth: AudioPlayer registers once, and the sequencer then releases
- * voices or queues notes on the Web Audio clock without holding a reference to the synth.
+ * Bridges the VoicePool (AudioPlayer) and sequence playback (useSequencePlayback), which owns the
+ * schedule but not the voices: AudioPlayer registers once, and the sequencer then releases voices
+ * or queues notes on the Web Audio clock without holding a reference to the pool.
  */
 export type SequenceSynth = {
   releaseAll: () => void;
@@ -15,13 +15,13 @@ export type SequenceSynth = {
 
 let sequenceSynth: SequenceSynth | null = null;
 
-/** AudioPlayer: wire the live Tone.PolySynth; pass null on teardown. */
+/** AudioPlayer: wire the live VoicePool; pass null on teardown. */
 export function setSequenceSynth(synth: SequenceSynth | null): void {
   sequenceSynth = synth;
 }
 
-/** Tone.PolySynth.releaseAll — no-op until AudioPlayer has registered. */
-export function releasePolySynthVoicesNow(): void {
+/** Release every sounding voice - no-op until AudioPlayer has registered. */
+export function releaseSequenceVoicesNow(): void {
   sequenceSynth?.releaseAll();
 }
 

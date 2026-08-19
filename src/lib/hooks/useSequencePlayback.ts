@@ -9,7 +9,7 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useGlobalMode } from "@/lib/hooks/useGlobalMode";
-import { releasePolySynthVoicesNow } from "@/lib/audio/polySynthVoiceBridge";
+import { releaseSequenceVoicesNow } from "@/lib/audio/sequenceVoiceBridge";
 import {
   pauseScheduledSequence,
   resumeScheduledSequence,
@@ -95,7 +95,7 @@ export const useSequencePlayback = ({
       const mode = modeOverride ?? scalePlaybackMode;
 
       stopScheduledSequence();
-      releasePolySynthVoicesNow();
+      releaseSequenceVoicesNow();
       setActiveStepIndex(null);
       clearSequenceSelection();
       setPlaybackState(PlaybackState.SequencePlaying);
@@ -121,22 +121,16 @@ export const useSequencePlayback = ({
     const prepared = prepareChordProgressionSequence(selectedProgression, selectedMusicalKey);
 
     stopScheduledSequence();
-    releasePolySynthVoicesNow();
+    releaseSequenceVoicesNow();
     setActiveStepIndex(null);
     setPlaybackState(PlaybackState.SequencePlaying);
 
     startScheduledSequence(
-      buildProgressionSchedule(
-        prepared,
-        scalePlaybackMode,
-        showProgressionStep,
-        handleSequenceComplete,
-      ),
+      buildProgressionSchedule(prepared, showProgressionStep, handleSequenceComplete),
     );
   }, [
     selectedProgression,
     selectedMusicalKey,
-    scalePlaybackMode,
     setPlaybackState,
     showProgressionStep,
     handleSequenceComplete,
@@ -169,7 +163,7 @@ export const useSequencePlayback = ({
 
   const stopSequencePlayback = useCallback(() => {
     stopScheduledSequence();
-    releasePolySynthVoicesNow();
+    releaseSequenceVoicesNow();
     setActiveStepIndex(null);
     clearSequenceSelection();
     setPlaybackState(PlaybackState.SequenceComplete);

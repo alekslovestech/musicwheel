@@ -5,7 +5,9 @@
       "PowerShell(npx eslint *)",
       "Bash(npx prettier *)",
       "Bash(npx eslint *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(git rm *)",
+      "Bash(npx next *)"
     ]
   }
 }
