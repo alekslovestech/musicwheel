@@ -27,7 +27,7 @@ export class ArcPathVisualizer {
     innerRadius: number,
   ): CartesianPoint {
     const middleAngle = PolarMath.NoteIndexToMiddleAngle(chromaticIndex);
-    return PolarMath.getCartesianFromPolar((innerRadius + outerRadius) * 0.5, middleAngle);
+    return PolarMath.getCartesianFromPolar((innerRadius + outerRadius) * 0.5, middleAngle, true);
   }
 
   /** SVG user-unit width for {@link SVGTextElement.textLength} on roman triad labels. */
@@ -74,8 +74,8 @@ export class ArcPathVisualizer {
       innerRadius + (outerRadius - innerRadius) * ACCIDENTAL_SYMBOL_STYLES.radialOffset;
 
     return {
-      start: PolarMath.getCartesianFromPolar(radius, middleAngle - HALF_KEY_ANGLE), //flat
-      end: PolarMath.getCartesianFromPolar(radius, middleAngle + HALF_KEY_ANGLE), //sharp
+      start: PolarMath.getCartesianFromPolar(radius, middleAngle - HALF_KEY_ANGLE, true), //flat
+      end: PolarMath.getCartesianFromPolar(radius, middleAngle + HALF_KEY_ANGLE, true), //sharp
     };
   }
 
