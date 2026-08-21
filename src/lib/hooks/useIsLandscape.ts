@@ -2,11 +2,14 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
+function getIsLandscape() {
+  return typeof window !== "undefined" && window.matchMedia("(orientation: landscape)").matches;
+}
+
 export function useIsLandscape() {
-  const [isLandscape, setIsLandscape] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(getIsLandscape);
   useEffect(() => {
-    const check = () => setIsLandscape(window.matchMedia("(orientation: landscape)").matches);
-    check();
+    const check = () => setIsLandscape(getIsLandscape());
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
