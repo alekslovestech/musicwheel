@@ -56,7 +56,7 @@ export class VoicePool {
     const silentAt = time + durationSec + this.envelope.release;
 
     indices.forEach((index) => {
-      const voiceIndex = this.claimVoice();
+      const voiceIndex = this.claimVoice(time);
       this.silentAtSec[voiceIndex] = silentAt;
       this.voices[voiceIndex].triggerAttackRelease(frequencyFromIndex(index), durationSec, time);
     });
@@ -77,15 +77,11 @@ export class VoicePool {
   }
 
   /**
-   * The voice that has been silent longest, which under any load the pool is sized for is a voice
-   * that is genuinely silent. Claiming by "quietest for longest" is what keeps a note's tail from
-   * being cut out from under it by the next step.
+   * The first voice already silent at this instant. The pool is sized so one always is - see
+   * {@link VOICE_COUNT} - which is what keeps a note's tail from being cut out from under it by
+   * the next step.
    */
-  private claimVoice(): number {
-    let quietest = 0;
-    for (let index = 1; index < this.silentAtSec.length; index++) {
-      if (this.silentAtSec[index] < this.silentAtSec[quietest]) quietest = index;
-    }
-    return quietest;
+  private claimVoice(time: number): number {
+    return this.silentAtSec.findIndex((silentAt) => silentAt <= time);
   }
 }

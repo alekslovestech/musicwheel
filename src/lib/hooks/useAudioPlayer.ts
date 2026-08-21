@@ -20,7 +20,6 @@ export function useAudioPlayer() {
 
   useToneContextInit(setAudioInitialized);
   usePauseSequenceOnHide(playbackState, pauseSequencePlayback);
-  useVoicePoolBridge(poolRef);
   useVoicePoolLifecycle(poolRef, isAudioInitialized);
   const { playSelectedNotes } = useNotePlayback(poolRef, selectedNoteIndices, isAudioInitialized);
 
@@ -130,22 +129,6 @@ function usePauseSequenceOnHide(
   }, [pauseSequencePlayback]);
 }
 
-function useVoicePoolBridge(poolRef: RefObject<VoicePool | null>) {
-  useEffect(() => {
-    setSequenceSynth({
-      releaseAll: () => poolRef.current?.releaseAll(),
-      setEnvelope: (envelope) => poolRef.current?.setEnvelope(envelope),
-      triggerNotes: (indices, durationSec, time) => {
-        if (indices.length === 0) return;
-        // At the instant the scheduler named, not "whenever this ran": the notes of a chord must
-        // share an onset, and the pool places both ends of each note on the clock up front.
-        poolRef.current?.triggerNotes(indices, durationSec, time);
-      },
-    });
-    return () => setSequenceSynth(null);
-  }, []);
-}
-
 function useVoicePoolLifecycle(
   poolRef: MutableRefObject<VoicePool | null>,
   isAudioInitialized: boolean,
@@ -157,12 +140,15 @@ function useVoicePoolLifecycle(
     try {
       // Every voice is built here, once, so that no step of a sequence ever pays for one.
       poolRef.current = new VoicePool();
+      // VoicePool already matches SequenceSynth's shape, so the sequencer can call it directly.
+      setSequenceSynth(poolRef.current);
     } catch (error) {
       console.error("Failed to initialize synth:", error);
     }
 
     return () => {
       if (poolRef.current) {
+        setSequenceSynth(null);
         poolRef.current.dispose();
         poolRef.current = null;
       }
