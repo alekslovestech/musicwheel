@@ -19,7 +19,7 @@ export function useAudioPlayer() {
   const { selectedNoteIndices } = useMusical();
 
   useToneContextInit(setAudioInitialized);
-  usePauseSequenceOnHide(playbackState, pauseSequencePlayback);
+  usePauseAudioOnHide(playbackState, pauseSequencePlayback, poolRef);
   useVoicePoolLifecycle(poolRef, isAudioInitialized);
   const { playSelectedNotes } = useNotePlayback(poolRef, selectedNoteIndices, isAudioInitialized);
 
@@ -110,23 +110,29 @@ function useToneContextInit(setAudioInitialized: (initialized: boolean) => void)
   }, [setAudioInitialized]);
 }
 
-function usePauseSequenceOnHide(
+function usePauseAudioOnHide(
   playbackState: PlaybackState,
   pauseSequencePlayback: () => void,
+  poolRef: RefObject<VoicePool | null>,
 ) {
   const playbackStateRef = useRef(playbackState);
   playbackStateRef.current = playbackState;
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.hidden && playbackStateRef.current === PlaybackState.SequencePlaying) {
+      if (!document.hidden) return;
+
+      if (playbackStateRef.current === PlaybackState.SequencePlaying) {
         pauseSequencePlayback();
       }
+      // A one-off chord/note has no transport to pause - releasing it is the equivalent action,
+      // so backgrounding silences audio the same way whether or not a sequence is running.
+      poolRef.current?.releaseAll();
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [pauseSequencePlayback]);
+  }, [pauseSequencePlayback, poolRef]);
 }
 
 function useVoicePoolLifecycle(
