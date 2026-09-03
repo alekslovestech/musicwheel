@@ -17,7 +17,7 @@ export type PlaybackProfile = {
  * How much of a step a note may occupy. The remainder is what guarantees the release begins
  * before the following step attacks rather than partway through it.
  */
-const STEP_SUSTAIN_RATIO = 0.85;
+export const STEP_SUSTAIN_RATIO = 0.85;
 
 /** A single tap has nothing following it, so the tail can be generous. */
 export const DEFAULT_ENVELOPE: SynthEnvelope = {
@@ -78,6 +78,23 @@ export const SEQUENCE_PLAYBACK: PlaybackProfile = {
  */
 export function stepNoteDurationSec(profile: PlaybackProfile, stepSec: number): number {
   return Math.min(profile.durationSec, stepSec * STEP_SUSTAIN_RATIO);
+}
+
+/**
+ * Ceiling on how long a progression chord rings. Sized for a chord that's clearly been let ring,
+ * not a click - well above {@link DEFAULT_CLICK}'s duration - but short of a whole note's full
+ * notated length, which would otherwise drone for most of a bar.
+ */
+const PROGRESSION_HOLD_CAP_SEC = 0.8;
+
+/**
+ * How long a progression chord rings, given its own notated length. Shorter notes (quarters,
+ * eighths) scale with their step so they stay clearly distinct from one another; longer notes
+ * (halves, wholes) are clamped to {@link PROGRESSION_HOLD_CAP_SEC} rather than holding their full
+ * length, which would otherwise drone for most of a bar.
+ */
+export function progressionStepDurationSec(stepSec: number): number {
+  return Math.min(PROGRESSION_HOLD_CAP_SEC, stepSec * STEP_SUSTAIN_RATIO);
 }
 
 /** The profile for clicking a key or a scale degree, as opposed to a step of a sequence. */
