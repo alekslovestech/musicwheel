@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { GlobalMode } from "@/types/enums/GlobalMode";
-import { getPath } from "@/utils/slug/paths";
-import { progressionTypeToSlug } from "@/utils/slug/codecs";
+import { defaultProgressionSelection, progressionSelectionPath } from "@/utils/slug/progressionSelection";
 
 export default async function ProgressionsPage({
   searchParams,
@@ -10,5 +8,5 @@ export default async function ProgressionsPage({
   searchParams: Promise<{ isDemo?: string }>;
 }) {
   const isDemo = (await searchParams).isDemo !== undefined;
-  redirect(getPath(GlobalMode.ChordProgressions, progressionTypeToSlug(null), isDemo));
+  redirect(progressionSelectionPath(defaultProgressionSelection(), { demo: isDemo }));
 }

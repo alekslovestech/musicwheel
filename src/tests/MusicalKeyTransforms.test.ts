@@ -110,6 +110,14 @@ describe("MusicalKey transforms", () => {
         input: MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor),
         expected: "Ab",
       },
+      {
+        // Regression: this landed on the sole gap in MAJOR_KEY_SIGNATURES (no "Gb" entry, only
+        // sharp-preferring "F#"), so the relative Ionian key was spelled with 6 sharps despite
+        // Eb Aeolian's own key signature being 6 flats.
+        desc: "Eb Aeolian => Gb Ionian (not F#, matching Eb minor's own flat key signature)",
+        input: MusicalKey.fromGreekMode("Eb", ScaleModeType.Aeolian),
+        expected: "Gb",
+      },
     ];
 
     cases.forEach(({ desc, input, expected }) => {
@@ -141,11 +149,61 @@ describe("MusicalKey transforms", () => {
         input: MusicalKey.fromGreekMode("C", ScaleModeType.HungarianMinor),
         expected: "E",
       },
+      {
+        desc: "Eb Aeolian => Gb major (Greek mode, respells to the flat side)",
+        input: MusicalKey.fromGreekMode("Eb", ScaleModeType.Aeolian),
+        expected: "Gb",
+      },
     ];
 
     cases.forEach(({ desc, input, expected }) => {
       it(desc, () => {
         expect(input.getStaffSpellingKey().tonicString).toEqual(expected);
+      });
+    });
+
+    it("Eb Aeolian's staff spelling key has the same 6 flats as its own key signature", () => {
+      const ebAeolian = MusicalKey.fromGreekMode("Eb", ScaleModeType.Aeolian);
+      expect(ebAeolian.getStaffSpellingKey().keySignature.getAccidentals()).toEqual(
+        ebAeolian.keySignature.getAccidentals(),
+      );
+    });
+  });
+
+  describe("switching scale mode respells the tonic for the target classicalMode", () => {
+    const cases = [
+      {
+        desc: "Db Ionian => Aeolian respells to C# Aeolian (Db isn't a legal minor tonic)",
+        tonic: "Db",
+        fromMode: ScaleModeType.Ionian,
+        toMode: ScaleModeType.Aeolian,
+        expectedTonic: "C#",
+        expectedClassicalMode: KeyType.Minor,
+      },
+      {
+        desc: "C# Aeolian => Ionian respells to Db Ionian (C# isn't a legal major tonic)",
+        tonic: "C#",
+        fromMode: ScaleModeType.Aeolian,
+        toMode: ScaleModeType.Ionian,
+        expectedTonic: "Db",
+        expectedClassicalMode: KeyType.Major,
+      },
+      {
+        desc: "C Ionian => Dorian keeps C (already legal for both)",
+        tonic: "C",
+        fromMode: ScaleModeType.Ionian,
+        toMode: ScaleModeType.Dorian,
+        expectedTonic: "C",
+        expectedClassicalMode: KeyType.Minor,
+      },
+    ];
+
+    cases.forEach(({ desc, tonic, fromMode, toMode, expectedTonic, expectedClassicalMode }) => {
+      it(desc, () => {
+        const original = MusicalKey.fromGreekMode(tonic, fromMode);
+        const switched = MusicalKey.fromGreekMode(original.tonicString, toMode);
+        expect(switched.tonicString).toBe(expectedTonic);
+        expect(switched.classicalMode).toBe(expectedClassicalMode);
       });
     });
   });

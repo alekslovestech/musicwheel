@@ -22,6 +22,8 @@ import {
   type SequenceStepVisual,
 } from "@/lib/audio/sequenceSchedules";
 import { prepareChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { suggestedKeyForProgression } from "@/utils/slug/progressionSelection";
 
 interface UseSequencePlaybackProps {
   isAudioInitialized: boolean;
@@ -46,6 +48,7 @@ export const useSequencePlayback = ({
 }: UseSequencePlaybackProps) => {
   const {
     selectedMusicalKey,
+    setSelectedMusicalKey,
     setNotesDirectly,
     setSelectionFromSequence,
     setCurrentChordRef,
@@ -56,7 +59,28 @@ export const useSequencePlayback = ({
   const [scalePlaybackMode, setScalePlaybackMode] = useState<ScalePlaybackMode>(
     ScalePlaybackMode.SingleNote,
   );
-  const [selectedProgression, setSelectedProgression] = useState<ChordProgressionType | null>(null);
+  const [selectedProgression, setSelectedProgressionState] = useState<ChordProgressionType | null>(
+    null,
+  );
+  /**
+   * Switching progressions lands on that progression's own key - the key its chords were written
+   * against - unless `tonicOverride` says otherwise (the URL sync hook uses this to restore a
+   * tonic from a deep link instead of the progression's default).
+   */
+  const setSelectedProgression = useCallback(
+    (progression: ChordProgressionType | null, tonicOverride?: string) => {
+      setSelectedProgressionState(progression);
+      if (progression == null) return;
+
+      const suggestedKey = suggestedKeyForProgression(progression);
+      setSelectedMusicalKey(
+        tonicOverride == null
+          ? suggestedKey
+          : MusicalKey.fromClassicalMode(tonicOverride, suggestedKey.classicalMode),
+      );
+    },
+    [setSelectedMusicalKey],
+  );
   /** Index of the currently sounding step, for UI highlight (progression grid or scale staff).
    * Meaning depends on globalMode; null when playback isn't active in that mode. */
   const [activeStepIndex, setActiveStepIndex] = useState<number | null>(null);

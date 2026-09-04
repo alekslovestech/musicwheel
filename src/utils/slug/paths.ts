@@ -23,9 +23,3 @@ export function getPath(mode: GlobalMode, slug?: string, demo?: boolean): string
 }
 
 export const harmonyPath = (demo?: boolean) => getPath(GlobalMode.Harmony, undefined, demo);
-
-export const scalePath = (slug: string, demo?: boolean) =>
-  getPath(GlobalMode.Scales, slug, demo);
-
-export const progressionPath = (slug: string, demo?: boolean) =>
-  getPath(GlobalMode.ChordProgressions, slug, demo);
