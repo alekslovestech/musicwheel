@@ -1,10 +1,10 @@
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
-import { KeySignature } from "@/types/Keys/KeySignature";
 import { PROGRESSION_REGISTRY } from "@/types/ChordProgressions/progressionRegistry";
 
 import { progressionTypeToSlug, slugToProgressionType } from "./codecs";
+import { isLegalTonicForClassicalMode, legalTonicsForClassicalMode } from "./legalTonics";
 import { DEMO_QUERY_PARAM, getBasePath } from "./paths";
 import { slugToTonic, tonicToSlug } from "./tonicSlug";
 
@@ -23,11 +23,11 @@ export function suggestedKeyForProgression(progression: ChordProgressionType) {
 /** The tonics a progression can legally take - one canonical spelling per pitch class, in the
  * major or minor family the progression's chords were written in. */
 export function legalTonicsForProgression(progression: ChordProgressionType): string[] {
-  return KeySignature.getKeyList(suggestedKeyForProgression(progression).classicalMode);
+  return legalTonicsForClassicalMode(suggestedKeyForProgression(progression).classicalMode);
 }
 
 export function isLegalProgressionTonic(tonic: string, progression: ChordProgressionType): boolean {
-  return legalTonicsForProgression(progression).includes(tonic);
+  return isLegalTonicForClassicalMode(tonic, suggestedKeyForProgression(progression).classicalMode);
 }
 
 export const DEFAULT_PROGRESSION_TYPE: ChordProgressionType = slugToProgressionType(

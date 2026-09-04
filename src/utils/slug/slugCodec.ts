@@ -13,19 +13,12 @@ export function buildSlugMap<TType extends string>(
   ) as Record<string, TType>;
 }
 
-export interface SlugCodec<TValue> {
-  slugToValue(slug: string): TValue | undefined;
-  valueToSlug(value: TValue | null): string;
+export function slugToValue<TValue>(map: Record<string, TValue>, slug: string): TValue | undefined {
+  return map[slug.toLowerCase()];
 }
 
-export function createSlugCodec<TValue>(map: Record<string, TValue>): SlugCodec<TValue> {
+export function valueToSlug<TValue>(map: Record<string, TValue>, value: TValue | null): string {
   const defaultSlug = Object.keys(map)[0];
-
-  return {
-    slugToValue: (slug) => map[slug.toLowerCase()],
-    valueToSlug: (value) =>
-      value == null
-        ? defaultSlug
-        : Object.entries(map).find(([, v]) => v === value)?.[0] ?? defaultSlug,
-  };
+  if (value == null) return defaultSlug;
+  return Object.entries(map).find(([, v]) => v === value)?.[0] ?? defaultSlug;
 }

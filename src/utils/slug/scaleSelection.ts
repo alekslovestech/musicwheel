@@ -2,10 +2,11 @@ import { GlobalMode } from "@/types/enums/GlobalMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { classicalModeForScaleMode } from "@/types/Keys/MusicalKey";
-import { KeySignature } from "@/types/Keys/KeySignature";
 
 import { scaleTypeToSlug, slugToScaleType } from "./codecs";
+import { isLegalTonicForClassicalMode, legalTonicsForClassicalMode } from "./legalTonics";
 import { DEMO_QUERY_PARAM, getBasePath } from "./paths";
+import { slugToValue, valueToSlug } from "./slugCodec";
 import { slugToTonic, tonicToSlug } from "./tonicSlug";
 
 export { tonicToSlug, slugToTonic } from "./tonicSlug";
@@ -20,31 +21,23 @@ export const PLAYBACK_QUERY_PARAM = "play";
 
 /** The tonics a scale mode can legally take - one canonical spelling per pitch class. */
 export function legalTonicsForScaleMode(scaleMode: ScaleModeType): string[] {
-  return KeySignature.getKeyList(classicalModeForScaleMode(scaleMode));
+  return legalTonicsForClassicalMode(classicalModeForScaleMode(scaleMode));
 }
 
 export function isLegalTonic(tonic: string, scaleMode: ScaleModeType): boolean {
-  return legalTonicsForScaleMode(scaleMode).includes(tonic);
+  return isLegalTonicForClassicalMode(tonic, classicalModeForScaleMode(scaleMode));
 }
 
-const PLAYBACK_MODE_SLUGS: Record<ScalePlaybackMode, string> = {
-  [ScalePlaybackMode.SingleNote]: "single",
-  [ScalePlaybackMode.Triad]: "triad",
-  [ScalePlaybackMode.DronedSingleNote]: "droned",
-  [ScalePlaybackMode.Seventh]: "seventh",
+const PLAYBACK_MODE_SLUG_MAP: Record<string, ScalePlaybackMode> = {
+  single: ScalePlaybackMode.SingleNote,
+  triad: ScalePlaybackMode.Triad,
+  droned: ScalePlaybackMode.DronedSingleNote,
+  seventh: ScalePlaybackMode.Seventh,
 };
 
-const SLUG_TO_PLAYBACK_MODE: Record<string, ScalePlaybackMode> = Object.fromEntries(
-  Object.entries(PLAYBACK_MODE_SLUGS).map(([mode, slug]) => [slug, mode as ScalePlaybackMode]),
-);
-
-export function playbackModeToSlug(mode: ScalePlaybackMode): string {
-  return PLAYBACK_MODE_SLUGS[mode];
-}
-
-export function slugToPlaybackMode(slug: string): ScalePlaybackMode | undefined {
-  return SLUG_TO_PLAYBACK_MODE[slug.toLowerCase()];
-}
+export const slugToPlaybackMode = (slug: string) => slugToValue(PLAYBACK_MODE_SLUG_MAP, slug);
+export const playbackModeToSlug = (mode: ScalePlaybackMode | null) =>
+  valueToSlug(PLAYBACK_MODE_SLUG_MAP, mode);
 
 export interface ReadonlySearchParamsLike {
   get(name: string): string | null;

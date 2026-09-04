@@ -1,12 +1,12 @@
 import { PROGRESSION_SLUG_MAP } from "@/types/ChordProgressions/progressionRegistry";
 import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeRegistry";
+import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
-import { createSlugCodec } from "./slugCodec";
+import { slugToValue, valueToSlug } from "./slugCodec";
 
-const scaleSlugCodec = createSlugCodec(SCALE_SLUG_MAP);
-const progressionSlugCodec = createSlugCodec(PROGRESSION_SLUG_MAP);
-
-export const slugToScaleType = scaleSlugCodec.slugToValue;
-export const scaleTypeToSlug = scaleSlugCodec.valueToSlug;
-export const slugToProgressionType = progressionSlugCodec.slugToValue;
-export const progressionTypeToSlug = progressionSlugCodec.valueToSlug;
+export const slugToScaleType = (slug: string) => slugToValue(SCALE_SLUG_MAP, slug);
+export const scaleTypeToSlug = (type: ScaleModeType | null) => valueToSlug(SCALE_SLUG_MAP, type);
+export const slugToProgressionType = (slug: string) => slugToValue(PROGRESSION_SLUG_MAP, slug);
+export const progressionTypeToSlug = (type: ChordProgressionType | null) =>
+  valueToSlug(PROGRESSION_SLUG_MAP, type);
