@@ -5,7 +5,7 @@ import { PROGRESSION_REGISTRY } from "@/types/ChordProgressions/progressionRegis
 
 import { progressionTypeToSlug, slugToProgressionType } from "./codecs";
 import { isLegalTonicForClassicalMode, legalTonicsForClassicalMode } from "./legalTonics";
-import { DEMO_QUERY_PARAM, getBasePath } from "./paths";
+import { getPath } from "./paths";
 import { slugToTonic, tonicToSlug } from "./tonicSlug";
 
 export { tonicToSlug, slugToTonic } from "./tonicSlug";
@@ -49,8 +49,7 @@ export function progressionSelectionPath(
 ): string {
   const tonicSlug = tonicToSlug(selection.tonic);
   const progressionSlug = progressionTypeToSlug(selection.progression);
-  const query = options.demo ? `?${DEMO_QUERY_PARAM}` : "";
-  return `${getBasePath(GlobalMode.ChordProgressions)}/${tonicSlug}/${progressionSlug}${query}`;
+  return getPath(GlobalMode.ChordProgressions, `${tonicSlug}/${progressionSlug}`, options.demo);
 }
 
 /**

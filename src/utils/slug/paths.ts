@@ -17,9 +17,24 @@ export function getBasePath(mode: GlobalMode): string {
   }
 }
 
-export function getPath(mode: GlobalMode, slug?: string, demo?: boolean): string {
-  const path = slug ? `${getBasePath(mode)}/${slug}` : getBasePath(mode);
-  return demo ? `${path}?${DEMO_QUERY_PARAM}` : path;
+function joinPath(base: string, segments: string[]): string {
+  return [base, ...segments].join("/");
 }
 
-export const harmonyPath = (demo?: boolean) => getPath(GlobalMode.Harmony, undefined, demo);
+function joinQuery(params: string[]): string {
+  return params.length ? `?${params.join("&")}` : "";
+}
+
+/** Builds a full path: base + path segments + a query string. Omit a piece by passing an empty
+ * array - callers decide what's present, e.g. `demo ? [DEMO_QUERY_PARAM] : []`. */
+export function buildPath(
+  base: string,
+  segments: string[] = [],
+  queryParams: string[] = [],
+): string {
+  return joinPath(base, segments) + joinQuery(queryParams);
+}
+
+export function getPath(mode: GlobalMode, slug?: string, demo?: boolean): string {
+  return buildPath(getBasePath(mode), slug ? [slug] : [], demo ? [DEMO_QUERY_PARAM] : []);
+}

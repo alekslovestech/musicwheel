@@ -5,7 +5,7 @@ import { classicalModeForScaleMode } from "@/types/Keys/MusicalKey";
 
 import { scaleTypeToSlug, slugToScaleType } from "./codecs";
 import { isLegalTonicForClassicalMode, legalTonicsForClassicalMode } from "./legalTonics";
-import { DEMO_QUERY_PARAM, getBasePath } from "./paths";
+import { buildPath, DEMO_QUERY_PARAM, getBasePath } from "./paths";
 import { slugToValue, valueToSlug } from "./slugCodec";
 import { slugToTonic, tonicToSlug } from "./tonicSlug";
 
@@ -52,11 +52,14 @@ export function scaleSelectionPath(
 ): string {
   const tonicSlug = tonicToSlug(selection.tonic);
   const modeSlug = scaleTypeToSlug(selection.scaleMode);
-  const query = [
-    `${PLAYBACK_QUERY_PARAM}=${playbackModeToSlug(selection.playbackMode)}`,
-    ...(options.demo ? [DEMO_QUERY_PARAM] : []),
-  ].join("&");
-  return `${getBasePath(GlobalMode.Scales)}/${tonicSlug}/${modeSlug}?${query}`;
+  return buildPath(
+    getBasePath(GlobalMode.Scales),
+    [tonicSlug, modeSlug],
+    [
+      `${PLAYBACK_QUERY_PARAM}=${playbackModeToSlug(selection.playbackMode)}`,
+      ...(options.demo ? [DEMO_QUERY_PARAM] : []),
+    ],
+  );
 }
 
 /**
