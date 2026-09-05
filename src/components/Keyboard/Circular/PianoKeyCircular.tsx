@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
 
-import { actualToChromatic } from "@/types/IndexTypes";
+import { ActualIndex, actualToChromatic } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
-import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
 import { CartesianPoint, CartesianPointPair } from "@/types/interfaces/CartesianPoint";
 
@@ -19,9 +18,23 @@ import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
-interface PianoKeyCircularProps extends PianoKeyBaseProps {
+const PianoKeyCircularBase = ({
+  actualIndex,
+  isBassNote,
+  outerRadius,
+  innerRadius,
+  onKeyClick,
+  isSelected,
+  isScales,
+  selectedMusicalKey,
+  scalePlaybackMode,
+}: {
+  actualIndex: ActualIndex;
+  isBassNote: boolean;
   outerRadius: number;
   innerRadius: number;
+  /** Pass null to render the key read-only, for the static wheel article figures embed. */
+  onKeyClick: ((index: ActualIndex) => void) | null;
   /**
    * Selection, key and playback mode arrive as props rather than from context: a memoized
    * component still re-renders whenever a context it consumes changes, and during sequence
@@ -32,18 +45,6 @@ interface PianoKeyCircularProps extends PianoKeyBaseProps {
   isScales: boolean;
   selectedMusicalKey: MusicalKey;
   scalePlaybackMode: ScalePlaybackMode;
-}
-
-const PianoKeyCircularBase: React.FC<PianoKeyCircularProps> = ({
-  actualIndex,
-  isBassNote,
-  outerRadius,
-  innerRadius,
-  onKeyClick,
-  isSelected,
-  isScales,
-  selectedMusicalKey,
-  scalePlaybackMode,
 }) => {
   const chromaticIndex = actualToChromatic(actualIndex);
   const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
@@ -126,8 +127,10 @@ const PianoKeyCircularBase: React.FC<PianoKeyCircularProps> = ({
   return (
     <g
       id={id}
-      className={`${allBaseClasses} !${keyColors.border} hover:[&_path]:opacity-80`}
-      onClick={() => onKeyClick(actualIndex)}
+      className={`${allBaseClasses} !${keyColors.border} ${
+        onKeyClick ? "hover:[&_path]:opacity-80" : ""
+      }`}
+      onClick={onKeyClick ? () => onKeyClick(actualIndex) : undefined}
     >
       <path d={pathData} className={`${keyColors.primary} stroke-keys-strokeOutline stroke-1`} />
       <text

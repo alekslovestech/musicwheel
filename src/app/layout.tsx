@@ -1,7 +1,7 @@
 import { geistSans, geistMono } from "@/lib/design";
 import { baseMetadata, viewport } from "@/lib/metadata";
 import "./globals.css";
-import { RootProvider } from "@/contexts/RootContext";
+import { AnalyticsProvider } from "@/lib/tracking/AnalyticsProvider";
 
 export { viewport };
 export const metadata = baseMetadata;
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <RootProvider>{children}</RootProvider>
+        <AnalyticsProvider>{children}</AnalyticsProvider>
       </body>
     </html>
   );

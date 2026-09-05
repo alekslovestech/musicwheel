@@ -126,6 +126,25 @@ export const chordProgressionViewMetadata: Metadata = {
   },
 };
 
+// Learn section metadata - the prose side of the site, written to be indexed and read rather
+// than played with. Each article sets its own title through metadataForSlugPage.
+export const learnViewMetadata: Metadata = {
+  ...baseMetadata,
+  title: "Music Wheel App - Learn",
+  keywords: ["music theory explained", "modes explained", "parallel modes", "scale comparison"],
+  description: "Short written guides to the ideas the Music Wheel app lets you hear",
+  openGraph: {
+    ...baseMetadata.openGraph,
+    title: "Music Wheel - Learn",
+    description: "Short written guides to the ideas the Music Wheel app lets you hear",
+    url: "/learn",
+  },
+  twitter: {
+    ...baseMetadata.twitter,
+    title: "Music Wheel - Learn",
+    description: "Short written guides to the ideas the Music Wheel app lets you hear",
+  },
+};
 
 // Per-slug metadata for scales and progressions (canonical path, no query params). `description`
 // overrides the base view's generic description; omitted, it falls back to `base.description`.

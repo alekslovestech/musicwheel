@@ -65,8 +65,6 @@ function applyScaleStepAtDegree(
   }
 }
 
-export const SCALE_BOUNDARY_MARKER_SIZE = 5;
-
 export interface PianoKeyBaseProps {
   actualIndex: ActualIndex;
   isBassNote: boolean;
