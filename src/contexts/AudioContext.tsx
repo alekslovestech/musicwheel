@@ -30,7 +30,9 @@ interface AudioContextType {
 
   // Chord progression-specific
   selectedProgression: ChordProgressionType | null;
-  setSelectedProgression: (progression: ChordProgressionType | null) => void;
+  /** `tonicOverride` restores a specific tonic instead of the progression's suggested key -
+   * used by the URL sync hook when a deep link names a transposed key. */
+  setSelectedProgression: (progression: ChordProgressionType | null, tonicOverride?: string) => void;
   /** Index of the currently sounding step, for UI highlight (progression grid or scale staff).
    * Meaning depends on globalMode; null when playback isn't active in that mode. */
   activeStepIndex: number | null;

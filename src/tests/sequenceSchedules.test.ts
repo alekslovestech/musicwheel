@@ -2,7 +2,11 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
 import { SCALE_AUDIO_WARMUP_MS } from "@/lib/audio/playbackDurations";
-import { SEQUENCE_PLAYBACK } from "@/lib/audio/playbackProfiles";
+import {
+  progressionStepDurationSec,
+  SEQUENCE_PLAYBACK,
+  STEP_SUSTAIN_RATIO,
+} from "@/lib/audio/playbackProfiles";
 import {
   buildProgressionSchedule,
   buildScaleSchedule,
@@ -119,8 +123,28 @@ describe("buildProgressionSchedule", () => {
 
     schedule.steps.forEach((step, index) => {
       const nextAtSec = schedule.steps[index + 1]?.atSec ?? schedule.endsAtSec;
+      const stepSec =
+        RhythmUtils.chordDurationMs(
+          prepared.tempo,
+          prepared.steps[index].noteLength,
+          prepared.steps[index].rhythmDots,
+        ) / 1000;
       expect(step.atSec + step.durationSec).toBeLessThan(nextAtSec);
-      expect(step.durationSec).toBeLessThanOrEqual(SEQUENCE_PLAYBACK.durationSec);
+      expect(step.durationSec).toBeCloseTo(progressionStepDurationSec(stepSec), 10);
     });
+  });
+
+  test("rings a whole note past the click-length cap but short of its full notated length", () => {
+    const prepared = prepareChordProgressionSequence(
+      ChordProgressionType.Fifties_Progression,
+      constants.C_IONIAN_KEY,
+    );
+    prepared.steps[0].noteLength = 1;
+    prepared.steps[0].rhythmDots = 0;
+    const schedule = buildProgressionSchedule(prepared, noop, noop);
+    const stepSec = RhythmUtils.chordDurationMs(prepared.tempo, 1, 0) / 1000;
+
+    expect(schedule.steps[0].durationSec).toBeGreaterThan(SEQUENCE_PLAYBACK.durationSec);
+    expect(schedule.steps[0].durationSec).toBeLessThan(stepSec * STEP_SUSTAIN_RATIO);
   });
 });

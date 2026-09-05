@@ -27,3 +27,12 @@ export const MINOR_KEY_SIGNATURES: Record<string, string[]> = {
   Bb: ["Bb", "Eb", "Ab", "Db", "Gb"],
   Eb: ["Bb", "Eb", "Ab", "Db", "Gb", "Cb"], //in minor key we prefer flats
 };
+
+/**
+ * The one pitch class MAJOR_KEY_SIGNATURES has no flat spelling for (only sharp-preferring
+ * "F#") - needed when a derived key (a mode's relative Ionian, via
+ * {@link MusicalKey.getCanonicalIonianKey}) must respell using the flat side. Not one of the 12
+ * canonical picker/URL tonics, so not added to MAJOR_KEY_SIGNATURES itself. Gb major and Eb minor
+ * are relative keys and so share one signature - see MINOR_KEY_SIGNATURES.Eb above.
+ */
+export const ENHARMONIC_FLAT_MAJOR_TONIC = "Gb";

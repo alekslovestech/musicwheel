@@ -126,25 +126,32 @@ export const chordProgressionViewMetadata: Metadata = {
   },
 };
 
-/** Per-slug metadata for scales and progressions (canonical path, no query params). */
+
+// Per-slug metadata for scales and progressions (canonical path, no query params). `description`
+// overrides the base view's generic description; omitted, it falls back to `base.description`.
 export function metadataForSlugPage(
   base: Metadata,
   pathname: string,
   itemTitle: string,
+  description?: string,
 ): Metadata {
   const pageTitle = `Music Wheel - ${itemTitle}`;
+  const pageDescription = description ?? base.description ?? undefined;
 
   return {
     ...base,
     title: pageTitle,
+    description: pageDescription,
     openGraph: {
       ...base.openGraph,
       title: pageTitle,
+      description: pageDescription,
       url: pathname,
     },
     twitter: {
       ...base.twitter,
       title: pageTitle,
+      description: pageDescription,
     },
     alternates: {
       canonical: pathname,

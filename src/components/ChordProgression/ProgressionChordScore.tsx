@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { ProgressionNotebook } from "./ProgressionNotebook";
 import { ProgressionPicker } from "./ProgressionPicker";
@@ -16,7 +16,7 @@ import { useIsLandscape } from "@/lib/hooks";
 /** Chord/Roman view of the selected progression (picker + notebook). Staff notation is StaffRenderer. */
 export function ProgressionChordScore() {
   const { selectedProgression, setSelectedProgression, activeStepIndex } = useAudio();
-  const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
+  const { selectedMusicalKey } = useMusical();
   const { showBassInRomanNotation } = useDisplay();
   const isLandscape = useIsLandscape();
 
@@ -25,11 +25,6 @@ export function ProgressionChordScore() {
       ? ChordProgressionLibrary.getProgression(selectedProgression)
       : null;
   }, [selectedProgression]);
-
-  useEffect(() => {
-    if (progression == null) return;
-    setSelectedMusicalKey(progression.suggestedMusicalKey);
-  }, [progression, setSelectedMusicalKey]);
 
   const registryEntry =
     selectedProgression != null ? PROGRESSION_REGISTRY[selectedProgression] : null;

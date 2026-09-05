@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
-import { GlobalMode } from "@/types/enums/GlobalMode";
-import { getPath } from "@/utils/slug/paths";
-import { scaleTypeToSlug } from "@/utils/slug/codecs";
+import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { scaleSelectionPath } from "@/utils/slug/scaleSelection";
 
 export default async function ScalesPage({
   searchParams,
@@ -10,5 +10,14 @@ export default async function ScalesPage({
   searchParams: Promise<{ isDemo?: string }>;
 }) {
   const isDemo = (await searchParams).isDemo !== undefined;
-  redirect(getPath(GlobalMode.Scales, scaleTypeToSlug(null), isDemo));
+  redirect(
+    scaleSelectionPath(
+      {
+        tonic: DEFAULT_MUSICAL_KEY.tonicString,
+        scaleMode: DEFAULT_MUSICAL_KEY.scaleMode,
+        playbackMode: ScalePlaybackMode.SingleNote,
+      },
+      { demo: isDemo },
+    ),
+  );
 }

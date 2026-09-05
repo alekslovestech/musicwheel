@@ -19,8 +19,7 @@ export function useAudioPlayer() {
   const { selectedNoteIndices } = useMusical();
 
   useToneContextInit(setAudioInitialized);
-  usePauseSequenceOnHide(playbackState, pauseSequencePlayback);
-  useVoicePoolBridge(poolRef);
+  usePauseAudioOnHide(playbackState, pauseSequencePlayback, poolRef);
   useVoicePoolLifecycle(poolRef, isAudioInitialized);
   const { playSelectedNotes } = useNotePlayback(poolRef, selectedNoteIndices, isAudioInitialized);
 
@@ -111,39 +110,29 @@ function useToneContextInit(setAudioInitialized: (initialized: boolean) => void)
   }, [setAudioInitialized]);
 }
 
-function usePauseSequenceOnHide(
+function usePauseAudioOnHide(
   playbackState: PlaybackState,
   pauseSequencePlayback: () => void,
+  poolRef: RefObject<VoicePool | null>,
 ) {
   const playbackStateRef = useRef(playbackState);
   playbackStateRef.current = playbackState;
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.hidden && playbackStateRef.current === PlaybackState.SequencePlaying) {
+      if (!document.hidden) return;
+
+      if (playbackStateRef.current === PlaybackState.SequencePlaying) {
         pauseSequencePlayback();
       }
+      // A one-off chord/note has no transport to pause - releasing it is the equivalent action,
+      // so backgrounding silences audio the same way whether or not a sequence is running.
+      poolRef.current?.releaseAll();
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [pauseSequencePlayback]);
-}
-
-function useVoicePoolBridge(poolRef: RefObject<VoicePool | null>) {
-  useEffect(() => {
-    setSequenceSynth({
-      releaseAll: () => poolRef.current?.releaseAll(),
-      setEnvelope: (envelope) => poolRef.current?.setEnvelope(envelope),
-      triggerNotes: (indices, durationSec, time) => {
-        if (indices.length === 0) return;
-        // At the instant the scheduler named, not "whenever this ran": the notes of a chord must
-        // share an onset, and the pool places both ends of each note on the clock up front.
-        poolRef.current?.triggerNotes(indices, durationSec, time);
-      },
-    });
-    return () => setSequenceSynth(null);
-  }, []);
+  }, [pauseSequencePlayback, poolRef]);
 }
 
 function useVoicePoolLifecycle(
@@ -157,12 +146,15 @@ function useVoicePoolLifecycle(
     try {
       // Every voice is built here, once, so that no step of a sequence ever pays for one.
       poolRef.current = new VoicePool();
+      // VoicePool already matches SequenceSynth's shape, so the sequencer can call it directly.
+      setSequenceSynth(poolRef.current);
     } catch (error) {
       console.error("Failed to initialize synth:", error);
     }
 
     return () => {
       if (poolRef.current) {
+        setSequenceSynth(null);
         poolRef.current.dispose();
         poolRef.current = null;
       }

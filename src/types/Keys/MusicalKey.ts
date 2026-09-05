@@ -10,6 +10,7 @@ import { ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { NoteIndices, toNoteIndices } from "@/types/IndexTypes";
 import { KeySignature } from "@/types/Keys/KeySignature";
+import { ENHARMONIC_FLAT_MAJOR_TONIC } from "@/types/constants/KeySignatureConstants";
 
 import { NoteConverter } from "@/utils/NoteConverter";
 import { IndexUtils } from "@/utils/IndexUtils";
@@ -24,10 +25,14 @@ export class MusicalKey {
   public readonly scaleModeInfo: ScaleModeInfo;
 
   private constructor(tonicAsString: string, classicalMode: KeyType, greekMode: ScaleModeType) {
-    this.tonicString = NoteConverter.sanitizeNoteString(tonicAsString);
+    // Respells to a spelling this classicalMode actually uses - e.g. switching a key from major
+    // to a minor-family mode without respelling would leave "Db" attached to a Minor key even
+    // though minor tonics are spelled "C#" at that pitch class, producing a key nothing else in
+    // the app (the tonic picker, the URL router) considers legal.
+    this.tonicString = MusicalKey.canonicalTonicString(tonicAsString, classicalMode);
     this.classicalMode = classicalMode;
     this.scaleMode = greekMode;
-    this.keySignature = new KeySignature(tonicAsString, classicalMode);
+    this.keySignature = new KeySignature(this.tonicString, classicalMode);
     this.tonicIndex = NoteConverter.toChromaticIndex(this.tonicString);
     this.scaleModeInfo = SCALE_MODE_REGISTRY[greekMode];
   }
@@ -73,31 +78,31 @@ export class MusicalKey {
   }
 
   static fromGreekMode(tonicAsString: string, greekMode: ScaleModeType): MusicalKey {
-    const classicalMode = [
-      ScaleModeType.Ionian,
-      ScaleModeType.Lydian,
-      //   ScaleModeType.Mixolydian,
-    ].includes(greekMode)
-      ? KeyType.Major
-      : KeyType.Minor;
-    return new MusicalKey(tonicAsString, classicalMode, greekMode);
+    return new MusicalKey(tonicAsString, classicalModeForScaleMode(greekMode), greekMode);
   }
 
   getOppositeKey(): MusicalKey {
     const newMode = isMajor(this.classicalMode) ? KeyType.Minor : KeyType.Major;
-    const newTonicAsString = this.findKeyWithTonicIndex(this.tonicIndex, newMode);
+    const newTonicAsString = MusicalKey.findKeyWithTonicIndex(this.tonicIndex, newMode);
     return MusicalKey.fromClassicalMode(newTonicAsString, newMode);
   }
 
   getTransposedKey(amount: number): MusicalKey {
     const newTonicIndex = addChromatic(this.tonicIndex, amount);
-    const newTonicAsString = this.findKeyWithTonicIndex(newTonicIndex, this.classicalMode);
+    const newTonicAsString = MusicalKey.findKeyWithTonicIndex(newTonicIndex, this.classicalMode);
     return MusicalKey.fromGreekMode(newTonicAsString, this.scaleMode);
   }
 
   getCanonicalIonianKey(): MusicalKey {
     const ionianTonicIndex = this.scaleModeInfo.getIonianTonicIndex(this.tonicIndex);
-    const ionianTonicString = this.findKeyWithTonicIndex(ionianTonicIndex, KeyType.Major);
+    // Respell using this key's own sharp/flat orientation - e.g. Eb Aeolian's relative Ionian is
+    // the flat "Gb", not MAJOR_KEY_SIGNATURES's sharp-preferring "F#" for that same pitch class.
+    const preferFlat = this.getDefaultAccidental() === AccidentalType.Flat;
+    const ionianTonicString = MusicalKey.findKeyWithTonicIndex(
+      ionianTonicIndex,
+      KeyType.Major,
+      preferFlat,
+    );
     return MusicalKey.fromGreekMode(ionianTonicString, ScaleModeType.Ionian);
   }
 
@@ -112,11 +117,48 @@ export class MusicalKey {
     return this.keySignature.getDefaultAccidental();
   }
 
-  private findKeyWithTonicIndex(tonicIndex: ChromaticIndex, mode: KeyType): string {
+  private static findKeyWithTonicIndex(
+    tonicIndex: ChromaticIndex,
+    mode: KeyType,
+    preferFlat: boolean = false,
+  ): string {
+    if (
+      preferFlat &&
+      mode === KeyType.Major &&
+      tonicIndex === NoteConverter.toChromaticIndex(ENHARMONIC_FLAT_MAJOR_TONIC)
+    ) {
+      return ENHARMONIC_FLAT_MAJOR_TONIC;
+    }
+
     const keyList = KeySignature.getKeyList(mode);
     const tonicAsString = keyList.find((key) => NoteConverter.toChromaticIndex(key) === tonicIndex);
     return tonicAsString!;
   }
+
+  /** Whether tonicAsString is a spelling this classicalMode already recognizes as itself - one of
+   * the 12 canonical picker/URL tonics, or (major only) the "Gb" enharmonic carve-out that
+   * {@link getCanonicalIonianKey} deliberately spells with flats. */
+  private static isKnownTonicSpelling(tonicAsString: string, classicalMode: KeyType): boolean {
+    return (
+      KeySignature.getKeyList(classicalMode).includes(tonicAsString) ||
+      (classicalMode === KeyType.Major && tonicAsString === ENHARMONIC_FLAT_MAJOR_TONIC)
+    );
+  }
+
+  private static canonicalTonicString(tonicAsString: string, classicalMode: KeyType): string {
+    const sanitized = NoteConverter.sanitizeNoteString(tonicAsString);
+    if (MusicalKey.isKnownTonicSpelling(sanitized, classicalMode)) return sanitized;
+
+    const tonicIndex = NoteConverter.toChromaticIndex(sanitized);
+    return MusicalKey.findKeyWithTonicIndex(tonicIndex, classicalMode);
+  }
 }
 
 export const DEFAULT_MUSICAL_KEY = MusicalKey.fromClassicalMode("C", KeyType.Major);
+
+/** Which classical mode (and therefore which legal tonic spellings) a Greek/other scale mode uses. */
+export function classicalModeForScaleMode(scaleMode: ScaleModeType): KeyType {
+  return [ScaleModeType.Ionian, ScaleModeType.Lydian].includes(scaleMode)
+    ? KeyType.Major
+    : KeyType.Minor;
+}

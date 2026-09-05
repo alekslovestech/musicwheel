@@ -1,11 +1,17 @@
 "use client";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
+
+function getIsLandscape() {
+  return window.matchMedia("(orientation: landscape)").matches;
+}
 
 export function useIsLandscape() {
+  // Starts false to match the server-rendered markup (window is undefined during SSR); the
+  // layout effect below corrects it synchronously before paint, so there's no visible flash and
+  // no hydration mismatch.
   const [isLandscape, setIsLandscape] = useState(false);
-  useEffect(() => {
-    const check = () => setIsLandscape(window.matchMedia("(orientation: landscape)").matches);
+  useLayoutEffect(() => {
+    const check = () => setIsLandscape(getIsLandscape());
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);

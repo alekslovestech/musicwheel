@@ -2,6 +2,7 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { isMajor, KeyType } from "@/types/enums/KeyType";
 
 import {
+  ENHARMONIC_FLAT_MAJOR_TONIC,
   MAJOR_KEY_SIGNATURES,
   MINOR_KEY_SIGNATURES,
 } from "@/types/constants/KeySignatureConstants";
@@ -20,8 +21,11 @@ export class KeySignature {
     //this.accidentals = this.calculateAccidentals();
   }
   getAccidentals(): string[] {
+    if (isMajor(this.mode) && this.tonicString === ENHARMONIC_FLAT_MAJOR_TONIC) 
+      return MINOR_KEY_SIGNATURES.Eb;
+    
     const keyMap = isMajor(this.mode) ? MAJOR_KEY_SIGNATURES : MINOR_KEY_SIGNATURES;
-    return keyMap[this.tonicString] || [];
+    return keyMap[this.tonicString] ?? [];
   }
 
   getDefaultAccidental(): AccidentalType {

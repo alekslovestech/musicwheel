@@ -14,7 +14,11 @@ import {
   SCALE_STEP_MS_SINGLE_NOTE,
   SCALE_STEP_MS_TRIAD,
 } from "@/lib/audio/playbackDurations";
-import { SEQUENCE_PLAYBACK, stepNoteDurationSec } from "@/lib/audio/playbackProfiles";
+import {
+  progressionStepDurationSec,
+  SEQUENCE_PLAYBACK,
+  stepNoteDurationSec,
+} from "@/lib/audio/playbackProfiles";
 import type { ScheduledStep, SequenceSchedule } from "@/lib/audio/sequenceScheduler";
 
 /** Runs on the draw loop when a step is due, so the UI follows the note rather than causing it. */
@@ -95,7 +99,7 @@ export function buildProgressionSchedule(
     steps.push({
       atSec,
       indices: step.value,
-      durationSec: stepNoteDurationSec(SEQUENCE_PLAYBACK, stepSec),
+      durationSec: progressionStepDurationSec(stepSec),
       onVisual: () => onStep(stepIndex, step.value),
     });
     atSec += stepSec;
