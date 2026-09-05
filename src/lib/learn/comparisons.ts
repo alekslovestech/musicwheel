@@ -8,7 +8,7 @@ export interface ScaleComparisonEntry {
  * index page and the sitemap read from, so a new article can't be added to one and forgotten in
  * the other. */
 export const COMPARISONS: ScaleComparisonEntry[] = [
-  { modeA: "Aeolian", modeB: "Dorian", href: "/learn/comparisons/aeolian-vs-dorian" },
+  { modeA: "Minor", modeB: "Dorian", href: "/learn/comparisons/minor-vs-dorian" },
   {
     modeA: "Phrygian",
     modeB: "Phrygian Dominant",
@@ -34,11 +34,11 @@ export const COMPARISONS: ScaleComparisonEntry[] = [
     modeB: "Panthu Varaali",
     href: "/learn/comparisons/double-harmonic-major-vs-panthu-varaali",
   },
-  { modeA: "Ionian", modeB: "Mixolydian", href: "/learn/comparisons/ionian-vs-mixolydian" },
-  { modeA: "Ionian", modeB: "Lydian", href: "/learn/comparisons/ionian-vs-lydian" },
+  { modeA: "Major", modeB: "Mixolydian", href: "/learn/comparisons/major-vs-mixolydian" },
+  { modeA: "Major", modeB: "Lydian", href: "/learn/comparisons/major-vs-lydian" },
   { modeA: "Minor", modeB: "Harmonic Minor", href: "/learn/comparisons/minor-vs-harmonic-minor" },
   { modeA: "Major", modeB: "Harmonic Major", href: "/learn/comparisons/major-vs-harmonic-major" },
-  { modeA: "Aeolian", modeB: "Phrygian", href: "/learn/comparisons/aeolian-vs-phrygian" },
+  { modeA: "Minor", modeB: "Phrygian", href: "/learn/comparisons/minor-vs-phrygian" },
   { modeA: "Locrian", modeB: "Phrygian", href: "/learn/comparisons/locrian-vs-phrygian" },
   {
     modeA: "Harmonic Minor",

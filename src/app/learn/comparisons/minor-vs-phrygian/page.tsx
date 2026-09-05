@@ -8,20 +8,21 @@ import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/comparisons/aeolian-vs-phrygian",
-  "Aeolian vs. Phrygian",
+  "/learn/comparisons/minor-vs-phrygian",
+  "Minor vs. Phrygian",
   "Two minor scales on the same tonic, separated by a single note - what the flat second changes.",
 );
 
-export default function AeolianVsPhrygianPage() {
+export default function MinorVsPhrygianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Aeolian vs. Phrygian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Minor vs. Phrygian: one note apart</h1>
 
       <p>
-        Both of these start on C, and both are minor scales. Held against the same tonic, they run
-        identically from the third degree on - and then they disagree exactly once, on the second.
+        The first of these is the natural minor scale - Aeolian, in Greek-mode terms - and both
+        start on C. Held against the same tonic, they run identically from the third degree on - and
+        then they disagree exactly once, on the second.
       </p>
 
       <ScaleDegreeComparison
@@ -34,10 +35,11 @@ export default function AeolianVsPhrygianPage() {
       />
 
       <p>
-        That single degree is the whole reason Phrygian sounds unsettled where Aeolian sounds merely
-        sad: a half-step down from the tonic is the tightest interval a scale can open right at its
-        root, and no other common minor mode has it. Reading it is one thing; the difference is much
-        more obvious held under a drone, which is what the links under each figure are for.
+        That single degree is the whole reason Phrygian sounds unsettled where the natural minor
+        sounds merely sad: a half-step down from the tonic is the tightest interval a scale can open
+        right at its root, and no other common minor mode has it. Reading it is one thing; the
+        difference is much more obvious held under a drone, which is what the links under each
+        figure are for.
       </p>
     </>
   );

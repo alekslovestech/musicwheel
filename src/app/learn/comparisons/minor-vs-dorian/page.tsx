@@ -8,20 +8,21 @@ import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/comparisons/aeolian-vs-dorian",
-  "Aeolian vs. Dorian",
+  "/learn/comparisons/minor-vs-dorian",
+  "Minor vs. Dorian",
   "Two minor scales on the same tonic, separated by a single note - what the sixth degree changes.",
 );
 
-export default function AeolianVsDorianPage() {
+export default function MinorVsDorianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Aeolian vs. Dorian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Minor vs. Dorian: one note apart</h1>
 
       <p>
-        Both of these are minor scales, and both start on C. Held against the same tonic, they run
-        the same first five degrees - and then they disagree exactly once, on the sixth.
+        The first of these is the natural minor scale - Aeolian, in Greek-mode terms - and both
+        start on C. Held against the same tonic, they run the same first five degrees - and then
+        they disagree exactly once, on the sixth.
       </p>
 
       <ScaleDegreeComparison

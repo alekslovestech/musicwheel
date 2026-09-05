@@ -8,21 +8,21 @@ import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/comparisons/ionian-vs-lydian",
-  "Ionian vs. Lydian",
+  "/learn/comparisons/major-vs-lydian",
+  "Major vs. Lydian",
   "The major scale and its brighter cousin, separated by a single note - what the sharp fourth changes.",
 );
 
-export default function IonianVsLydianPage() {
+export default function MajorVsLydianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Ionian vs. Lydian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Major vs. Lydian: one note apart</h1>
 
       <p>
-        Both of these start on C, and both are major scales. Held against the same tonic, they run
-        identically for the first three degrees - and then they disagree exactly once, on the
-        fourth.
+        The first of these is the major scale - Ionian, in Greek-mode terms - and both start on C.
+        Held against the same tonic, they run identically for the first three degrees - and then
+        they disagree exactly once, on the fourth.
       </p>
 
       <ScaleDegreeComparison
@@ -35,9 +35,9 @@ export default function IonianVsLydianPage() {
 
       <p>
         That single degree is why Lydian is called the brighter major - raising the fourth removes
-        the only note in Ionian that leans toward the tonic from above, leaving a scale that floats
-        rather than resolves. Reading it is one thing; the difference is much more obvious held
-        under a drone, which is what the links under each figure are for.
+        the only note in the major scale that leans toward the tonic from above, leaving a scale
+        that floats rather than resolves. Reading it is one thing; the difference is much more
+        obvious held under a drone, which is what the links under each figure are for.
       </p>
     </>
   );
