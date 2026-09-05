@@ -9,4 +9,10 @@ export const LEARN_STYLES = {
   figureCaption: "flex flex-col gap-tight text-xs text-labels-textDefault sm:text-sm",
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "underline underline-offset-2",
+
+  /** Two-column list of comparison pairs. Each cell holds its own link to the same page rather
+   * than one anchor wrapping the row (invalid inside a <tr>) - `group`/`group-hover` on the row
+   * makes hovering either cell highlight both, so the pair still reads as one clickable unit. */
+  comparisonTableRow: "group border-b border-containers-divider last:border-b-0",
+  comparisonTableCellLink: "block px-snug py-tight no-underline group-hover:bg-canvas-bgScales",
 } as const;

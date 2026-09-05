@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
-import { LEARN_STYLES } from "@/lib/design";
+import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
+import { ComparisonsBackLink } from "@/components/Learn/ComparisonsBackLink";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/aeolian-vs-dorian",
+  "/learn/comparisons/aeolian-vs-dorian",
   "Aeolian vs. Dorian",
   "Two minor scales on the same tonic, separated by a single note - what the sixth degree changes.",
 );
@@ -15,6 +16,7 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function AeolianVsDorianPage() {
   return (
     <>
+      <ComparisonsBackLink />
       <h1 className="text-3xl font-semibold">Aeolian vs. Dorian: one note apart</h1>
 
       <p>
@@ -22,27 +24,13 @@ export default function AeolianVsDorianPage() {
         the same first five degrees - and then they disagree exactly once, on the sixth.
       </p>
 
-      <div className={LEARN_STYLES.comparisonGrid}>
-        <ScaleFigure
-          tonic="C"
-          scaleMode={ScaleModeType.Aeolian}
-          highlightedDegree={6}
-          caption="C Aeolian holds a flat sixth against the tonic - the darker of the two."
-        />
-        <ScaleFigure
-          tonic="C"
-          scaleMode={ScaleModeType.Dorian}
-          highlightedDegree={6}
-          caption="C Dorian raises that sixth by a semitone, and the whole scale lifts with it."
-        />
-      </div>
-
-      <p>
-        The wheel makes the difference positional rather than verbal: the flag marks the tonic in
-        both, the sixth degree sits one wedge further clockwise in Dorian, and the spoke drawn from
-        the center takes its color from the interval that degree forms with the tonic. Everything
-        else on the two wheels is identical.
-      </p>
+      <ScaleDegreeComparison
+        modeA={ScaleModeType.Aeolian}
+        modeB={ScaleModeType.Dorian}
+        degree={ixScaleDegree(6)}
+        captionA="C Aeolian holds a flat sixth against the tonic - the darker of the two."
+        captionB="C Dorian raises that sixth by a semitone, and the whole scale lifts with it."
+      />
 
       <p>
         That single degree is why Dorian is the brighter minor - it is the scale that keeps a minor

@@ -12,23 +12,12 @@ export default function LearnIndexPage() {
         go and play with it.
       </p>
 
-      <ul className="flex list-none flex-col gap-snug p-0">
-        <li>
-          <Link href="/learn/aeolian-vs-dorian" className={LEARN_STYLES.link}>
-            Aeolian vs. Dorian: one note apart
-          </Link>
-        </li>
-        <li>
-          <Link href="/learn/phrygian-vs-phrygian-dominant" className={LEARN_STYLES.link}>
-            Phrygian vs. Phrygian Dominant: one note apart
-          </Link>
-        </li>
-        <li>
-          <Link href="/learn/dorian-vs-ukrainian-dorian" className={LEARN_STYLES.link}>
-            Dorian vs. Ukrainian Dorian: one note apart
-          </Link>
-        </li>
-      </ul>
+      <h2 className="text-xl font-semibold">
+        <Link href="/learn/comparisons" className={LEARN_STYLES.link}>
+          Comparisons
+        </Link>
+      </h2>
+      <p>Two modes on the same tonic, one note apart.</p>
     </>
   );
 }

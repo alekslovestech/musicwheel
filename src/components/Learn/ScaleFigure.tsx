@@ -8,7 +8,7 @@ import { LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
+import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { scaleSelectionPath } from "@/utils/slug/scaleSelection";
 import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
@@ -31,13 +31,13 @@ export function ScaleFigure({
 }: {
   tonic: string;
   scaleMode: ScaleModeType;
-  /** 1-based scale degree the wheel holds against the tonic drone. */
-  highlightedDegree: number;
+  /** Scale degree the wheel holds against the tonic drone. */
+  highlightedDegree: ScaleDegree;
   caption: string;
 }) {
   const playbackMode = ScalePlaybackMode.DronedSingleNote;
   const musicalKey = MusicalKey.fromGreekMode(tonic, scaleMode);
-  const degreeIndex = ixScaleDegreeIndex(highlightedDegree - 1);
+  const degreeIndex = scaleDegreeToIndex(highlightedDegree);
   const highlightedNoteIndices = musicalKey.getNoteIndicesForScaleDegree(degreeIndex, playbackMode);
 
   return (

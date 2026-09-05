@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
-import { LEARN_STYLES } from "@/lib/design";
+import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
+import { ComparisonsBackLink } from "@/components/Learn/ComparisonsBackLink";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/dorian-vs-ukrainian-dorian",
+  "/learn/comparisons/dorian-vs-ukrainian-dorian",
   "Dorian vs. Ukrainian Dorian",
   "Two scales on the same tonic, sharing the same minor third and raised sixth - separated by a single note on the fourth degree.",
 );
@@ -15,6 +16,7 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function DorianVsUkrainianDorianPage() {
   return (
     <>
+      <ComparisonsBackLink />
       <h1 className="text-3xl font-semibold">Dorian vs. Ukrainian Dorian: one note apart</h1>
 
       <p>
@@ -23,27 +25,13 @@ export default function DorianVsUkrainianDorianPage() {
         degrees - and then they disagree exactly once, on the fourth.
       </p>
 
-      <div className={LEARN_STYLES.comparisonGrid}>
-        <ScaleFigure
-          tonic="C"
-          scaleMode={ScaleModeType.Dorian}
-          highlightedDegree={4}
-          caption="C Dorian holds a natural fourth against the tonic - the darker of the two."
-        />
-        <ScaleFigure
-          tonic="C"
-          scaleMode={ScaleModeType.UkrainianDorian}
-          highlightedDegree={4}
-          caption="C Ukrainian Dorian raises that fourth by a semitone, into a sharp four."
-        />
-      </div>
-
-      <p>
-        The wheel makes the difference positional rather than verbal: the fourth-degree wedge sits
-        one step further clockwise in Ukrainian Dorian, and the spoke drawn from the center recolors
-        to the interval that degree now forms with the tonic. Everything else on the two wheels -
-        the minor third, the natural sixth, the flat seventh - stays put.
-      </p>
+      <ScaleDegreeComparison
+        modeA={ScaleModeType.Dorian}
+        modeB={ScaleModeType.UkrainianDorian}
+        degree={ixScaleDegree(4)}
+        captionA="C Dorian holds a natural fourth against the tonic - the darker of the two."
+        captionB="C Ukrainian Dorian raises that fourth by a semitone, into a sharp four."
+      />
 
       <p>
         That single degree turns a plain minor scale into something with a foot in two camps: a
