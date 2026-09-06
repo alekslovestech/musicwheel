@@ -17,15 +17,12 @@ export default function DoubleHarmonicMajorVsPanthuVaraaliPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">
-        Double Harmonic Major vs. Panthu Varaali: one note apart
-      </h1>
+      <h1 className="text-3xl font-semibold">Double Harmonic Major vs. Panthu Varaali</h1>
 
       <p>
         Both of these start on C, and both carry the same pair of flattened notes that give Double
         Harmonic Major its double augmented-second color: a flat second and a flat sixth around a
-        major third and seventh. Held against the same tonic, they run identically apart from a
-        single degree: the fourth.
+        major third and seventh.
       </p>
 
       <ScaleDegreeComparison

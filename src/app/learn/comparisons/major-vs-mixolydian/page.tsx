@@ -17,12 +17,10 @@ export default function MajorVsMixolydianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Major vs. Mixolydian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Major vs. Mixolydian</h1>
 
       <p>
         The first of these is the major scale - Ionian, in Greek-mode terms - and both start on C.
-        Held against the same tonic, they run identically for the first six degrees, and then they
-        disagree exactly once, on the seventh.
       </p>
 
       <ScaleDegreeComparison

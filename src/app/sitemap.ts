@@ -18,7 +18,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();
   const url = (path: string) => `${siteUrl}${path}`;
 
-  const staticPages = [url("/harmony"), url("/learn"), url("/learn/comparisons")];
+  const staticPages = [
+    url("/harmony"),
+    url("/learn"),
+    url("/learn/comparisons"),
+    url("/learn/harmonic-scales"),
+    url("/learn/melodic-scales"),
+  ];
 
   const comparisonPages = COMPARISONS.map(({ href }) => url(href));
 

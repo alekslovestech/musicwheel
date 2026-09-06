@@ -17,12 +17,9 @@ export default function MajorVsHarmonicMajorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Major vs. Harmonic Major: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Major vs. Harmonic Major</h1>
 
-      <p>
-        Both of these start on C, and both are major scales. Held against the same tonic, they run
-        identically for the first five degrees - and then they disagree exactly once, on the sixth.
-      </p>
+      <p>Both of these start on C, and both are major scales.</p>
 
       <ScaleDegreeComparison
         modeA={ScaleModeType.Ionian}

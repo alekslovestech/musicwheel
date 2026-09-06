@@ -18,6 +18,20 @@ export default function LearnIndexPage() {
         </Link>
       </h2>
       <p>Two modes on the same tonic, one note apart.</p>
+
+      <h2 className="text-xl font-semibold">
+        <Link href="/learn/harmonic-scales" className={LEARN_STYLES.link}>
+          What Makes a Scale “Harmonic”?
+        </Link>
+      </h2>
+      <p>What the name actually means, and the gap it leaves behind.</p>
+
+      <h2 className="text-xl font-semibold">
+        <Link href="/learn/melodic-scales" className={LEARN_STYLES.link}>
+          What Makes a Scale “Melodic”?
+        </Link>
+      </h2>
+      <p>The same gap, closed back up - and what that costs.</p>
     </>
   );
 }

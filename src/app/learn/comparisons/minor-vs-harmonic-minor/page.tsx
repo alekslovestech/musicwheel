@@ -17,13 +17,9 @@ export default function MinorVsHarmonicMinorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Minor vs. Harmonic Minor: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Minor vs. Harmonic Minor</h1>
 
-      <p>
-        Both of these start on C, and both are minor scales in every way that matters for the first
-        six degrees. Held against the same tonic, they run identically until the seventh, where they
-        disagree exactly once.
-      </p>
+      <p>Both of these start on C, and both are minor scales.</p>
 
       <ScaleDegreeComparison
         modeA={ScaleModeType.Aeolian}

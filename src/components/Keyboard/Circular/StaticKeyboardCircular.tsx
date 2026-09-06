@@ -26,10 +26,15 @@ export function StaticKeyboardCircular({
   musicalKey,
   highlightedNoteIndices = [],
   scalePlaybackMode = ScalePlaybackMode.SingleNote,
+  showStepAnnotations = false,
 }: {
   musicalKey: MusicalKey;
   highlightedNoteIndices?: NoteIndices;
   scalePlaybackMode?: ScalePlaybackMode;
+  /** Colors the arc between each pair of adjacent scale degrees by its whole/half-step size - the
+   * same annotation the live wheel's W-H toggle adds. For figures illustrating a scale's own
+   * shape rather than highlighting one degree against a drone. */
+  showStepAnnotations?: boolean;
 }) {
   const highlightColor = ColorUtils.getColorForIndices(highlightedNoteIndices);
 
@@ -57,6 +62,8 @@ export function StaticKeyboardCircular({
           />
         );
       })}
+      {showStepAnnotations &&
+        CircularVisualizations.drawScaleStepIntervals(musicalKey, INNER_RADIUS)}
       {CircularVisualizations.draw(
         highlightedNoteIndices,
         circularVisModeForNoteCount(highlightedNoteIndices.length),
