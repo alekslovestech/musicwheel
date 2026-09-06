@@ -1,6 +1,6 @@
 "use client";
 
-import { StaticKeyboardCircular } from "@/components/Keyboard/Circular/StaticKeyboardCircular";
+import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { chromaticToActual } from "@/types/IndexTypes";
@@ -41,10 +41,11 @@ export function StaticChordFigure({
 
   return (
     <figure className={LEARN_STYLES.figureCard}>
-      <StaticKeyboardCircular
+      <CircularKeyboardView
         musicalKey={musicalKey}
         highlightedNoteIndices={chordNotes}
         isScales={false}
+        onKeyClick={null}
       />
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span>{caption}</span>

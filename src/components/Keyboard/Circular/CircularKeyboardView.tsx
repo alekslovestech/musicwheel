@@ -1,5 +1,5 @@
 import { TWELVE } from "@/types/constants/NoteConstants";
-import { ixActual, NoteIndices } from "@/types/IndexTypes";
+import { ActualIndex, ixActual, NoteIndices } from "@/types/IndexTypes";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -17,17 +17,21 @@ import {
 } from "./circularGeometry";
 
 /**
- * The wheel with every moving part removed: no click handlers, no audio, no context reads - the
- * key, the highlight and the playback mode all arrive as props. Prose pages render this so a
- * figure's colors and geometry come from the same code the live app runs, instead of from a
- * captured image that silently goes stale the next time the palette or the layout moves.
+ * The circular keyboard's one rendering implementation: the 12 keys, the step-interval arcs, the
+ * chord highlight, and the tonic flag. KeyboardCircular (the live app) is a thin adapter that
+ * reads context and forwards it here; Learn figures call this directly with plain data instead of
+ * hooks. Passing null for onKeyClick is what makes a call site read-only - an omission, not a
+ * flag - so a static page can be trusted not to ship interactivity from the prop alone.
  */
-export function StaticKeyboardCircular({
+export function CircularKeyboardView({
   musicalKey,
   highlightedNoteIndices = [],
   scalePlaybackMode = ScalePlaybackMode.SingleNote,
   showStepAnnotations = false,
   isScales = true,
+  onKeyClick,
+  isBassNote = () => false,
+  className = "w-full aspect-square",
 }: {
   musicalKey: MusicalKey;
   highlightedNoteIndices?: NoteIndices;
@@ -40,11 +44,19 @@ export function StaticKeyboardCircular({
    * plain chromatic keyboard, only selected notes colored) - the same distinction the live app
    * draws between its two modes. Chord figures with no scale context want this off. */
   isScales?: boolean;
+  /** Pass null for a read-only wheel. The live app passes its real click handler here. */
+  onKeyClick: ((index: ActualIndex) => void) | null;
+  isBassNote?: (index: ActualIndex) => boolean;
+  className?: string;
 }) {
   const highlightColor = ColorUtils.getColorForIndices(highlightedNoteIndices);
 
   return (
-    <svg viewBox={CIRCULAR_VIEWBOX} className="w-full aspect-square" role="img">
+    <svg
+      viewBox={CIRCULAR_VIEWBOX}
+      className={className}
+      role={onKeyClick == null ? "img" : undefined}
+    >
       {Array.from({ length: TWELVE }).map((_, index) => {
         const actualIndex = ixActual(index);
 
@@ -52,8 +64,8 @@ export function StaticKeyboardCircular({
           <PianoKeyCircular
             key={index}
             actualIndex={actualIndex}
-            isBassNote={false}
-            onKeyClick={null}
+            isBassNote={isBassNote(actualIndex)}
+            onKeyClick={onKeyClick}
             outerRadius={OUTER_RADIUS}
             innerRadius={INNER_RADIUS}
             isSelected={KeyboardUtils.isKeySelected(
