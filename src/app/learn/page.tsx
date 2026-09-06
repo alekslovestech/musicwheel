@@ -13,6 +13,20 @@ export default function LearnIndexPage() {
       </p>
 
       <h2 className="text-xl font-semibold">
+        <Link href="/learn/greek-modes" className={LEARN_STYLES.link}>
+          How the Greek Modes Relate to Each Other
+        </Link>
+      </h2>
+      <p>Relative modes, parallel modes, and one scale rotated seven ways.</p>
+
+      <h2 className="text-xl font-semibold">
+        <Link href="/learn/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
+          Relative vs. Parallel Modes
+        </Link>
+      </h2>
+      <p>Same notes, different tonic - or the same tonic, different notes.</p>
+
+      <h2 className="text-xl font-semibold">
         <Link href="/learn/comparisons" className={LEARN_STYLES.link}>
           Comparisons
         </Link>

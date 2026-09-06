@@ -12,28 +12,31 @@ import { scaleSelectionPath } from "@/utils/slug/scaleSelection";
 import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 /**
- * A single scale's shape, not a comparison: the wheel and ribbon both show the whole/half-step
- * coloring between every pair of adjacent degrees instead of highlighting one degree against a
- * drone. For concept articles illustrating a scale's own structure - e.g. where its stretched,
- * augmented-second gap sits - rather than what changed relative to another scale.
+ * A single scale's shape, not a comparison: no drone, no highlighted degree. With
+ * showStepAnnotations, the wheel and ribbon color the whole/half-step arc between every pair of
+ * adjacent degrees - for articles illustrating where a scale's own gaps sit. Without it, the
+ * wheel just shades which of the twelve keys are in the scale - for articles illustrating a
+ * scale's raw note collection, e.g. that two differently-named scales share every note.
  */
-export function StepAnnotatedScaleFigure({
+export function SingleScaleFigure({
   tonic,
   scaleMode,
   caption,
+  showStepAnnotations = true,
 }: {
   tonic: string;
   scaleMode: ScaleModeType;
   caption: string;
+  showStepAnnotations?: boolean;
 }) {
   const playbackMode = ScalePlaybackMode.SingleNote;
   const musicalKey = MusicalKey.fromGreekMode(tonic, scaleMode);
 
   return (
     <figure className={LEARN_STYLES.figureCard}>
-      <StaticKeyboardCircular musicalKey={musicalKey} showStepAnnotations />
+      <StaticKeyboardCircular musicalKey={musicalKey} showStepAnnotations={showStepAnnotations} />
 
-      <ScaleRibbon ribbon={buildScaleRibbonData(musicalKey, playbackMode, true)} />
+      <ScaleRibbon ribbon={buildScaleRibbonData(musicalKey, playbackMode, showStepAnnotations)} />
 
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span>{caption}</span>

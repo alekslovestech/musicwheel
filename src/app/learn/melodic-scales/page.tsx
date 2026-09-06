@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { StepAnnotatedScaleFigure } from "@/components/Learn/StepAnnotatedScaleFigure";
+import { SingleScaleFigure } from "@/components/Learn/SingleScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -41,7 +41,7 @@ export default function MelodicScalesPage() {
         sixth as well, closing the gap completely.
       </p>
 
-      <StepAnnotatedScaleFigure
+      <SingleScaleFigure
         tonic="C"
         scaleMode={ScaleModeType.MelodicMinor}
         caption="C Melodic Minor: no colored arc anywhere - every step is a plain whole step (W) or

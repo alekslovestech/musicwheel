@@ -22,6 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/harmony"),
     url("/learn"),
     url("/learn/comparisons"),
+    url("/learn/greek-modes"),
+    url("/learn/relative-vs-parallel-modes"),
     url("/learn/harmonic-scales"),
     url("/learn/melodic-scales"),
   ];
