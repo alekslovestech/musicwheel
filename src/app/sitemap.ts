@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getSiteUrl } from "@/lib/metadata";
-import { COMPARISONS } from "@/lib/learn/comparisons";
+import { COMPARISONS } from "@/lib/learn/scales/comparisons";
 import { PROGRESSION_SLUG_MAP } from "@/types/ChordProgressions/progressionRegistry";
 import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeRegistry";
 import { legalTonicsForProgression, tonicToSlug } from "@/utils/slug/progressionSelection";
@@ -21,11 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     url("/harmony"),
     url("/learn"),
-    url("/learn/comparisons"),
-    url("/learn/greek-modes"),
-    url("/learn/relative-vs-parallel-modes"),
-    url("/learn/harmonic-scales"),
-    url("/learn/melodic-scales"),
+    url("/learn/scales"),
+    url("/learn/scales/comparisons"),
+    url("/learn/scales/greek-modes"),
+    url("/learn/scales/relative-vs-parallel-modes"),
+    url("/learn/scales/harmonic"),
+    url("/learn/scales/melodic"),
     url("/learn/triad-inversions"),
   ];
 
