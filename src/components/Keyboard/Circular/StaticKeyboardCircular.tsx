@@ -27,6 +27,7 @@ export function StaticKeyboardCircular({
   highlightedNoteIndices = [],
   scalePlaybackMode = ScalePlaybackMode.SingleNote,
   showStepAnnotations = false,
+  isScales = true,
 }: {
   musicalKey: MusicalKey;
   highlightedNoteIndices?: NoteIndices;
@@ -35,6 +36,10 @@ export function StaticKeyboardCircular({
    * same annotation the live wheel's W-H toggle adds. For figures illustrating a scale's own
    * shape rather than highlighting one degree against a drone. */
   showStepAnnotations?: boolean;
+  /** Scales-mode shading (diatonic vs. muted, plus the tonic flag) vs. Harmony-mode shading (a
+   * plain chromatic keyboard, only selected notes colored) - the same distinction the live app
+   * draws between its two modes. Chord figures with no scale context want this off. */
+  isScales?: boolean;
 }) {
   const highlightColor = ColorUtils.getColorForIndices(highlightedNoteIndices);
 
@@ -56,7 +61,7 @@ export function StaticKeyboardCircular({
               highlightedNoteIndices,
               KeyboardUIType.Circular,
             )}
-            isScales
+            isScales={isScales}
             selectedMusicalKey={musicalKey}
             scalePlaybackMode={scalePlaybackMode}
           />
@@ -70,11 +75,13 @@ export function StaticKeyboardCircular({
         INNER_RADIUS,
         highlightColor.css(),
       )}
-      <polygon
-        points={getScaleBoundaryPoints(musicalKey.tonicIndex)}
-        className="fill-keys-scaleBoundaryColor"
-        stroke="none"
-      />
+      {isScales && (
+        <polygon
+          points={getScaleBoundaryPoints(musicalKey.tonicIndex)}
+          className="fill-keys-scaleBoundaryColor"
+          stroke="none"
+        />
+      )}
     </svg>
   );
 }

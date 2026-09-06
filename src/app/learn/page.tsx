@@ -46,6 +46,13 @@ export default function LearnIndexPage() {
         </Link>
       </h2>
       <p>The same gap, closed back up - and what that costs.</p>
+
+      <h2 className="text-xl font-semibold">
+        <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
+          Triad Inversions
+        </Link>
+      </h2>
+      <p>Same three notes, different note on the bottom.</p>
     </>
   );
 }
