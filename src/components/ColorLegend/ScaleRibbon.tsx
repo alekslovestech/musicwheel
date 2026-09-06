@@ -212,7 +212,10 @@ function NoteTickRow({
 
 /**
  * Renders as a button only when selectable, so a read-only ribbon exposes no empty control to
- * keyboard or screen-reader users.
+ * keyboard or screen-reader users. The interactive branch is its own component, not an inline
+ * conditional, so useTrack() (and the music/audio contexts it reads) is only ever called when
+ * onSelect is actually given - a read-only ribbon can render outside those providers entirely,
+ * e.g. in a static article figure.
  */
 function RibbonNoteCell({
   onSelect,
@@ -230,7 +233,6 @@ function RibbonNoteCell({
   // Keyed by position, not label: every ribbon closes on the octave tonic, so the first and last
   // cell always share a label ("C" ... "C", "I" ... "I") and a label-derived id would collide.
   const id = `scale-ribbon-note-${stepIndex}`;
-  const trackAction = useTrack();
 
   if (!onSelect)
     return (
@@ -238,6 +240,28 @@ function RibbonNoteCell({
         {children}
       </div>
     );
+
+  return (
+    <InteractiveRibbonNoteCell id={id} onSelect={onSelect} label={label} className={className}>
+      {children}
+    </InteractiveRibbonNoteCell>
+  );
+}
+
+function InteractiveRibbonNoteCell({
+  id,
+  onSelect,
+  label,
+  className,
+  children,
+}: {
+  id: string;
+  onSelect: () => void;
+  label: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  const trackAction = useTrack();
 
   const handleClick = () => {
     // No step index in the payload - what matters is that people click around here at all.

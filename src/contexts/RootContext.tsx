@@ -1,9 +1,7 @@
 "use client";
 
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { useGlobalMode } from "@/lib/hooks";
-import { initPH, ph } from "@/lib/tracking/ph";
-import { usePathname } from "next/navigation";
 
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { DisplayProvider } from "./DisplayContext";
@@ -11,25 +9,12 @@ import { MusicalProvider } from "./MusicalContext";
 import { ChordPresetProvider } from "./ChordPresetContext";
 import { AudioProvider } from "./AudioContext";
 
+/** Mounts the interactive app's music/audio/display contexts - scoped to the (app) route group
+ * so static content elsewhere on the site (e.g. /learn) never pulls in Tone.js or the audio
+ * engine. Site-wide concerns like analytics live in AnalyticsProvider instead, at the true root,
+ * since they apply to every route. */
 export const RootProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const globalMode = useGlobalMode();
-  const pathname = usePathname();
-
-  // Initialize PostHog on mount
-  useEffect(() => {
-    initPH();
-  }, []);
-
-  // Track page views when route changes
-  useEffect(() => {
-    if (ph.__loaded && pathname) {
-      ph.capture("$pageview", {
-        $current_url: window.location.href,
-        pathname: pathname,
-        global_mode: globalMode,
-      });
-    }
-  }, [pathname, globalMode]);
 
   return (
     <MusicalProvider key={`musical-${globalMode}`}>
