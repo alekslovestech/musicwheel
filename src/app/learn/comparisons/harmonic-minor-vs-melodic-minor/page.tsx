@@ -17,13 +17,11 @@ export default function HarmonicMinorVsMelodicMinorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Harmonic Minor vs. Melodic Minor: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Harmonic Minor vs. Melodic Minor</h1>
 
       <p>
         Both of these start on C, and both keep the raised seventh that a plain natural minor
-        doesn&apos;t have - the leading tone that pulls back to the tonic. Held against the same
-        tonic, they run identically for the first five degrees, and then they disagree exactly once,
-        on the sixth.
+        doesn&apos;t have - the leading tone that pulls back to the tonic.
       </p>
 
       <ScaleDegreeComparison

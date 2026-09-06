@@ -17,13 +17,12 @@ export default function PhrygianVsPhrygianDominantPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Phrygian vs. Phrygian Dominant: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Phrygian vs. Phrygian Dominant</h1>
 
       <p>
         Both of these start on C, and both hold the flat second that gives Phrygian its
         unmistakable, unsettled sound - the half-step down from the tonic that no other minor mode
-        has. Against that same tonic, they run identically for the first two degrees, and then they
-        disagree exactly once, on the third.
+        has.
       </p>
 
       <ScaleDegreeComparison

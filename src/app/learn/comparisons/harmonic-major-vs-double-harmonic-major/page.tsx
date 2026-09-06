@@ -17,14 +17,11 @@ export default function HarmonicMajorVsDoubleHarmonicMajorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">
-        Harmonic Major vs. Double Harmonic Major: one note apart
-      </h1>
+      <h1 className="text-3xl font-semibold">Harmonic Major vs. Double Harmonic Major</h1>
 
       <p>
         Both of these start on C, and both hold the flat sixth that gives Harmonic Major its name -
-        a major scale with one note pulled toward minor. Held against the same tonic, they run
-        identically apart from a single degree: the second.
+        a major scale with one note pulled toward minor.
       </p>
 
       <ScaleDegreeComparison

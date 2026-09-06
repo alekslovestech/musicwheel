@@ -17,12 +17,11 @@ export default function HarmonicMinorVsHungarianMinorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Harmonic Minor vs. Hungarian Minor: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Harmonic Minor vs. Hungarian Minor</h1>
 
       <p>
         Both of these start on C, and both keep the raised seventh that gives Harmonic Minor its
-        pull back to the tonic. Held against the same tonic, they run identically apart from a
-        single degree: the fourth.
+        pull back to the tonic.
       </p>
 
       <ScaleDegreeComparison

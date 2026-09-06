@@ -17,12 +17,11 @@ export default function LocrianVsPhrygianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Locrian vs. Phrygian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Locrian vs. Phrygian</h1>
 
       <p>
         Both of these start on C, and both hold the flat second that makes a scale sound unsettled
-        right from its first step off the tonic. Held against the same tonic, they run identically
-        apart from a single degree: the fifth.
+        right from its first step off the tonic.
       </p>
 
       <ScaleDegreeComparison

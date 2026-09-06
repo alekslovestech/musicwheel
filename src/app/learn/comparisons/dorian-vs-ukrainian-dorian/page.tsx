@@ -17,12 +17,11 @@ export default function DorianVsUkrainianDorianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Dorian vs. Ukrainian Dorian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Dorian vs. Ukrainian Dorian</h1>
 
       <p>
         Both of these start on C, and both are Dorian: a minor third and, unusually for a minor
-        mode, a natural sixth. Held against the same tonic, they run identically for the first three
-        degrees - and then they disagree exactly once, on the fourth.
+        mode, a natural sixth.
       </p>
 
       <ScaleDegreeComparison

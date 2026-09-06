@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { ScaleRibbon } from "@/components/ColorLegend/ScaleRibbon";
-import { StaticKeyboardCircular } from "@/components/Keyboard/Circular/StaticKeyboardCircular";
+import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
@@ -42,10 +42,11 @@ export function ScaleFigure({
 
   return (
     <figure className={LEARN_STYLES.figureCard}>
-      <StaticKeyboardCircular
+      <CircularKeyboardView
         musicalKey={musicalKey}
         highlightedNoteIndices={highlightedNoteIndices}
         scalePlaybackMode={playbackMode}
+        onKeyClick={null}
       />
 
       <ScaleRibbon

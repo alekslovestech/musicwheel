@@ -17,12 +17,10 @@ export default function MajorVsLydianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Major vs. Lydian: one note apart</h1>
+      <h1 className="text-3xl font-semibold">Major vs. Lydian</h1>
 
       <p>
         The first of these is the major scale - Ionian, in Greek-mode terms - and both start on C.
-        Held against the same tonic, they run identically for the first three degrees - and then
-        they disagree exactly once, on the fourth.
       </p>
 
       <ScaleDegreeComparison

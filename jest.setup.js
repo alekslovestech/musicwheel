@@ -30,7 +30,10 @@ jest.mock("tone", () => ({
     connect: jest.fn().mockReturnThis(),
     triggerAttack: jest.fn(),
     triggerRelease: jest.fn(),
+    triggerAttackRelease: jest.fn(),
     dispose: jest.fn(),
+    toDestination: jest.fn().mockReturnThis(),
+    set: jest.fn(),
   })),
   Filter: jest.fn().mockImplementation(() => ({
     connect: jest.fn().mockReturnThis(),
