@@ -69,7 +69,7 @@ export function ScaleFigure({
 
       <ScaleRibbon
         ribbon={buildScaleRibbonData(musicalKey, scalePlaybackMode, showStepAnnotations)}
-        activeNoteIndex={highlightedDegree == null ? null : highlightedDegree - 1}
+        activeDegreeIndex={highlightedDegree == null ? null : scaleDegreeToIndex(highlightedDegree)}
       />
 
       <figcaption className={LEARN_STYLES.figureCaption}>

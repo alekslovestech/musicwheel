@@ -7,13 +7,13 @@ import { LabelWithColor, ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils
 
 export function ScaleRibbon({
   ribbon,
-  activeNoteIndex = null,
+  activeDegreeIndex = null,
   onSelectStep,
   caption,
   stepAnnotations,
 }: {
   ribbon: ScaleRibbonData;
-  activeNoteIndex?: number | null;
+  activeDegreeIndex?: number | null;
   /** Selects the degree at this sequence index; omit to render the ribbon read-only. */
   onSelectStep?: (stepIndex: number) => void;
   /** One line naming what this lens holds fixed and what it varies. */
@@ -34,14 +34,14 @@ export function ScaleRibbon({
         <LabelsRibbonLayout
           notes={ribbon.notes}
           steps={ribbon.steps}
-          activeNoteIndex={activeNoteIndex}
+          activeDegreeIndex={activeDegreeIndex}
           onSelectStep={onSelectStep}
         />
       )}
       {ribbon.kind === "swatches" && (
         <NotesRibbonLayout
           notes={ribbon.notes}
-          activeNoteIndex={activeNoteIndex}
+          activeDegreeIndex={activeDegreeIndex}
           onSelectStep={onSelectStep}
         />
       )}
@@ -92,11 +92,11 @@ function StepAnnotationToggle({
 
 function NotesRibbonLayout({
   notes,
-  activeNoteIndex,
+  activeDegreeIndex,
   onSelectStep,
 }: {
   notes: LabelWithColor[];
-  activeNoteIndex: number | null;
+  activeDegreeIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
   // No outer gap - every layout uses equal-width flex-1 cells with zero gap, so a note's center
@@ -108,7 +108,7 @@ function NotesRibbonLayout({
           key={`${note.label}-${index}`}
           note={note}
           stepIndex={index}
-          isActive={index === activeNoteIndex}
+          isActive={index === activeDegreeIndex}
           onSelect={onSelectStep && (() => onSelectStep(index))}
         />
       ))}
@@ -128,17 +128,21 @@ function NotesRibbonLayout({
 function LabelsRibbonLayout({
   notes,
   steps,
-  activeNoteIndex,
+  activeDegreeIndex,
   onSelectStep,
 }: {
   notes: string[];
   steps?: LabelWithColor[];
-  activeNoteIndex: number | null;
+  activeDegreeIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
   if (!steps) {
     return (
-      <NoteTickRow notes={notes} activeNoteIndex={activeNoteIndex} onSelectStep={onSelectStep} />
+      <NoteTickRow
+        notes={notes}
+        activeDegreeIndex={activeDegreeIndex}
+        onSelectStep={onSelectStep}
+      />
     );
   }
 
@@ -177,7 +181,7 @@ function LabelsRibbonLayout({
         <div className="relative z-10">
           <NoteTickRow
             notes={notes}
-            activeNoteIndex={activeNoteIndex}
+            activeDegreeIndex={activeDegreeIndex}
             onSelectStep={onSelectStep}
           />
         </div>
@@ -188,11 +192,11 @@ function LabelsRibbonLayout({
 
 function NoteTickRow({
   notes,
-  activeNoteIndex,
+  activeDegreeIndex,
   onSelectStep,
 }: {
   notes: string[];
-  activeNoteIndex: number | null;
+  activeDegreeIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
   return (
@@ -202,7 +206,7 @@ function NoteTickRow({
           key={`${label}-${index}`}
           label={label}
           stepIndex={index}
-          isActive={index === activeNoteIndex}
+          isActive={index === activeDegreeIndex}
           onSelect={onSelectStep && (() => onSelectStep(index))}
         />
       ))}
