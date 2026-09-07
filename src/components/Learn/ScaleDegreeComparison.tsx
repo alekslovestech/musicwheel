@@ -1,5 +1,5 @@
+import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { ScaleFigure } from "@/components/Learn/ScaleFigure";
-import { LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
@@ -46,7 +46,7 @@ export function ScaleDegreeComparison({
 
   return (
     <>
-      <div className={LEARN_STYLES.comparisonGrid}>
+      <ComparisonGrid2>
         <ScaleFigure
           tonic={tonic}
           scaleMode={modeA}
@@ -61,7 +61,7 @@ export function ScaleDegreeComparison({
           highlightedDegree={degree}
           caption={captionB}
         />
-      </div>
+      </ComparisonGrid2>
 
       <p>
         The wheel makes the difference positional rather than verbal: the {ordinal}-degree wedge

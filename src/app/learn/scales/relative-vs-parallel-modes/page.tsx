@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
 import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
@@ -40,7 +41,7 @@ export default function RelativeVsParallelModesPage() {
         at the same physical points around the wheel. Only the flag marking the tonic moves.
       </p>
 
-      <div className={LEARN_STYLES.comparisonGrid}>
+      <ComparisonGrid2>
         <ScaleFigure
           tonic="C"
           scaleMode={ScaleModeType.Ionian}
@@ -54,7 +55,7 @@ export default function RelativeVsParallelModesPage() {
           caption="F Lydian: the same seven arcs, in the same places on the wheel - only the flag has
             moved."
         />
-      </div>
+      </ComparisonGrid2>
 
       <p>
         That&apos;s the test for whether two modes are relative: if every colored arc lines up in

@@ -4,6 +4,14 @@ export const LEARN_STYLES = {
    * stacking, and gets roomier automatically in landscape. */
   comparisonGrid: "grid grid-cols-2 gap-tight sm:gap-normal",
 
+  /** Three-up comparison: two side by side in the first row with the third centered underneath
+   * in portrait (nth-child(3) spans both columns, then shrinks to a single column's width and
+   * centers itself), all three in one row once there's room for it (sm and up). */
+  comparisonGrid3:
+    "grid grid-cols-2 gap-tight sm:grid-cols-3 sm:gap-normal " +
+    "[&>*:nth-child(3)]:col-span-2 [&>*:nth-child(3)]:mx-auto [&>*:nth-child(3)]:w-1/2 " +
+    "sm:[&>*:nth-child(3)]:col-span-1 sm:[&>*:nth-child(3)]:mx-0 sm:[&>*:nth-child(3)]:w-auto",
+
   figureCard:
     "m-0 flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-tight sm:gap-snug sm:p-normal",
   figureCaption: "flex flex-col gap-tight text-xs text-labels-textDefault sm:text-sm",
