@@ -1,6 +1,7 @@
 import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 const DEGREE_ORDINALS = [
@@ -49,12 +50,14 @@ export function ScaleDegreeComparison({
         <ScaleFigure
           tonic={tonic}
           scaleMode={modeA}
+          scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
           highlightedDegree={degree}
           caption={captionA}
         />
         <ScaleFigure
           tonic={tonic}
           scaleMode={modeB}
+          scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
           highlightedDegree={degree}
           caption={captionB}
         />

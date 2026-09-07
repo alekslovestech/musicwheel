@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SingleScaleFigure } from "@/components/Learn/SingleScaleFigure";
+import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -41,16 +41,14 @@ export default function GreekModesPage() {
       </p>
 
       <div className={LEARN_STYLES.comparisonGrid}>
-        <SingleScaleFigure
+        <ScaleFigure
           tonic="C"
           scaleMode={ScaleModeType.Ionian}
-          showStepAnnotations={false}
           caption="C Ionian: the seven white keys, starting and ending on C."
         />
-        <SingleScaleFigure
+        <ScaleFigure
           tonic="D"
           scaleMode={ScaleModeType.Dorian}
-          showStepAnnotations={false}
           caption="D Dorian: the same seven white keys, starting and ending on D instead."
         />
       </div>

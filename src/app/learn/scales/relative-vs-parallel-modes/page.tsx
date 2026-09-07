@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
-import { SingleScaleFigure } from "@/components/Learn/SingleScaleFigure";
+import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -41,13 +41,13 @@ export default function RelativeVsParallelModesPage() {
       </p>
 
       <div className={LEARN_STYLES.comparisonGrid}>
-        <SingleScaleFigure
+        <ScaleFigure
           tonic="C"
           scaleMode={ScaleModeType.Ionian}
           showStepAnnotations
           caption="C Ionian: seven colored arcs, one whole or half step apart."
         />
-        <SingleScaleFigure
+        <ScaleFigure
           tonic="F"
           scaleMode={ScaleModeType.Lydian}
           showStepAnnotations
