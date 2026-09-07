@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SingleScaleFigure } from "@/components/Learn/SingleScaleFigure";
+import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
+import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -40,20 +41,18 @@ export default function GreekModesPage() {
         you move between all seven modes without ever picking up or dropping a single note.
       </p>
 
-      <div className={LEARN_STYLES.comparisonGrid}>
-        <SingleScaleFigure
+      <ComparisonGrid2>
+        <ScaleFigure
           tonic="C"
           scaleMode={ScaleModeType.Ionian}
-          showStepAnnotations={false}
           caption="C Ionian: the seven white keys, starting and ending on C."
         />
-        <SingleScaleFigure
+        <ScaleFigure
           tonic="D"
           scaleMode={ScaleModeType.Dorian}
-          showStepAnnotations={false}
           caption="D Dorian: the same seven white keys, starting and ending on D instead."
         />
-      </div>
+      </ComparisonGrid2>
 
       <p>
         This is the traditional meaning of &ldquo;relative&rdquo; - the same relationship as

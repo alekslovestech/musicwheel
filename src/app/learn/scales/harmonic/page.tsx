@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SingleScaleFigure } from "@/components/Learn/SingleScaleFigure";
+import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -37,9 +37,10 @@ export default function HarmonicScalesPage() {
         raising the seventh a semitone, into a proper leading tone.
       </p>
 
-      <SingleScaleFigure
+      <ScaleFigure
         tonic="C"
         scaleMode={ScaleModeType.HarmonicMinor}
+        showStepAnnotations
         caption="C Harmonic Minor: every arc is a whole step (W) or half step (H) - except one,
           colored differently, spanning a step and a half."
       />
@@ -58,9 +59,10 @@ export default function HarmonicScalesPage() {
         already there.
       </p>
 
-      <SingleScaleFigure
+      <ScaleFigure
         tonic="C"
         scaleMode={ScaleModeType.HarmonicMajor}
+        showStepAnnotations
         caption="C Harmonic Major: the same colored, step-and-a-half arc as Harmonic Minor, sitting
           one step later in the scale."
       />
@@ -72,9 +74,10 @@ export default function HarmonicScalesPage() {
         identical gap near the bottom of the scale.
       </p>
 
-      <SingleScaleFigure
+      <ScaleFigure
         tonic="C"
         scaleMode={ScaleModeType.DoubleHarmonicMajor}
+        showStepAnnotations
         caption="C Double Harmonic Major: two colored, step-and-a-half arcs instead of one, on
           opposite sides of the wheel."
       />

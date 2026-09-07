@@ -42,7 +42,7 @@ export function SequenceLegendPanel() {
   const isScalePlaybackActive =
     playbackState === PlaybackState.SequencePlaying ||
     playbackState === PlaybackState.SequencePaused;
-  const activeNoteIndex = isScalePlaybackActive
+  const activeDegreeIndex = isScalePlaybackActive
     ? activeStepIndex
     : StaffUtils.findScaleStepIndexForSelection(
         selectedMusicalKey,
@@ -54,7 +54,7 @@ export function SequenceLegendPanel() {
     <div className="mx-auto mt-tight w-full max-w-md rounded border border-containers-divider bg-canvas-bgDefault/95 p-snug">
       <ScaleRibbon
         ribbon={ribbon}
-        activeNoteIndex={activeNoteIndex}
+        activeDegreeIndex={activeDegreeIndex}
         onSelectStep={selectStep}
         caption={SCALE_PLAYBACK_MODE_CAPTIONS[scalePlaybackMode]}
         // Offered only where step segments have a meaning to overlay; Drone and Chords measure
