@@ -56,19 +56,19 @@ export class ChordSetUtils {
    * Keyed on quality alone. An inverted stack shares both its quality and its color with the
    * root-position chord, so splitting them apart would draw a line nothing on screen shows.
    */
+  /** Diatonic keys only - callers gate on {@link MusicalKey.scaleModeInfo} before calling in. */
   static seventhsByDegree(key: MusicalKey): Map<ChordType, string[]> {
+    const scaleModeInfo = key.scaleModeInfo!;
     const degreesByQuality = new Map<ChordType, string[]>();
 
     for (let i = 0; i < key.scalePatternLength; i++) {
-      const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(
-        ixScaleDegreeIndex(i),
-      );
-      const offsets = key.scaleModeInfo.getSeventhOffsets(scaleDegreeInfo);
+      const scaleDegreeInfo = scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
+      const offsets = scaleModeInfo.getSeventhOffsets(scaleDegreeInfo);
       const chordType = NoteGroupingLibrary.matchChordTypeAllowingInversions(offsets);
       if (chordType === ChordType.Unknown) continue;
 
       const numeral = RomanChordFormatter.formatRomanNumeralOnly(
-        RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, key.scaleModeInfo, true),
+        RomanChordFormatter.romanChordFromScaleDegree(scaleDegreeInfo, scaleModeInfo, true),
       );
       degreesByQuality.set(chordType, [...(degreesByQuality.get(chordType) ?? []), numeral]);
     }
@@ -77,14 +77,13 @@ export class ChordSetUtils {
   }
 
   private static chordTypesForKey(key: MusicalKey, isSeventh: boolean): Set<ChordType> {
+    const scaleModeInfo = key.scaleModeInfo!;
     const types = new Set<ChordType>();
     for (let i = 0; i < key.scalePatternLength; i++) {
-      const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(
-        ixScaleDegreeIndex(i),
-      );
+      const scaleDegreeInfo = scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i));
       const chordType = isSeventh
-        ? this.getSeventhChordType(scaleDegreeInfo, key.scaleModeInfo)
-        : this.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
+        ? this.getSeventhChordType(scaleDegreeInfo, scaleModeInfo)
+        : this.getTriadChordType(scaleDegreeInfo, scaleModeInfo);
       if (chordType !== ChordType.Unknown) {
         types.add(chordType);
       }

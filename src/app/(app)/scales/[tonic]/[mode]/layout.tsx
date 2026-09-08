@@ -4,8 +4,15 @@ import { notFound } from "next/navigation";
 import { metadataForSlugPage, scalesViewMetadata } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { SCALE_SLUG_MAP } from "@/types/ScaleModes/ScaleModeRegistry";
-import { slugToScaleType } from "@/utils/slug/codecs";
-import { isLegalTonic, legalTonicsForScaleMode, slugToTonic, tonicToSlug } from "@/utils/slug/scaleSelection";
+import {
+  AnyScaleType,
+  isLegalTonic,
+  isOtherScaleType,
+  legalTonicsForScaleMode,
+  slugToAnyScaleType,
+  slugToTonic,
+  tonicToSlug,
+} from "@/utils/slug/scaleSelection";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -29,8 +36,11 @@ export function generateStaticParams() {
  */
 function scaleMetadataLabel(
   tonic: string,
-  scaleMode: ScaleModeType,
+  scaleMode: AnyScaleType,
 ): { title: string; description?: string } {
+  if (isOtherScaleType(scaleMode)) {
+    return { title: `${tonic} ${scaleMode}` };
+  }
   if (scaleMode === ScaleModeType.Ionian) {
     return {
       title: `${tonic} Major`,
@@ -49,7 +59,7 @@ function scaleMetadataLabel(
 export async function generateMetadata({ params }: Pick<LayoutProps, "params">): Promise<Metadata> {
   const { tonic: tonicSlug, mode: modeSlug } = await params;
 
-  const scaleMode = slugToScaleType(modeSlug);
+  const scaleMode = slugToAnyScaleType(modeSlug);
   if (scaleMode == null) notFound();
 
   const tonic = slugToTonic(tonicSlug);

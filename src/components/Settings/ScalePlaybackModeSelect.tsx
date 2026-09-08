@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { isChordalScalePlaybackMode, ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { useAudio } from "@/contexts/AudioContext";
+import { useMusical } from "@/contexts/MusicalContext";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 import { Button } from "@/components/Common/Button";
@@ -11,6 +12,10 @@ import { WheelShapeIcon } from "../Icons/WheelShapeIcon";
 export const ScalePlaybackModeSelect: React.FC = () => {
   const trackAction = useTrack();
   const { scalePlaybackMode, setScalePlaybackMode, startSequencePlayback } = useAudio();
+  const { selectedMusicalKey } = useMusical();
+  // A non-diatonic scale (e.g. Whole Tone) has no triad/seventh chords to offer - see
+  // MusicalKey.scaleModeInfo/OtherScaleInfo.
+  const isChordsAvailable = selectedMusicalKey.scaleModeInfo !== null;
   // Remembered so leaving Chords and coming back returns you to the density you were on,
   // rather than silently demoting your sevenths to triads.
   const [lastDensityIsSeventh, setLastDensityIsSeventh] = useState(
@@ -66,14 +71,19 @@ export const ScalePlaybackModeSelect: React.FC = () => {
           variant="option"
           size="sm"
           selected={isChordsSelected}
+          disabled={!isChordsAvailable}
           onClick={() => selectMode(lastChordDensity)}
-          title="Chords - same chords, different home"
+          title={
+            isChordsAvailable
+              ? "Chords - same chords, different home"
+              : "Chords - not available for this scale"
+          }
         >
           {/* evenly spaced (not a real triad's actual notes) so the shape reads as a clean triangle */}
           <WheelShapeIcon indices={[0, 4, 8]} />
         </Button>
       </div>
-      {isChordsSelected && (
+      {isChordsSelected && isChordsAvailable && (
         <div id="chord-density-select" className="mt-tight flex gap-[2px]">
           <Button
             id="chord-density-3"

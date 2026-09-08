@@ -7,10 +7,12 @@ import {
   ComparisonGrid4,
 } from "@/components/Learn/ComparisonGrid";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { OtherScaleFigure } from "@/components/Learn/OtherScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
+import { OtherScaleType } from "@/types/enums/OtherScaleType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -175,14 +177,26 @@ export default function SymmetryAndDissonancePage() {
       <p>
         The same idea scales up past four notes. Slice the octave into six equal parts instead of
         four - whole steps instead of minor thirds - and you get the whole-tone scale: six notes,
-        every gap the same two semitones. It isn&apos;t in the app yet, so there&apos;s no figure to
-        show here, but the logic already covers it: with every gap identical, the scale has no note
-        that stands out as more &ldquo;home&rdquo; than any other. It doesn&apos;t matter where you
+        every gap the same two semitones. With every gap identical, the scale has no note that
+        stands out as more &ldquo;home&rdquo; than any other. It doesn&apos;t matter where you
         start counting from - the same six notes, walked in from any point, are the same scale. That
         rootlessness is a large part of why it sounds the way it does: disorienting and dreamy,
         drifting rather than resolving, because there&apos;s nowhere in the shape itself that&apos;s
         distinguished from anywhere else.
       </p>
+
+      <ComparisonGrid2>
+        <OtherScaleFigure
+          rootNote="C"
+          otherScaleType={OtherScaleType.WholeTone}
+          caption="Root C: C, D, E, F#, G#, A#."
+        />
+        <OtherScaleFigure
+          rootNote="D"
+          otherScaleType={OtherScaleType.WholeTone}
+          caption="Call D the root instead - the same six wedges, D, E, F#, G#, A#, C."
+        />
+      </ComparisonGrid2>
     </>
   );
 }

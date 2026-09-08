@@ -18,14 +18,19 @@ const SINGLE_ACCIDENTALS = [
 
 /** Scale-degree-aware note spelling (e.g. C Phrygian ♭2 → D♭, not C♯). */
 export class ScaleNoteSpellingResolver {
+  /**
+   * Works for a non-diatonic key too: {@link OtherScaleInfo} hands back a plain scale-degree
+   * number with no accidental prefix, and letter-cycling degree-by-degree off the tonic (below)
+   * doesn't actually depend on the scale being diatonic - it's what produces the conventional
+   * "C D E F# G# A#" whole-tone spelling, one accidental short of a full key signature's worth.
+   */
   static resolveNoteInScale(
     musicalKey: MusicalKey,
     chromaticIndex: ChromaticIndex,
   ): NoteInfo | null {
-    const scaleDegreeInfo = musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(
-      chromaticIndex,
-      musicalKey.tonicIndex,
-    );
+    const scaleDegreeInfo = musicalKey.scaleModeInfo
+      ? musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(chromaticIndex, musicalKey.tonicIndex)
+      : musicalKey.getOtherScaleDegreeInfo(chromaticIndex);
     if (!scaleDegreeInfo) return null;
 
     if (scaleDegreeInfo.scaleDegree === 1) {

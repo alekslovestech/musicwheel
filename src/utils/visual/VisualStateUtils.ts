@@ -18,10 +18,7 @@ export class VisualStateUtils {
     isSvg: boolean,
   ): KeyColors {
     // Determine state color based on context
-    const isDiatonic = musicalKey.scaleModeInfo.isDiatonicNote(
-      chromaticIndex,
-      musicalKey.tonicIndex,
-    );
+    const isDiatonic = musicalKey.isDiatonicNote(chromaticIndex);
 
     const stateColor = isScales
       ? isDiatonic

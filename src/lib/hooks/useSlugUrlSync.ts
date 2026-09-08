@@ -7,13 +7,15 @@ import { useAudio } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
 import { useIsDemoRoute } from "@/lib/hooks/useGlobalMode";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { slugToProgressionType, slugToScaleType } from "@/utils/slug/codecs";
+import { slugToProgressionType } from "@/utils/slug/codecs";
 import { slugToTonic } from "@/utils/slug/tonicSlug";
 import {
   isLegalTonic,
+  isOtherScaleType,
   routeMatchesScaleSelection,
   scaleSelectionFromRoute,
   scaleSelectionPath,
+  slugToAnyScaleType,
   type ScaleSelection,
 } from "@/utils/slug/scaleSelection";
 import {
@@ -42,7 +44,7 @@ export function useScaleSlugPage() {
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
   const pendingRouteSyncRef = useRef<string | null>(null);
 
-  const routeScaleMode = slugToScaleType(modeSlug);
+  const routeScaleMode = slugToAnyScaleType(modeSlug);
   if (routeScaleMode == null) {
     notFound();
   }
@@ -53,7 +55,7 @@ export function useScaleSlugPage() {
 
   const stateSelection: ScaleSelection = {
     tonic: selectedMusicalKey.tonicString,
-    scaleMode: selectedMusicalKey.scaleMode,
+    scaleMode: selectedMusicalKey.scaleMode ?? selectedMusicalKey.otherScaleType!,
     playbackMode: scalePlaybackMode,
   };
   // Identifies "this route" for the pending-sync guard below; changes whenever the route does.
@@ -75,7 +77,11 @@ export function useScaleSlugPage() {
 
     pendingRouteSyncRef.current = routeKey;
     if (keyChanged) {
-      setSelectedMusicalKey(MusicalKey.fromGreekMode(routeSelection.tonic, routeSelection.scaleMode));
+      setSelectedMusicalKey(
+        isOtherScaleType(routeSelection.scaleMode)
+          ? MusicalKey.fromOtherScale(routeSelection.tonic, routeSelection.scaleMode)
+          : MusicalKey.fromGreekMode(routeSelection.tonic, routeSelection.scaleMode),
+      );
     }
     if (playbackChanged) {
       setScalePlaybackMode(routeSelection.playbackMode);

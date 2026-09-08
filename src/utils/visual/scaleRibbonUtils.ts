@@ -92,8 +92,9 @@ function stepColorForSemitones(semitones: number): chroma.Color {
   return ColorUtils.getColorForSemitoneDistance(semitones);
 }
 
+/** Diatonic keys only - callers gate on {@link MusicalKey.scaleModeInfo} before calling in. */
 function getScalePatternOffsets(key: MusicalKey): number[] {
-  const pattern = key.scaleModeInfo.scalePattern;
+  const pattern = key.scaleModeInfo!.scalePattern;
   return Array.from({ length: pattern.length }, (_, i) =>
     pattern.getOffsetAtIndex(ixScaleDegreeIndex(i)),
   );
@@ -120,10 +121,9 @@ function buildStepSegments(offsets: number[]): LabelWithColor[] {
  * you hear, not what things are called.
  */
 function scaleDegreeLabels(key: MusicalKey): string[] {
+  const scaleModeInfo = key.scaleModeInfo!;
   const degrees = Array.from({ length: key.scalePatternLength }, (_, i) =>
-    ScaleDegreeFormatter.formatForDisplay(
-      key.scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i)),
-    ),
+    ScaleDegreeFormatter.formatForDisplay(scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i))),
   );
   return [...degrees, "8"];
 }
@@ -151,13 +151,14 @@ function buildChordRibbon(
 ): ScaleRibbonData {
   const isSeventh = mode === ScalePlaybackMode.Seventh;
 
+  const scaleModeInfo = key.scaleModeInfo!;
   const romanLabelAtDegree = (degreeIndex: number): string => {
-    const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(
+    const scaleDegreeInfo = scaleModeInfo.getScaleDegreeInfoFromPosition(
       ixScaleDegreeIndex(degreeIndex),
     );
     const romanChord = RomanChordFormatter.romanChordFromScaleDegree(
       scaleDegreeInfo,
-      key.scaleModeInfo,
+      scaleModeInfo,
       isSeventh,
     );
     // Numeral only - the ribbon is tight on space; color carries quality instead.

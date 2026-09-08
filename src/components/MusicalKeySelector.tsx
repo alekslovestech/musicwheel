@@ -4,10 +4,13 @@ import React from "react";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { getScaleModeGroup, ScaleModeGroup } from "@/types/enums/ScaleModeGroup";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { OtherScaleType } from "@/types/enums/OtherScaleType";
 import { isMajor } from "@/types/enums/KeyType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { KeySignature } from "@/types/Keys/KeySignature";
 
 import { useMusical } from "@/contexts/MusicalContext";
+import { useAudio } from "@/contexts/AudioContext";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 
@@ -22,26 +25,44 @@ const SCALE_MODE_GROUPS: ReadonlyArray<{ id: ScaleModeGroup; label: string }> = 
   { id: ScaleModeGroup.Other, label: "Other scales" },
 ];
 
+/** Values from OtherScaleType are prefixed so a single <select> can distinguish them from
+ * ScaleModeType values without the two enums' string values ever colliding. */
+const OTHER_SCALE_OPTION_PREFIX = "other:";
+
 export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelector: boolean }) => {
   const trackAction = useTrack();
   const { selectedMusicalKey, setSelectedMusicalKey } = useMusical();
+  const { setScalePlaybackMode } = useAudio();
 
   //C / C# / Db / D / D# / Eb / E / F / F# / Gb / G / G# / Ab / A / A# / Bb / B
   const handleTonicNameChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const tonicName = event.target.value as string;
 
-    const newKey = useDropdownSelector
-      ? MusicalKey.fromGreekMode(tonicName, selectedMusicalKey.scaleMode)
-      : MusicalKey.fromClassicalMode(tonicName, selectedMusicalKey.classicalMode);
+    const newKey = !useDropdownSelector
+      ? MusicalKey.fromClassicalMode(tonicName, selectedMusicalKey.classicalMode)
+      : selectedMusicalKey.scaleMode
+        ? MusicalKey.fromGreekMode(tonicName, selectedMusicalKey.scaleMode)
+        : MusicalKey.fromOtherScale(tonicName, selectedMusicalKey.otherScaleType!);
     trackAction(TrackEvent.ScaleTonicInteracted);
     setSelectedMusicalKey(newKey);
   };
 
   const handleScaleModeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const scaleMode = event.target.value as ScaleModeType;
+    const value = event.target.value;
+
+    if (value.startsWith(OTHER_SCALE_OPTION_PREFIX)) {
+      const otherScaleType = value.slice(OTHER_SCALE_OPTION_PREFIX.length) as OtherScaleType;
+      const newKey = MusicalKey.fromOtherScale(selectedMusicalKey.tonicString, otherScaleType);
+      // A non-diatonic scale has no triad/seventh chords to play - see OtherScaleInfo.
+      setScalePlaybackMode(ScalePlaybackMode.SingleNote);
+      setSelectedMusicalKey(newKey);
+      return;
+    }
+
+    const scaleMode = value as ScaleModeType;
     const newKey = MusicalKey.fromGreekMode(selectedMusicalKey.tonicString, scaleMode);
     if (useDropdownSelector) {
-      trackAction(TrackEvent.ScaleTypeChanged, { scale_type: newKey.scaleMode });
+      trackAction(TrackEvent.ScaleTypeChanged, { scale_type: newKey.scaleMode! });
     }
     setSelectedMusicalKey(newKey);
   };
@@ -80,7 +101,10 @@ export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelecto
           <TonicSelector />
           <Select
             id="scale-mode-select"
-            value={selectedMusicalKey.scaleMode}
+            value={
+              selectedMusicalKey.scaleMode ??
+              `${OTHER_SCALE_OPTION_PREFIX}${selectedMusicalKey.otherScaleType}`
+            }
             onChange={handleScaleModeChange}
             title="Select musical mode"
           >
@@ -95,6 +119,17 @@ export const MusicalKeySelector = ({ useDropdownSelector }: { useDropdownSelecto
                   ))}
               </optgroup>
             ))}
+            <optgroup label="Symmetric scales">
+              {Object.values(OtherScaleType).map((otherScaleType) => (
+                <option
+                  id={`scale-mode-option-${otherScaleType}`}
+                  key={otherScaleType}
+                  value={`${OTHER_SCALE_OPTION_PREFIX}${otherScaleType}`}
+                >
+                  {otherScaleType}
+                </option>
+              ))}
+            </optgroup>
           </Select>
         </div>
       ) : (

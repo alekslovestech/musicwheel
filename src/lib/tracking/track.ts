@@ -4,6 +4,7 @@ import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { HarmonyInputMode } from "@/types/enums/HarmonyInputMode";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { OtherScaleType } from "@/types/enums/OtherScaleType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { TransposeTarget } from "@/types/enums/TransposeTarget";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
@@ -12,7 +13,7 @@ import { NoteGroupingId } from "@/types/NoteGroupingId";
 export type TrackCtx = {
   global_mode?: GlobalMode;
   harmony_input_mode?: HarmonyInputMode;
-  scale_type?: ScaleModeType;
+  scale_type?: ScaleModeType | OtherScaleType;
   progression_type?: ChordProgressionType | null;
   keyboard_ui?: KeyboardUIType;
   scale_playback_mode?: ScalePlaybackMode;
@@ -23,7 +24,7 @@ export type TrackCtx = {
 
 type ModeContextInput = {
   globalMode: GlobalMode;
-  scaleType: ScaleModeType;
+  scaleType: ScaleModeType | OtherScaleType;
   scalePlaybackMode: ScalePlaybackMode;
   harmonyInputMode: HarmonyInputMode;
   progressionType: ChordProgressionType | null;

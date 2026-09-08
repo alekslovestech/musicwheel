@@ -14,7 +14,9 @@ export const KeyboardCircular = () => {
   const { scalePlaybackMode } = useAudio();
   const { showStepAnnotations } = useDisplay();
   const showScaleStepIntervals =
-    isScales && showsStepSegments(scalePlaybackMode, showStepAnnotations);
+    isScales &&
+    selectedMusicalKey.scaleModeInfo !== null &&
+    showsStepSegments(scalePlaybackMode, showStepAnnotations);
 
   return (
     <CircularKeyboardView

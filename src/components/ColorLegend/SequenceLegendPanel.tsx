@@ -19,14 +19,21 @@ export function SequenceLegendPanel() {
   const { scalePlaybackMode, activeStepIndex, playbackState } = useAudio();
   const { showStepAnnotations, setShowStepAnnotations } = useDisplay();
 
+  // A non-diatonic scale (e.g. Whole Tone) has no scale-degree chords or step-interval ribbon to
+  // build - see MusicalKey.scaleModeInfo. Guarded inside the memo so the hook itself still runs
+  // unconditionally every render.
+  const isDiatonicKey = selectedMusicalKey.scaleModeInfo !== null;
   // The ribbon itself is the same for every step of a scale - only which cell is active moves -
   // so rebuilding it on each playback step is work the step does not need to pay for.
   const ribbon = useMemo(
-    () => buildScaleRibbonData(selectedMusicalKey, scalePlaybackMode, showStepAnnotations),
-    [selectedMusicalKey, scalePlaybackMode, showStepAnnotations],
+    () =>
+      isDiatonicKey
+        ? buildScaleRibbonData(selectedMusicalKey, scalePlaybackMode, showStepAnnotations)
+        : null,
+    [isDiatonicKey, selectedMusicalKey, scalePlaybackMode, showStepAnnotations],
   );
 
-  if (!isScalesMode) return null;
+  if (!isScalesMode || !ribbon) return null;
 
   // Same setter the sequence player uses, so a click lands the notes on the wheel, staff and
   // audio exactly as stepping to that degree would.

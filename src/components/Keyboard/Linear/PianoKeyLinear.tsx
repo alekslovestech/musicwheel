@@ -41,9 +41,7 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     KeyboardUIType.Linear,
   );
   const isScales = useIsScalePreviewMode();
-  const isDiatonicInScale =
-    !isScales ||
-    selectedMusicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, selectedMusicalKey.tonicIndex);
+  const isDiatonicInScale = !isScales || selectedMusicalKey.isDiatonicNote(chromaticIndex);
 
   const {
     prevAccidentalExists,

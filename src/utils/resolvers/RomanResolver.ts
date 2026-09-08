@@ -15,8 +15,9 @@ import {
 } from "@/types/RomanTypes";
 
 export class RomanResolver {
+  /** Diatonic keys only - Roman-numeral chords have no non-diatonic equivalent (see OtherScaleInfo). */
   static resolveRomanChord(romanChord: RomanChord, musicalKey: MusicalKey): AbsoluteChord {
-    const scale = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
+    const scale = musicalKey.scaleModeInfo!.getAbsoluteScaleNotes(musicalKey.tonicIndex);
 
     let chromaticIndex = scale[scaleDegreeToIndex(romanChord.scaleDegree)];
 

@@ -3,7 +3,7 @@ import { NoteConverter } from "../utils/NoteConverter";
 import { GreekTestConstants } from "./utils/GreekTestConstants";
 
 function verifyGreekModeScaleNotes(musicalKey: MusicalKey, expectedNotes: string[]) {
-  const noteList = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
+  const noteList = musicalKey.scaleModeInfo!.getAbsoluteScaleNotes(musicalKey.tonicIndex);
   const expectedIndices = NoteConverter.noteArrayToIndices(expectedNotes);
   expect(noteList).toEqual(expectedIndices);
 }

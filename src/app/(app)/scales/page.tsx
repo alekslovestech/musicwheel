@@ -14,7 +14,7 @@ export default async function ScalesPage({
     scaleSelectionPath(
       {
         tonic: DEFAULT_MUSICAL_KEY.tonicString,
-        scaleMode: DEFAULT_MUSICAL_KEY.scaleMode,
+        scaleMode: DEFAULT_MUSICAL_KEY.scaleMode!, // always Ionian - built via fromClassicalMode
         playbackMode: ScalePlaybackMode.SingleNote,
       },
       { demo: isDemo },

@@ -1,9 +1,16 @@
 import { GlobalMode } from "@/types/enums/GlobalMode";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { OtherScaleType } from "@/types/enums/OtherScaleType";
+import { KeyType } from "@/types/enums/KeyType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { classicalModeForScaleMode } from "@/types/Keys/MusicalKey";
 
-import { scaleTypeToSlug, slugToScaleType } from "./codecs";
+import {
+  otherScaleTypeToSlug,
+  scaleTypeToSlug,
+  slugToOtherScaleType,
+  slugToScaleType,
+} from "./codecs";
 import { isLegalTonicForClassicalMode, legalTonicsForClassicalMode } from "./legalTonics";
 import { buildPath, DEMO_QUERY_PARAM, getBasePath } from "./paths";
 import { slugToValue, valueToSlug } from "./slugCodec";
@@ -11,21 +18,42 @@ import { slugToTonic, tonicToSlug } from "./tonicSlug";
 
 export { tonicToSlug, slugToTonic } from "./tonicSlug";
 
+/** A scale selectable in the Scales view - diatonic (ScaleModeType) or not (OtherScaleType). */
+export type AnyScaleType = ScaleModeType | OtherScaleType;
+
+export function isOtherScaleType(scaleMode: AnyScaleType): scaleMode is OtherScaleType {
+  return Object.values(OtherScaleType).includes(scaleMode as OtherScaleType);
+}
+
 export interface ScaleSelection {
   tonic: string;
-  scaleMode: ScaleModeType;
+  scaleMode: AnyScaleType;
   playbackMode: ScalePlaybackMode;
 }
 
 export const PLAYBACK_QUERY_PARAM = "play";
 
-/** The tonics a scale mode can legally take - one canonical spelling per pitch class. */
-export function legalTonicsForScaleMode(scaleMode: ScaleModeType): string[] {
-  return legalTonicsForClassicalMode(classicalModeForScaleMode(scaleMode));
+/** A non-diatonic scale has no classical mode of its own - it always uses the Major tonic list,
+ * matching {@link MusicalKey.fromOtherScale}. */
+function classicalModeForAnyScaleType(scaleMode: AnyScaleType): KeyType {
+  return isOtherScaleType(scaleMode) ? KeyType.Major : classicalModeForScaleMode(scaleMode);
 }
 
-export function isLegalTonic(tonic: string, scaleMode: ScaleModeType): boolean {
-  return isLegalTonicForClassicalMode(tonic, classicalModeForScaleMode(scaleMode));
+function anyScaleTypeToSlug(scaleMode: AnyScaleType): string {
+  return isOtherScaleType(scaleMode) ? otherScaleTypeToSlug(scaleMode) : scaleTypeToSlug(scaleMode);
+}
+
+export function slugToAnyScaleType(slug: string): AnyScaleType | undefined {
+  return slugToScaleType(slug) ?? slugToOtherScaleType(slug);
+}
+
+/** The tonics a scale mode can legally take - one canonical spelling per pitch class. */
+export function legalTonicsForScaleMode(scaleMode: AnyScaleType): string[] {
+  return legalTonicsForClassicalMode(classicalModeForAnyScaleType(scaleMode));
+}
+
+export function isLegalTonic(tonic: string, scaleMode: AnyScaleType): boolean {
+  return isLegalTonicForClassicalMode(tonic, classicalModeForAnyScaleType(scaleMode));
 }
 
 const PLAYBACK_MODE_SLUG_MAP: Record<string, ScalePlaybackMode> = {
@@ -51,7 +79,7 @@ export function scaleSelectionPath(
   options: { demo?: boolean } = {},
 ): string {
   const tonicSlug = tonicToSlug(selection.tonic);
-  const modeSlug = scaleTypeToSlug(selection.scaleMode);
+  const modeSlug = anyScaleTypeToSlug(selection.scaleMode);
   return buildPath(
     getBasePath(GlobalMode.Scales),
     [tonicSlug, modeSlug],
@@ -74,7 +102,7 @@ export function scaleSelectionFromRoute(
   searchParams: ReadonlySearchParamsLike | null | undefined,
   fallback: ScaleSelection,
 ): ScaleSelection {
-  const scaleMode = slugToScaleType(modeSlug) ?? fallback.scaleMode;
+  const scaleMode = slugToAnyScaleType(modeSlug) ?? fallback.scaleMode;
 
   const decodedTonic = slugToTonic(tonicSlug);
   const tonic =
@@ -96,7 +124,7 @@ export function routeMatchesScaleSelection(
 ): boolean {
   return (
     tonicSlug === tonicToSlug(selection.tonic) &&
-    modeSlug === scaleTypeToSlug(selection.scaleMode) &&
+    modeSlug === anyScaleTypeToSlug(selection.scaleMode) &&
     searchParams?.get(PLAYBACK_QUERY_PARAM) === playbackModeToSlug(selection.playbackMode)
   );
 }

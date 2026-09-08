@@ -52,9 +52,7 @@ const PianoKeyCircularBase = ({
 
   const baseClasses = ["key-base"];
   const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
-  const isDiatonicInScale =
-    !isScales ||
-    selectedMusicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, selectedMusicalKey.tonicIndex);
+  const isDiatonicInScale = !isScales || selectedMusicalKey.isDiatonicNote(chromaticIndex);
 
   // Add color classes based on visual state and selection
   const keyColors = VisualStateUtils.getKeyColors(
@@ -85,7 +83,10 @@ const PianoKeyCircularBase = ({
     scalePlaybackMode,
   );
 
-  const isRomanLabels = isScales && KeyboardUtils.usesRomanScaleLabels(scalePlaybackMode);
+  const isRomanLabels =
+    isScales &&
+    selectedMusicalKey.scaleModeInfo !== null &&
+    KeyboardUtils.usesRomanScaleLabels(scalePlaybackMode);
   const romanLabelFit = isRomanLabels
     ? ArcPathVisualizer.getRomanLabelFit(noteText, outerRadius, innerRadius)
     : undefined;
