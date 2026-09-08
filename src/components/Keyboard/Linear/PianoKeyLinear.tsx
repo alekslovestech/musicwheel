@@ -1,25 +1,38 @@
 import React from "react";
 
-import { useIsScalePreviewMode } from "@/lib/hooks/useGlobalMode";
-
 import { TYPOGRAPHY } from "@/lib/design/Typography";
 
-import { actualToChromatic } from "@/types/IndexTypes";
+import { ActualIndex, actualToChromatic, NoteIndices } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 import { BLACK_KEY_WIDTH_RATIO, WHITE_KEYS_PER_2OCTAVES } from "@/types/constants/NoteConstants";
+import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils";
 import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
-import { PianoKeyBaseProps } from "@/components/Keyboard/KeyboardBase";
 
-import { useMusical } from "@/contexts/MusicalContext";
-
-interface PianoKeyLinearProps extends PianoKeyBaseProps {
+interface PianoKeyLinearProps {
+  actualIndex: ActualIndex;
+  isBassNote: boolean;
   doDisplayText: boolean;
+  /** Pass null for a read-only keyboard, for the static wheel article figures embed. */
+  onKeyClick: ((index: ActualIndex) => void) | null;
+  selectedMusicalKey: MusicalKey;
+  selectedNoteIndices: NoteIndices;
+  isScales: boolean;
+  /** Real black/white key colors instead of the live app's blue Scales-mode theme. */
+  useRealisticColors?: boolean;
+  /** The small ♯/♭ ticks on a white key's edge marking its black-key neighbor. */
+  showAccidentalMarks?: boolean;
+  /** The note-name letter on white keys (black keys never get one). */
+  showNoteLabels?: boolean;
+  /** Geometry override. Default computes both from actualIndex for a two-octave keyboard starting
+   * at C - see LinearKeyboardView's singleOctaveFromTonic for the other case. */
+  left?: string;
+  widthPercent?: string;
 }
 
 export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
@@ -27,12 +40,18 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   isBassNote,
   doDisplayText,
   onKeyClick,
+  selectedMusicalKey,
+  selectedNoteIndices,
+  isScales,
+  useRealisticColors = false,
+  showAccidentalMarks = true,
+  showNoteLabels = true,
+  left: leftOverride,
+  widthPercent: widthPercentOverride,
 }) => {
-  const { selectedMusicalKey, selectedNoteIndices } = useMusical();
-
   const chromaticIndex = actualToChromatic(actualIndex);
   const isShortKey = BlackKeyUtils.isBlackKey(chromaticIndex);
-  const left = LinearKeyboardUtils.getKeyPosition(actualIndex);
+  const left = leftOverride ?? LinearKeyboardUtils.getKeyPosition(actualIndex);
 
   const baseClasses = ["key-base"];
   const isSelected = KeyboardUtils.isKeySelected(
@@ -40,7 +59,6 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     selectedNoteIndices,
     KeyboardUIType.Linear,
   );
-  const isScales = useIsScalePreviewMode();
   const isDiatonicInScale = !isScales || selectedMusicalKey.isDiatonicNote(chromaticIndex);
 
   const {
@@ -51,17 +69,26 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   } = KeyboardUtils.getAdjacentKeyState(chromaticIndex, selectedNoteIndices);
 
   const widthRatio = isShortKey ? BLACK_KEY_WIDTH_RATIO : 1;
-  const keyWidthAsPercent = `${((widthRatio * 100) / WHITE_KEYS_PER_2OCTAVES).toFixed(2)}%`;
+  const keyWidthAsPercent =
+    widthPercentOverride ?? `${((widthRatio * 100) / WHITE_KEYS_PER_2OCTAVES).toFixed(2)}%`;
 
-  const keyColors = VisualStateUtils.getKeyColors(
-    chromaticIndex,
-    isScales,
-    selectedMusicalKey,
-    isBassNote,
-    isShortKey,
-    isSelected,
-    false,
-  );
+  const keyColors = useRealisticColors
+    ? VisualStateUtils.getRealisticScaleKeyColors(
+        isShortKey,
+        isDiatonicInScale,
+        isSelected,
+        isBassNote,
+        false,
+      )
+    : VisualStateUtils.getKeyColors(
+        chromaticIndex,
+        isScales,
+        selectedMusicalKey,
+        isBassNote,
+        isShortKey,
+        isSelected,
+        false,
+      );
 
   const allBaseClasses = KeyboardUtils.buildKeyClasses(
     baseClasses,
@@ -107,19 +134,23 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
         isShortKey ? "h-[60%] -translate-x-1/2 z-[2]" : "h-full z-[1]"
       } ${isShortKey ? "" : "items-end"} shadow-linear-key`}
       style={{ left, width: keyWidthAsPercent }}
-      onClick={() => onKeyClick(actualIndex)}
+      onClick={onKeyClick ? () => onKeyClick(actualIndex) : undefined}
     >
       {doDisplayText && (
         <>
-          {!isShortKey && (
+          {showNoteLabels && !isShortKey && (
             <div
               className={`${TYPOGRAPHY.linearNoteText} text-center w-full leading-none mb-0.5 ${keyColors.text}`}
             >
               {noteText}
             </div>
           )}
-          {prevAccidentalExists && renderAccidental(AccidentalType.Flat, prevAccidentalSelected)}
-          {nextAccidentalExists && renderAccidental(AccidentalType.Sharp, nextAccidentalSelected)}
+          {showAccidentalMarks &&
+            prevAccidentalExists &&
+            renderAccidental(AccidentalType.Flat, prevAccidentalSelected)}
+          {showAccidentalMarks &&
+            nextAccidentalExists &&
+            renderAccidental(AccidentalType.Sharp, nextAccidentalSelected)}
         </>
       )}
     </div>

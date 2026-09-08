@@ -26,6 +26,11 @@ export const COMPARISONS: ScaleComparisonEntry[] = [
     modeB: "Harmonic Minor",
     href: "/learn/scales/comparisons/minor-vs-harmonic-minor",
   },
+  {
+    modeA: "Harmonic Minor",
+    modeB: "Harmonic Major",
+    href: "/learn/scales/comparisons/harmonic-minor-vs-harmonic-major",
+  },
   { modeA: "Minor", modeB: "Phrygian", href: "/learn/scales/comparisons/minor-vs-phrygian" },
   {
     modeA: "Phrygian",

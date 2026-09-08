@@ -65,6 +65,7 @@ const config: Config = {
         keys: {
           bgWhite: "rgb(250, 250, 246)", //"#fafaf6",
           bgBlack: "rgb(68, 68, 68)", //"#444444",
+          bgBlackMuted: "rgb(150, 150, 150)", // Non-diatonic black key in realistic scale figures
           bgWhiteSelected: "rgb(190, 227, 236)", //"#BEE3EC",
           bgBlackSelected: "rgb(90, 156, 179)", //"#5A9CB3",
           textOnWhiteSelected: "rgb(63, 105, 201)", // Softer blue for selected white keys
@@ -75,7 +76,7 @@ const config: Config = {
           strokeOutline: "rgb(156, 163, 175)", // Outline around circular key wedges
 
           bgHighlighted: "rgb(113, 182, 255)", //"#B0D6FD",
-          bgHighlightedSelected: "rgb(59, 97, 222)", //"#3B61DE",
+          bgHighlightedSelected: "rgb(22, 46, 158)", //"#162E9E"
           textOnHighlighted: "rgb(255, 255, 255)", // #FFFFFF
 
           bgMuted: "rgb(228, 229, 230)", //"#E4E5E6",
