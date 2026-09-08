@@ -17,41 +17,60 @@ export class VisualStateUtils {
     isSelected: boolean,
     isSvg: boolean,
   ): KeyColors {
-    // Determine state color based on context
-    const isDiatonic = musicalKey.scaleModeInfo.isDiatonicNote(
-      chromaticIndex,
-      musicalKey.tonicIndex,
-    );
+    const border = this.getBorder(isRootNote);
 
-    const stateColor = isScales
-      ? isDiatonic
-        ? "Highlighted"
-        : "Muted"
-      : isBlack
-        ? "Black"
-        : "White";
-
-    const selectedString = isSelected ? "Selected" : "";
-
-    // Build CSS classes
-    const primaryPrefix = isSvg ? "fill" : "bg";
-    const textPrefix = this.getTextPrefix(isSvg);
-
-    const primary = `${primaryPrefix}-keys-bg${stateColor}${selectedString}`;
-    const border = `border-${isRootNote ? "keys-borderRootNote" : "keys-borderColor"}`;
-
-    // Determine text color - always use Selected or Faded variants
-    // For scale mode, use Highlighted/Muted colors (no Selected/Faded variants)
-    // For non-scale mode, use White/Black with Selected or Faded suffix
-    let text: string;
-    if (isScales) {
-      // Scale mode uses Highlighted/Muted colors (no Selected/Faded variants)
-      text = `${textPrefix}-keys-textOn${stateColor}`;
-    } else {
-      // Non-scale mode: always use Selected or Faded variant
-      text = this.getTextColorClassForNonScaleMode(isSelected, isBlack, isSvg);
+    if (!isScales) {
+      const { primary, text } = this.blackWhiteColors(isBlack, isSelected, isSvg);
+      return { primary, text, border };
     }
 
+    const isDiatonic = musicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, musicalKey.tonicIndex);
+    const stateColor = isDiatonic ? "Highlighted" : "Muted";
+    const selectedString = isSelected ? "Selected" : "";
+    const primaryPrefix = this.getBgPrefix(isSvg);
+    const textPrefix = this.getTextPrefix(isSvg);
+
+    return {
+      primary: `${primaryPrefix}-keys-bg${stateColor}${selectedString}`,
+      text: `${textPrefix}-keys-textOn${stateColor}`,
+      border,
+    };
+  }
+
+  /**
+   * Realistic black/white keys (see PianoKeyLinear's useRealisticColors), three tiers: plain,
+   * in-scale (soft accent), and the specific interval a figure is spotlighting (navy - the wheel's
+   * own Highlighted/HighlightedSelected color).
+   */
+  static getRealisticScaleKeyColors(
+    isBlack: boolean,
+    isDiatonic: boolean,
+    isSelected: boolean,
+    isRootNote: boolean,
+    isSvg: boolean,
+  ): KeyColors {
+    const border = this.getBorder(isRootNote);
+    const primaryPrefix = this.getBgPrefix(isSvg);
+
+    if (isSelected) {
+      return {
+        primary: `${primaryPrefix}-keys-bgHighlightedSelected`,
+        text: `${this.getTextPrefix(isSvg)}-keys-textOnHighlighted`,
+        border,
+      };
+    }
+
+    // Muted gray rather than full black: stays darker than a white key but doesn't compete with
+    // the navy "specific interval" tier.
+    if (isBlack && !isDiatonic) {
+      return {
+        primary: `${primaryPrefix}-keys-bgBlackMuted`,
+        text: this.getTextColorClassForNonScaleMode(false, isBlack, isSvg),
+        border,
+      };
+    }
+
+    const { primary, text } = this.blackWhiteColors(isBlack, isDiatonic, isSvg);
     return { primary, text, border };
   }
 
@@ -64,6 +83,31 @@ export class VisualStateUtils {
     const state = isSelected ? "Selected" : "Faded";
     const keyType = isBlack ? "Black" : "White";
     return `${prefix}-keys-textOn${keyType}${state}`;
+  }
+
+  /** Plain black/white key, with an accent (Selected variant) when isAccented. Shared shape behind
+   * getKeyColors's Harmony-mode branch and getRealisticScaleKeyColors's default branch - they
+   * differ only in what drives the accent (current selection vs. scale membership). */
+  private static blackWhiteColors(
+    isBlack: boolean,
+    isAccented: boolean,
+    isSvg: boolean,
+  ): { primary: string; text: string } {
+    const primaryPrefix = this.getBgPrefix(isSvg);
+    const keyType = isBlack ? "Black" : "White";
+    const suffix = isAccented ? "Selected" : "";
+    return {
+      primary: `${primaryPrefix}-keys-bg${keyType}${suffix}`,
+      text: this.getTextColorClassForNonScaleMode(isAccented, isBlack, isSvg),
+    };
+  }
+
+  private static getBorder(isRootNote: boolean): string {
+    return `border-${isRootNote ? "keys-borderRootNote" : "keys-borderColor"}`;
+  }
+
+  private static getBgPrefix(isSvg: boolean): string {
+    return isSvg ? "fill" : "bg";
   }
 
   private static getTextPrefix(isSvg: boolean): string {

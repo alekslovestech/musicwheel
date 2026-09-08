@@ -16,6 +16,18 @@ export class LinearKeyboardUtils {
     return `${((basePosition + octaveOffsetPosition) / 14) * 100}%`;
   }
 
+  /** Position within a one-octave-wide window starting at tonicIndex. */
+  static getKeyPositionRelativeToTonic(
+    actualIndex: ActualIndex,
+    tonicIndex: ChromaticIndex,
+  ): string {
+    const { chromaticIndex, octaveOffset } = actualIndexToChromaticAndOctave(actualIndex);
+    const basePosition =
+      LinearKeyboardUtils.whiteKeyPositions[chromaticIndex] + octaveOffset * WHITE_KEYS_PER_OCTAVE;
+    const tonicPosition = LinearKeyboardUtils.whiteKeyPositions[tonicIndex];
+    return `${((basePosition - tonicPosition) / WHITE_KEYS_PER_OCTAVE) * 100}%`;
+  }
+
   static calculateScaleBoundaryPercentages(tonicIndex: ChromaticIndex): {
     x1: number;
     x2: number;
