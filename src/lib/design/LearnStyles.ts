@@ -1,3 +1,8 @@
+import type { CSSProperties } from "react";
+
+/** Sets --key-border-width to 0 for a figure's keyboards, thinner than the app's default 1px. */
+export const FIGURE_KEY_BORDER = { "--key-border-width": "0" } as CSSProperties;
+
 export const LEARN_STYLES = {
   /** Side-by-side scale comparisons: unconditional 2-up, not width-breakpointed - a 2-column
    * grid is half-width at any viewport, so it stays side-by-side in portrait instead of

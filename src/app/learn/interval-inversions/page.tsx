@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
 import { LEARN_STYLES } from "@/lib/design";
-import { INTERVAL_CLASS_PALETTE } from "@/lib/design/palette";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { IntervalType } from "@/types/enums/IntervalType";
 
@@ -16,34 +16,80 @@ export const metadata: Metadata = metadataForSlugPage(
 );
 
 const INVERSION_PAIRS: {
-  ic: keyof typeof INTERVAL_CLASS_PALETTE;
-  pair: string;
+  intervalA: IntervalType;
+  intervalB: IntervalType;
+  noteA: string;
+  noteB: string;
+  semitonesA: string;
+  semitonesB: string;
+  nameA: string;
+  nameB: string;
   character: string;
 }[] = [
   {
-    ic: 1,
-    pair: "Minor 2nd / Major 7th",
+    intervalA: IntervalType.Minor2,
+    intervalB: IntervalType.Major7,
+    noteA: "Db",
+    noteB: "B",
+    semitonesA: "one semitone",
+    semitonesB: "eleven semitones",
+    nameA: "a minor 2nd",
+    nameB: "a major 7th",
     character: "The tightest possible clash - both sharp, both biting.",
   },
   {
-    ic: 2,
-    pair: "Major 2nd / Minor 7th",
+    intervalA: IntervalType.Major2,
+    intervalB: IntervalType.Minor7,
+    noteA: "D",
+    noteB: "Bb",
+    semitonesA: "two semitones",
+    semitonesB: "ten semitones",
+    nameA: "a major 2nd",
+    nameB: "a minor 7th",
     character: "Open and a little restless, but nowhere near as harsh.",
   },
-  { ic: 3, pair: "Minor 3rd / Major 6th", character: "Mellow and a bit wistful." },
   {
-    ic: 4,
-    pair: "Major 3rd / Minor 6th",
+    intervalA: IntervalType.Minor3,
+    intervalB: IntervalType.Major6,
+    noteA: "Eb",
+    noteB: "A",
+    semitonesA: "three semitones",
+    semitonesB: "nine semitones",
+    nameA: "a minor 3rd",
+    nameB: "a major 6th",
+    character: "Mellow and a bit wistful.",
+  },
+  {
+    intervalA: IntervalType.Major3,
+    intervalB: IntervalType.Minor6,
+    noteA: "E",
+    noteB: "Ab",
+    semitonesA: "four semitones",
+    semitonesB: "eight semitones",
+    nameA: "a major 3rd",
+    nameB: "a minor 6th",
     character: "The two sweetest, most settled intervals in the system.",
   },
   {
-    ic: 5,
-    pair: "Perfect 4th / Perfect 5th",
+    intervalA: IntervalType.Fourth,
+    intervalB: IntervalType.Fifth,
+    noteA: "F",
+    noteB: "G",
+    semitonesA: "five semitones",
+    semitonesB: "seven semitones",
+    nameA: "a perfect 4th",
+    nameB: "a perfect 5th",
     character: "Clean, open, almost hollow - the least ambiguous sound there is.",
   },
   {
-    ic: 6,
-    pair: "Tritone (with itself)",
+    intervalA: IntervalType.Tritone,
+    intervalB: IntervalType.Tritone,
+    noteA: "F#",
+    noteB: "F#",
+    semitonesA: "six semitones",
+    semitonesB: "six semitones",
+    nameA: "a tritone",
+    nameB: "a tritone",
     character: "Splits the octave exactly in half, so it has no partner - it inverts to itself.",
   },
 ];
@@ -84,33 +130,14 @@ export default function IntervalInversionsPage() {
           chordType={IntervalType.Minor2}
           inversionIndex={0}
           caption="C to Db: a minor 2nd, one semitone up."
+          isCompact
         />
         <StaticChordFigure
           rootNote="C"
           chordType={IntervalType.Major7}
           inversionIndex={0}
           caption="C to B: a major 7th, eleven semitones up - the complementary distance from the same C."
-        />
-      </ComparisonGrid2>
-
-      <p>
-        The same thing happens with a perfect 4th and a perfect 5th. Five semitones up from C lands
-        on F; seven semitones up from that same C - the complementary distance - lands on G, the
-        single most consonant interval next to the octave.
-      </p>
-
-      <ComparisonGrid2>
-        <StaticChordFigure
-          rootNote="C"
-          chordType={IntervalType.Fourth}
-          inversionIndex={0}
-          caption="C to F: a perfect 4th, five semitones up."
-        />
-        <StaticChordFigure
-          rootNote="C"
-          chordType={IntervalType.Fifth}
-          inversionIndex={0}
-          caption="C to G: a perfect 5th, seven semitones up - the complementary distance from the same C."
+          isCompact
         />
       </ComparisonGrid2>
 
@@ -129,47 +156,41 @@ export default function IntervalInversionsPage() {
         they&apos;re the same distance, just going the short way around versus the long way around.
       </p>
 
-      <div className="flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-normal">
-        {INVERSION_PAIRS.map((row) => (
-          <div key={row.ic} className="flex items-start gap-snug">
-            <div
-              className="mt-1 h-5 w-5 shrink-0 rounded-sm border border-containers-divider/40"
-              style={{ backgroundColor: INTERVAL_CLASS_PALETTE[row.ic] }}
-            />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <span className="text-sm font-medium">{row.pair}</span>
-              <span className="text-xs text-labels-textDefault opacity-70">{row.character}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <h2 className="text-xl font-semibold">The tritone: its own inverse</h2>
+      <h2 className="text-xl font-semibold">The rest of the interval classes</h2>
 
       <p>
-        Six of the seven interval classes pair up with a partner. The tritone doesn&apos;t, because
-        six semitones is exactly half of twelve: subtract six from twelve and you get six right
-        back. Six semitones up from C lands on F# - and there&apos;s no complementary distance to go
-        find, because the complement of six is six. There&apos;s no second name for it to become,
-        and no direction that makes it resolve toward something smaller. That symmetry is exactly
-        why it sounds suspended rather than clearly settled or clearly clashing - it&apos;s the one
-        interval the wheel can&apos;t point anywhere else.
+        The same pattern holds all the way through. Six of the seven interval classes pair up this
+        way; the tritone doesn&apos;t - six semitones is exactly half of twelve, so subtracting it
+        from twelve just gives you six back. It&apos;s its own inversion, with nowhere else to land.
       </p>
 
-      <ComparisonGrid2>
-        <StaticChordFigure
-          rootNote="C"
-          chordType={IntervalType.Tritone}
-          inversionIndex={0}
-          caption="C to F#: a tritone, six semitones."
-        />
-        <StaticChordFigure
-          rootNote="C"
-          chordType={IntervalType.Tritone}
-          inversionIndex={0}
-          caption="C to F#, again: the complementary distance is six semitones too, so there's nowhere else to land."
-        />
-      </ComparisonGrid2>
+      {INVERSION_PAIRS.slice(1).map(
+        ({ intervalA, intervalB, noteA, noteB, semitonesA, semitonesB, nameA, nameB, character }) => (
+          <Fragment key={`${intervalA}-${intervalB}`}>
+            <p>{character}</p>
+            <ComparisonGrid2>
+              <StaticChordFigure
+                rootNote="C"
+                chordType={intervalA}
+                inversionIndex={0}
+                caption={`C to ${noteA}: ${nameA}, ${semitonesA} up.`}
+                isCompact
+              />
+              <StaticChordFigure
+                rootNote="C"
+                chordType={intervalB}
+                inversionIndex={0}
+                caption={
+                  intervalA === intervalB
+                    ? `C to ${noteB}, again: the complementary distance is ${semitonesB} too, so there's nowhere else to land.`
+                    : `C to ${noteB}: ${nameB}, ${semitonesB} up - the complementary distance from the same C.`
+                }
+                isCompact
+              />
+            </ComparisonGrid2>
+          </Fragment>
+        ),
+      )}
     </>
   );
 }

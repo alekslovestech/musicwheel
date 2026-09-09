@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
-import { LEARN_STYLES } from "@/lib/design";
+import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { actualToChromatic } from "@/types/IndexTypes";
@@ -12,13 +12,8 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { scaleSelectionPath } from "@/utils/slug/scaleSelection";
 
-/**
- * One scale figure in a prose page: the wheel, the keyboard, and a link out to the same scale in
- * the live app. Read-only - nothing here is interactive.
- *
- * The client boundary sits here because MusicalKey is a class instance, which a server component
- * can't hand to a client one.
- */
+/** One scale figure: the wheel, the keyboard, and a link to the live app. Read-only, client
+ * component since MusicalKey is a class instance. */
 export function ScaleFigure({
   tonic,
   scaleMode,
@@ -46,7 +41,7 @@ export function ScaleFigure({
         );
 
   return (
-    <figure className={LEARN_STYLES.figureCard}>
+    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
       <CircularKeyboardView
         musicalKey={musicalKey}
         highlightedNoteIndices={highlightedNoteIndices}
@@ -63,7 +58,7 @@ export function ScaleFigure({
         useRealisticColors
         showAccidentalMarks={false}
         showNoteLabels={false}
-        singleOctaveFromTonic
+        isCompact={musicalKey.tonicIndex === 0}
       />
 
       <figcaption className={LEARN_STYLES.figureCaption}>
