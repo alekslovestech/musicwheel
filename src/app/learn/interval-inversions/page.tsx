@@ -149,7 +149,7 @@ export default function IntervalInversionsPage() {
         twelve semitones: 1 and 11, 2 and 10, 5 and 7. The wheel doesn&apos;t care which direction
         you travel around it, only how far - so the short way around is exactly the same distance
         for both members of the pair. That&apos;s the same interval class from{" "}
-        <Link href="/learn/color-coding" className={LEARN_STYLES.link}>
+        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>{" "}
         showing up again: a minor 2nd and a major 7th get the same color on the wheel because

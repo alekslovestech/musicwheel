@@ -9,7 +9,7 @@ import { ChordType } from "@/types/enums/ChordType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/why-this-app",
+  "/learn/approach/why-this-app",
   "Why This App",
   "The problems this app is trying to solve: which parts of music theory actually matter for hearing harmony, and which parts are historical noise.",
 );
@@ -17,8 +17,8 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function WhyThisAppPage() {
   return (
     <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
+      <Link href="/learn/approach" className={LEARN_STYLES.link}>
+        ← Approach
       </Link>
 
       <h1 className="text-3xl font-semibold">Why This App</h1>
@@ -128,7 +128,7 @@ export default function WhyThisAppPage() {
         That&apos;s also why the wheel is colored the way it is: things that sound similar, look
         similar. Every wedge and every chord blend is derived from interval distance rather than
         note names, so a relationship you can hear shows up as a relationship you can see - see{" "}
-        <Link href="/learn/color-coding" className={LEARN_STYLES.link}>
+        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>{" "}
         for how that works.

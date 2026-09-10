@@ -20,6 +20,10 @@ export const LEARN_STYLES = {
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "underline underline-offset-2",
 
+  /** Marks an index-page link that leads to more than one page (e.g. "Comparisons"), instead of a
+   * single article. Put right after the link, inside the same heading. */
+  sectionLabel: "ml-2 align-middle text-xs font-medium uppercase tracking-wide opacity-60",
+
   /** Two-column list of comparison pairs. Each cell holds its own link to the same page rather
    * than one anchor wrapping the row (invalid inside a <tr>) - `group`/`group-hover` on the row
    * makes hovering either cell highlight both, so the pair still reads as one clickable unit. */

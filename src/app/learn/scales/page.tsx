@@ -42,6 +42,7 @@ export default function ScalesIndexPage() {
         <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
           Comparisons
         </Link>
+        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>Two modes on the same tonic, one note apart.</p>
 

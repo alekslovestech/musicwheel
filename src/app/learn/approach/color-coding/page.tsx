@@ -7,7 +7,7 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/color-coding",
+  "/learn/approach/color-coding",
   "Color Coding",
   "Why every wedge, chord, and step in Music Wheel is colored the way it is - and what that color is actually telling you.",
 );
@@ -25,8 +25,8 @@ const INTERVAL_ROWS: { ic: keyof typeof INTERVAL_CLASS_PALETTE; label: string; n
 export default function ColorCodingPage() {
   return (
     <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
+      <Link href="/learn/approach" className={LEARN_STYLES.link}>
+        ← Approach
       </Link>
 
       <h1 className="text-3xl font-semibold">Color Coding</h1>
