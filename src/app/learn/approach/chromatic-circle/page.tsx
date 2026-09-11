@@ -34,14 +34,13 @@ export default function ChromaticCirclePage() {
 
       <h2 className="text-xl font-semibold">Intervals as distance, not as a seam to cross</h2>
       <StaticChordFigure
-          rootNote="C"
-          chordType={SpecialType.None}
-          inversionIndex={0}
-          caption="The Chromatic Circle as it relates to the piano keyboard"
-          isCompact = {true}    
-          showNoteLabels = {true}
-          showAccidentalMarks = {true}      
-        />
+        rootNote="C"
+        chordType={SpecialType.None}
+        inversionIndex={0}
+        caption="The Chromatic Circle as it relates to the piano keyboard"
+        isCompact={true}
+        showLabels={true}
+      />
       <p>
         Once pitch is arranged this way, an interval stops being &ldquo;a number of letter-names
         apart&rdquo; and becomes what it actually is: an angular distance between two points on a

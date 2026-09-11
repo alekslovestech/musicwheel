@@ -56,8 +56,7 @@ export function ScaleFigure({
         onKeyClick={null}
         isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
         useRealisticColors
-        showAccidentalMarks={false}
-        showNoteLabels={false}
+        showLabels={false}
         isCompact={musicalKey.tonicIndex === 0}
       />
 

@@ -19,16 +19,14 @@ export function StaticChordFigure({
   inversionIndex,
   caption,
   isCompact = false,
-  showAccidentalMarks = false,
-  showNoteLabels = false,
+  showLabels = false,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
   inversionIndex: number;
   caption: string;
   isCompact?: boolean;
-  showAccidentalMarks?: boolean;
-  showNoteLabels?: boolean;
+  showLabels?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
   const chordRef = makeChordReference(
@@ -52,8 +50,7 @@ export function StaticChordFigure({
         isScales={false}
         onKeyClick={null}
         isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
-        showAccidentalMarks={showAccidentalMarks}
-        showNoteLabels={showNoteLabels}
+        showLabels={showLabels}
         isCompact={isCompact}
       />
       <figcaption className={LEARN_STYLES.figureCaption}>

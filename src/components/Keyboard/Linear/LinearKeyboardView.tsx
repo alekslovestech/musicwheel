@@ -26,8 +26,7 @@ export function LinearKeyboardView({
   isBassNote = () => false,
   className,
   useRealisticColors = false,
-  showAccidentalMarks = true,
-  showNoteLabels = true,
+  showLabels = true,
   isCompact = false,
 }: {
   musicalKey: MusicalKey;
@@ -41,9 +40,7 @@ export function LinearKeyboardView({
   /** See PianoKeyLinear. */
   useRealisticColors?: boolean;
   /** See PianoKeyLinear. */
-  showAccidentalMarks?: boolean;
-  /** See PianoKeyLinear. */
-  showNoteLabels?: boolean;
+  showLabels?: boolean;
   /** Compact shows 1 octave, default shows 2. */
   isCompact?: boolean;
 }) {
@@ -71,8 +68,7 @@ export function LinearKeyboardView({
         selectedNoteIndices={highlightedNoteIndices}
         isScales={isScales}
         useRealisticColors={useRealisticColors}
-        showAccidentalMarks={showAccidentalMarks}
-        showNoteLabels={showNoteLabels}
+        showLabels={showLabels}
         left={isCompact ? LinearKeyboardUtils.getKeyPositionInOneOctave(actualIndex) : undefined}
         widthPercent={
           isCompact

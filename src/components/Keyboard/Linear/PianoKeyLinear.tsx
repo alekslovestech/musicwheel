@@ -31,10 +31,8 @@ interface PianoKeyLinearProps {
   isScales: boolean;
   /** Real black/white key colors instead of the live app's blue Scales-mode theme. */
   useRealisticColors?: boolean;
-  /** The small ♯/♭ ticks on a white key's edge marking its black-key neighbor. */
-  showAccidentalMarks?: boolean;
-  /** The note-name letter on white keys (black keys never get one). */
-  showNoteLabels?: boolean;
+  /** The note-name letter on white keys, and the small ♯/♭ ticks marking a black-key neighbor. */
+  showLabels?: boolean;
   /** Geometry override - default computes both from actualIndex. */
   left?: string;
   widthPercent?: string;
@@ -49,8 +47,7 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   selectedNoteIndices,
   isScales,
   useRealisticColors = false,
-  showAccidentalMarks = true,
-  showNoteLabels = true,
+  showLabels = true,
   left: leftOverride,
   widthPercent: widthPercentOverride,
 }) => {
@@ -137,17 +134,17 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     >
       {doDisplayText && (
         <>
-          {showNoteLabels && !isShortKey && (
+          {showLabels && !isShortKey && (
             <div
               className={`${TYPOGRAPHY.linearNoteText} ${NOTE_LABEL_CLASSES} ${keyColors.text}`}
             >
               {noteText}
             </div>
           )}
-          {showAccidentalMarks &&
+          {showLabels &&
             prevAccidentalExists &&
             renderAccidental(AccidentalType.Flat, prevAccidentalSelected)}
-          {showAccidentalMarks &&
+          {showLabels &&
             nextAccidentalExists &&
             renderAccidental(AccidentalType.Sharp, nextAccidentalSelected)}
         </>
