@@ -26,7 +26,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/learn/scales/greek-modes"),
     url("/learn/scales/relative-vs-parallel-modes"),
     url("/learn/scales/harmonic"),
-    url("/learn/scales/melodic"),
+    url("/learn/scales/modal-rotations"),
+    url("/learn/scales/melodic-minor-modes"),
     url("/learn/triad-inversions"),
   ];
 

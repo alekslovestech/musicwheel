@@ -6,6 +6,9 @@ export enum ScaleModeGroup {
   HarmonicMajor = "harmonicMajor",
   DoubleHarmonic = "doubleHarmonic",
   Other = "other",
+  /** Melodic Minor's jazz modes - not yet offered in the app's scale selector, so deliberately
+   * excluded from MusicalKeySelector's SCALE_MODE_GROUPS list. */
+  MelodicMinor = "melodicMinor",
 }
 
 export function getScaleModeGroup(mode: ScaleModeType): ScaleModeGroup {
@@ -30,6 +33,10 @@ export function getScaleModeGroup(mode: ScaleModeType): ScaleModeGroup {
     case ScaleModeType.DoubleHarmonicMajor:
     case ScaleModeType.HungarianMinor:
       return ScaleModeGroup.DoubleHarmonic;
+
+    case ScaleModeType.LydianDominant:
+    case ScaleModeType.SuperLocrian:
+      return ScaleModeGroup.MelodicMinor;
 
     default:
       return ScaleModeGroup.Other;

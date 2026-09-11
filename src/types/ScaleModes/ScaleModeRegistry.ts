@@ -93,6 +93,16 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     "melodic-minor",
     SCALE_MODE_PATTERNS.MELODIC_MINOR,
   ), // Melodic minor (ascending form)
+  [ScaleModeType.LydianDominant]: new ScaleModeInfo(
+    ScaleModeType.LydianDominant,
+    "lydian-dominant",
+    SCALE_MODE_PATTERNS.LYDIAN_DOMINANT,
+  ), // 4th mode of Melodic Minor
+  [ScaleModeType.SuperLocrian]: new ScaleModeInfo(
+    ScaleModeType.SuperLocrian,
+    "super-locrian",
+    SCALE_MODE_PATTERNS.SUPER_LOCRIAN,
+  ), // 7th mode of Melodic Minor, aka the Altered scale
 };
 
 export const SCALE_SLUG_MAP = buildSlugMap(SCALE_MODE_REGISTRY);
