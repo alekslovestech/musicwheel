@@ -12,6 +12,15 @@ const posthogAssetsHost = getPostHogAssetsHost();
 const nextConfig: NextConfig = {
   devIndicators: false,
   skipTrailingSlashRedirect: true,
+  async redirects() {
+    return [
+      {
+        source: "/learn/scales/melodic",
+        destination: "/learn/scales/melodic-minor-modes",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

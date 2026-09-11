@@ -14,23 +14,26 @@ import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 
+const KEY_BASE_CLASSES = "absolute box-border flex shadow-linear-key";
+const SHORT_KEY_CLASSES = "h-[60%] -translate-x-1/2 z-[2]";
+const TALL_KEY_CLASSES = "h-full z-[1] items-end";
+const ACCIDENTAL_CLASSES = "absolute top-2/3 -translate-y-1/2";
+const NOTE_LABEL_CLASSES = "text-center w-full leading-none mb-0.5";
+
 interface PianoKeyLinearProps {
   actualIndex: ActualIndex;
   isBassNote: boolean;
   doDisplayText: boolean;
-  /** Pass null for a read-only keyboard, for the static wheel article figures embed. */
+  /** Pass null for a read-only keyboard. */
   onKeyClick: ((index: ActualIndex) => void) | null;
   selectedMusicalKey: MusicalKey;
   selectedNoteIndices: NoteIndices;
   isScales: boolean;
   /** Real black/white key colors instead of the live app's blue Scales-mode theme. */
   useRealisticColors?: boolean;
-  /** The small ♯/♭ ticks on a white key's edge marking its black-key neighbor. */
-  showAccidentalMarks?: boolean;
-  /** The note-name letter on white keys (black keys never get one). */
-  showNoteLabels?: boolean;
-  /** Geometry override. Default computes both from actualIndex for a two-octave keyboard starting
-   * at C - see LinearKeyboardView's singleOctaveFromTonic for the other case. */
+  /** The note-name letter on white keys, and the small ♯/♭ ticks marking a black-key neighbor. */
+  showLabels?: boolean;
+  /** Geometry override - default computes both from actualIndex. */
   left?: string;
   widthPercent?: string;
 }
@@ -44,8 +47,7 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   selectedNoteIndices,
   isScales,
   useRealisticColors = false,
-  showAccidentalMarks = true,
-  showNoteLabels = true,
+  showLabels = true,
   left: leftOverride,
   widthPercent: widthPercentOverride,
 }) => {
@@ -59,9 +61,7 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     selectedNoteIndices,
     KeyboardUIType.Linear,
   );
-  const isDiatonicInScale =
-    !isScales ||
-    selectedMusicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, selectedMusicalKey.tonicIndex);
+  const isDiatonicInScale = !isScales || selectedMusicalKey.isDiatonicNote(chromaticIndex);
 
   const {
     prevAccidentalExists,
@@ -111,14 +111,10 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
 
   const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {
     const isSharp = accidental === AccidentalType.Sharp;
-    const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(
-      isSelected,
-      false, // isBlack: Accidentals are on white keys in linear keyboard
-      false, // isSvg
-    );
+    const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(isSelected, false, false);
     return (
       <span
-        className={`absolute ${isSharp ? "right-0.5" : "left-0.5"} top-2/3 -translate-y-1/2 ${
+        className={`${ACCIDENTAL_CLASSES} ${isSharp ? "right-0.5" : "left-0.5"} ${
           TYPOGRAPHY.linearAccidental
         } ${colorClass}`}
       >
@@ -130,27 +126,25 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   return (
     <div
       id={id}
-      className={`${allBaseClasses} ${keyColors.primary} !${
-        keyColors.border
-      } absolute box-border flex ${
-        isShortKey ? "h-[60%] -translate-x-1/2 z-[2]" : "h-full z-[1]"
-      } ${isShortKey ? "" : "items-end"} shadow-linear-key`}
+      className={`${allBaseClasses} ${keyColors.primary} !${keyColors.border} ${KEY_BASE_CLASSES} ${
+        isShortKey ? SHORT_KEY_CLASSES : TALL_KEY_CLASSES
+      }`}
       style={{ left, width: keyWidthAsPercent }}
       onClick={onKeyClick ? () => onKeyClick(actualIndex) : undefined}
     >
       {doDisplayText && (
         <>
-          {showNoteLabels && !isShortKey && (
+          {showLabels && !isShortKey && (
             <div
-              className={`${TYPOGRAPHY.linearNoteText} text-center w-full leading-none mb-0.5 ${keyColors.text}`}
+              className={`${TYPOGRAPHY.linearNoteText} ${NOTE_LABEL_CLASSES} ${keyColors.text}`}
             >
               {noteText}
             </div>
           )}
-          {showAccidentalMarks &&
+          {showLabels &&
             prevAccidentalExists &&
             renderAccidental(AccidentalType.Flat, prevAccidentalSelected)}
-          {showAccidentalMarks &&
+          {showLabels &&
             nextAccidentalExists &&
             renderAccidental(AccidentalType.Sharp, nextAccidentalSelected)}
         </>

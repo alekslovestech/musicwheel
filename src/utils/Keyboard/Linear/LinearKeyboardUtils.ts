@@ -16,16 +16,12 @@ export class LinearKeyboardUtils {
     return `${((basePosition + octaveOffsetPosition) / 14) * 100}%`;
   }
 
-  /** Position within a one-octave-wide window starting at tonicIndex. */
-  static getKeyPositionRelativeToTonic(
-    actualIndex: ActualIndex,
-    tonicIndex: ChromaticIndex,
-  ): string {
+  /** Position within a fixed one-octave window, C to the C above it inclusive (8 white keys). */
+  static getKeyPositionInOneOctave(actualIndex: ActualIndex): string {
     const { chromaticIndex, octaveOffset } = actualIndexToChromaticAndOctave(actualIndex);
     const basePosition =
       LinearKeyboardUtils.whiteKeyPositions[chromaticIndex] + octaveOffset * WHITE_KEYS_PER_OCTAVE;
-    const tonicPosition = LinearKeyboardUtils.whiteKeyPositions[tonicIndex];
-    return `${((basePosition - tonicPosition) / WHITE_KEYS_PER_OCTAVE) * 100}%`;
+    return `${(basePosition / (WHITE_KEYS_PER_OCTAVE + 1)) * 100}%`;
   }
 
   static calculateScaleBoundaryPercentages(tonicIndex: ChromaticIndex): {

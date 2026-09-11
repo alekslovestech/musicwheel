@@ -3,6 +3,9 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { createNoteInfo, NoteInfo } from "@/types/interfaces/NoteInfo";
 
 export const SEVEN = 7; // diatonic scale degrees per octave
+// Upper bound for ScaleDegree/ScaleDegreeIndex: diatonic scales are always 7, but a non-diatonic
+// scale (OtherScaleInfo) can have up to 8 - see ScaleDegreeType.ts.
+export const MAX_SCALE_DEGREE_COUNT = 8;
 export const TWELVE = 12; //the magic number
 export const TWENTY4 = 2 * TWELVE;
 

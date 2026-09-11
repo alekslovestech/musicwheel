@@ -1,35 +1,32 @@
 "use client";
 
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
-import { LEARN_STYLES } from "@/lib/design";
+import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
+import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
-import { chromaticToActual } from "@/types/IndexTypes";
+import { actualToChromatic, chromaticToActual } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { NoteGroupingId } from "@/types/NoteGroupingId";
 import { makeChordReference } from "@/types/interfaces/ChordReference";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { NoteConverter } from "@/utils/NoteConverter";
 
-/**
- * A chord voicing on the wheel, rendered Harmony-mode (isScales=false) rather than Scales-mode: a
- * plain chromatic keyboard with only the chord tones colored, no diatonic/muted shading and no
- * tonic flag - a scale concept a lone chord doesn't have. The highlighted triangle plus the same
- * base-note dot the live app draws at whichever note is first in the array - not tied to pitch
- * class. Chord notes come back from ChordUtils bass-first per inversion, so passing them straight
- * through lands the dot on the actual current bass, and root position / first inversion / second
- * inversion of the same chord each highlight a different one, even though all three light the
- * same three wedges.
- */
+/** A chord on the wheel and linear keyboard, Harmony-mode colors (no diatonic shading, no tonic
+ * flag). The wheel's base-note dot follows whichever note is first in the chord's note array. */
 export function StaticChordFigure({
   rootNote,
   chordType,
   inversionIndex,
   caption,
+  isCompact = false,
+  showLabels = false,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
   inversionIndex: number;
   caption: string;
+  isCompact?: boolean;
+  showLabels?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
   const chordRef = makeChordReference(
@@ -40,12 +37,21 @@ export function StaticChordFigure({
   const chordNotes = ChordUtils.calculateChordNotesFromChordReference(chordRef);
 
   return (
-    <figure className={LEARN_STYLES.figureCard}>
+    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
       <CircularKeyboardView
         musicalKey={musicalKey}
         highlightedNoteIndices={chordNotes}
         isScales={false}
         onKeyClick={null}
+      />
+      <LinearKeyboardView
+        musicalKey={musicalKey}
+        highlightedNoteIndices={chordNotes}
+        isScales={false}
+        onKeyClick={null}
+        isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
+        showLabels={showLabels}
+        isCompact={isCompact}
       />
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span>{caption}</span>

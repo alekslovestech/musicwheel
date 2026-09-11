@@ -28,8 +28,9 @@ export class CircularVisualizations {
     ];
   }
 
+  /** Diatonic keys only - callers gate on {@link MusicalKey.scaleModeInfo} before calling in. */
   static drawScaleStepIntervals(musicalKey: MusicalKey, innerRadius: number): JSX.Element[] {
-    const scaleNotes = musicalKey.scaleModeInfo.getAbsoluteScaleNotes(musicalKey.tonicIndex);
+    const scaleNotes = musicalKey.scaleModeInfo!.getAbsoluteScaleNotes(musicalKey.tonicIndex);
     const steps = getStepSegmentsForScale(musicalKey);
 
     const segments = steps.map((step, index) =>

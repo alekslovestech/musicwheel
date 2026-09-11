@@ -30,21 +30,21 @@ export default function TriadInversionsPage() {
       </p>
       <ComparisonGrid3>   
         <StaticChordFigure
-          rootNote="G"
+          rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="Root position: the bass dot sits on G, the note the chord is named after."
         />
 
         <StaticChordFigure
-          rootNote="G"
+          rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={1}
           caption="First inversion: same three wedges, bass dot moved to B."
         />
 
         <StaticChordFigure
-          rootNote="G"
+          rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={2}
           caption="Second inversion: same three wedges again, bass dot moved to D."

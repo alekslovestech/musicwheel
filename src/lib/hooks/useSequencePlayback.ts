@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { GlobalMode } from "@/types/enums/GlobalMode";
 
-import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { isChordalScalePlaybackMode, ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 
 import { PlaybackState } from "@/contexts/AudioContext";
 import { useMusical } from "@/contexts/MusicalContext";
@@ -117,6 +117,9 @@ export const useSequencePlayback = ({
     (modeOverride?: ScalePlaybackMode) => {
       if (!selectedMusicalKey || !isAudioInitialized) return;
       const mode = modeOverride ?? scalePlaybackMode;
+      // A non-diatonic scale (e.g. Whole Tone) has no triad/seventh chords to schedule - see
+      // MusicalKey.scaleModeInfo/OtherScaleInfo. SingleNote and DronedSingleNote still work.
+      if (!selectedMusicalKey.scaleModeInfo && isChordalScalePlaybackMode(mode)) return;
 
       stopScheduledSequence();
       releaseSequenceVoicesNow();

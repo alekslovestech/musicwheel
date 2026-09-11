@@ -41,10 +41,7 @@ export class KeyboardUtils {
     selectedMusicalKey: MusicalKey,
     keyDisplayMode: KeyDisplayMode,
   ): string {
-    const isDiatonic = selectedMusicalKey.scaleModeInfo.isDiatonicNote(
-      chromaticIndex,
-      selectedMusicalKey.tonicIndex,
-    );
+    const isDiatonic = selectedMusicalKey.isDiatonicNote(chromaticIndex);
 
     return !isDiatonic
       ? ""
@@ -145,8 +142,19 @@ export class KeyboardUtils {
       ? this.computeNoteTextForScalesMode(
           chromaticIndex,
           selectedMusicalKey,
-          this.resolveCircularScaleLabelMode(scalePlaybackMode ?? ScalePlaybackMode.SingleNote),
+          this.resolveScaleLabelMode(selectedMusicalKey, scalePlaybackMode),
         )
       : this.computeNoteTextForDefaultMode(chromaticIndex);
+  }
+
+  /** {@link resolveCircularScaleLabelMode}, but a non-diatonic key has no Roman-numeral chords to
+   * label with (see {@link OtherScaleInfo}) - falls back to plain scale degree instead. */
+  private static resolveScaleLabelMode(
+    selectedMusicalKey: MusicalKey,
+    scalePlaybackMode?: ScalePlaybackMode,
+  ): KeyDisplayMode {
+    const mode = this.resolveCircularScaleLabelMode(scalePlaybackMode ?? ScalePlaybackMode.SingleNote);
+    const isRoman = mode === KeyDisplayMode.Roman || mode === KeyDisplayMode.RomanSeventh;
+    return isRoman && selectedMusicalKey.scaleModeInfo === null ? KeyDisplayMode.ScaleDegree : mode;
   }
 }

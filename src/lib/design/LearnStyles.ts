@@ -1,3 +1,8 @@
+import type { CSSProperties } from "react";
+
+/** Sets --key-border-width to 0 for a figure's keyboards, thinner than the app's default 1px. */
+export const FIGURE_KEY_BORDER = { "--key-border-width": "0" } as CSSProperties;
+
 export const LEARN_STYLES = {
   /** Side-by-side scale comparisons: unconditional 2-up, not width-breakpointed - a 2-column
    * grid is half-width at any viewport, so it stays side-by-side in portrait instead of
@@ -14,6 +19,10 @@ export const LEARN_STYLES = {
   figureCaption: "flex flex-col gap-tight text-xs text-labels-textDefault sm:text-sm",
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "underline underline-offset-2",
+
+  /** Marks an index-page link that leads to more than one page (e.g. "Comparisons"), instead of a
+   * single article. Put right after the link, inside the same heading. */
+  sectionLabel: "ml-2 align-middle text-xs font-medium uppercase tracking-wide opacity-60",
 
   /** Two-column list of comparison pairs. Each cell holds its own link to the same page rather
    * than one anchor wrapping the row (invalid inside a <tr>) - `group`/`group-hover` on the row

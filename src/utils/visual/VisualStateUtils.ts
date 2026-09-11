@@ -24,7 +24,7 @@ export class VisualStateUtils {
       return { primary, text, border };
     }
 
-    const isDiatonic = musicalKey.scaleModeInfo.isDiatonicNote(chromaticIndex, musicalKey.tonicIndex);
+    const isDiatonic = musicalKey.isDiatonicNote(chromaticIndex);
     const stateColor = isDiatonic ? "Highlighted" : "Muted";
     const selectedString = isSelected ? "Selected" : "";
     const primaryPrefix = this.getBgPrefix(isSvg);

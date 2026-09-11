@@ -19,12 +19,19 @@ export function useTrack() {
     () =>
       buildModeContext({
         globalMode,
-        scaleType: selectedMusicalKey.scaleMode,
+        scaleType: selectedMusicalKey.scaleMode ?? selectedMusicalKey.otherScaleType!,
         scalePlaybackMode,
         harmonyInputMode,
         progressionType: selectedProgression,
       }),
-    [globalMode, selectedMusicalKey.scaleMode, scalePlaybackMode, harmonyInputMode, selectedProgression],
+    [
+      globalMode,
+      selectedMusicalKey.scaleMode,
+      selectedMusicalKey.otherScaleType,
+      scalePlaybackMode,
+      harmonyInputMode,
+      selectedProgression,
+    ],
   );
 
   return useCallback(

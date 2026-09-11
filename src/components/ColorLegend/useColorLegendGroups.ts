@@ -48,6 +48,12 @@ export function useColorLegendGroups(): {
     };
   }
 
+  // A non-diatonic scale (e.g. Whole Tone) has no scale-degree chords to key the legend off -
+  // see MusicalKey.scaleModeInfo.
+  if (isScalesMode && selectedMusicalKey.scaleModeInfo === null) {
+    return { groups: [], chordsOnly: true };
+  }
+
   if (isScalesMode && isChordalScalePlaybackMode(scalePlaybackMode)) {
     return {
       groups: getColorLegendGroupsForIds(ChordSetUtils.triadTypesForKey(selectedMusicalKey)),

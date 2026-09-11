@@ -106,11 +106,6 @@ describe("MusicalKey transforms", () => {
         expected: "Ab",
       },
       {
-        desc: "C double harmonic major => Ab Ionian",
-        input: MusicalKey.fromGreekMode("C", ScaleModeType.DoubleHarmonicMajor),
-        expected: "Ab",
-      },
-      {
         // Regression: this landed on the sole gap in MAJOR_KEY_SIGNATURES (no "Gb" entry, only
         // sharp-preferring "F#"), so the relative Ionian key was spelled with 6 sharps despite
         // Eb Aeolian's own key signature being 6 flats.

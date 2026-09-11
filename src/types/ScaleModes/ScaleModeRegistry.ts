@@ -52,56 +52,57 @@ export const SCALE_MODE_REGISTRY: Record<ScaleModeType, ScaleModeInfo> = {
     ScaleModeType.UkrainianDorian,
     "ukrainian-dorian",
     SCALE_MODE_PATTERNS.UKRAINIAN_DORIAN,
-    2,
   ), // Dorian with #4
   [ScaleModeType.PhrygianDominant]: new ScaleModeInfo(
     ScaleModeType.PhrygianDominant,
     "phrygian-dominant",
     SCALE_MODE_PATTERNS.PHRYGIAN_DOMINANT,
-    5,
   ),
   [ScaleModeType.DoubleHarmonicMajor]: new ScaleModeInfo(
     ScaleModeType.DoubleHarmonicMajor,
     "double-harmonic-major",
     SCALE_MODE_PATTERNS.DOUBLE_HARMONIC_MAJOR,
-    3,
   ),
   [ScaleModeType.PanthuVaraali]: new ScaleModeInfo(
     ScaleModeType.PanthuVaraali,
     "panthu-varaali",
     SCALE_MODE_PATTERNS.PANTHU_VARAALI,
-    3,
   ), // Panthu Varaali
   [ScaleModeType.HarmonicMinor]: new ScaleModeInfo(
     ScaleModeType.HarmonicMinor,
     "harmonic-minor",
     SCALE_MODE_PATTERNS.HARMONIC_MINOR,
-    1,
   ), // Harmonic minor scale
   [ScaleModeType.HungarianMinor]: new ScaleModeInfo(
     ScaleModeType.HungarianMinor,
     "hungarian-minor",
     SCALE_MODE_PATTERNS.HUNGARIAN_MINOR,
-    6,
   ), // Hungarian minor scale
   [ScaleModeType.HarmonicMajor]: new ScaleModeInfo(
     ScaleModeType.HarmonicMajor,
     "harmonic-major",
     SCALE_MODE_PATTERNS.HARMONIC_MAJOR,
-    1,
   ),
   [ScaleModeType.MixolydianB2]: new ScaleModeInfo(
     ScaleModeType.MixolydianB2,
     "mixolydian-b2",
     SCALE_MODE_PATTERNS.MIXOLYDIAN_B2,
-    5,
   ),
   [ScaleModeType.MelodicMinor]: new ScaleModeInfo(
     ScaleModeType.MelodicMinor,
     "melodic-minor",
     SCALE_MODE_PATTERNS.MELODIC_MINOR,
-    1,
   ), // Melodic minor (ascending form)
+  [ScaleModeType.LydianDominant]: new ScaleModeInfo(
+    ScaleModeType.LydianDominant,
+    "lydian-dominant",
+    SCALE_MODE_PATTERNS.LYDIAN_DOMINANT,
+  ), // 4th mode of Melodic Minor
+  [ScaleModeType.SuperLocrian]: new ScaleModeInfo(
+    ScaleModeType.SuperLocrian,
+    "super-locrian",
+    SCALE_MODE_PATTERNS.SUPER_LOCRIAN,
+  ), // 7th mode of Melodic Minor, aka the Altered scale
 };
 
 export const SCALE_SLUG_MAP = buildSlugMap(SCALE_MODE_REGISTRY);

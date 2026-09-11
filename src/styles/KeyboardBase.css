@@ -1,7 +1,8 @@
 /* Common base styles for both circular and linear keys */
 :is(.key-base, .key-base path) {
   cursor: pointer;
-  border-width: 1px;
+  /* Set --key-border-width on a container to override; default 1px. */
+  border-width: var(--key-border-width, 1px);
   border-style: solid;
 }
 

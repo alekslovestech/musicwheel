@@ -13,19 +13,21 @@ export default function LearnIndexPage() {
       </p>
 
       <h2 className="text-xl font-semibold">
-        <Link href="/learn/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
+        <Link href="/learn/approach" className={LEARN_STYLES.link}>
+          Approach
         </Link>
+        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>
-        The problems we&apos;re trying to solve: what matters about harmony, and what&apos;s just
-        historical noise.
+        The opinions behind this app: what&apos;s wrong with how music theory usually gets taught,
+        and what we do about it.
       </p>
 
       <h2 className="text-xl font-semibold">
         <Link href="/learn/scales" className={LEARN_STYLES.link}>
           Scales
         </Link>
+        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>
         How the modes relate to each other, what &ldquo;harmonic&rdquo; and &ldquo;melodic&rdquo;
@@ -48,13 +50,6 @@ export default function LearnIndexPage() {
         Flip an interval upside down and the number changes - but a minor 2nd and a major 7th still
         sound like close relatives.
       </p>
-
-      <h2 className="text-xl font-semibold">
-        <Link href="/learn/color-coding" className={LEARN_STYLES.link}>
-          Color Coding
-        </Link>
-      </h2>
-      <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
 
       <h2 className="text-xl font-semibold">
         <Link href="/learn/symmetry-and-dissonance" className={LEARN_STYLES.link}>

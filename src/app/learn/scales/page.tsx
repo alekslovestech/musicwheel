@@ -8,7 +8,7 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/scales",
   "Scales",
-  "How the modes relate to each other, what the harmonic and melodic scale names mean, and pairs of scales that differ by exactly one note.",
+  "How the modes relate to each other, what the harmonic scale names mean, and pairs of scales that differ by exactly one note.",
 );
 
 export default function ScalesIndexPage() {
@@ -42,6 +42,7 @@ export default function ScalesIndexPage() {
         <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
           Comparisons
         </Link>
+        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>Two modes on the same tonic, one note apart.</p>
 
@@ -53,11 +54,11 @@ export default function ScalesIndexPage() {
       <p>What the name actually means, and the gap it leaves behind.</p>
 
       <h2 className="text-xl font-semibold">
-        <Link href="/learn/scales/melodic" className={LEARN_STYLES.link}>
-          What Makes a Scale “Melodic”?
+        <Link href="/learn/scales/modal-rotations" className={LEARN_STYLES.link}>
+          Modal Families Beyond the Major Scale
         </Link>
       </h2>
-      <p>The same gap, closed back up - and what that costs.</p>
+      <p>Other scales with famous rotations of their own, the way the major scale has the Greek modes.</p>
     </>
   );
 }

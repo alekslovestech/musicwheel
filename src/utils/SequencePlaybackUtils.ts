@@ -91,16 +91,19 @@ export function prepareChordProgressionSequence(
   };
 }
 
+/** Diatonic keys only - callers (getScaleStepAtDegree, reached only from a diatonic click
+ * handler branch) gate on {@link MusicalKey.scaleModeInfo} before calling in. */
 function getScaleChordRef(
   key: MusicalKey,
   scaleDegreeIndex: ScaleDegreeIndex,
   rootNote: ActualIndex,
   isSeventh: boolean,
 ): ChordReference {
-  const scaleDegreeInfo = key.scaleModeInfo.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
+  const scaleModeInfo = key.scaleModeInfo!;
+  const scaleDegreeInfo = scaleModeInfo.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
   const chordType = isSeventh
-    ? ChordSetUtils.getSeventhChordType(scaleDegreeInfo, key.scaleModeInfo)
-    : ChordSetUtils.getTriadChordType(scaleDegreeInfo, key.scaleModeInfo);
+    ? ChordSetUtils.getSeventhChordType(scaleDegreeInfo, scaleModeInfo)
+    : ChordSetUtils.getTriadChordType(scaleDegreeInfo, scaleModeInfo);
   return makeChordReference(rootNote, chordType, ixInversion(0));
 }
 
