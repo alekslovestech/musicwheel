@@ -19,7 +19,9 @@ export class ScaleModeInfo implements SluggedEntry {
     public readonly type: ScaleModeType,
     public readonly slug: string,
     pattern: number[], // The pattern of the mode, typically 7 notes. e.g. [0, 2, 4, 5, 7, 9, 10] for Mixolydian
-    public readonly modeNumber: number, // The number of the mode, typically 1-7. e.g. 1 for Ionian, 2 for Dorian, etc.
+    
+    // Position within the Greek-mode rotation (1 for Ionian, 2 for Dorian, etc.) 
+    public readonly modeNumber?: number,
   ) {
     this.scalePattern = new ScalePattern(pattern);
   }
@@ -56,6 +58,9 @@ export class ScaleModeInfo implements SluggedEntry {
   }
 
   public getIonianTonicIndex(tonicIndex: ChromaticIndex): ChromaticIndex {
+    if (this.modeNumber == null) {
+      throw new Error(`getIonianTonicIndex called on non-Greek mode ${this.type}`);
+    }
     const offset = this.modeNumber - 1;
 
     const scaleLength = this.scalePattern.length;
