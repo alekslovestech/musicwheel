@@ -51,6 +51,16 @@ export default function ApproachIndexPage() {
         </Link>
       </h2>
       <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
+
+      <h2 className="text-xl font-semibold">
+        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+          The Chromatic Circle
+        </Link>
+      </h2>
+      <p>
+        Why a circle instead of a line makes intervals and inversions easier to see - and how
+        that&apos;s different from the circle of fifths.
+      </p>
     </>
   );
 }
