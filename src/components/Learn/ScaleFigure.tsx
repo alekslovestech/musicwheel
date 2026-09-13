@@ -5,33 +5,43 @@ import Link from "next/link";
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
-import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { actualToChromatic } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import { scaleSelectionPath } from "@/utils/slug/scaleSelection";
+import { AnyScaleType, isOtherScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
 
-/** One scale figure: the wheel, the keyboard, and a link to the live app. Read-only, client
- * component since MusicalKey is a class instance. */
+/** One scale figure: the wheel, optionally the keyboard, and a link to the live app. Diatonic
+ * (ScaleModeType) or not (OtherScaleType) - MusicalKey and its scale-degree lookups work the same
+ * way for either, so this doesn't need two components any more (that's what OtherScaleFigure used
+ * to be). Read-only, client component since MusicalKey is a class instance. */
 export function ScaleFigure({
   tonic,
-  scaleMode,
+  scaleType,
   caption,
   scalePlaybackMode = ScalePlaybackMode.SingleNote,
   highlightedDegree,
   showStepAnnotations = false,
+  showLinearKeyboard = true,
+  linearShowLabels = false,
 }: {
   tonic: string;
-  scaleMode: ScaleModeType;
+  scaleType: AnyScaleType;
   caption: string;
+  /** Triad/Seventh are diatonic-only (see MusicalKey.getOffsets) - don't pass those for a
+   * non-diatonic scaleType. */
   scalePlaybackMode?: ScalePlaybackMode;
   /** Scale degree to highlight, under whichever scalePlaybackMode is active. Omit for a figure
    * with nothing highlighted - the scale's plain shape, or its step pattern. */
   highlightedDegree?: ScaleDegree;
   showStepAnnotations?: boolean;
+  showLinearKeyboard?: boolean;
+  /** The note-name letter and accidental ticks on the linear keyboard - see PianoKeyLinear. */
+  linearShowLabels?: boolean;
 }) {
-  const musicalKey = MusicalKey.fromGreekMode(tonic, scaleMode);
+  const musicalKey = isOtherScaleType(scaleType)
+    ? MusicalKey.fromOtherScale(tonic, scaleType)
+    : MusicalKey.fromGreekMode(tonic, scaleType);
   const highlightedNoteIndices =
     highlightedDegree == null
       ? []
@@ -50,23 +60,25 @@ export function ScaleFigure({
         onKeyClick={null}
       />
 
-      <LinearKeyboardView
-        musicalKey={musicalKey}
-        highlightedNoteIndices={highlightedNoteIndices}
-        onKeyClick={null}
-        isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
-        useRealisticColors
-        showLabels={false}
-        isCompact={musicalKey.tonicIndex === 0}
-      />
+      {showLinearKeyboard && (
+        <LinearKeyboardView
+          musicalKey={musicalKey}
+          highlightedNoteIndices={highlightedNoteIndices}
+          onKeyClick={null}
+          isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
+          useRealisticColors
+          showLabels={linearShowLabels}
+          isCompact={musicalKey.tonicIndex === 0}
+        />
+      )}
 
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span>{caption}</span>
         <Link
-          href={scaleSelectionPath({ tonic, scaleMode, playbackMode: scalePlaybackMode })}
+          href={scaleSelectionPath({ tonic, scaleMode: scaleType, playbackMode: scalePlaybackMode })}
           className={LEARN_STYLES.link}
         >
-          Hear {tonic} {scaleMode} in the app
+          Hear {tonic} {scaleType} in the app
         </Link>
       </figcaption>
     </figure>

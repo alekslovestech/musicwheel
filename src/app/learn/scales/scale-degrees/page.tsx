@@ -27,16 +27,18 @@ export default function ScaleDegreesPage() {
 
       <ScaleFigure
         tonic="C"
-        scaleMode={ScaleModeType.Ionian}
+        scaleType={ScaleModeType.Ionian}
         scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
         caption="C Ionian, the reference scale for the seven scale degrees."
+        linearShowLabels = {true}
       />
 
       <ScaleFigure
         tonic="C"
-        scaleMode={ScaleModeType.Lydian}
+        scaleType={ScaleModeType.Lydian}
         scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
         caption="C Lydian, a raised 4th degree (F#) compared to C Ionian."
+        linearShowLabels = {true}
       />
     </>
   );

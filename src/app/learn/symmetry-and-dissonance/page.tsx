@@ -7,7 +7,7 @@ import {
   ComparisonGrid4,
 } from "@/components/Learn/ComparisonGrid";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
-import { OtherScaleFigure } from "@/components/Learn/OtherScaleFigure";
+import { ScaleFigure } from "@/components/Learn/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -186,17 +186,19 @@ export default function SymmetryAndDissonancePage() {
       </p>
 
       <ComparisonGrid2>
-        <OtherScaleFigure
-          rootNote="C"
-          otherScaleType={OtherScaleType.WholeTone}
+        <ScaleFigure
+          tonic="C"
+          scaleType={OtherScaleType.WholeTone}
           caption="Root C: C, D, E, F#, G#, A#."
           showStepAnnotations
+          showLinearKeyboard={false}
         />
-        <OtherScaleFigure
-          rootNote="D"
-          otherScaleType={OtherScaleType.WholeTone}
+        <ScaleFigure
+          tonic="D"
+          scaleType={OtherScaleType.WholeTone}
           caption="Call D the root instead - the same six wedges, D, E, F#, G#, A#, C."
           showStepAnnotations
+          showLinearKeyboard={false}
         />
       </ComparisonGrid2>
     </>

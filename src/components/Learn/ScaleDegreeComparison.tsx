@@ -49,14 +49,14 @@ export function ScaleDegreeComparison({
       <ComparisonGrid2>
         <ScaleFigure
           tonic={tonic}
-          scaleMode={modeA}
+          scaleType={modeA}
           scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
           highlightedDegree={degree}
           caption={captionA}
         />
         <ScaleFigure
           tonic={tonic}
-          scaleMode={modeB}
+          scaleType={modeB}
           scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
           highlightedDegree={degree}
           caption={captionB}

@@ -36,7 +36,7 @@ export default function MelodicMinorModesPage() {
 
       <ScaleFigure
         tonic="C"
-        scaleMode={ScaleModeType.MelodicMinor}
+        scaleType={ScaleModeType.MelodicMinor}
         showStepAnnotations
         caption="C Melodic Minor."
       />
@@ -49,7 +49,7 @@ export default function MelodicMinorModesPage() {
 
       <ScaleFigure
         tonic="F"
-        scaleMode={ScaleModeType.LydianDominant}
+        scaleType={ScaleModeType.LydianDominant}
         showStepAnnotations
         caption="F Lydian Dominant: the same seven notes as C Melodic Minor, started on the 4th
           degree instead of the 1st."
@@ -63,7 +63,7 @@ export default function MelodicMinorModesPage() {
 
       <ScaleFigure
         tonic="B"
-        scaleMode={ScaleModeType.SuperLocrian}
+        scaleType={ScaleModeType.SuperLocrian}
         showStepAnnotations
         caption="B Super Locrian: the same seven notes as C Melodic Minor, started on the 7th
           degree - the leading tone - instead of the 1st."
