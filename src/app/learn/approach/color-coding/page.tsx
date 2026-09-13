@@ -4,6 +4,11 @@ import Link from "next/link";
 import { LEARN_STYLES } from "@/lib/design";
 import { INTERVAL_CLASS_PALETTE } from "@/lib/design/palette";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
+import { ChordType } from "@/types/enums/ChordType";
+import {
+  getJoinedColorLegendGroupsForIds,
+  legendLabelForGroup,
+} from "@/utils/visual/colorLegendGroups";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -21,6 +26,25 @@ const INTERVAL_ROWS: { ic: keyof typeof INTERVAL_CLASS_PALETTE; label: string; n
   { ic: 5, label: "Perfect 4th / Perfect 5th", name: "Blue" },
   { ic: 6, label: "Tritone", name: "Magenta" },
 ];
+
+const CHORD_COLOR_GROUPS = getJoinedColorLegendGroupsForIds(
+  new Set([
+    ChordType.Major,
+    ChordType.Minor,
+    ChordType.Diminished,
+    ChordType.Augmented,
+    ChordType.Major7,
+    ChordType.Minor7,
+    ChordType.Dominant7,
+    ChordType.Dominant7Flat5,
+    ChordType.MinorMajor7,
+    ChordType.HalfDiminished,
+    ChordType.Diminished7,
+    ChordType.AugMajor7,
+    ChordType.Sus4,
+    ChordType.Sus2,
+  ]),
+);
 
 export default function ColorCodingPage() {
   return (
@@ -75,6 +99,25 @@ export default function ColorCodingPage() {
         place. A plain major triad leans on its calmer, more evenly weighted intervals and comes out
         as a fairly settled blend; add a seventh or a sharp dissonance and the mix visibly shifts
         toward that interval&apos;s color.
+      </p>
+
+      <div className="flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-normal">
+        {CHORD_COLOR_GROUPS.map((group) => (
+          <div key={group.groupingIds.join("-")} className="flex items-center gap-snug">
+            <div
+              className="h-5 w-5 shrink-0 rounded-sm border border-containers-divider/40"
+              style={{ backgroundColor: group.color.css() }}
+            />
+            <span className="min-w-0 flex-1 text-sm">{legendLabelForGroup(group)}</span>
+          </div>
+        ))}
+      </div>
+
+      <p>
+        This is why some qualities land close together and others stand apart: any two chords
+        built from the same interval classes come out looking similar regardless of what they&apos;re
+        called, while a single unstable interval buried in an otherwise calm chord can still pull
+        its color noticeably off to one side.
       </p>
 
       <p>
