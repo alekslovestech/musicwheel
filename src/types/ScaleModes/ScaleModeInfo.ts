@@ -1,13 +1,15 @@
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { SluggedEntry } from "@/utils/slug/slugCodec";
 
 import { addChromatic, ChromaticIndex, subChromatic } from "@/types/ChromaticIndex";
 
+import { IScaleInfo } from "./IScaleInfo";
 import { ScalePattern } from "./ScalePattern";
 import { ScaleDegreeInfo } from "./ScaleDegreeInfo";
 import { ixScaleDegreeIndex, scaleDegreeToIndex, ScaleDegreeIndex } from "./ScaleDegreeType";
 
-export class ScaleModeInfo implements SluggedEntry {
+export class ScaleModeInfo implements SluggedEntry, IScaleInfo {
   /**
    * The scale pattern for this mode.
    * For most use cases, you can access this directly to use ScalePattern methods.
@@ -27,6 +29,10 @@ export class ScaleModeInfo implements SluggedEntry {
   }
 
   public getScalePatternLength(): number {
+    return this.scalePattern.length;
+  }
+
+  public get length(): number {
     return this.scalePattern.length;
   }
 
@@ -72,13 +78,32 @@ export class ScaleModeInfo implements SluggedEntry {
     return addChromatic(tonicIndex, ionianOffset);
   }
 
-  public isDiatonicNote(chromaticIndex: ChromaticIndex, tonicIndex: ChromaticIndex): boolean {
+  public isInScale(chromaticIndex: ChromaticIndex, tonicIndex: ChromaticIndex): boolean {
     const scaleNotes = this.getAbsoluteScaleNotes(tonicIndex);
     return scaleNotes.includes(chromaticIndex);
   }
 
   public getScaleDegreeInfoFromPosition(scaleDegreeIndex: ScaleDegreeIndex): ScaleDegreeInfo {
     return this.scalePattern.getScaleDegreeInfoFromPosition(scaleDegreeIndex);
+  }
+
+  public getOffsets(scaleDegreeIndex: ScaleDegreeIndex, mode: ScalePlaybackMode): number[] {
+    switch (mode) {
+      case ScalePlaybackMode.Triad:
+        return this.scalePattern.getOffsets135(scaleDegreeIndex);
+      case ScalePlaybackMode.Seventh:
+        return this.scalePattern.getOffsets1357(scaleDegreeIndex);
+      case ScalePlaybackMode.DronedSingleNote:
+        return this.scalePattern.getTonicDroneWithRootOffset(scaleDegreeIndex);
+      default:
+        return this.scalePattern.getRootOffset(scaleDegreeIndex);
+    }
+  }
+
+  public getStepOffsets(): number[] {
+    return Array.from({ length: this.scalePattern.length }, (_, i) =>
+      this.scalePattern.getOffsetAtIndex(ixScaleDegreeIndex(i)),
+    );
   }
 
   public getTriadOffsets(scaleDegreeInfo: ScaleDegreeInfo): number[] {

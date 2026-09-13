@@ -6,4 +6,5 @@ export enum OtherScaleType {
   WholeTone = "Whole Tone",
   MajorPentatonic = "Major Pentatonic",
   MinorPentatonic = "Minor Pentatonic",
+  Diminished = "Diminished",
 }

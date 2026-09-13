@@ -7,8 +7,9 @@ import { isMajor, KeyType } from "@/types/enums/KeyType";
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
 import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
-import { ScaleDegreeIndex, ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
+import { ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
+import { IScaleInfo } from "@/types/ScaleModes/IScaleInfo";
 import { OTHER_SCALE_REGISTRY } from "@/types/OtherScales/OtherScaleRegistry";
 import { OtherScaleInfo } from "@/types/OtherScales/OtherScaleInfo";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
@@ -52,22 +53,31 @@ export class MusicalKey {
     this.otherScaleInfo = otherScaleType ? OTHER_SCALE_REGISTRY[otherScaleType] : null;
   }
 
+  /** Whichever of scaleModeInfo/otherScaleInfo this key has, behind the shared surface MusicalKey
+   * needs to treat the two polymorphically instead of branching on which one it is. */
+  private get scaleInfo(): IScaleInfo {
+    return this.scaleModeInfo ?? this.otherScaleInfo!;
+  }
+
   public get scalePatternLength(): number {
-    return this.scaleModeInfo
-      ? this.scaleModeInfo.getScalePatternLength()
-      : this.otherScaleInfo!.pattern.length;
+    return this.scaleInfo.length;
   }
 
   /** Whether chromaticIndex is one of this key's scale notes - diatonic or not. */
   isDiatonicNote(chromaticIndex: ChromaticIndex): boolean {
-    return this.scaleModeInfo
-      ? this.scaleModeInfo.isDiatonicNote(chromaticIndex, this.tonicIndex)
-      : this.otherScaleInfo!.isInScale(chromaticIndex, this.tonicIndex);
+    return this.scaleInfo.isInScale(chromaticIndex, this.tonicIndex);
   }
 
-  /** Plain scale-degree info for a non-diatonic key - null for a diatonic one (use scaleModeInfo instead). */
-  getOtherScaleDegreeInfo(chromaticIndex: ChromaticIndex): ScaleDegreeInfo | null {
-    return this.otherScaleInfo?.getScaleDegreeInfoFromChromatic(chromaticIndex, this.tonicIndex) ?? null;
+  /** Scale-degree info for a chromatic note - diatonic or not - or null if it's not in the scale. */
+  getScaleDegreeInfo(chromaticIndex: ChromaticIndex): ScaleDegreeInfo | null {
+    return this.scaleInfo.getScaleDegreeInfoFromChromatic(chromaticIndex, this.tonicIndex);
+  }
+
+  /** Scale-degree info (number + accidental) at a plain 0-based position in the scale pattern -
+   * diatonic or not, so ribbon labels work the same way for either kind of key. A non-diatonic
+   * key has no accidentals to spell - just its plain 1-based position. */
+  getScaleDegreeInfoAtPosition(position: ScaleDegreeIndex): ScaleDegreeInfo {
+    return this.scaleInfo.getScaleDegreeInfoFromPosition(position);
   }
 
   /**
@@ -79,24 +89,7 @@ export class MusicalKey {
    * @param scalePlaybackMode The mode of playback (triad, seventh, droned single note, or root)
    */
   getOffsets(scaleDegreeIndex: ScaleDegreeIndex, scalePlaybackMode: ScalePlaybackMode): number[] {
-    if (this.otherScaleInfo) {
-      const pattern = this.otherScaleInfo.pattern;
-      return scalePlaybackMode === ScalePlaybackMode.DronedSingleNote
-        ? pattern.getTonicDroneWithRootOffset(scaleDegreeIndex)
-        : pattern.getRootOffset(scaleDegreeIndex);
-    }
-
-    const scalePattern = this.scaleModeInfo!.scalePattern;
-    switch (scalePlaybackMode) {
-      case ScalePlaybackMode.Triad:
-        return scalePattern.getOffsets135(scaleDegreeIndex);
-      case ScalePlaybackMode.Seventh:
-        return scalePattern.getOffsets1357(scaleDegreeIndex);
-      case ScalePlaybackMode.DronedSingleNote:
-        return scalePattern.getTonicDroneWithRootOffset(scaleDegreeIndex);
-      default:
-        return scalePattern.getRootOffset(scaleDegreeIndex);
-    }
+    return this.scaleInfo.getOffsets(scaleDegreeIndex, scalePlaybackMode);
   }
 
   public getNoteIndicesForScaleDegree(
@@ -193,23 +186,14 @@ export class MusicalKey {
 
   /** Absolute scale notes - diatonic or not. */
   getAbsoluteScaleNotes(): ChromaticIndex[] {
-    return this.scaleModeInfo
-      ? this.scaleModeInfo.getAbsoluteScaleNotes(this.tonicIndex)
-      : this.otherScaleInfo!.getAbsoluteScaleNotes(this.tonicIndex);
+    return this.scaleInfo.getAbsoluteScaleNotes(this.tonicIndex);
   }
 
   /** Offset from the tonic for each position in the scale pattern - diatonic or not, so step
    * annotations (the wheel's W-H arcs, the Notes ribbon's step segments) work the same for either
    * kind of key. */
   getScaleStepOffsets(): number[] {
-    if (this.otherScaleInfo) {
-      const pattern = this.otherScaleInfo.pattern;
-      return Array.from({ length: pattern.length }, (_, i) => pattern.getRootOffset(i)[0]);
-    }
-    const scalePattern = this.scaleModeInfo!.scalePattern;
-    return Array.from({ length: scalePattern.length }, (_, i) =>
-      scalePattern.getOffsetAtIndex(ixScaleDegreeIndex(i)),
-    );
+    return this.scaleInfo.getStepOffsets();
   }
 
   /** Whether tonicAsString is a spelling this classicalMode already recognizes as itself - one of

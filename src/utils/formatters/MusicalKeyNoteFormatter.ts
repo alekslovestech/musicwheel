@@ -18,9 +18,7 @@ export class MusicalKeyNoteFormatter {
     chromaticIndex: ChromaticIndex,
     keyTextMode: KeyDisplayMode,
   ): string {
-    const scaleDegreeInfo = musicalKey.scaleModeInfo
-      ? musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(chromaticIndex, musicalKey.tonicIndex)
-      : musicalKey.getOtherScaleDegreeInfo(chromaticIndex);
+    const scaleDegreeInfo = musicalKey.getScaleDegreeInfo(chromaticIndex);
 
     if (keyTextMode === KeyDisplayMode.NoteNames) {
       const scaleNoteInfo = ScaleNoteSpellingResolver.resolveNoteInScale(musicalKey, chromaticIndex);

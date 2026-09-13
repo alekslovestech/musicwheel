@@ -117,11 +117,10 @@ function buildStepSegments(offsets: number[]): LabelWithColor[] {
  * you hear, not what things are called.
  */
 function scaleDegreeLabels(key: MusicalKey): string[] {
-  const scaleModeInfo = key.scaleModeInfo!;
   const degrees = Array.from({ length: key.scalePatternLength }, (_, i) =>
-    ScaleDegreeFormatter.formatForDisplay(scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i))),
+    ScaleDegreeFormatter.formatForDisplay(key.getScaleDegreeInfoAtPosition(ixScaleDegreeIndex(i))),
   );
-  return [...degrees, "8"];
+  return [...degrees, `${key.scalePatternLength + 1}`];
 }
 
 function buildNotesRibbon(key: MusicalKey, showStepAnnotations: boolean): ScaleRibbonData {
