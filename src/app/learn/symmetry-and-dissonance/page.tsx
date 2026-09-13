@@ -190,11 +190,13 @@ export default function SymmetryAndDissonancePage() {
           rootNote="C"
           otherScaleType={OtherScaleType.WholeTone}
           caption="Root C: C, D, E, F#, G#, A#."
+          showStepAnnotations
         />
         <OtherScaleFigure
           rootNote="D"
           otherScaleType={OtherScaleType.WholeTone}
           caption="Call D the root instead - the same six wedges, D, E, F#, G#, A#, C."
+          showStepAnnotations
         />
       </ComparisonGrid2>
     </>

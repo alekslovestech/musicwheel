@@ -20,16 +20,25 @@ export function OtherScaleFigure({
   rootNote,
   otherScaleType,
   caption,
+  showStepAnnotations = false,
 }: {
   rootNote: string;
   otherScaleType: OtherScaleType;
   caption: string;
+  /** Colors the arc between each pair of adjacent scale notes by its step size - e.g. shows the
+   * whole tone scale's uniform whole-step spacing. */
+  showStepAnnotations?: boolean;
 }) {
   const musicalKey = MusicalKey.fromOtherScale(rootNote, otherScaleType);
 
   return (
     <figure className={LEARN_STYLES.figureCard}>
-      <CircularKeyboardView musicalKey={musicalKey} isScales={true} onKeyClick={null} />
+      <CircularKeyboardView
+        musicalKey={musicalKey}
+        isScales={true}
+        showStepAnnotations={showStepAnnotations}
+        onKeyClick={null}
+      />
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span>{caption}</span>
         <Link
