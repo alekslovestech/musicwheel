@@ -92,12 +92,8 @@ function stepColorForSemitones(semitones: number): chroma.Color {
   return ColorUtils.getColorForSemitoneDistance(semitones);
 }
 
-/** Diatonic keys only - callers gate on {@link MusicalKey.scaleModeInfo} before calling in. */
 function getScalePatternOffsets(key: MusicalKey): number[] {
-  const pattern = key.scaleModeInfo!.scalePattern;
-  return Array.from({ length: pattern.length }, (_, i) =>
-    pattern.getOffsetAtIndex(ixScaleDegreeIndex(i)),
-  );
+  return key.getScaleStepOffsets();
 }
 
 function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {

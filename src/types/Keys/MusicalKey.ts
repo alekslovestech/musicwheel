@@ -7,7 +7,7 @@ import { isMajor, KeyType } from "@/types/enums/KeyType";
 import { addChromatic, ChromaticIndex } from "@/types/ChromaticIndex";
 import { SCALE_MODE_REGISTRY } from "@/types/ScaleModes/ScaleModeRegistry";
 import { ScaleModeInfo } from "@/types/ScaleModes/ScaleModeInfo";
-import { ScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
+import { ScaleDegreeIndex, ixScaleDegreeIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { ScaleDegreeInfo } from "@/types/ScaleModes/ScaleDegreeInfo";
 import { OTHER_SCALE_REGISTRY } from "@/types/OtherScales/OtherScaleRegistry";
 import { OtherScaleInfo } from "@/types/OtherScales/OtherScaleInfo";
@@ -189,6 +189,27 @@ export class MusicalKey {
     const keyList = KeySignature.getKeyList(mode);
     const tonicAsString = keyList.find((key) => NoteConverter.toChromaticIndex(key) === tonicIndex);
     return tonicAsString!;
+  }
+
+  /** Absolute scale notes - diatonic or not. */
+  getAbsoluteScaleNotes(): ChromaticIndex[] {
+    return this.scaleModeInfo
+      ? this.scaleModeInfo.getAbsoluteScaleNotes(this.tonicIndex)
+      : this.otherScaleInfo!.getAbsoluteScaleNotes(this.tonicIndex);
+  }
+
+  /** Offset from the tonic for each position in the scale pattern - diatonic or not, so step
+   * annotations (the wheel's W-H arcs, the Notes ribbon's step segments) work the same for either
+   * kind of key. */
+  getScaleStepOffsets(): number[] {
+    if (this.otherScaleInfo) {
+      const pattern = this.otherScaleInfo.pattern;
+      return Array.from({ length: pattern.length }, (_, i) => pattern.getRootOffset(i)[0]);
+    }
+    const scalePattern = this.scaleModeInfo!.scalePattern;
+    return Array.from({ length: scalePattern.length }, (_, i) =>
+      scalePattern.getOffsetAtIndex(ixScaleDegreeIndex(i)),
+    );
   }
 
   /** Whether tonicAsString is a spelling this classicalMode already recognizes as itself - one of
