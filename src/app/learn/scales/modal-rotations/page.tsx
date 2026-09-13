@@ -79,7 +79,7 @@ export default function ModalRotationsPage() {
 
       <ScaleFigure
         tonic="G"
-        scaleMode={ScaleModeType.PhrygianDominant}
+        scaleType={ScaleModeType.PhrygianDominant}
         showStepAnnotations
         caption="G Phrygian Dominant: the same seven notes as C Harmonic Minor, started on the 5th
           degree instead of the 1st."
@@ -97,7 +97,7 @@ export default function ModalRotationsPage() {
 
       <ScaleFigure
         tonic="G"
-        scaleMode={ScaleModeType.MixolydianB2}
+        scaleType={ScaleModeType.MixolydianB2}
         showStepAnnotations
         caption="G Mixolydian ♭2: the same seven notes as C Harmonic Major, started on the 5th
           degree instead of the 1st."
@@ -120,7 +120,7 @@ export default function ModalRotationsPage() {
 
       <ScaleFigure
         tonic="F"
-        scaleMode={ScaleModeType.HungarianMinor}
+        scaleType={ScaleModeType.HungarianMinor}
         showStepAnnotations
         caption="F Hungarian Minor: the same seven notes as C Double Harmonic Major, started on the
           4th degree instead of the 1st."

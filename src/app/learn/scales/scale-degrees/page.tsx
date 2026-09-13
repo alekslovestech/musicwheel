@@ -1,0 +1,61 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { ScaleFigure } from "@/components/Learn/ScaleFigure";
+import { LEARN_STYLES } from "@/lib/design";
+import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+
+export const metadata: Metadata = metadataForSlugPage(
+  learnViewMetadata,
+  "/learn/scales/scale-degrees",
+  "Scale Degrees",
+  "What each numbered position in a scale is called, and why the names matter.",
+);
+
+export default function ScaleDegreesPage() {
+  return (
+    <>
+      <Link href="/learn/scales" className={LEARN_STYLES.link}>
+        ← Scales
+      </Link>
+
+      <h1 className="text-3xl font-semibold">Scale Degrees</h1>
+
+      <p>
+        A scale degree is just a numbered position: 1 through 7, counting up from the tonic. Every
+        mode has seven of them, but the numbers alone don&apos;t say what note actually sits at each
+        position - for that, every mode gets measured against the same reference: Ionian, the major
+        scale. Ionian&apos;s own seven notes are the plain, unaltered degrees - 1, 2, 3, 4, 5, 6,
+        7, no sharps or flats attached - which is what makes it the yardstick everything else is
+        described against, rather than one more mode with equal claim to the naming.
+      </p>
+
+      <ScaleFigure
+        tonic="C"
+        scaleType={ScaleModeType.Ionian}
+        scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
+        caption="C Ionian, the reference scale for the seven scale degrees."
+        linearShowLabels={true}
+      />
+
+      <p>
+        Every other mode is really just a statement about which of those seven positions differ
+        from Ionian, and by how much. Lydian is Ionian with one change: the 4th degree raised a
+        semitone, so it gets called &ldquo;sharp 4&rdquo; rather than a plain 4th - not because
+        it&apos;s sharp in any absolute sense, but because it sits a semitone above where Ionian
+        puts the 4th degree on the same tonic. Swap that one note back and Lydian collapses into
+        Ionian; the name &ldquo;sharp 4&rdquo; is the whole difference, made explicit.
+      </p>
+
+      <ScaleFigure
+        tonic="C"
+        scaleType={ScaleModeType.Lydian}
+        scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
+        caption="C Lydian, a raised 4th degree (F#) compared to C Ionian."
+        linearShowLabels={true}
+      />
+    </>
+  );
+}

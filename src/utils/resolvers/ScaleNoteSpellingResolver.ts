@@ -28,9 +28,7 @@ export class ScaleNoteSpellingResolver {
     musicalKey: MusicalKey,
     chromaticIndex: ChromaticIndex,
   ): NoteInfo | null {
-    const scaleDegreeInfo = musicalKey.scaleModeInfo
-      ? musicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(chromaticIndex, musicalKey.tonicIndex)
-      : musicalKey.getOtherScaleDegreeInfo(chromaticIndex);
+    const scaleDegreeInfo = musicalKey.getScaleDegreeInfo(chromaticIndex);
     if (!scaleDegreeInfo) return null;
 
     if (scaleDegreeInfo.scaleDegree === 1) {

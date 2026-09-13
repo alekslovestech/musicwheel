@@ -32,6 +32,13 @@ export default function ScalesIndexPage() {
       <p>Relative modes, parallel modes, and one scale rotated seven ways.</p>
 
       <h2 className="text-xl font-semibold">
+        <Link href="/learn/scales/scale-degrees" className={LEARN_STYLES.link}>
+          Scale Degrees
+        </Link>
+      </h2>
+      <p>What each numbered position in a scale is called, and why the names matter.</p>
+
+      <h2 className="text-xl font-semibold">
         <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
           Relative vs. Parallel Modes
         </Link>

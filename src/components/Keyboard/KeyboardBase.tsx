@@ -145,12 +145,7 @@ export const useKeyboardHandlers = () => {
         // (see OtherScaleInfo). getScaleStepAtDegree below still works for it under SingleNote and
         // DronedSingleNote - Triad/Seventh are diatonic-only, and the UI keeps them unreachable
         // here (ScalePlaybackModeSelect disables that button for a non-diatonic key).
-        const scaleDegreeInfo = selectedMusicalKey.scaleModeInfo
-          ? selectedMusicalKey.scaleModeInfo.getScaleDegreeInfoFromChromatic(
-              chromaticIndex,
-              selectedMusicalKey.tonicIndex,
-            )
-          : selectedMusicalKey.getOtherScaleDegreeInfo(chromaticIndex);
+        const scaleDegreeInfo = selectedMusicalKey.getScaleDegreeInfo(chromaticIndex);
         if (!scaleDegreeInfo) return;
 
         const step = getScaleStepAtDegree(

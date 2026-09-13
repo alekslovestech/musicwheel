@@ -92,12 +92,8 @@ function stepColorForSemitones(semitones: number): chroma.Color {
   return ColorUtils.getColorForSemitoneDistance(semitones);
 }
 
-/** Diatonic keys only - callers gate on {@link MusicalKey.scaleModeInfo} before calling in. */
 function getScalePatternOffsets(key: MusicalKey): number[] {
-  const pattern = key.scaleModeInfo!.scalePattern;
-  return Array.from({ length: pattern.length }, (_, i) =>
-    pattern.getOffsetAtIndex(ixScaleDegreeIndex(i)),
-  );
+  return key.getScaleStepOffsets();
 }
 
 function getStepSemitonesBetween(offsets: number[], fromIndex: number): number {
@@ -121,11 +117,10 @@ function buildStepSegments(offsets: number[]): LabelWithColor[] {
  * you hear, not what things are called.
  */
 function scaleDegreeLabels(key: MusicalKey): string[] {
-  const scaleModeInfo = key.scaleModeInfo!;
   const degrees = Array.from({ length: key.scalePatternLength }, (_, i) =>
-    ScaleDegreeFormatter.formatForDisplay(scaleModeInfo.getScaleDegreeInfoFromPosition(ixScaleDegreeIndex(i))),
+    ScaleDegreeFormatter.formatForDisplay(key.getScaleDegreeInfoAtPosition(ixScaleDegreeIndex(i))),
   );
-  return [...degrees, "8"];
+  return [...degrees, `${key.scalePatternLength + 1}`];
 }
 
 function buildNotesRibbon(key: MusicalKey, showStepAnnotations: boolean): ScaleRibbonData {

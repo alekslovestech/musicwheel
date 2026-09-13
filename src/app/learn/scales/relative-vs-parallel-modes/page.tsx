@@ -44,13 +44,13 @@ export default function RelativeVsParallelModesPage() {
       <ComparisonGrid2>
         <ScaleFigure
           tonic="C"
-          scaleMode={ScaleModeType.Ionian}
+          scaleType={ScaleModeType.Ionian}
           showStepAnnotations
           caption="C Ionian: seven colored arcs, one whole or half step apart."
         />
         <ScaleFigure
           tonic="F"
-          scaleMode={ScaleModeType.Lydian}
+          scaleType={ScaleModeType.Lydian}
           showStepAnnotations
           caption="F Lydian: the same seven arcs, in the same places on the wheel - only the flag has
             moved."

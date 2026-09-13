@@ -2,7 +2,12 @@
 
 import { useRef } from "react";
 
-import { BLACK_KEY_WIDTH_RATIO, TWENTY4, WHITE_KEYS_PER_OCTAVE } from "@/types/constants/NoteConstants";
+import {
+  BLACK_KEY_WIDTH_RATIO,
+  TWENTY4,
+  WHITE_KEYS_PER_OCTAVE,
+  WHITE_KEYS_PER_2OCTAVES,
+} from "@/types/constants/NoteConstants";
 import { ActualIndex, actualToChromatic, ixActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { useLinearKeyboardDoDisplayText } from "@/lib/hooks/useLinearKeyboardDoDisplayText";
@@ -45,13 +50,16 @@ export function LinearKeyboardView({
   isCompact?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const doDisplayText = useLinearKeyboardDoDisplayText(containerRef);
+  const oneOctaveWhiteKeys = WHITE_KEYS_PER_OCTAVE + 1; // inclusive of the C above
+  const doDisplayText = useLinearKeyboardDoDisplayText(
+    containerRef,
+    isCompact ? oneOctaveWhiteKeys : WHITE_KEYS_PER_2OCTAVES,
+  );
 
   const resolvedClassName =
     className ?? (isCompact ? COMPACT_CONTAINER_CLASSES : FULL_CONTAINER_CLASSES);
 
   const endIndex = isCompact ? 12 : TWENTY4 - 1;
-  const oneOctaveWhiteKeys = WHITE_KEYS_PER_OCTAVE + 1; // inclusive of the C above
 
   const keys = [];
   for (let index = 0; index <= endIndex; index++) {

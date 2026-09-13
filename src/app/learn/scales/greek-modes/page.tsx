@@ -44,12 +44,12 @@ export default function GreekModesPage() {
       <ComparisonGrid2>
         <ScaleFigure
           tonic="C"
-          scaleMode={ScaleModeType.Ionian}
+          scaleType={ScaleModeType.Ionian}
           caption="C Ionian: the seven white keys, starting and ending on C."
         />
         <ScaleFigure
           tonic="D"
-          scaleMode={ScaleModeType.Dorian}
+          scaleType={ScaleModeType.Dorian}
           caption="D Dorian: the same seven white keys, starting and ending on D instead."
         />
       </ComparisonGrid2>
