@@ -39,6 +39,7 @@ export default function MelodicMinorModesPage() {
         scaleType={ScaleModeType.MelodicMinor}
         showStepAnnotations
         caption="C Melodic Minor."
+        isCompact
       />
 
       <p>

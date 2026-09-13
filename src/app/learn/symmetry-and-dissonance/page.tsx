@@ -191,14 +191,14 @@ export default function SymmetryAndDissonancePage() {
           scaleType={OtherScaleType.WholeTone}
           caption="Root C: C, D, E, F#, G#, A#."
           showStepAnnotations
-          showLinearKeyboard={false}
+          showLinearKeyboard
         />
         <ScaleFigure
           tonic="D"
           scaleType={OtherScaleType.WholeTone}
           caption="Call D the root instead - the same six wedges, D, E, F#, G#, A#, C."
           showStepAnnotations
-          showLinearKeyboard={false}
+          showLinearKeyboard
         />
       </ComparisonGrid2>
     </>
