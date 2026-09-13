@@ -11,10 +11,9 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AnyScaleType, isOtherScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
 
-/** One scale figure: the wheel, optionally the keyboard, and a link to the live app. Diatonic
- * (ScaleModeType) or not (OtherScaleType) - MusicalKey and its scale-degree lookups work the same
- * way for either, so this doesn't need two components any more (that's what OtherScaleFigure used
- * to be). Read-only, client component since MusicalKey is a class instance. */
+// One scale figure: the wheel, optionally the keyboard, and a link to the live app. 
+// Can handle both diatonic and non-diatonic scales
+
 export function ScaleFigure({
   tonic,
   scaleType,
