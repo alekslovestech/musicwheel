@@ -23,6 +23,7 @@ export function ScaleFigure({
   showStepAnnotations = false,
   showLinearKeyboard = true,
   linearShowLabels = false,
+  isCompact = false,
 }: {
   tonic: string;
   scaleType: AnyScaleType;
@@ -37,6 +38,10 @@ export function ScaleFigure({
   showLinearKeyboard?: boolean;
   /** The note-name letter and accidental ticks on the linear keyboard - see PianoKeyLinear. */
   linearShowLabels?: boolean;
+  /** Single-octave linear keyboard starting on C, instead of the full two-octave view - only
+   * looks right when tonic is C, since a compact keyboard always starts there regardless of
+   * tonic. See LinearKeyboardView.isCompact. */
+  isCompact?: boolean;
 }) {
   const musicalKey = isOtherScaleType(scaleType)
     ? MusicalKey.fromOtherScale(tonic, scaleType)
@@ -67,7 +72,8 @@ export function ScaleFigure({
           isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
           useRealisticColors
           showLabels={linearShowLabels}
-          isCompact={musicalKey.tonicIndex === 0}
+          isCompact={isCompact}
+          showScaleBoundaryFlag
         />
       )}
 

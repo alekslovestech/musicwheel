@@ -14,6 +14,13 @@ import { useLinearKeyboardDoDisplayText } from "@/lib/hooks/useLinearKeyboardDoD
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils";
 
+import {
+  getScaleBoundaryLeftPercentages,
+  SCALE_BOUNDARY_FLAG_HEIGHT,
+  SCALE_BOUNDARY_FLAG_POINTS,
+  SCALE_BOUNDARY_FLAG_VIEWBOX,
+  SCALE_BOUNDARY_FLAG_WIDTH,
+} from "./linearGeometry";
 import { PianoKeyLinear } from "./PianoKeyLinear";
 
 const CONTAINER_BASE_CLASSES = "relative flex box-border w-full max-h-full p-[5px]";
@@ -33,6 +40,7 @@ export function LinearKeyboardView({
   useRealisticColors = false,
   showLabels = true,
   isCompact = false,
+  showScaleBoundaryFlag = false,
 }: {
   musicalKey: MusicalKey;
   highlightedNoteIndices?: NoteIndices;
@@ -48,6 +56,9 @@ export function LinearKeyboardView({
   showLabels?: boolean;
   /** Compact shows 1 octave, default shows 2. */
   isCompact?: boolean;
+  /** Marks the tonic with a flag, as the circular keyboard always does in Scales mode - off by
+   * default (the live app's keyboard is dense enough without it), on for Learn's scale figures. */
+  showScaleBoundaryFlag?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const oneOctaveWhiteKeys = WHITE_KEYS_PER_OCTAVE + 1; // inclusive of the C above
@@ -89,7 +100,28 @@ export function LinearKeyboardView({
 
   return (
     <div ref={containerRef} className={resolvedClassName}>
-      <div className={KEYS_WRAPPER_CLASSES}>{keys}</div>
+      <div className={KEYS_WRAPPER_CLASSES}>
+        {keys}
+        {isScales &&
+          showScaleBoundaryFlag &&
+          getScaleBoundaryLeftPercentages(musicalKey.tonicIndex, isCompact).map(
+            (leftPercent, index) => (
+              <svg
+                key={index}
+                viewBox={SCALE_BOUNDARY_FLAG_VIEWBOX}
+                className="pointer-events-none absolute z-10 overflow-visible"
+                style={{
+                  left: `${leftPercent}%`,
+                  top: -SCALE_BOUNDARY_FLAG_HEIGHT,
+                  width: SCALE_BOUNDARY_FLAG_WIDTH,
+                  height: SCALE_BOUNDARY_FLAG_HEIGHT,
+                }}
+              >
+                <polygon points={SCALE_BOUNDARY_FLAG_POINTS} className="fill-keys-scaleBoundaryColor" />
+              </svg>
+            ),
+          )}
+      </div>
     </div>
   );
 }

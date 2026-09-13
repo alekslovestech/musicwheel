@@ -32,16 +32,11 @@ export const Button: React.FC<ButtonProps> = ({
   const selectedStyles = shouldShowSelected ? `${SELECTED_STYLES} selected` : "";
   const disabledStyles = disabled ? `${DISABLED_STYLES} disabled` : "";
 
-  const propsId = props.id;
-  const propsWithoutId = { ...props };
-  delete propsWithoutId.id;
-
   return (
     <button
-      id={propsId}
       disabled={disabled}
       className={`${BASE_STYLES} ${TYPOGRAPHY.buttonText} ${SIZES[size]} ${VARIANTS[variant]} ${selectedStyles} ${disabledStyles} ${className}`}
-      {...propsWithoutId}
+      {...props}
     >
       {children}
     </button>

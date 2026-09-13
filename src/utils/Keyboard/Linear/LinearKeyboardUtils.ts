@@ -1,11 +1,5 @@
-import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ActualIndex, actualIndexToChromaticAndOctave } from "@/types/IndexTypes";
-import {
-  WHITE_KEYS_PER_OCTAVE,
-  WHITE_KEYS_PER_2OCTAVES,
-  BLACK_KEY_WIDTH_RATIO,
-} from "@/types/constants/NoteConstants";
-import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
+import { WHITE_KEYS_PER_OCTAVE } from "@/types/constants/NoteConstants";
 
 //utils for calculating the linear keyboard geometry
 export class LinearKeyboardUtils {
@@ -22,33 +16,6 @@ export class LinearKeyboardUtils {
     const basePosition =
       LinearKeyboardUtils.whiteKeyPositions[chromaticIndex] + octaveOffset * WHITE_KEYS_PER_OCTAVE;
     return `${(basePosition / (WHITE_KEYS_PER_OCTAVE + 1)) * 100}%`;
-  }
-
-  static calculateScaleBoundaryPercentages(tonicIndex: ChromaticIndex): {
-    x1: number;
-    x2: number;
-  } {
-    const position = this.whiteKeyPositions[tonicIndex];
-    const x1 = (position / WHITE_KEYS_PER_2OCTAVES) * 100;
-    const x2 = ((position + WHITE_KEYS_PER_OCTAVE) / WHITE_KEYS_PER_2OCTAVES) * 100;
-    //black keys are 70% of the width of a white key
-    const shortKeyWidthPercent = 70 / WHITE_KEYS_PER_2OCTAVES / 2;
-    const offset = BlackKeyUtils.isBlackKey(tonicIndex) ? -shortKeyWidthPercent : 0;
-    return { x1: x1 + offset, x2: x2 + offset };
-  }
-
-  static calculateScaleBoundaryPositions(
-    tonicIndex: ChromaticIndex,
-    containerWidth: number,
-  ): { x1: number; x2: number } {
-    const position = this.whiteKeyPositions[tonicIndex];
-    const whiteKeyWidth = containerWidth / WHITE_KEYS_PER_2OCTAVES;
-    const x1 = position * whiteKeyWidth;
-    const x2 = (position + WHITE_KEYS_PER_OCTAVE) * whiteKeyWidth;
-    //black keys are 70% of the width of a white key
-    const shortKeyWidth = (whiteKeyWidth * BLACK_KEY_WIDTH_RATIO) / 2;
-    const offset = BlackKeyUtils.isBlackKey(tonicIndex) ? -shortKeyWidth : 0;
-    return { x1: x1 + offset, x2: x2 + offset };
   }
 
   static readonly whiteKeyPositions: number[] = [0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6];
