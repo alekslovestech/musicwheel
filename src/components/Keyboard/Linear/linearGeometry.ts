@@ -1,12 +1,11 @@
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { BLACK_KEY_WIDTH_RATIO, WHITE_KEYS_PER_OCTAVE } from "@/types/constants/NoteConstants";
+import { toSvgPointsString } from "@/types/interfaces/CartesianPoint";
 import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils";
 
 // Scale-boundary marker: a flag marking the tonic, echoing the circular keyboard's tonic marker
-// (see circularGeometry.ts) without its flagpole - flush with the tonic's left edge, pointing
-// right (the direction the scale runs from its tonic - ascending pitch), protruding above the
-// keyboard rather than overlapping its top edge. A fixed-size polygon, not scaled with the
+//  A fixed-size polygon, not scaled with the
 // keyboard's height, since it lives in the page's unscaled margin above it.
 export const SCALE_BOUNDARY_FLAG_WIDTH = 10; // px, back edge to tip
 export const SCALE_BOUNDARY_FLAG_HEIGHT = 8; // px, protrusion above the keyboard
@@ -16,14 +15,12 @@ export const SCALE_BOUNDARY_FLAG_VIEWBOX = `0 0 ${SCALE_BOUNDARY_FLAG_WIDTH} ${S
 
 // Perimeter walk: up the flush back edge, out to the tip, down to the other corner of the back
 // edge (a sliver of width, not a point, so it reads as a flag rather than a bare triangle).
-export const SCALE_BOUNDARY_FLAG_POINTS = [
-  [0, SCALE_BOUNDARY_FLAG_HEIGHT],
-  [0, 0],
-  [SCALE_BOUNDARY_FLAG_WIDTH, SCALE_BOUNDARY_FLAG_HEIGHT / 2],
-  [SCALE_BOUNDARY_FLAG_BASE_WIDTH, SCALE_BOUNDARY_FLAG_HEIGHT],
-]
-  .map(([x, y]) => `${x},${y}`)
-  .join(" ");
+export const SCALE_BOUNDARY_FLAG_POINTS = toSvgPointsString([
+  { x: 0, y: SCALE_BOUNDARY_FLAG_HEIGHT },
+  { x: 0, y: 0 },
+  { x: SCALE_BOUNDARY_FLAG_WIDTH, y: SCALE_BOUNDARY_FLAG_HEIGHT / 2 },
+  { x: SCALE_BOUNDARY_FLAG_BASE_WIDTH, y: SCALE_BOUNDARY_FLAG_HEIGHT },
+]);
 
 /**
  * Left-edge x-position (percent of keyboard width) of the tonic's white-key column, one entry per

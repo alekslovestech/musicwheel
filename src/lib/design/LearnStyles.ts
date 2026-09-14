@@ -4,6 +4,11 @@ import type { CSSProperties } from "react";
 export const FIGURE_KEY_BORDER = { "--key-border-width": "0" } as CSSProperties;
 
 export const LEARN_STYLES = {
+  /** Article title - one per page. */
+  h1: "text-3xl font-semibold",
+  /** Section heading within an article. */
+  h2: "text-xl font-semibold",
+
   /** Side-by-side scale comparisons: unconditional 2-up, not width-breakpointed - a 2-column
    * grid is half-width at any viewport, so it stays side-by-side in portrait instead of
    * stacking, and gets roomier automatically in landscape. */
@@ -16,7 +21,7 @@ export const LEARN_STYLES = {
 
   figureCard:
     "m-0 flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-tight sm:gap-snug sm:p-normal",
-  figureCaption: "flex flex-col gap-tight text-xs text-labels-textDefault sm:text-sm",
+  figureCaption: "flex flex-col gap-tight text-center text-xs text-labels-textDefault sm:text-sm",
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "underline underline-offset-2",
 

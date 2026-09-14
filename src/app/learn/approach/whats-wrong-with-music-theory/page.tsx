@@ -18,7 +18,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         ← Approach
       </Link>
 
-      <h1 className="text-3xl font-semibold">What&apos;s Wrong with Music Theory</h1>
+      <h1 className={LEARN_STYLES.h1}>What&apos;s Wrong with Music Theory</h1>
 
       <p>
         Standard music theory teaches two different things at once, with the same tone of voice:
@@ -28,7 +28,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         than it needs to be. Here&apos;s a short tour of it.
       </p>
 
-      <h2 className="text-xl font-semibold">Historical accidents</h2>
+      <h2 className={LEARN_STYLES.h2}>Historical accidents</h2>
 
       <p>
         The seven-letter alphabet, the uneven black-and-white keyboard layout, sharps and flats
@@ -40,7 +40,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         exceptions.
       </p>
 
-      <h2 className="text-xl font-semibold">Enharmonic notation</h2>
+      <h2 className={LEARN_STYLES.h2}>Enharmonic notation</h2>
 
       <p>
         G-sharp and A-flat are the same pitch. Which name is &ldquo;correct&rdquo; in a given passage
@@ -50,7 +50,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         that sounds exactly like some much simpler-looking key a semitone away.
       </p>
 
-      <h2 className="text-xl font-semibold">Musical keys</h2>
+      <h2 className={LEARN_STYLES.h2}>Musical keys</h2>
 
       <p>
         A key signature is a fact about how a piece is written down - how many sharps or flats sit
@@ -61,7 +61,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         they need entirely separate vocabulary to describe.
       </p>
 
-      <h2 className="text-xl font-semibold">Pointless memorization</h2>
+      <h2 className={LEARN_STYLES.h2}>Pointless memorization</h2>
 
       <p>
         &ldquo;Every Good Boy Does Fine.&rdquo; &ldquo;Whole-whole-half-whole-whole-whole-half.&rdquo;
@@ -70,7 +70,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         you can see the shape, the string is just extra weight to carry around.
       </p>
 
-      <h2 className="text-xl font-semibold">Turf wars around spelling</h2>
+      <h2 className={LEARN_STYLES.h2}>Turf wars around spelling</h2>
 
       <p>
         A remarkable amount of theory instruction is spent litigating whether something

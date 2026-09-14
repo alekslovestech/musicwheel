@@ -19,7 +19,7 @@ export default function ComparisonsIndexPage() {
         ← Scales
       </Link>
 
-      <h1 className="text-3xl font-semibold">Comparisons</h1>
+      <h1 className={LEARN_STYLES.h1}>Comparisons</h1>
       <p>Two modes on the same tonic, one note apart.</p>
 
       <table className="w-full border-collapse text-left">

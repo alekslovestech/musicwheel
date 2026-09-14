@@ -28,27 +28,18 @@ export default function SymmetryAndDissonancePage() {
         ← Learn
       </Link>
 
-      <h1 className="text-3xl font-semibold">Symmetry and Dissonance</h1>
+      <h1 className={LEARN_STYLES.h1}>Symmetry and Dissonance</h1>
 
       <p>
-        A major triad is lopsided on purpose. C, E, and G sit four semitones apart, then three, then
-        five back around to C - three different gaps, no two the same. That lopsidedness is what
-        gives the chord a root: C is the note the uneven pattern points back to, the one spot on the
-        wheel where the shape and the label agree. Rotate that shape to start on E or G instead and
-        you get a genuinely different-sounding gap pattern, not the same chord in disguise.
+        What happens when the distance between notes in an interval, chord, or scale is the same size? Slice the
+        octave into equal parts and the resulting shape looks identical no matter which note you
+        start counting from - so it has no single note to point back to. Every candidate for
+        &ldquo;root&rdquo; is equally good and equally arbitrary, and an ear that can&apos;t settle
+        on a home note hears that as tension rather than repose. Change the root and the shape
+        doesn&apos;t change flavor at all - it&apos;s the same sound, just relabeled.
       </p>
 
-      <p>
-        Now shrink the gaps until they&apos;re all equal. A shape that divides the octave into equal
-        slices looks exactly the same no matter which of its notes you start counting from - which
-        means it has no single note it points back to. Every candidate for &ldquo;root&rdquo; is
-        equally good and equally arbitrary, and an ear that can&apos;t settle on a home note hears
-        that as tension rather than repose. That&apos;s the thread connecting three otherwise
-        unrelated-looking shapes: a bare interval and two chords, each built by slicing the octave
-        into equal parts.
-      </p>
-
-      <h2 className="text-xl font-semibold">The tritone: splitting the octave in two</h2>
+      <h2 className={LEARN_STYLES.h2}>The tritone: splitting the octave in two</h2>
 
       <p>
         Twelve semitones split into two equal halves is six and six. C up to F# is a tritone;
@@ -67,17 +58,17 @@ export default function SymmetryAndDissonancePage() {
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={0}
-          caption="C to F#: six semitones."
+          caption="C to F#: 6 semitones apart"
         />
         <StaticChordFigure
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={1}
-          caption="F# to C: still six semitones - the halfway split looks the same from either side."
+          caption="F# to C: still 6 semitones apart"
         />
       </ComparisonGrid2>
 
-      <h2 className="text-xl font-semibold">The augmented triad: splitting the octave in three</h2>
+      <h2 className={LEARN_STYLES.h2}>The augmented triad: splitting the octave in three</h2>
 
       <p>
         Twelve semitones split into three equal parts is four apiece - three stacked major thirds.
@@ -92,19 +83,19 @@ export default function SymmetryAndDissonancePage() {
           rootNote="C"
           chordType={ChordType.Augmented}
           inversionIndex={0}
-          caption="Root C: C, E, G#."
+          caption="Caug"
         />
         <StaticChordFigure
           rootNote="E"
           chordType={ChordType.Augmented}
           inversionIndex={0}
-          caption="Call E the root instead - the same three wedges, E, G#, C."
+          caption="Caug/E (or E aug) "
         />
         <StaticChordFigure
           rootNote="G#"
           chordType={ChordType.Augmented}
           inversionIndex={0}
-          caption="Or G# - still the same three wedges. Nothing about the shape picks one of them out."
+          caption="Caug/G# (or Gaug)"
         />
       </ComparisonGrid3>
 
@@ -115,7 +106,7 @@ export default function SymmetryAndDissonancePage() {
         already sitting equidistant from three different keys at once.
       </p>
 
-      <h2 className="text-xl font-semibold">The diminished 7th: splitting the octave in four</h2>
+      <h2 className={LEARN_STYLES.h2}>The diminished 7th: splitting the octave in four</h2>
 
       <p>
         Twelve semitones split into four equal parts is three apiece - four stacked minor thirds.
@@ -130,25 +121,25 @@ export default function SymmetryAndDissonancePage() {
           rootNote="C"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
-          caption="Root C: C, D#, F#, A."
+          caption="Cdim7"
         />
         <StaticChordFigure
           rootNote="D#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
-          caption="Root D#: same four wedges, D#, F#, A, C."
+          caption="Cdim7/D# (or D#dim7)"
         />
         <StaticChordFigure
           rootNote="F#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
-          caption="Root F#: same four wedges again, F#, A, C, D#."
+          caption="Cdim7/F# (or F#dim7)"
         />
         <StaticChordFigure
           rootNote="A"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
-          caption="Root A: still the same four wedges, A, C, D#, F#."
+          caption="Cdim7/A (or Adim7)"
         />
       </ComparisonGrid4>
 
@@ -161,18 +152,7 @@ export default function SymmetryAndDissonancePage() {
         can go.
       </p>
 
-      <h2 className="text-xl font-semibold">The pattern</h2>
-
-      <p>
-        In all three cases the mechanism is identical: an evenly spaced shape maps onto itself when
-        you rotate it, so the wheel can&apos;t point back to any one wedge as more
-        &ldquo;root&rdquo; than the others. What the ear experiences as unresolved tension is that
-        structural fact, heard rather than reasoned about - a shape with no distinguishing feature
-        to settle on. The more symmetrical the shape, the less it has to say about where it belongs,
-        and the more it seems to demand somewhere to go.
-      </p>
-
-      <h2 className="text-xl font-semibold">One step further: the whole-tone scale</h2>
+      <h2 className={LEARN_STYLES.h2}>The whole-tone scale: splitting the octave in six</h2>
 
       <p>
         The same idea scales up past four notes. Slice the octave into six equal parts instead of
@@ -201,6 +181,17 @@ export default function SymmetryAndDissonancePage() {
           showLinearKeyboard
         />
       </ComparisonGrid2>
+
+      <h2 className={LEARN_STYLES.h2}>The pattern</h2>
+
+      <p>
+        In all four cases the mechanism is identical: an evenly spaced shape maps onto itself when
+        you rotate it, so the wheel can&apos;t point back to any one wedge as more
+        &ldquo;root&rdquo; than the others. What the ear experiences as unresolved tension is that
+        structural fact, heard rather than reasoned about - a shape with no distinguishing feature
+        to settle on. The more symmetrical the shape, the less it has to say about where it belongs,
+        and the more it seems to demand somewhere to go.
+      </p>
     </>
   );
 }

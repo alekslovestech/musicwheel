@@ -101,7 +101,7 @@ export default function IntervalInversionsPage() {
         ← Learn
       </Link>
 
-      <h1 className="text-3xl font-semibold">Interval Inversions</h1>
+      <h1 className={LEARN_STYLES.h1}>Interval Inversions</h1>
 
       <p>
         <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
@@ -116,7 +116,7 @@ export default function IntervalInversionsPage() {
         relatives of each other.
       </p>
 
-      <h2 className="text-xl font-semibold">Same starting note, two complementary distances</h2>
+      <h2 className={LEARN_STYLES.h2}>Same starting note, two complementary distances</h2>
 
       <p>
         Start from C and go up a semitone, and you land on Db - a minor 2nd. Start from that same C
@@ -141,7 +141,7 @@ export default function IntervalInversionsPage() {
         />
       </ComparisonGrid2>
 
-      <h2 className="text-xl font-semibold">Why inverted intervals sound like relatives</h2>
+      <h2 className={LEARN_STYLES.h2}>Why inverted intervals sound like relatives</h2>
 
       <p>
         This isn&apos;t a coincidence, and it isn&apos;t really about the two notes at all -
@@ -156,7 +156,7 @@ export default function IntervalInversionsPage() {
         they&apos;re the same distance, just going the short way around versus the long way around.
       </p>
 
-      <h2 className="text-xl font-semibold">The rest of the interval classes</h2>
+      <h2 className={LEARN_STYLES.h2}>The rest of the interval classes</h2>
 
       <p>
         The same pattern holds all the way through. Six of the seven interval classes pair up this

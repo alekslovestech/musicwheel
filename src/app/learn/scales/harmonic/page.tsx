@@ -20,7 +20,7 @@ export default function HarmonicScalesPage() {
         ← Scales
       </Link>
 
-      <h1 className="text-3xl font-semibold">What Makes a Scale “Harmonic”?</h1>
+      <h1 className={LEARN_STYLES.h1}>What Makes a Scale “Harmonic”?</h1>
 
       <p>
         Four scales carry the word “harmonic” in their name, or in a common name for them. All four
@@ -54,7 +54,7 @@ export default function HarmonicScalesPage() {
         </li>
       </ul>
 
-      <h2 id="harmonic-minor" className="text-xl font-semibold">
+      <h2 id="harmonic-minor" className={LEARN_STYLES.h2}>
         Harmonic Minor
       </h2>
 
@@ -80,7 +80,7 @@ export default function HarmonicScalesPage() {
         edge, and it exists purely as a side effect of adding the leading tone.
       </p>
 
-      <h2 id="harmonic-major" className="text-xl font-semibold">
+      <h2 id="harmonic-major" className={LEARN_STYLES.h2}>
         Harmonic Major
       </h2>
 
@@ -100,7 +100,7 @@ export default function HarmonicScalesPage() {
         isCompact
       />
 
-      <h2 id="double-harmonic-major" className="text-xl font-semibold">
+      <h2 id="double-harmonic-major" className={LEARN_STYLES.h2}>
         Double Harmonic Major
       </h2>
 
@@ -127,7 +127,7 @@ export default function HarmonicScalesPage() {
         stretched gaps are obvious immediately.
       </p>
 
-      <h2 id="double-harmonic-minor" className="text-xl font-semibold">
+      <h2 id="double-harmonic-minor" className={LEARN_STYLES.h2}>
         Double Harmonic Minor (Hungarian Minor)
       </h2>
 
@@ -147,7 +147,7 @@ export default function HarmonicScalesPage() {
         isCompact
       />
 
-      <h2 className="text-xl font-semibold">Comparisons</h2>
+      <h2 className={LEARN_STYLES.h2}>Comparisons</h2>
 
       <p>
         For a closer look at exactly one degree separating two of these scales, see{" "}

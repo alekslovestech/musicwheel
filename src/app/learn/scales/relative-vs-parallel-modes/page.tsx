@@ -23,7 +23,7 @@ export default function RelativeVsParallelModesPage() {
         ← Scales
       </Link>
 
-      <h1 className="text-3xl font-semibold">Relative vs. Parallel Modes</h1>
+      <h1 className={LEARN_STYLES.h1}>Relative vs. Parallel Modes</h1>
 
       <p>
         Any two modes are related to each other in one of two ways, depending on what you hold
@@ -31,7 +31,7 @@ export default function RelativeVsParallelModesPage() {
         tonic the same and move the notes, and you get parallel modes.
       </p>
 
-      <h2 className="text-xl font-semibold">Relative: C Ionian and F Lydian</h2>
+      <h2 className={LEARN_STYLES.h2}>Relative: C Ionian and F Lydian</h2>
 
       <p>
         C Ionian and F Lydian are built from the exact same seven notes - the white keys on a piano
@@ -63,7 +63,7 @@ export default function RelativeVsParallelModesPage() {
         only rotated which one counts as home.
       </p>
 
-      <h2 className="text-xl font-semibold">Parallel: C Ionian and C Lydian</h2>
+      <h2 className={LEARN_STYLES.h2}>Parallel: C Ionian and C Lydian</h2>
 
       <p>
         C Ionian and C Lydian keep the same tonic, but they are not the same seven notes. They
@@ -81,8 +81,14 @@ export default function RelativeVsParallelModesPage() {
 
       <p>
         Unlike relative modes, which always share every note by definition, parallel modes can
-        differ by as little as one note or by several, depending on which two modes you pick. For a
-        closer look at this exact pair, see{" "}
+        differ by as little as one note or by several, depending on which two modes you pick. That
+        &ldquo;sharp 4&rdquo; label is a{" "}
+        <Link href="/learn/scales/scale-degrees" className={LEARN_STYLES.link}>
+          scale degree
+        </Link>{" "}
+        - every mode gets described this way, as Ionian&apos;s seven degrees with some subset
+        raised or lowered, which is exactly what a parallel comparison measures. For a closer look
+        at this exact pair, see{" "}
         <Link href="/learn/scales/comparisons/major-vs-lydian" className={LEARN_STYLES.link}>
           Major vs. Lydian
         </Link>

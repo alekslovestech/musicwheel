@@ -21,7 +21,7 @@ export default function TriadInversionsPage() {
         ← Learn
       </Link>
 
-      <h1 className="text-3xl font-semibold">Triad Inversions</h1>
+      <h1 className={LEARN_STYLES.h1}>Triad Inversions</h1>
 
       <p>
         A triad is three notes, but which one is lowest doesn&apos;t change which chord it is - it

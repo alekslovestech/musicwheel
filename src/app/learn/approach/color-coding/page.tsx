@@ -53,7 +53,7 @@ export default function ColorCodingPage() {
         ← Approach
       </Link>
 
-      <h1 className="text-3xl font-semibold">Color Coding</h1>
+      <h1 className={LEARN_STYLES.h1}>Color Coding</h1>
 
       <p>
         Nothing on the wheel is colored for decoration. Every wedge, ribbon segment, and legend

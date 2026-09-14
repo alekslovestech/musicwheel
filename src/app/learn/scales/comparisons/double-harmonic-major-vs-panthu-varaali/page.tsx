@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LEARN_STYLES } from "@/lib/design";
 
 import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
 import { ComparisonsBackLink } from "@/components/Learn/ComparisonsBackLink";
@@ -17,7 +18,7 @@ export default function DoubleHarmonicMajorVsPanthuVaraaliPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Double Harmonic Major vs. Panthu Varaali</h1>
+      <h1 className={LEARN_STYLES.h1}>Double Harmonic Major vs. Panthu Varaali</h1>
 
       <p>
         Both of these start on C, and both carry the same pair of flattened notes that give Double

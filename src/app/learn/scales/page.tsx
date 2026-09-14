@@ -18,34 +18,34 @@ export default function ScalesIndexPage() {
         ← Learn
       </Link>
 
-      <h1 className="text-3xl font-semibold">Scales</h1>
+      <h1 className={LEARN_STYLES.h1}>Scales</h1>
       <p>
         Everything about scales and modes: how they relate, what their names mean, and how they
         differ.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/greek-modes" className={LEARN_STYLES.link}>
-          How the Greek Modes Relate to Each Other
+          Greek modes (aka Church modes)
         </Link>
       </h2>
-      <p>Relative modes, parallel modes, and one scale rotated seven ways.</p>
+      <p>The seven traditional names, in order, and one scale rotated seven ways.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/scale-degrees" className={LEARN_STYLES.link}>
           Scale Degrees
         </Link>
       </h2>
       <p>What each numbered position in a scale is called, and why the names matter.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
           Relative vs. Parallel Modes
         </Link>
       </h2>
       <p>Same notes, different tonic - or the same tonic, different notes.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
           Comparisons
         </Link>
@@ -53,14 +53,14 @@ export default function ScalesIndexPage() {
       </h2>
       <p>Two modes on the same tonic, one note apart.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/harmonic" className={LEARN_STYLES.link}>
           What Makes a Scale “Harmonic”?
         </Link>
       </h2>
       <p>What the name actually means, and the gap it leaves behind.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/modal-rotations" className={LEARN_STYLES.link}>
           Modal Families Beyond the Major Scale
         </Link>
