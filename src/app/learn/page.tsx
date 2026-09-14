@@ -39,9 +39,7 @@ export default function LearnIndexPage() {
           Major and Minor Triads
         </Link>
       </h2>
-      <p>
-        The two most common chords in Western music, through root position and both inversions.
-      </p>
+      <p>The two most common chords in Western music - one semitone apart on the third.</p>
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>

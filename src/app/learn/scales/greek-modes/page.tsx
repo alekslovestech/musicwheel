@@ -24,7 +24,7 @@ export default function GreekModesPage() {
       <h1 className={LEARN_STYLES.h1}>How the Greek Modes Relate to Each Other</h1>
 
       <p>
-        If you've been around musicians long enough, you may have heard about the Greek modes (aka Church modes) with the following names:
+        If you&apos;ve been around musicians long enough, you may have heard about the Greek modes (aka Church modes) with the following names:
         1. Ionian, 2. Dorian, 3. Phrygian, 4. Lydian, 5. Mixolydian, 6. Aeolian, 7. Locrian 
         What is so special about them and what do they have in common? These scales are some of the most frequently used in Western music, and each one of them can be derived from others by starting at a new tonic.
         They are all just one scale played from seven different starting points. Every one of them is built from the exact same pattern of seven notes, the only thing that changes is the note you treat as home (aka the _tonic_). 
