@@ -20,7 +20,7 @@ export default function MelodicMinorModesPage() {
         ← Modal Families Beyond the Major Scale
       </Link>
 
-      <h1 className="text-3xl font-semibold">Modes of Melodic Minor</h1>
+      <h1 className={LEARN_STYLES.h1}>Modes of Melodic Minor</h1>
 
       <p>
         Melodic Minor has the most famous rotation family outside the major scale, mostly through
@@ -39,6 +39,7 @@ export default function MelodicMinorModesPage() {
         scaleType={ScaleModeType.MelodicMinor}
         showStepAnnotations
         caption="C Melodic Minor."
+        isCompact
       />
 
       <p>

@@ -21,7 +21,7 @@ export default function ScaleDegreesPage() {
         ← Scales
       </Link>
 
-      <h1 className="text-3xl font-semibold">Scale Degrees</h1>
+      <h1 className={LEARN_STYLES.h1}>Scale Degrees</h1>
 
       <p>
         A scale degree is just a numbered position: 1 through 7, counting up from the tonic. Every
@@ -37,7 +37,8 @@ export default function ScaleDegreesPage() {
         scaleType={ScaleModeType.Ionian}
         scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
         caption="C Ionian, the reference scale for the seven scale degrees."
-        linearShowLabels={true}
+        linearShowLabels
+        isCompact
       />
 
       <p>
@@ -54,8 +55,21 @@ export default function ScaleDegreesPage() {
         scaleType={ScaleModeType.Lydian}
         scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
         caption="C Lydian, a raised 4th degree (F#) compared to C Ionian."
-        linearShowLabels={true}
+        linearShowLabels
+        isCompact
       />
+
+      <p>
+        This is the same tonic held fixed while the degrees move - a{" "}
+        <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
+          parallel
+        </Link>{" "}
+        comparison. See{" "}
+        <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
+          Comparisons
+        </Link>{" "}
+        for more mode pairs described this way, one degree at a time.
+      </p>
     </>
   );
 }

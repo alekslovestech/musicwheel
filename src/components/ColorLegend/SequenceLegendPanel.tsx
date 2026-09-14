@@ -56,7 +56,7 @@ export function SequenceLegendPanel() {
         ribbon={ribbon}
         activeDegreeIndex={activeDegreeIndex}
         onSelectStep={selectStep}
-        caption={SCALE_PLAYBACK_MODE_CAPTIONS[scalePlaybackMode]}
+        caption="" //{SCALE_PLAYBACK_MODE_CAPTIONS[scalePlaybackMode]}
         // Offered only where step segments have a meaning to overlay; Drone and Chords measure
         // against the tonic and against the chord tones, not against the neighbouring note.
         stepAnnotations={

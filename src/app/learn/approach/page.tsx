@@ -18,14 +18,14 @@ export default function ApproachIndexPage() {
         ← Learn
       </Link>
 
-      <h1 className="text-3xl font-semibold">Approach</h1>
+      <h1 className={LEARN_STYLES.h1}>Approach</h1>
 
       <p>
         Not lessons about a specific music concept - the opinions behind why this app exists and
         why it&apos;s built the way it is.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
           What&apos;s Wrong with Music Theory
         </Link>
@@ -35,7 +35,7 @@ export default function ApproachIndexPage() {
         turf wars around spelling - a tour of the parts of theory that aren&apos;t about sound.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
           Why This App
         </Link>
@@ -45,14 +45,14 @@ export default function ApproachIndexPage() {
         historical noise.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>
       </h2>
       <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
           The Chromatic Circle
         </Link>

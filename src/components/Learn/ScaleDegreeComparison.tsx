@@ -53,6 +53,7 @@ export function ScaleDegreeComparison({
           scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
           highlightedDegree={degree}
           caption={captionA}
+          isCompact
         />
         <ScaleFigure
           tonic={tonic}
@@ -60,6 +61,7 @@ export function ScaleDegreeComparison({
           scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
           highlightedDegree={degree}
           caption={captionB}
+          isCompact
         />
       </ComparisonGrid2>
 

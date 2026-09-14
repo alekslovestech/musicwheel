@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LEARN_STYLES } from "@/lib/design";
 
 import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
 import { ComparisonsBackLink } from "@/components/Learn/ComparisonsBackLink";
@@ -17,7 +18,7 @@ export default function MajorVsMixolydianPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Major vs. Mixolydian</h1>
+      <h1 className={LEARN_STYLES.h1}>Major vs. Mixolydian</h1>
 
       <p>
         The first of these is the major scale - Ionian, in Greek-mode terms - and both start on C.

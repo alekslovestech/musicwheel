@@ -21,7 +21,7 @@ export default function WhyThisAppPage() {
         ← Approach
       </Link>
 
-      <h1 className="text-3xl font-semibold">Why This App</h1>
+      <h1 className={LEARN_STYLES.h1}>Why This App</h1>
 
       <p>
         Music theory is worth learning. It explains why some combinations of notes feel settled and
@@ -40,7 +40,7 @@ export default function WhyThisAppPage() {
         naming, without changing anything about what you&apos;d hear.
       </p>
 
-      <h2 className="text-xl font-semibold">What actually matters</h2>
+      <h2 className={LEARN_STYLES.h2}>What actually matters</h2>
 
       <p>
         <strong>The harmony itself</strong> - which notes are sounding together, and what that
@@ -69,7 +69,7 @@ export default function WhyThisAppPage() {
         transposed into. A ii-V-I is the same shape whether it starts on C or on F-sharp.
       </p>
 
-      <h2 className="text-xl font-semibold">What we leave out</h2>
+      <h2 className={LEARN_STYLES.h2}>What we leave out</h2>
 
       <p>
         <strong>Chord spelling.</strong> Whether a note is written as G-sharp or A-flat matters to
@@ -99,7 +99,7 @@ export default function WhyThisAppPage() {
         require a piano, or a guitar, or any instrument at all.
       </p>
 
-      <h2 className="text-xl font-semibold">Why the wheel</h2>
+      <h2 className={LEARN_STYLES.h2}>Why the wheel</h2>
 
       <p>
         The chromatic circle is a cleaner way to look at harmony than a keyboard or a staff, because

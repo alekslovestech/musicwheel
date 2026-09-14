@@ -5,14 +5,14 @@ import { LEARN_STYLES } from "@/lib/design";
 export default function LearnIndexPage() {
   return (
     <>
-      <h1 className="text-3xl font-semibold">Learn</h1>
+      <h1 className={LEARN_STYLES.h1}>Learn</h1>
       <p>
         Short written pieces about the ideas the wheel is built around. Every figure is the real
         wheel, drawn from the same code the app runs - but held still, so you can read it before you
         go and play with it.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach" className={LEARN_STYLES.link}>
           Approach
         </Link>
@@ -23,7 +23,7 @@ export default function LearnIndexPage() {
         and what we do about it.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales" className={LEARN_STYLES.link}>
           Scales
         </Link>
@@ -34,14 +34,21 @@ export default function LearnIndexPage() {
         actually mean, and pairs that differ by exactly one note.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/major-vs-minor-triads" className={LEARN_STYLES.link}>
+          Major and Minor Triads
+        </Link>
+      </h2>
+      <p>The two most common chords in Western music - one semitone apart on the third.</p>
+
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
           Triad Inversions
         </Link>
       </h2>
       <p>Same three notes, different note on the bottom.</p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
           Interval Inversions
         </Link>
@@ -51,7 +58,7 @@ export default function LearnIndexPage() {
         sound like close relatives.
       </p>
 
-      <h2 className="text-xl font-semibold">
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/symmetry-and-dissonance" className={LEARN_STYLES.link}>
           Symmetry and Dissonance
         </Link>

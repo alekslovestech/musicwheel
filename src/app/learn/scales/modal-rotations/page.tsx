@@ -20,7 +20,7 @@ export default function ModalRotationsPage() {
         ← Scales
       </Link>
 
-      <h1 className="text-3xl font-semibold">Modal Families Beyond the Major Scale</h1>
+      <h1 className={LEARN_STYLES.h1}>Modal Families Beyond the Major Scale</h1>
 
       <p>
         <Link href="/learn/scales/greek-modes" className={LEARN_STYLES.link}>
@@ -62,7 +62,7 @@ export default function ModalRotationsPage() {
         </li>
       </ul>
 
-      <h2 id="harmonic-minor-family" className="text-xl font-semibold">
+      <h2 id="harmonic-minor-family" className={LEARN_STYLES.h2}>
         Harmonic Minor Family: Harmonic Minor ↔ Phrygian Dominant
       </h2>
 
@@ -85,7 +85,7 @@ export default function ModalRotationsPage() {
           degree instead of the 1st."
       />
 
-      <h2 id="harmonic-major-family" className="text-xl font-semibold">
+      <h2 id="harmonic-major-family" className={LEARN_STYLES.h2}>
         Harmonic Major Family: Harmonic Major ↔ Mixolydian ♭2
       </h2>
 
@@ -103,7 +103,7 @@ export default function ModalRotationsPage() {
           degree instead of the 1st."
       />
 
-      <h2 id="double-harmonic-family" className="text-xl font-semibold">
+      <h2 id="double-harmonic-family" className={LEARN_STYLES.h2}>
         Double Harmonic Family: Double Harmonic Major ↔ Hungarian Minor
       </h2>
 
@@ -126,7 +126,7 @@ export default function ModalRotationsPage() {
           4th degree instead of the 1st."
       />
 
-      <h2 id="melodic-minor-family" className="text-xl font-semibold">
+      <h2 id="melodic-minor-family" className={LEARN_STYLES.h2}>
         Melodic Minor Family: Seven Jazz Modes
       </h2>
 

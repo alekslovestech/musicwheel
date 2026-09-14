@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LEARN_STYLES } from "@/lib/design";
 
 import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
 import { ComparisonsBackLink } from "@/components/Learn/ComparisonsBackLink";
@@ -17,7 +18,7 @@ export default function MajorVsMelodicMinorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Major vs. Melodic Minor</h1>
+      <h1 className={LEARN_STYLES.h1}>Major vs. Melodic Minor</h1>
 
       <p>
         Both of these start on C, and if you only look at the third, they cover the entire distance

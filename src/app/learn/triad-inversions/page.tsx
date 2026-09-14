@@ -21,33 +21,32 @@ export default function TriadInversionsPage() {
         ← Learn
       </Link>
 
-      <h1 className="text-3xl font-semibold">Triad Inversions</h1>
+      <h1 className={LEARN_STYLES.h1}>Triad Inversions</h1>
 
       <p>
         A triad is three notes, but which one is lowest doesn&apos;t change which chord it is - it
-        only changes the inversion. All three wheels below light the same three wedges, G, B, and D;
-        the dot marking the bass is the only thing that moves.
+        only changes the inversion. All three wheels below light the same three wedges: C, E and G
       </p>
       <ComparisonGrid3>   
         <StaticChordFigure
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
-          caption="Root position: the bass dot sits on G, the note the chord is named after."
+          caption="C major (C)"
         />
 
         <StaticChordFigure
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={1}
-          caption="First inversion: same three wedges, bass dot moved to B."
+          caption="First inversion: C/E"
         />
 
         <StaticChordFigure
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={2}
-          caption="Second inversion: same three wedges again, bass dot moved to D."
+          caption="Second inversion: C/G"
         />
       </ComparisonGrid3>
       <p>

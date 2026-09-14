@@ -20,7 +20,7 @@ export default function ChromaticCirclePage() {
         ← Approach
       </Link>
 
-      <h1 className="text-3xl font-semibold">The Chromatic Circle</h1>
+      <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
         A keyboard or a staff lays the twelve notes out in a line, which is a reasonable way to
@@ -32,7 +32,7 @@ export default function ChromaticCirclePage() {
         seam, and no direction that&apos;s privileged over any other.
       </p>
 
-      <h2 className="text-xl font-semibold">Intervals as distance, not as a seam to cross</h2>
+      <h2 className={LEARN_STYLES.h2}>Intervals as distance, not as a seam to cross</h2>
       <StaticChordFigure
         rootNote="C"
         chordType={SpecialType.None}
@@ -64,7 +64,7 @@ export default function ChromaticCirclePage() {
         them as the same relationship, just measured the other way.
       </p>
 
-      <h2 className="text-xl font-semibold">Chord inversions as a marker, not a reshuffle</h2>
+      <h2 className={LEARN_STYLES.h2}>Chord inversions as a marker, not a reshuffle</h2>
 
       <p>
         Chord inversion gets the same clarity. On a staff, root position, first inversion, and
@@ -79,7 +79,7 @@ export default function ChromaticCirclePage() {
         calling the bottom did.
       </p>
 
-      <h2 className="text-xl font-semibold">The circle of fifths is a different circle</h2>
+      <h2 className={LEARN_STYLES.h2}>The circle of fifths is a different circle</h2>
 
       <p>
         The circle of fifths also arranges all twelve notes into a loop, and the two are related -

@@ -19,7 +19,7 @@ export default function HarmonicMinorVsHarmonicMajorPage() {
   return (
     <>
       <ComparisonsBackLink />
-      <h1 className="text-3xl font-semibold">Harmonic Minor vs. Harmonic Major</h1>
+      <h1 className={LEARN_STYLES.h1}>Harmonic Minor vs. Harmonic Major</h1>
 
       <p>
         Both of these start on C, and both already carry a flat sixth and a raised seventh - the
