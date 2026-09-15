@@ -1,6 +1,8 @@
 import Link from "next/link";
 
+import { LearnTags } from "@/components/Learn/LearnTags";
 import { LEARN_STYLES } from "@/lib/design";
+import { LearnTag } from "@/types/enums/LearnTag";
 
 export default function LearnIndexPage() {
   return (
@@ -36,6 +38,7 @@ export default function LearnIndexPage() {
         <Link href="/learn/major-vs-minor-triads" className={LEARN_STYLES.link}>
           Major and Minor Triads
         </Link>
+        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
       </h2>
       <p>The two most common chords in Western music - one semitone apart on the third.</p>
 
@@ -43,6 +46,7 @@ export default function LearnIndexPage() {
         <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
           Triad Inversions
         </Link>
+        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
       </h2>
       <p>Same three notes, different note on the bottom.</p>
 
@@ -50,6 +54,7 @@ export default function LearnIndexPage() {
         <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
           Interval Inversions
         </Link>
+        <LearnTags tags={[LearnTag.BasicConcepts]} />
       </h2>
       <p>
         Flip an interval upside down and the number changes - but a minor 2nd and a major 7th still
@@ -60,6 +65,7 @@ export default function LearnIndexPage() {
         <Link href="/learn/symmetry-and-dissonance" className={LEARN_STYLES.link}>
           Symmetry and Dissonance
         </Link>
+        <LearnTags tags={[LearnTag.Geometry]} />
       </h2>
       <p>
         Why the tritone, the augmented triad, and the diminished 7th all sound unsettled: split the

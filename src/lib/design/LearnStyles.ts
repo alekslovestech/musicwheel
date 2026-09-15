@@ -30,6 +30,11 @@ export const LEARN_STYLES = {
    * `link` on the heading's <Link>. */
   sectionLink: "underline underline-offset-2 font-mono uppercase tracking-wide",
 
+  /** Row of topic tags (see LearnTag) following a heading's link. */
+  tagRow: "ml-2 inline-flex gap-1 align-middle",
+  tagBadge:
+    "rounded border border-containers-divider px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-labels-textDefault opacity-60",
+
   /** Two-column list of comparison pairs. Each cell holds its own link to the same page rather
    * than one anchor wrapping the row (invalid inside a <tr>) - `group`/`group-hover` on the row
    * makes hovering either cell highlight both, so the pair still reads as one clickable unit. */

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { LearnTags } from "@/components/Learn/LearnTags";
 import { LEARN_STYLES } from "@/lib/design";
+import { LearnTag } from "@/types/enums/LearnTag";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
 export const metadata: Metadata = metadataForSlugPage(
@@ -49,6 +51,7 @@ export default function ApproachIndexPage() {
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>
+        <LearnTags tags={[LearnTag.Geometry]} />
       </h2>
       <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
 
@@ -56,6 +59,7 @@ export default function ApproachIndexPage() {
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
           The Chromatic Circle
         </Link>
+        <LearnTags tags={[LearnTag.Geometry]} />
       </h2>
       <p>
         Why a circle instead of a line makes intervals and inversions easier to see - and how

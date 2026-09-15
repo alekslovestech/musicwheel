@@ -8,7 +8,7 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/scales/modal-rotations",
+  "/learn/scales/modal-families",
   "Modal Families Beyond the Major Scale",
   "The major scale isn't the only collection with famous rotations - Harmonic Minor, Harmonic Major, Double Harmonic Major, and Melodic Minor each have their own.",
 );
