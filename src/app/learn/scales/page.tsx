@@ -46,10 +46,9 @@ export default function ScalesIndexPage() {
       <p>Same notes, different tonic - or the same tonic, different notes.</p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
+        <Link href="/learn/scales/comparisons" className={LEARN_STYLES.sectionLink}>
           Comparisons
         </Link>
-        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>Two modes on the same tonic, one note apart.</p>
 

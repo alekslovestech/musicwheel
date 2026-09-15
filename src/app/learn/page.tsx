@@ -13,10 +13,9 @@ export default function LearnIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach" className={LEARN_STYLES.link}>
+        <Link href="/learn/approach" className={LEARN_STYLES.sectionLink}>
           Approach
         </Link>
-        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>
         The opinions behind this app: what&apos;s wrong with how music theory usually gets taught,
@@ -24,10 +23,9 @@ export default function LearnIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales" className={LEARN_STYLES.link}>
+        <Link href="/learn/scales" className={LEARN_STYLES.sectionLink}>
           Scales
         </Link>
-        <span className={LEARN_STYLES.sectionLabel}>Section</span>
       </h2>
       <p>
         How the modes relate to each other, what &ldquo;harmonic&rdquo; and &ldquo;melodic&rdquo;
