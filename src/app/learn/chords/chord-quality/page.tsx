@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ColorSwatch } from "@/components/ColorLegend/ColorSwatch";
 import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
+import { QualityRow } from "@/components/Learn/QualityRow";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
-import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
-import { getColorForGrouping } from "@/utils/visual/NoteGroupingColorRegistry";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -115,22 +113,5 @@ export default function ChordQualityPage() {
         for why that makes them sound the way they do.
       </p>
     </>
-  );
-}
-
-/** One row of the quality table, pulling its long form and symbol straight from the catalog
- * rather than restating them, so the table can't drift out of sync with what the app actually
- * shows. */
-function QualityRow({ chordType }: { chordType: ChordType }) {
-  const { longForm, symbolForm, shortForm } = NoteGroupingLibrary.getGroupingById(chordType);
-  return (
-    <tr className={LEARN_STYLES.comparisonTableRow}>
-      <td className="w-8 p-0 py-tight">
-        <ColorSwatch color={getColorForGrouping(chordType)} />
-      </td>
-      <td className="w-1/3 px-snug py-tight">{longForm}</td>
-      <td className="px-snug py-tight">{symbolForm || "___"}</td>
-      <td className="px-snug py-tight">{shortForm}</td>
-    </tr>
   );
 }
