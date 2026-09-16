@@ -21,12 +21,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     url("/harmony"),
     url("/learn"),
+
+    url("/learn/approach"),
+    url("/learn/approach/whats-wrong-with-music-theory"),
+    url("/learn/approach/why-this-app"),
+    url("/learn/approach/color-coding"),
+    url("/learn/approach/chromatic-circle"),
+
     url("/learn/chords"),
+    url("/learn/chords/major-vs-minor-triads"),
     url("/learn/chords/triad-inversions"),
+    url("/learn/chords/chord-quality"),
+    url("/learn/chords/roman-numerals"),
+
+    url("/learn/interval-inversions"),
+    url("/learn/symmetry-and-dissonance"),
+
     url("/learn/scales"),
-    url("/learn/scales/comparisons"),
     url("/learn/scales/greek-modes"),
+    url("/learn/scales/scale-degrees"),
     url("/learn/scales/relative-vs-parallel-modes"),
+    url("/learn/scales/comparisons"),
     url("/learn/scales/harmonic"),
     url("/learn/scales/modal-families"),
     url("/learn/scales/melodic-minor-modes"),
