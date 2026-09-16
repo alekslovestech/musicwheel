@@ -9,7 +9,7 @@ import { ComparisonGrid3 } from "@/components/Learn/ComparisonGrid";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/triad-inversions",
+  "/learn/chords/triad-inversions",
   "Triad Inversions",
   "Root position, first inversion, second inversion - the same three notes of a G major triad, marked with a different bass each time.",
 );
@@ -17,8 +17,8 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function TriadInversionsPage() {
   return (
     <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
+      <Link href="/learn/chords" className={LEARN_STYLES.link}>
+        ← Chords
       </Link>
 
       <h1 className={LEARN_STYLES.h1}>Triad Inversions</h1>

@@ -71,7 +71,7 @@ export default function ChromaticCirclePage() {
         second inversion of a triad are three different-looking clusters of notes, because the notes
         get physically rearranged in pitch order as the bass changes. On the circle, nothing moves:
         it&apos;s the same three wedges lit up the entire time, in every inversion - see{" "}
-        <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
+        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
           Triad Inversions
         </Link>
         . Only a small dot marking the bass note moves from wedge to wedge. That&apos;s the whole

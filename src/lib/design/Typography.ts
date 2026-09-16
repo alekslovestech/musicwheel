@@ -1,5 +1,5 @@
 export const TYPOGRAPHY = {
-  sectionTitle: "text-base font-bold",
+  sectionTitle: "font-mono text-sm font-semibold uppercase tracking-wide",
   controlLabel: "text-sm font-medium",
   buttonText: "text-sm font-medium",
   chordNameText: "text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold",

@@ -41,20 +41,27 @@ export default function ScaleDegreesPage() {
         isCompact
       />
 
-      <p>
-        Every other mode is really just a statement about which of those seven positions differ
-        from Ionian, and by how much. Lydian is Ionian with one change: the 4th degree raised a
-        semitone, so it gets called &ldquo;sharp 4&rdquo; rather than a plain 4th - not because
-        it&apos;s sharp in any absolute sense, but because it sits a semitone above where Ionian
-        puts the 4th degree on the same tonic. Swap that one note back and Lydian collapses into
-        Ionian; the name &ldquo;sharp 4&rdquo; is the whole difference, made explicit.
-      </p>
+      <p>Lydian is Ionian with the 4th degree raised a semitone: sharp 4.</p>
 
       <ScaleFigure
         tonic="C"
         scaleType={ScaleModeType.Lydian}
         scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
-        caption="C Lydian, a raised 4th degree (F#) compared to C Ionian."
+        caption="C Lydian: ♯4, a raised 4th degree (F♯)"
+        linearShowLabels
+        isCompact
+      />
+
+      <p>
+        Aeolian (natural minor) is Ionian with the 3rd, 6th, and 7th degrees each lowered a
+        semitone.
+      </p>
+
+      <ScaleFigure
+        tonic="C"
+        scaleType={ScaleModeType.Aeolian}
+        scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
+        caption="C Aeolian: ♭3, ♭6, and ♭7 (E♭, A♭, B♭) compared to C Ionian."
         linearShowLabels
         isCompact
       />
@@ -68,7 +75,12 @@ export default function ScaleDegreesPage() {
         <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
           Comparisons
         </Link>{" "}
-        for more mode pairs described this way, one degree at a time.
+        for more mode pairs described this way, one degree at a time. Chords, not just notes, get
+        numbered from the tonic too - see{" "}
+        <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
+          Roman Numeral Notation
+        </Link>
+        .
       </p>
     </>
   );

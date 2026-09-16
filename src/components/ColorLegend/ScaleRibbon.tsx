@@ -1,6 +1,7 @@
 "use client";
 
-import { TYPOGRAPHY } from "@/lib/design";
+import { ColorSwatch } from "@/components/ColorLegend/ColorSwatch";
+import { RIBBON_STYLES, TYPOGRAPHY } from "@/lib/design";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
 import { LabelWithColor, ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
@@ -24,9 +25,7 @@ export function ScaleRibbon({
   return (
     <div id="scale-ribbon" className="flex flex-col gap-tight">
       <div className="flex items-center justify-between gap-snug">
-        <div className="text-xs font-medium uppercase tracking-wide text-labels-textDefault opacity-70">
-          {ribbon.title}
-        </div>
+        <div className={RIBBON_STYLES.title}>{ribbon.title}</div>
         {stepAnnotations && <StepAnnotationToggle {...stepAnnotations} />}
       </div>
 
@@ -47,10 +46,7 @@ export function ScaleRibbon({
       )}
 
       {caption && (
-        <div
-          id="scale-ribbon-caption"
-          className="text-center text-[10px] italic leading-tight text-labels-textDefault opacity-60"
-        >
+        <div id="scale-ribbon-caption" className={RIBBON_STYLES.caption}>
           {caption}
         </div>
       )}
@@ -79,10 +75,8 @@ function StepAnnotationToggle({
       aria-pressed={checked}
       onClick={handleClick}
       title="Show the whole- and half-step distance between neighbouring notes"
-      className={`shrink-0 rounded border px-tight py-px text-[10px] font-medium uppercase tracking-wide transition-colors ${
-        checked
-          ? "border-buttons-borderSelected bg-buttons-bgSelected text-buttons-textSelected"
-          : "border-containers-divider text-labels-textDefault opacity-70 hover:bg-buttons-bgHover hover:opacity-100"
+      className={`${RIBBON_STYLES.annotationToggle} ${
+        checked ? RIBBON_STYLES.annotationToggleActive : RIBBON_STYLES.annotationToggleInactive
       }`}
     >
       W–H
@@ -102,7 +96,7 @@ function NotesRibbonLayout({
   // No outer gap - every layout uses equal-width flex-1 cells with zero gap, so a note's center
   // is always at index+0.5 slots. See LabelsRibbonLayout, which depends on that being exact.
   return (
-    <div className="flex items-end">
+    <div className={RIBBON_STYLES.noteRow}>
       {notes.map((note, index) => (
         <RibbonNoteSwatch
           key={`${note.label}-${index}`}
@@ -154,7 +148,7 @@ function LabelsRibbonLayout({
         {steps.map((step, index) => (
           <span
             key={`${step.label}-${index}`}
-            className="absolute top-0 text-center text-[10px] font-medium leading-none text-labels-textDefault"
+            className={RIBBON_STYLES.stepLabel}
             style={{
               left: `${(index + 0.5) * cellWidthPercent}%`,
               width: `${cellWidthPercent}%`,
@@ -165,11 +159,11 @@ function LabelsRibbonLayout({
         ))}
       </div>
       <div className="relative">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0">
+        <div aria-hidden className={RIBBON_STYLES.connectorOverlay}>
           {steps.map((step, index) => (
             <div
               key={`${step.label}-${index}`}
-              className="absolute top-0 h-1 rounded-full"
+              className={RIBBON_STYLES.connectorBar}
               style={{
                 left: `${(index + 0.5) * cellWidthPercent}%`,
                 width: `${cellWidthPercent}%`,
@@ -200,7 +194,7 @@ function NoteTickRow({
   onSelectStep?: (stepIndex: number) => void;
 }) {
   return (
-    <div className="flex items-end">
+    <div className={RIBBON_STYLES.noteRow}>
       {notes.map((label, index) => (
         <RibbonNoteTick
           key={`${label}-${index}`}
@@ -279,7 +273,7 @@ function InteractiveRibbonNoteCell({
       type="button"
       onClick={handleClick}
       aria-label={`Select scale degree ${label}`}
-      className={`${className} cursor-pointer rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-keys-scaleBoundaryColor`}
+      className={`${className} ${RIBBON_STYLES.interactiveCell}`}
     >
       {children}
     </button>
@@ -302,14 +296,9 @@ function RibbonNoteSwatch({
       onSelect={onSelect}
       stepIndex={stepIndex}
       label={note.label}
-      className="flex min-w-0 flex-1 flex-col items-center gap-0.5"
+      className={RIBBON_STYLES.noteCell}
     >
-      <div
-        className={`h-4 w-4 shrink-0 rounded-sm border border-containers-divider/40 ${
-          isActive ? "ring-2 ring-keys-scaleBoundaryColor ring-offset-1" : ""
-        }`}
-        style={{ backgroundColor: note.color.css() }}
-      />
+      <ColorSwatch color={note.color} isActive={isActive} />
       <span className={`w-full truncate text-center ${TYPOGRAPHY.degreeLabelText}`}>
         {note.label}
       </span>
@@ -334,16 +323,16 @@ function RibbonNoteTick({
       onSelect={onSelect}
       stepIndex={stepIndex}
       label={label}
-      className="flex min-w-0 flex-1 flex-col items-center gap-0.5"
+      className={RIBBON_STYLES.noteCell}
     >
       <div
-        className={`h-3 shrink-0 rounded-full ${
-          isActive ? "w-1 bg-keys-scaleBoundaryColor" : "w-0.5 bg-containers-divider"
+        className={`${RIBBON_STYLES.tickMark} ${
+          isActive ? RIBBON_STYLES.tickMarkActive : RIBBON_STYLES.tickMarkInactive
         }`}
       />
       <span
-        className={`flex h-5 min-w-5 items-center justify-center ${TYPOGRAPHY.degreeLabelText} ${
-          isActive ? "rounded-full border-2 border-keys-scaleBoundaryColor" : ""
+        className={`${RIBBON_STYLES.tickLabel} ${TYPOGRAPHY.degreeLabelText} ${
+          isActive ? RIBBON_STYLES.tickLabelActive : ""
         }`}
       >
         {label}

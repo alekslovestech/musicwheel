@@ -16,4 +16,7 @@ export const COMMON_STYLES = {
 
   pageContainer: `${LAYOUT_PATTERNS.fullSize} flex flex-col px-tight md:px-loose lg:px-spacious`,
   pageGrid: `grid gap-tight ${LAYOUT_PATTERNS.clippedContainer} flex-1`,
+
+  colorSwatch: "inline-block h-4 w-4 shrink-0 rounded-sm border border-containers-divider/40",
+  colorSwatchActive: "ring-2 ring-keys-scaleBoundaryColor ring-offset-1",
 } as const;

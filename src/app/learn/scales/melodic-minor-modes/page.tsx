@@ -16,7 +16,7 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function MelodicMinorModesPage() {
   return (
     <>
-      <Link href="/learn/scales/modal-rotations" className={LEARN_STYLES.link}>
+      <Link href="/learn/scales/modal-families" className={LEARN_STYLES.link}>
         ← Modal Families Beyond the Major Scale
       </Link>
 

@@ -6,7 +6,7 @@ import { LEARN_STYLES } from "@/lib/design";
 export function ComparisonsBackLink() {
   return (
     <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
-      ← All comparisons
+      ← All scale comparisons
     </Link>
   );
 }
