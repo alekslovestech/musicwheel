@@ -3,6 +3,7 @@ export * from "./ButtonTypes";
 export * from "./SpacingTypes";
 export * from "./CommonStyles";
 export * from "./LearnStyles";
+export * from "./RibbonStyles";
 export * from "./fonts";
 export * from "./LayoutConstants";
 export * from "./LayoutPatterns";

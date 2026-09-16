@@ -77,7 +77,7 @@ export default function ScaleDegreesPage() {
         </Link>{" "}
         for more mode pairs described this way, one degree at a time. Chords, not just notes, get
         numbered from the tonic too - see{" "}
-        <Link href="/learn/scales/roman-numerals" className={LEARN_STYLES.link}>
+        <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
           Roman Numeral Notation
         </Link>
         .

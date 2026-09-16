@@ -9,7 +9,7 @@ import { ChordType } from "@/types/enums/ChordType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/major-vs-minor-triads",
+  "/learn/chords/major-vs-minor-triads",
   "Major and Minor Triads",
   "The major and minor triad are the two most common chords in Western music - built on the same root, one semitone apart on the third.",
 );
@@ -17,8 +17,8 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function MajorVsMinorPage() {
   return (
     <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
+      <Link href="/learn/chords" className={LEARN_STYLES.link}>
+        ← Chords
       </Link>
 
       <h1 className={LEARN_STYLES.h1}>Major and Minor Triads</h1>
@@ -47,7 +47,7 @@ export default function MajorVsMinorPage() {
 
       <p>
         Both chords come up constantly in all three of their positions - see{" "}
-        <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
+        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
           Triad Inversions
         </Link>{" "}
         for how a triad carries its identity even as the bass note underneath it changes.

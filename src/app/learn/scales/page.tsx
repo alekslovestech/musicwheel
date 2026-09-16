@@ -43,14 +43,6 @@ export default function ScalesIndexPage() {
       <p>What each numbered position in a scale is called, and why the names matter.</p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/roman-numerals" className={LEARN_STYLES.link}>
-          Roman Numeral Notation
-        </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
-      </h2>
-      <p>How chords get numbered from the tonic the same way scale degrees do.</p>
-
-      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
           Relative vs. Parallel Modes
         </Link>

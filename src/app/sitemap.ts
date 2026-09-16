@@ -21,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     url("/harmony"),
     url("/learn"),
+    url("/learn/chords"),
+    url("/learn/chords/triad-inversions"),
     url("/learn/scales"),
     url("/learn/scales/comparisons"),
     url("/learn/scales/greek-modes"),
@@ -28,7 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/learn/scales/harmonic"),
     url("/learn/scales/modal-families"),
     url("/learn/scales/melodic-minor-modes"),
-    url("/learn/triad-inversions"),
   ];
 
   const comparisonPages = COMPARISONS.map(({ href }) => url(href));

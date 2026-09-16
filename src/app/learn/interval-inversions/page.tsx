@@ -104,7 +104,7 @@ export default function IntervalInversionsPage() {
       <h1 className={LEARN_STYLES.h1}>Interval Inversions</h1>
 
       <p>
-        <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
+        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
           Triad inversions
         </Link>{" "}
         showed three notes that stay the same chord no matter which one is on the bottom. A bare

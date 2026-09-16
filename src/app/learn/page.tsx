@@ -35,20 +35,11 @@ export default function LearnIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/major-vs-minor-triads" className={LEARN_STYLES.link}>
-          Major and Minor Triads
+        <Link href="/learn/chords" className={LEARN_STYLES.sectionLink}>
+          Chords
         </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
       </h2>
-      <p>The two most common chords in Western music - one semitone apart on the third.</p>
-
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/triad-inversions" className={LEARN_STYLES.link}>
-          Triad Inversions
-        </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
-      </h2>
-      <p>Same three notes, different note on the bottom.</p>
+      <p>Major vs. minor, inversions, and how roman numerals number chords from the tonic.</p>
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
