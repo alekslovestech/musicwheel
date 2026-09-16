@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/learn/approach/why-this-app"),
     url("/learn/approach/color-coding"),
     url("/learn/approach/chromatic-circle"),
+    url("/learn/approach/accidentals"),
 
     url("/learn/chords"),
     url("/learn/chords/major-vs-minor-triads"),

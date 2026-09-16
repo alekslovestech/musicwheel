@@ -65,6 +65,16 @@ export default function ApproachIndexPage() {
         Why a circle instead of a line makes intervals and inversions easier to see - and how
         that&apos;s different from the circle of fifths.
       </p>
+
+      <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/approach/accidentals" className={LEARN_STYLES.link}>
+          Accidentals
+        </Link>
+      </h2>
+      <p>
+        Why the keyboard plays down sharps and flats, resolves a real spelling once you&apos;re in
+        a key, and never shows a double sharp or double flat.
+      </p>
     </>
   );
 }
