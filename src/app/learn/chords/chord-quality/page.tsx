@@ -86,8 +86,8 @@ export default function ChordQualityPage() {
           <tr className={LEARN_STYLES.comparisonTableRow}>
             <th className="p-0"></th>
             <th className="w-1/3 px-snug py-tight">Quality</th>
-            <th className="px-snug py-tight">Symbol</th>
-            <th className="px-snug py-tight">Short Form</th>
+            <th className="px-snug py-tight">Symbolic notation</th>
+            <th className="px-snug py-tight">Letter notation</th>
           </tr>
         </thead>
         <tbody>
@@ -129,7 +129,7 @@ function QualityRow({ chordType }: { chordType: ChordType }) {
         <ColorSwatch color={getColorForGrouping(chordType)} />
       </td>
       <td className="w-1/3 px-snug py-tight">{longForm}</td>
-      <td className="px-snug py-tight">{symbolForm || "(none)"}</td>
+      <td className="px-snug py-tight">{symbolForm || "___"}</td>
       <td className="px-snug py-tight">{shortForm}</td>
     </tr>
   );
