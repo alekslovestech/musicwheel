@@ -5,16 +5,12 @@ import { useRef } from "react";
 import {
   TWELVE,
   TWENTY4,
-  BLACK_KEY_WIDTH_RATIO,  
   WHITE_KEYS_PER_OCTAVE,
   WHITE_KEYS_PER_2OCTAVES,
-  
 } from "@/types/constants/NoteConstants";
-import { ActualIndex, actualToChromatic, ixActual, NoteIndices } from "@/types/IndexTypes";
+import { ActualIndex, ixActual, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { useLinearKeyboardDoDisplayText } from "@/lib/hooks/useLinearKeyboardDoDisplayText";
-import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
-import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils";
 
 import {
   getScaleBoundaryLeftPercentages,
@@ -79,7 +75,6 @@ export function LinearKeyboardView({
   const keys = [];
   for (let index = 0; index <= endIndex; index++) {
     const actualIndex = ixActual(index);
-    const isShortKey = BlackKeyUtils.isBlackKey(actualToChromatic(actualIndex));
     keys.push(
       <PianoKeyLinear
         key={index}
@@ -92,12 +87,7 @@ export function LinearKeyboardView({
         isScales={isScales}
         useRealisticColors={useRealisticColors}
         showLabels={showLabels}
-        left={isCompact ? LinearKeyboardUtils.getKeyPositionInOneOctave(actualIndex) : undefined}
-        widthPercent={
-          isCompact
-            ? `${(((isShortKey ? BLACK_KEY_WIDTH_RATIO : 1) * 100) / oneOctaveWhiteKeys).toFixed(2)}%`
-            : undefined
-        }
+        isCompact={isCompact}
       />,
     );
   }

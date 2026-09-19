@@ -46,9 +46,11 @@ export function ScaleFigure({
   const musicalKey = isOtherScaleType(scaleType)
     ? MusicalKey.fromOtherScale(tonic, scaleType)
     : MusicalKey.fromGreekMode(tonic, scaleType);
+  // Leave undefined rather than [] when nothing's highlighted - CircularKeyboardView and
+  // LinearKeyboardView already default highlightedNoteIndices to [] themselves.
   const highlightedNoteIndices =
     highlightedDegree == null
-      ? []
+      ? undefined
       : musicalKey.getNoteIndicesForScaleDegree(
           scaleDegreeToIndex(highlightedDegree),
           scalePlaybackMode,

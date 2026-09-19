@@ -1,6 +1,3 @@
-import { ChromaticIndex } from "@/types/ChromaticIndex";
-import { MusicalKey } from "@/types/Keys/MusicalKey";
-
 interface KeyColors {
   primary: string; // "fill-keys-bgWhite" or "bg-keys-bgWhite"
   text: string; // "fill-keys-textOnWhite" or "text-keys-textOnWhite"
@@ -9,9 +6,8 @@ interface KeyColors {
 
 export class VisualStateUtils {
   static getKeyColors(
-    chromaticIndex: ChromaticIndex,
     isScales: boolean,
-    musicalKey: MusicalKey,
+    isDiatonicInScale: boolean,
     isRootNote: boolean,
     isBlack: boolean,
     isSelected: boolean,
@@ -24,8 +20,7 @@ export class VisualStateUtils {
       return { primary, text, border };
     }
 
-    const isDiatonic = musicalKey.isDiatonicNote(chromaticIndex);
-    const stateColor = isDiatonic ? "Highlighted" : "Muted";
+    const stateColor = isDiatonicInScale ? "Highlighted" : "Muted";
     const selectedString = isSelected ? "Selected" : "";
     const primaryPrefix = this.getBgPrefix(isSvg);
     const textPrefix = this.getTextPrefix(isSvg);

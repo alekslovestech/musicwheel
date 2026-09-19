@@ -64,7 +64,7 @@ export class MusicalKey {
   }
 
   /** Whether chromaticIndex is one of this key's scale notes - diatonic or not. */
-  isDiatonicNote(chromaticIndex: ChromaticIndex): boolean {
+  isNoteInScale(chromaticIndex: ChromaticIndex): boolean {
     return this.scaleInfo.isInScale(chromaticIndex, this.tonicIndex);
   }
 
