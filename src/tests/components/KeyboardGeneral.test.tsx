@@ -81,29 +81,3 @@ describe("KeyboardGeneral", () => {
     keyVerificationUtils.verifySelectedCircularKeys([]); //verify there are no notes left
   });
 });
-
-describe("Keyboards in Advanced Mode", () => {
-  const renderComponent = () =>
-    render(
-      <RootProvider>
-        <KeyboardLinear />
-        <KeyboardCircular />
-        <HarmonyInputModeSelector />
-        <ChordPresetSelector />
-      </RootProvider>,
-    );
-
-  beforeEach(() => {
-    renderComponent();
-  });
-
-  test.skip("No keys selected in Advanced mode", () => {
-    keyVerificationUtils.verifySelectedLinearKeys([]);
-    keyVerificationUtils.verifySelectedCircularKeys([]);
-  });
-
-  test.skip("Advanced mode means keys are disabled", () => {
-    keyVerificationUtils.verifyLinearKeysDisabled();
-    keyVerificationUtils.verifyCircularKeysDisabled();
-  });
-});

@@ -21,16 +21,6 @@ export const keyVerificationUtils = {
     );
   },
 
-  verifyLinearKeysDisabled: () => {
-    const pianoKeys = keyVerificationUtils.getAllLinearKeys();
-    pianoKeys.forEach((key) => ReactTestUtils.expectElementToBeDisabled(key));
-  },
-
-  verifyCircularKeysDisabled: () => {
-    const circularKeys = keyVerificationUtils.getAllCircularKeys();
-    circularKeys.forEach((key) => ReactTestUtils.expectElementToBeDisabled(key));
-  },
-
   verifySelectedCircularKeys: (selectedIndices: number[]) => {
     const circularKeys = keyVerificationUtils.getAllCircularKeys();
     selectedIndices.forEach((index) =>

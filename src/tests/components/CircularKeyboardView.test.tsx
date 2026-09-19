@@ -67,4 +67,17 @@ describe("CircularKeyboardView", () => {
     expect(document.getElementById("circularKey04")).toHaveClass("root-note");
     expect(document.getElementById("circularKey00")).not.toHaveClass("root-note");
   });
+
+  test("isScales disables and mutes a note outside the key, leaves a diatonic note alone", () => {
+    render(<CircularKeyboardView musicalKey={DEFAULT_MUSICAL_KEY} isScales onKeyClick={null} />);
+    const tonic = document.getElementById("circularKey00")!; // C - diatonic in C major
+    const nonDiatonic = document.getElementById("circularKey01")!; // C# - not in C major
+
+    // The disabled/selected classes live on the <g>; the fill color is on its child <path>.
+    ReactTestUtils.expectElementToBeEnabled(tonic);
+    expect(tonic.querySelector("path")).toHaveClass("fill-keys-bgHighlighted");
+
+    ReactTestUtils.expectElementToBeDisabled(nonDiatonic);
+    expect(nonDiatonic.querySelector("path")).toHaveClass("fill-keys-bgMuted");
+  });
 });

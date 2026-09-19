@@ -34,10 +34,7 @@ interface PianoKeyLinearProps {
   isScales: boolean;
   /** Real black/white key colors instead of the live app's blue Scales-mode theme. */
   useRealisticColors?: boolean;
-  /** The note-name letter on white keys, and the small ♯/♭ ticks marking a black-key neighbor. */
   showLabels?: boolean;
-  /** Single-octave positioning (C to the C above, inclusive) instead of the full two-octave
-   * layout - see LinearKeyboardUtils.getKeyPositionInOneOctave. */
   isCompact?: boolean;
 }
 
