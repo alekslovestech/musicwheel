@@ -17,14 +17,20 @@ export const metadata: Metadata = metadataForSlugPage(
   "Why every wedge, chord, and step in Music Wheel is colored the way it is - and what that color is actually telling you.",
 );
 
-const INTERVAL_ROWS: { ic: keyof typeof INTERVAL_CLASS_PALETTE; label: string; name: string }[] = [
-  { ic: 0, label: "Unison / Octave", name: "Light Gray" },
-  { ic: 1, label: "Minor 2nd / Major 7th", name: "Crimson" },
-  { ic: 2, label: "Major 2nd / Minor 7th", name: "Orange" },
-  { ic: 3, label: "Minor 3rd / Major 6th", name: "Gold" },
-  { ic: 4, label: "Major 3rd / Minor 6th", name: "Green" },
-  { ic: 5, label: "Perfect 4th / Perfect 5th", name: "Blue" },
-  { ic: 6, label: "Tritone", name: "Magenta" },
+// Each row is an inversion pair sharing one interval class - label2 is what label1 becomes when
+// flipped. The tritone has no partner (it inverts to itself), so it's the one row without a label2.
+const INTERVAL_ROWS: {
+  ic: keyof typeof INTERVAL_CLASS_PALETTE;
+  label1: string;
+  label2: string;
+}[] = [
+  { ic: 0, label1: "Unison", label2: "(Octave)" },
+  { ic: 1, label1: "Minor 2nd", label2: "Major 7th" },
+  { ic: 2, label1: "Major 2nd", label2: "Minor 7th" },
+  { ic: 3, label1: "Minor 3rd", label2: "Major 6th" },
+  { ic: 4, label1: "Major 3rd", label2: "Minor 6th" },
+  { ic: 5, label1: "Perfect 4th", label2: "Perfect 5th" },
+  { ic: 6, label1: "Tritone", label2: "Tritone" }, // tritone inverts to itself, so it has no label2
 ];
 
 const CHORD_COLOR_GROUPS = getJoinedColorLegendGroupsForIds(
@@ -64,6 +70,21 @@ export default function ColorCodingPage() {
       </p>
 
       <p>
+        The same rule carries over to inversions. Flip an interval over - a major 3rd becomes a
+        minor 6th, for instance - and it&apos;s still the same interval class, so it keeps the same
+        color; see{" "}
+        <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
+          interval inversions
+        </Link>{" "}
+        for why. The same goes for chords:{" "}
+        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
+          triad inversions
+        </Link>{" "}
+        rearrange which note sits in the bass without changing which intervals are stacked, so a
+        chord and every inversion of it land on the same color.
+      </p>
+
+      <p>
         There are seven interval classes, 0 through 6, running from a unison up to a tritone.
         Anything past a tritone is really one of these seven counted the other way around the
         octave, so seven colors are all the palette ever needs.
@@ -71,13 +92,15 @@ export default function ColorCodingPage() {
 
       <div className="flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-normal">
         {INTERVAL_ROWS.map((row) => (
-          <div key={row.ic} className="flex items-center gap-snug">
+          <div key={row.ic} className="grid grid-cols-[1fr_1.25rem_1fr] items-center gap-snug">
+            <span className="min-w-0 text-right text-sm">{row.label1}</span>
             <div
-              className="h-5 w-5 shrink-0 rounded-sm border border-containers-divider/40"
+              role="img"
+              aria-label={`Color for ${row.label1}${row.label2 ? ` and its inversion, ${row.label2}` : ""}`}
+              className="h-5 w-5 shrink-0 justify-self-center rounded-sm border border-containers-divider/40"
               style={{ backgroundColor: INTERVAL_CLASS_PALETTE[row.ic] }}
             />
-            <span className="min-w-0 flex-1 text-sm">{row.label}</span>
-            <span className="text-xs text-labels-textDefault opacity-70">{row.name}</span>
+            <span className="min-w-0 text-left text-sm">{row.label2}</span>
           </div>
         ))}
       </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { ScaleRibbon } from "@/components/ColorLegend/ScaleRibbon";
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
@@ -10,6 +11,7 @@ import { actualToChromatic } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { AnyScaleType, isOtherScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
+import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 // One scale figure: the wheel, optionally the keyboard, and a link to the live app. 
 // Can handle both diatonic and non-diatonic scales
@@ -24,6 +26,7 @@ export function ScaleFigure({
   showLinearKeyboard = true,
   linearShowLabels = false,
   isCompact = false,
+  showRibbon = false,
 }: {
   tonic: string;
   scaleType: AnyScaleType;
@@ -42,6 +45,10 @@ export function ScaleFigure({
    * looks right when tonic is C, since a compact keyboard always starts there regardless of
    * tonic. See LinearKeyboardView.isCompact. */
   isCompact?: boolean;
+  /** Scale-degree numbers (1 ♭2 ♭3...) with step sizes between them - neither keyboard view shows
+   * degree numbers, since both are laid out by pitch, not by scale position. Static/read-only,
+   * same as the rest of the figure. */
+  showRibbon?: boolean;
 }) {
   const musicalKey = isOtherScaleType(scaleType)
     ? MusicalKey.fromOtherScale(tonic, scaleType)
@@ -65,6 +72,16 @@ export function ScaleFigure({
         showStepAnnotations={showStepAnnotations}
         onKeyClick={null}
       />
+
+      {showRibbon && (
+        <ScaleRibbon
+          ribbon={buildScaleRibbonData(musicalKey, scalePlaybackMode, showStepAnnotations)}
+          activeDegreeIndex={
+            highlightedDegree == null ? null : scaleDegreeToIndex(highlightedDegree)
+          }
+          showTitle={false}
+        />
+      )}
 
       {showLinearKeyboard && (
         <LinearKeyboardView

@@ -12,6 +12,7 @@ export function ScaleRibbon({
   onSelectStep,
   caption,
   stepAnnotations,
+  showTitle = true,
 }: {
   ribbon: ScaleRibbonData;
   activeDegreeIndex?: number | null;
@@ -21,13 +22,19 @@ export function ScaleRibbon({
   caption?: string;
   /** W-H annotation control; omit in the lenses where step segments mean nothing. */
   stepAnnotations?: { checked: boolean; onChange: (checked: boolean) => void };
+  /** Names which lens (Notes/Drone/Triads/Sevenths) this ribbon is - only meaningful where the
+   * lens can change, e.g. SequenceLegendPanel. A figure that only ever shows one static ribbon
+   * has nothing for the title to disambiguate. */
+  showTitle?: boolean;
 }) {
   return (
     <div id="scale-ribbon" className="flex flex-col gap-tight">
-      <div className="flex items-center justify-between gap-snug">
-        <div className={RIBBON_STYLES.title}>{ribbon.title}</div>
-        {stepAnnotations && <StepAnnotationToggle {...stepAnnotations} />}
-      </div>
+      {(showTitle || stepAnnotations) && (
+        <div className="flex items-center justify-between gap-snug">
+          {showTitle && <div className={RIBBON_STYLES.title}>{ribbon.title}</div>}
+          {stepAnnotations && <StepAnnotationToggle {...stepAnnotations} />}
+        </div>
+      )}
 
       {ribbon.kind === "labels" && (
         <LabelsRibbonLayout
