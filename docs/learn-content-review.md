@@ -29,7 +29,7 @@ review progress is visible in git history.
 | What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 0 | Examples of painful spellings, context dependencies keys etc. Memorization of key signatures. Excessive focus on memetic tricks that are not that helpful (WHHW)| |
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4 | Link to Circle of fifths example| |
 | Color coding | `approach/color-coding/page.tsx` | 3 | | |
-| Accidentals | `approach/accidentals/page.tsx` | 0 |Where they're useful and where they're overkill, why we deemphasize| |
+| Accidentals | `approach/accidentals/page.tsx` | 4 | | |
 | What's useful about music theory | Not created yet | 0 | What mood does this create? What's the easiest way to recognize a Harmonic Major? A half-diminished chord? | | |
 
 
@@ -39,8 +39,8 @@ review progress is visible in git history.
 |---|---|---|---|---|
 | Chords index | `chords/page.tsx` | 0 | | |
 | Chord quality | `chords/chord-quality/page.tsx` | 0 | | |
-| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 0 | | |
-| Roman numerals | `chords/roman-numerals/page.tsx` | 0 | | |
+| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3 | | |
+| Roman numerals | `chords/roman-numerals/page.tsx` | 3 | | |
 | Triad inversions | `chords/triad-inversions/page.tsx` | 4 | | |
 
 ## Scales
@@ -49,10 +49,10 @@ review progress is visible in git history.
 |---|---|---|---|---|
 | Scales index | `scales/page.tsx` | 0 | | |
 | Scale degrees | `scales/scale-degrees/page.tsx` | 0 | | |
-| Greek modes | `scales/greek-modes/page.tsx` | 0 | | |
+| Greek modes | `scales/greek-modes/page.tsx` | 3 | | |
 | Modal families | `scales/modal-families/page.tsx` | 0 | | |
 | Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 0 | | |
-| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 0 | | |
+| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4 | | |
 | Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 0 | | |
 
 ## Scales / Comparisons
@@ -80,5 +80,5 @@ Each entry: score — notes — last reviewed.
 
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
-| Interval inversions | `interval-inversions/page.tsx` | 0 | | |
-| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 0 | | |
+| Interval inversions | `interval-inversions/page.tsx` | 4 | | |
+| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 4 | | |
