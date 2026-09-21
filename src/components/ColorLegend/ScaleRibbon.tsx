@@ -4,6 +4,7 @@ import { ColorSwatch } from "@/components/ColorLegend/ColorSwatch";
 import { RIBBON_STYLES, TYPOGRAPHY } from "@/lib/design";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
+import { TWELVE } from "@/types/constants/NoteConstants";
 import { LabelWithColor, ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 export function ScaleRibbon({
@@ -20,7 +21,7 @@ export function ScaleRibbon({
   onSelectStep?: (stepIndex: number) => void;
   /** One line naming what this lens holds fixed and what it varies. */
   caption?: string;
-  /** W-H annotation control; omit in the lenses where step segments mean nothing. */
+  /** Gaps annotation control; omit in the lenses where step segments mean nothing. */
   stepAnnotations?: { checked: boolean; onChange: (checked: boolean) => void };
   /** Names which lens (Notes/Drone/Triads/Sevenths) this ribbon is - only meaningful where the
    * lens can change, e.g. SequenceLegendPanel. A figure that only ever shows one static ribbon
@@ -40,6 +41,7 @@ export function ScaleRibbon({
         <LabelsRibbonLayout
           notes={ribbon.notes}
           steps={ribbon.steps}
+          offsets={ribbon.offsets}
           activeDegreeIndex={activeDegreeIndex}
           onSelectStep={onSelectStep}
         />
@@ -81,12 +83,12 @@ function StepAnnotationToggle({
       type="button"
       aria-pressed={checked}
       onClick={handleClick}
-      title="Show the whole- and half-step distance between neighbouring notes"
+      title="Show the semitone gap between neighboring notes"
       className={`${RIBBON_STYLES.annotationToggle} ${
         checked ? RIBBON_STYLES.annotationToggleActive : RIBBON_STYLES.annotationToggleInactive
       }`}
     >
-      W–H
+      Gaps
     </button>
   );
 }
@@ -117,23 +119,31 @@ function NotesRibbonLayout({
   );
 }
 
+/** Positions an element at a chromatic offset (0-12) for RIBBON_STYLES.noteCellAbsolute, which is
+ *  zero-width so its own flex centering (`items-center`) lands exactly on this `left` point
+ *  regardless of the label's width - see that style's comment. The tonic ticks at the very ends
+ *  can overflow the row by half their width; the row has no overflow-hidden ancestor, so that's
+ *  harmless. */
+function chromaticPositionStyle(offset: number): React.CSSProperties {
+  return { left: `${(offset / TWELVE) * 100}%` };
+}
+
 /**
- * Bare tick-and-circle notes, same treatment as the W-H view, plus an optional connector overlay
- * when steps are given. Connectors can't be flex siblings interleaved between notes - that would
- * make the note row 2N-1 cells instead of N and shift every center relative to the other layouts
- * (NotesRibbonLayout). Instead each is an absolute box at left=(index+0.5)/N, width=1/N: with N
- * equal zero-gap cells, that starts exactly on one note's center and ends exactly on the next's.
- * It's pinned to the same top edge the tick marks start from rather than given a row of its own,
- * so only the interval label above it costs real height.
+ * Bare tick-and-circle notes, spaced by real semitone distance from the tonic rather than by
+ * index, plus an optional connector overlay when steps are given. Both the ticks and the
+ * connectors are positioned from the same `offsets` array, so a step's bar always spans exactly
+ * from one note's position to the next's.
  */
 function LabelsRibbonLayout({
   notes,
   steps,
+  offsets,
   activeDegreeIndex,
   onSelectStep,
 }: {
   notes: string[];
   steps?: LabelWithColor[];
+  offsets: number[];
   activeDegreeIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
@@ -141,51 +151,39 @@ function LabelsRibbonLayout({
     return (
       <NoteTickRow
         notes={notes}
+        offsets={offsets}
         activeDegreeIndex={activeDegreeIndex}
         onSelectStep={onSelectStep}
       />
     );
   }
 
-  const cellWidthPercent = 100 / notes.length;
-
   return (
-    <div className="flex flex-col">
-      <div className="relative h-3">
-        {steps.map((step, index) => (
-          <span
-            key={`${step.label}-${index}`}
-            className={RIBBON_STYLES.stepLabel}
-            style={{
-              left: `${(index + 0.5) * cellWidthPercent}%`,
-              width: `${cellWidthPercent}%`,
-            }}
-          >
-            {step.label}
-          </span>
-        ))}
-      </div>
-      <div className="relative">
-        <div aria-hidden className={RIBBON_STYLES.connectorOverlay}>
-          {steps.map((step, index) => (
+    <div className="relative">
+      <div aria-hidden className={RIBBON_STYLES.connectorOverlay}>
+        {steps.map((step, index) => {
+          const left = (offsets[index] / TWELVE) * 100;
+          const width = ((offsets[index + 1] - offsets[index]) / TWELVE) * 100;
+          return (
             <div
               key={`${step.label}-${index}`}
               className={RIBBON_STYLES.connectorBar}
               style={{
-                left: `${(index + 0.5) * cellWidthPercent}%`,
-                width: `${cellWidthPercent}%`,
+                left: `${left}%`,
+                width: `${width}%`,
                 backgroundColor: step.color.css(),
               }}
             />
-          ))}
-        </div>
-        <div className="relative z-10">
-          <NoteTickRow
-            notes={notes}
-            activeDegreeIndex={activeDegreeIndex}
-            onSelectStep={onSelectStep}
-          />
-        </div>
+          );
+        })}
+      </div>
+      <div className="relative z-10">
+        <NoteTickRow
+          notes={notes}
+          offsets={offsets}
+          activeDegreeIndex={activeDegreeIndex}
+          onSelectStep={onSelectStep}
+        />
       </div>
     </div>
   );
@@ -193,15 +191,17 @@ function LabelsRibbonLayout({
 
 function NoteTickRow({
   notes,
+  offsets,
   activeDegreeIndex,
   onSelectStep,
 }: {
   notes: string[];
+  offsets: number[];
   activeDegreeIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
 }) {
   return (
-    <div className={RIBBON_STYLES.noteRow}>
+    <div className={RIBBON_STYLES.noteRowProportional}>
       {notes.map((label, index) => (
         <RibbonNoteTick
           key={`${label}-${index}`}
@@ -209,6 +209,7 @@ function NoteTickRow({
           stepIndex={index}
           isActive={index === activeDegreeIndex}
           onSelect={onSelectStep && (() => onSelectStep(index))}
+          style={chromaticPositionStyle(offsets[index])}
         />
       ))}
     </div>
@@ -227,12 +228,14 @@ function RibbonNoteCell({
   stepIndex,
   label,
   className,
+  style,
   children,
 }: {
   onSelect?: () => void;
   stepIndex: number;
   label: string;
   className: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
   // Keyed by position, not label: every ribbon closes on the octave tonic, so the first and last
@@ -241,13 +244,19 @@ function RibbonNoteCell({
 
   if (!onSelect)
     return (
-      <div id={id} className={className}>
+      <div id={id} className={className} style={style}>
         {children}
       </div>
     );
 
   return (
-    <InteractiveRibbonNoteCell id={id} onSelect={onSelect} label={label} className={className}>
+    <InteractiveRibbonNoteCell
+      id={id}
+      onSelect={onSelect}
+      label={label}
+      className={className}
+      style={style}
+    >
       {children}
     </InteractiveRibbonNoteCell>
   );
@@ -258,12 +267,14 @@ function InteractiveRibbonNoteCell({
   onSelect,
   label,
   className,
+  style,
   children,
 }: {
   id: string;
   onSelect: () => void;
   label: string;
   className: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
   const trackAction = useTrack();
@@ -281,6 +292,7 @@ function InteractiveRibbonNoteCell({
       onClick={handleClick}
       aria-label={`Select scale degree ${label}`}
       className={`${className} ${RIBBON_STYLES.interactiveCell}`}
+      style={style}
     >
       {children}
     </button>
@@ -318,19 +330,21 @@ function RibbonNoteTick({
   stepIndex,
   isActive,
   onSelect,
+  style,
 }: {
   label: string;
   stepIndex: number;
   isActive: boolean;
   onSelect?: () => void;
+  style: React.CSSProperties;
 }) {
-  // Same min-w-0 flex-1 cell as RibbonNoteSwatch - centers must match across layouts.
   return (
     <RibbonNoteCell
       onSelect={onSelect}
       stepIndex={stepIndex}
       label={label}
-      className={RIBBON_STYLES.noteCell}
+      className={RIBBON_STYLES.noteCellAbsolute}
+      style={style}
     >
       <div
         className={`${RIBBON_STYLES.tickMark} ${
