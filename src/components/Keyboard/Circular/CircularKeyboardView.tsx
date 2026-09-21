@@ -50,6 +50,9 @@ export function CircularKeyboardView({
   className?: string;
 }) {
   const highlightColor = ColorUtils.getColorForIndices(highlightedNoteIndices);
+  // The first note of a chord selection is its root - same convention IndexUtils.normalizeIndices
+  // and ChordUtils.calculateChordNotesFromChordReference already rely on.
+  const chordRootIndex = highlightedNoteIndices[0];
 
   return (
     <svg
@@ -59,6 +62,9 @@ export function CircularKeyboardView({
     >
       {Array.from({ length: TWELVE }).map((_, index) => {
         const actualIndex = ixActual(index);
+        const isChordRoot =
+          chordRootIndex !== undefined &&
+          KeyboardUtils.isKeySelected(actualIndex, [chordRootIndex], KeyboardUIType.Circular);
 
         return (
           <PianoKeyCircular
@@ -73,6 +79,9 @@ export function CircularKeyboardView({
               highlightedNoteIndices,
               KeyboardUIType.Circular,
             )}
+            // A chord's Roman numeral belongs on its root; once anything is selected, every
+            // other key's numeral fades rather than reading as a chord of its own.
+            dimRomanLabel={highlightedNoteIndices.length > 0 && !isChordRoot}
             isScales={isScales}
             selectedMusicalKey={musicalKey}
             scalePlaybackMode={scalePlaybackMode}

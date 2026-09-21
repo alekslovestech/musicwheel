@@ -40,7 +40,7 @@ review progress is visible in git history.
 | Chords index | `chords/page.tsx` | 0 | | |
 | Chord quality | `chords/chord-quality/page.tsx` | 0 | | |
 | Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3 | | |
-| Roman numerals | `chords/roman-numerals/page.tsx` | 3 | | |
+| Roman numerals | `chords/roman-numerals/page.tsx` | 4 | | |
 | Triad inversions | `chords/triad-inversions/page.tsx` | 4 | | |
 
 ## Scales

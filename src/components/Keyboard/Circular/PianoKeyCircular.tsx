@@ -20,6 +20,7 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 const PianoKeyCircularBase = ({
   actualIndex,
   isBassNote,
+  dimRomanLabel,
   outerRadius,
   innerRadius,
   onKeyClick,
@@ -30,6 +31,8 @@ const PianoKeyCircularBase = ({
 }: {
   actualIndex: ActualIndex;
   isBassNote: boolean;
+  /** True once some chord is selected and this key isn't its root - see CircularKeyboardView. */
+  dimRomanLabel: boolean;
   outerRadius: number;
   innerRadius: number;
   /** Pass null to render the key read-only, for the static wheel article figures embed. */
@@ -80,6 +83,7 @@ const PianoKeyCircularBase = ({
     : isRomanLabels
       ? TYPOGRAPHY.circularRomanText
       : TYPOGRAPHY.circularNoteText;
+  const isRomanLabelDimmed = isRomanLabels && dimRomanLabel;
 
   const renderAccidental = (
     accidental: AccidentalType,
@@ -127,7 +131,9 @@ const PianoKeyCircularBase = ({
         fontSize={romanLabelFit?.fontSize}
         textLength={romanLabelFit?.textLength}
         lengthAdjust={romanLabelFit !== undefined ? "spacingAndGlyphs" : undefined}
-        className={`text-center pointer-events-none ${keyColors.text} ${noteTextClass}`}
+        className={`text-center pointer-events-none ${keyColors.text} ${noteTextClass} ${
+          isRomanLabelDimmed ? "opacity-50" : ""
+        }`}
       >
         {noteText}
       </text>
