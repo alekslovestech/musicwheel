@@ -3,6 +3,9 @@ import type { Config } from "tailwindcss";
 
 import { INTERVAL_CLASS_PALETTE } from "./src/lib/design/palette";
 
+// Shared background color for selected black and white keys
+const KEY_BG_SELECTED = "rgb(190, 227, 236)"; //"#5A9CB3",
+
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}", "!./src/tests/**"],
   safelist: [
@@ -66,8 +69,8 @@ const config: Config = {
           bgWhite: "rgb(250, 250, 246)", //"#fafaf6",
           bgBlack: "rgb(68, 68, 68)", //"#444444",
           bgBlackMuted: "rgb(150, 150, 150)", // Non-diatonic black key in realistic scale figures
-          bgWhiteSelected: "rgb(190, 227, 236)", //"#BEE3EC",
-          bgBlackSelected: "rgb(90, 156, 179)", //"#5A9CB3",
+          bgWhiteSelected: KEY_BG_SELECTED,
+          bgBlackSelected: KEY_BG_SELECTED,
           textOnWhiteSelected: "rgb(63, 105, 201)", // Softer blue for selected white keys
           textOnBlackSelected: "rgb(255, 255, 255)", // White for selected black keys
           textOnWhiteFaded: "rgba(100, 100, 110, 0.5)", //"#64646E",
