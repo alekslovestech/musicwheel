@@ -1,15 +1,10 @@
 "use client";
 
 import { ColorSwatch } from "@/components/ColorLegend/ColorSwatch";
-import {
-  chromaticPositionStyle,
-  RibbonNoteCell,
-  RibbonRow,
-} from "@/components/ColorLegend/ribbonCells";
+import { chromaticPercent, RibbonNoteCell, RibbonRow } from "@/components/ColorLegend/ribbonCells";
 import { RIBBON_STYLES, TYPOGRAPHY } from "@/lib/design";
 import { TrackEvent } from "@/lib/tracking/events";
 import { useTrack } from "@/lib/tracking/useTrack";
-import { TWELVE } from "@/types/constants/NoteConstants";
 import { LabelWithColor, ScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 export function ScaleRibbon({
@@ -165,8 +160,8 @@ function LabelsRibbonLayout({
     <div className="relative">
       <div aria-hidden className={RIBBON_STYLES.connectorOverlay}>
         {steps.map((step, index) => {
-          const left = (offsets[index] / TWELVE) * 100;
-          const width = ((offsets[index + 1] - offsets[index]) / TWELVE) * 100;
+          const left = chromaticPercent(offsets[index]);
+          const width = chromaticPercent(offsets[index + 1] - offsets[index]);
           return (
             <div
               key={`${step.label}-${index}`}
@@ -211,7 +206,7 @@ function NoteTickRow({
           key={`${tick.label}-${index}`}
           label={tick.label}
           stepIndex={index}
-          style={chromaticPositionStyle(tick.offset)}
+          style={{ left: `${chromaticPercent(tick.offset)}%` }}
           {...cellProps}
         />
       )}

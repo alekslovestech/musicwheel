@@ -43,13 +43,9 @@ export function RibbonRow<T>({
   );
 }
 
-/** Positions an element at a chromatic offset (0-12) for RIBBON_STYLES.noteCellAbsolute, which is
- *  zero-width so its own flex centering (`items-center`) lands exactly on this `left` point
- *  regardless of the label's width - see that style's comment. The tonic ticks at the very ends
- *  can overflow the row by half their width; the row has no overflow-hidden ancestor, so that's
- *  harmless. */
-export function chromaticPositionStyle(offset: number): React.CSSProperties {
-  return { left: `${(offset / TWELVE) * 100}%` };
+/** A chromatic offset (0-12 semitones from the tonic) as a percentage of the ribbon's full span. */
+export function chromaticPercent(offset: number): number {
+  return (offset / TWELVE) * 100;
 }
 
 /**
