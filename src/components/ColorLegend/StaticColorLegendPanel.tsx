@@ -24,7 +24,7 @@ export function StaticColorLegendPanel() {
   const { scalePlaybackMode } = useAudio();
   const { showStepAnnotations } = useDisplay();
   const { selectedMusicalKey } = useMusical();
-  // Follows the ribbon's W-H toggle: with the annotation off there are no step colors on screen
+  // Follows the ribbon's Gaps toggle: with the annotation off there are no step colors on screen
   // for this section to explain.
   const stepLegendItems =
     isScalesMode && showsStepSegments(scalePlaybackMode, showStepAnnotations)

@@ -54,7 +54,7 @@ export function StaticChordFigure({
         isCompact={isCompact}
       />
       <figcaption className={LEARN_STYLES.figureCaption}>
-        <span>{caption}</span>
+        <span className="whitespace-pre-line">{caption}</span>
       </figcaption>
     </figure>
   );

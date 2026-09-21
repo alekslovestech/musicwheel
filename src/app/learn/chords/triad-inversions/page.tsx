@@ -24,8 +24,9 @@ export default function TriadInversionsPage() {
       <h1 className={LEARN_STYLES.h1}>Triad Inversions</h1>
 
       <p>
-        A triad is three notes, but which one is lowest doesn&apos;t change which chord it is - it
-        only changes the inversion. All three wheels below light the same three wedges: C, E and G
+        A triad is 3 notes played at once, its first inversion is the bottom note moved up 1 octave. Interestingly, this operation changes very little about how we hear the chord quality.
+        For example a major chord and its first and second inversion sound almost identical, even though they have different bass notes. On the chromatic circle, this shows up as essentially the same
+        shape with a different starting point. 
       </p>
       <ComparisonGrid3>   
         <StaticChordFigure
@@ -50,10 +51,12 @@ export default function TriadInversionsPage() {
         />
       </ComparisonGrid3>
       <p>
-        Nothing about the chord&apos;s identity changes between these three - same notes, same name.
-        What changes is the bass, and that&apos;s audible even when the chord itself isn&apos;t: a
-        bass line can walk between inversions of one chord, or between different chords entirely,
-        and the ear tracks the bottom note either way.
+        Inversions are often interchangeable for the original chord, and are used to create smoother bass lines in chord progressions.
+        A chord's inversion preserves the{" "}
+        <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
+          chord quality
+        </Link>
+        , and shows up as the same shape and color in the MusicWheel's interface.
       </p>
     </>
   );

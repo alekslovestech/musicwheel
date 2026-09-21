@@ -2,13 +2,16 @@ import React from "react";
 
 import { TYPOGRAPHY } from "@/lib/design/Typography";
 
-import { ActualIndex, actualToChromatic, NoteIndices } from "@/types/IndexTypes";
+import { ActualIndex, NoteIndices } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
-import { BLACK_KEY_WIDTH_RATIO, WHITE_KEYS_PER_2OCTAVES } from "@/types/constants/NoteConstants";
+import {
+  BLACK_KEY_WIDTH_RATIO,
+  WHITE_KEYS_PER_OCTAVE,
+  WHITE_KEYS_PER_2OCTAVES,
+} from "@/types/constants/NoteConstants";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 
-import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { LinearKeyboardUtils } from "@/utils/Keyboard/Linear/LinearKeyboardUtils";
 import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
@@ -31,11 +34,8 @@ interface PianoKeyLinearProps {
   isScales: boolean;
   /** Real black/white key colors instead of the live app's blue Scales-mode theme. */
   useRealisticColors?: boolean;
-  /** The note-name letter on white keys, and the small ♯/♭ ticks marking a black-key neighbor. */
   showLabels?: boolean;
-  /** Geometry override - default computes both from actualIndex. */
-  left?: string;
-  widthPercent?: string;
+  isCompact?: boolean;
 }
 
 export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
@@ -48,20 +48,25 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   isScales,
   useRealisticColors = false,
   showLabels = true,
-  left: leftOverride,
-  widthPercent: widthPercentOverride,
+  isCompact = false,
 }) => {
-  const chromaticIndex = actualToChromatic(actualIndex);
-  const isShortKey = BlackKeyUtils.isBlackKey(chromaticIndex);
-  const left = leftOverride ?? LinearKeyboardUtils.getKeyPosition(actualIndex);
-
-  const baseClasses = ["key-base"];
   const isSelected = KeyboardUtils.isKeySelected(
     actualIndex,
     selectedNoteIndices,
     KeyboardUIType.Linear,
   );
-  const isDiatonicInScale = !isScales || selectedMusicalKey.isDiatonicNote(chromaticIndex);
+  const { chromaticIndex, isBlack: isShortKey, isDiatonicInScale, allBaseClasses, id, noteText } =
+    KeyboardUtils.getKeyVisualState(
+      actualIndex,
+      KeyboardUIType.Linear,
+      isScales,
+      selectedMusicalKey,
+      isSelected,
+      isBassNote,
+    );
+  const left = isCompact
+    ? LinearKeyboardUtils.getKeyPositionInOneOctave(actualIndex)
+    : LinearKeyboardUtils.getKeyPosition(actualIndex);
 
   const {
     prevAccidentalExists,
@@ -71,8 +76,8 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   } = KeyboardUtils.getAdjacentKeyState(chromaticIndex, selectedNoteIndices);
 
   const widthRatio = isShortKey ? BLACK_KEY_WIDTH_RATIO : 1;
-  const keyWidthAsPercent =
-    widthPercentOverride ?? `${((widthRatio * 100) / WHITE_KEYS_PER_2OCTAVES).toFixed(2)}%`;
+  const totalWhiteKeys = isCompact ? WHITE_KEYS_PER_OCTAVE + 1 : WHITE_KEYS_PER_2OCTAVES;
+  const keyWidthAsPercent = `${((widthRatio * 100) / totalWhiteKeys).toFixed(2)}%`;
 
   const keyColors = useRealisticColors
     ? VisualStateUtils.getRealisticScaleKeyColors(
@@ -83,31 +88,13 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
         false,
       )
     : VisualStateUtils.getKeyColors(
-        chromaticIndex,
         isScales,
-        selectedMusicalKey,
+        isDiatonicInScale,
         isBassNote,
         isShortKey,
         isSelected,
         false,
       );
-
-  const allBaseClasses = KeyboardUtils.buildKeyClasses(
-    baseClasses,
-    isSelected,
-    isShortKey,
-    isScales,
-    isBassNote,
-    isDiatonicInScale,
-  );
-
-  const id = KeyboardUtils.StringWithPaddedIndex("linearKey", actualIndex);
-  const noteText = KeyboardUtils.getNoteText(
-    KeyboardUIType.Linear,
-    chromaticIndex,
-    isScales,
-    selectedMusicalKey,
-  );
 
   const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {
     const isSharp = accidental === AccidentalType.Sharp;

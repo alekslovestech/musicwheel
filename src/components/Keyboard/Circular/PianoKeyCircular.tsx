@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import { ActualIndex, actualToChromatic } from "@/types/IndexTypes";
+import { ActualIndex } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
 
@@ -11,7 +11,6 @@ import { TYPOGRAPHY } from "@/lib/design/Typography";
 
 import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { ArcPathVisualizer } from "@/utils/Keyboard/Circular/ArcPathVisualizer";
-import { BlackKeyUtils } from "@/utils/BlackKeyUtils";
 import { VisualStateUtils } from "@/utils/visual/VisualStateUtils";
 import { KeyboardUtils } from "@/utils/Keyboard/KeyboardUtils";
 
@@ -46,41 +45,27 @@ const PianoKeyCircularBase = ({
   selectedMusicalKey: MusicalKey;
   scalePlaybackMode: ScalePlaybackMode;
 }) => {
-  const chromaticIndex = actualToChromatic(actualIndex);
+  const { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText } =
+    KeyboardUtils.getKeyVisualState(
+      actualIndex,
+      KeyboardUIType.Circular,
+      isScales,
+      selectedMusicalKey,
+      isSelected,
+      isBassNote,
+      scalePlaybackMode,
+    );
   const pathData = ArcPathVisualizer.getArcPathData(chromaticIndex, outerRadius, innerRadius);
   const textPoint = ArcPathVisualizer.getTextPoint(chromaticIndex, outerRadius, innerRadius);
 
-  const baseClasses = ["key-base"];
-  const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
-  const isDiatonicInScale = !isScales || selectedMusicalKey.isDiatonicNote(chromaticIndex);
-
-  // Add color classes based on visual state and selection
+  // Ignores isBassNote - the wheel marks the bass note with a separate dot, not a color.
   const keyColors = VisualStateUtils.getKeyColors(
-    chromaticIndex,
     isScales,
-    selectedMusicalKey,
+    isDiatonicInScale,
     false,
     isBlack,
     isSelected,
     true,
-  );
-
-  const allBaseClasses = KeyboardUtils.buildKeyClasses(
-    baseClasses,
-    isSelected,
-    isBlack,
-    isScales,
-    isBassNote,
-    isDiatonicInScale,
-  );
-
-  const id = KeyboardUtils.StringWithPaddedIndex("circularKey", actualIndex);
-  const noteText = KeyboardUtils.getNoteText(
-    KeyboardUIType.Circular,
-    chromaticIndex,
-    isScales,
-    selectedMusicalKey,
-    scalePlaybackMode,
   );
 
   const isRomanLabels =

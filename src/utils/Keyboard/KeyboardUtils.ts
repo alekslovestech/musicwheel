@@ -41,7 +41,7 @@ export class KeyboardUtils {
     selectedMusicalKey: MusicalKey,
     keyDisplayMode: KeyDisplayMode,
   ): string {
-    const isDiatonic = selectedMusicalKey.isDiatonicNote(chromaticIndex);
+    const isDiatonic = selectedMusicalKey.isNoteInScale(chromaticIndex);
 
     return !isDiatonic
       ? ""
@@ -92,6 +92,53 @@ export class KeyboardUtils {
       nextAccidentalSelected:
         nextIsBlack && this.isSelectedEitherOctave(nextChromaticIndex, selectedNoteIndices),
     };
+  }
+
+  /**
+   * The handful of derived values every key (circular or linear) needs before it can render:
+   * which chromatic pitch it is, whether it's black, whether it's in the current scale, its
+   * base classes, its element id, and its label text. Identical between the two keyboards except
+   * for the UI type, so both PianoKeyCircular and PianoKeyLinear call this instead of re-deriving
+   * each value themselves. Key *colors* are deliberately not included here - they diverge too
+   * much between the two (different isSvg, a bass-note quirk on the circular wheel, Linear's
+   * realistic-colors branch) to fold in without a leaky parameter list.
+   */
+  static getKeyVisualState(
+    actualIndex: ActualIndex,
+    keyboardUI: KeyboardUIType,
+    isScales: boolean,
+    selectedMusicalKey: MusicalKey,
+    isSelected: boolean,
+    isBassNote: boolean,
+    scalePlaybackMode?: ScalePlaybackMode,
+  ): {
+    chromaticIndex: ChromaticIndex;
+    isBlack: boolean;
+    isDiatonicInScale: boolean;
+    allBaseClasses: string;
+    id: string;
+    noteText: string;
+  } {
+    const chromaticIndex = actualToChromatic(actualIndex);
+    const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
+    const isDiatonicInScale = !isScales || selectedMusicalKey.isNoteInScale(chromaticIndex);
+    const allBaseClasses = this.buildKeyClasses(
+      ["key-base"],
+      isSelected,
+      isBlack,
+      isScales,
+      isBassNote,
+      isDiatonicInScale,
+    );
+    const id = this.StringWithPaddedIndex(`${keyboardUI}Key`, actualIndex);
+    const noteText = this.getNoteText(
+      keyboardUI,
+      chromaticIndex,
+      isScales,
+      selectedMusicalKey,
+      scalePlaybackMode,
+    );
+    return { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText };
   }
 
   static buildKeyClasses(

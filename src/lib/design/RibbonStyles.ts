@@ -17,13 +17,20 @@ export const RIBBON_STYLES = {
 
   /** Shared by both note-row layouts (swatches and ticks) - their cell centers must line up. */
   noteRow: "flex items-end",
-  stepLabel:
-    "absolute top-0 text-center text-[10px] font-medium leading-none text-labels-textDefault",
+  /** Notes ribbon only: ticks are positioned absolutely by semitone offset rather than by equal
+   *  flex cells, so the row needs an explicit height (tickMark h-3 + gap-0.5 + tickLabel h-5). */
+  noteRowProportional: "relative h-[34px]",
   connectorOverlay: "pointer-events-none absolute inset-x-0 top-0",
   connectorBar: "absolute top-0 h-1 rounded-full",
 
   /** Shared by RibbonNoteSwatch and RibbonNoteTick - same cell shape, different contents. */
   noteCell: "flex min-w-0 flex-1 flex-col items-center gap-0.5",
+  /** RibbonNoteTick when positioned by semitone offset instead of by equal flex cell - see
+   *  chromaticPositionStyle. `w-0` + `items-center` centers each child (tick, label) on this
+   *  element's own `left` position without a transform: a zero-width flex container has no space
+   *  to distribute, so alignment splits the child's full width evenly to either side of that
+   *  point. */
+  noteCellAbsolute: "absolute top-0 flex w-0 flex-col items-center gap-0.5 whitespace-nowrap",
   interactiveCell:
     "cursor-pointer rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-keys-scaleBoundaryColor",
 

@@ -18,7 +18,15 @@ export type LabelWithColor = {
 };
 
 export type ScaleRibbonData =
-  | { title: string; kind: "labels"; notes: string[]; steps?: LabelWithColor[] }
+  | {
+      title: string;
+      kind: "labels";
+      notes: string[];
+      steps?: LabelWithColor[];
+      /** Each note's position in semitones from the tonic, 0-12 - lets the ribbon space notes by
+       *  their real chromatic distance instead of by index. */
+      offsets: number[];
+    }
   | { title: string; kind: "swatches"; notes: LabelWithColor[] };
 
 export function buildScaleRibbonData(
@@ -80,11 +88,10 @@ export function getIntervalTypesForScaleFromRoot(key: MusicalKey): Set<NoteGroup
 }
 
 /** Steps are measured, not spelled - interval names would carry a harmonic function a step
- *  doesn't have (e.g. an augmented 2nd mislabeled `m3`, the right size under the wrong name). */
+ *  doesn't have (e.g. an augmented 2nd mislabeled `m3`, the right size under the wrong name). A
+ *  raw semitone count also avoids the W/H mnemonic, which needs translating before it means
+ *  anything, and the ½-step fractions, which still need translating back into semitones. */
 function stepLabel(semitones: number): string {
-  if (semitones === 1) return "H";
-  if (semitones === 2) return "W";
-  if (semitones === 3) return "1½";
   return `${semitones}`;
 }
 
@@ -123,10 +130,23 @@ function scaleDegreeLabels(key: MusicalKey): string[] {
   return [...degrees, `${key.scalePatternLength + 1}`];
 }
 
+/** Semitone position of each ribbon note, 0-12 - the scale's own offsets from the tonic, plus the
+ *  closing octave tonic at 12. Parallel to {@link scaleDegreeLabels}. */
+function noteOffsetsForRibbon(key: MusicalKey): number[] {
+  return [...getScalePatternOffsets(key), 12];
+}
+
 function buildNotesRibbon(key: MusicalKey, showStepAnnotations: boolean): ScaleRibbonData {
   const notes = scaleDegreeLabels(key);
-  if (!showStepAnnotations) return { title: "Notes", kind: "labels", notes };
-  return { title: "Notes", kind: "labels", notes, steps: getStepSegmentsForScale(key) };
+  const offsets = noteOffsetsForRibbon(key);
+  if (!showStepAnnotations) return { title: "Notes", kind: "labels", notes, offsets };
+  return {
+    title: "Notes",
+    kind: "labels",
+    notes,
+    offsets,
+    steps: getStepSegmentsForScale(key),
+  };
 }
 
 function buildFromRootRibbon(key: MusicalKey): ScaleRibbonData {
