@@ -20,6 +20,8 @@ import PlagalCadenceChords from "./songs/Plagal_Cadence";
 import SomethingChords from "./songs/Something";
 import SingForAbsolutionChords from "./songs/Sing_For_Absolution";
 import TheWorldIsNotEnoughChords from "./songs/The_World_Is_Not_Enough";
+import TritoneSubstitutionChords from "./songs/Tritone_Substitution";
+import TwoFiveOneTritoneSubChords from "./songs/Two_Five_One_Tritone_Sub";
 import TwoFiveOneChords from "./songs/Two_Five_One";
 import WithOrWithoutYouChords from "./songs/WithOrWithoutYou";
 
@@ -54,6 +56,16 @@ export const PROGRESSION_REGISTRY: Record<ChordProgressionType, ProgressionRegis
   [ChordProgressionType.Two_Five_One]: {
     slug: "2-5-1",
     chords: TwoFiveOneChords,
+    isPattern: true,
+  },
+  [ChordProgressionType.Tritone_Substitution]: {
+    slug: "tritone-substitution",
+    chords: TritoneSubstitutionChords,
+    isPattern: true,
+  },
+  [ChordProgressionType.Two_Five_One_Tritone_Sub]: {
+    slug: "2-5-1-tritone-sub",
+    chords: TwoFiveOneTritoneSubChords,
     isPattern: true,
   },
   [ChordProgressionType.Andalusian_Cadence]: {

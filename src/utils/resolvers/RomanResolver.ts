@@ -1,5 +1,6 @@
 import { ChordType } from "@/types/enums/ChordType";
 import { AccidentalType } from "@/types/enums/AccidentalType";
+import { OctaveModifier } from "@/types/enums/OctaveModifier";
 
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { RomanChord } from "@/types/RomanChord";
@@ -68,12 +69,18 @@ export class RomanResolver {
     const bassDegree = parsedRoman.bassRoman
       ? scaleDegreeFromRomanNumeral(parsedRoman.bassRoman)
       : undefined;
+    const octaveOverride: OctaveModifier | undefined =
+      parsedRoman.octaveMark === "'"
+        ? OctaveModifier.Up
+        : parsedRoman.octaveMark === ","
+          ? OctaveModifier.Down
+          : undefined;
 
     if (chordType === ChordType.Unknown) {
       throw new Error(`Invalid roman notation ${romanString}`);
     }
 
-    return new RomanChord(ordinal!, chordType, accidental, bassDegree);
+    return new RomanChord(ordinal!, chordType, accidental, bassDegree, octaveOverride);
   }
 
   static parseRomanChordWithDuration(input: string): Durated<RomanChord> {
@@ -87,12 +94,20 @@ interface ParsedRomanLexeme {
   pureRoman: string;
   chordSuffix: string;
   bassRoman: string | undefined;
+  /** Trailing LilyPond-style octave marker: `'` (high slot) or `,` (low slot), if present. */
+  octaveMark: string | undefined;
 }
 
 const accidentalRegex: RegExp = /#|♯|b|♭/;
 const pureRomanRegex: RegExp = /I|II|III|IV|V|VI|VII|i|ii|iii|iv|v|vi|vii/;
+/**
+ * Trailing octave marker, LilyPond-style: `'` forces the resolver's high octave slot,
+ * `,` forces the low slot. Only a single mark is supported since the resolver only has
+ * two octave slots to choose from (unlike LilyPond's unbounded relative octaves).
+ */
+const octaveMarkRegex: RegExp = /'|,/;
 const romanRegex: RegExp = new RegExp(
-  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${ROMAN_CHORD_SUFFIX_ALTERNATION})?(\/(${pureRomanRegex.source}))?$`,
+  `^(${accidentalRegex.source})?(${pureRomanRegex.source})(${ROMAN_CHORD_SUFFIX_ALTERNATION})?(\/(${pureRomanRegex.source}))?(${octaveMarkRegex.source})?$`,
 );
 
 /**
@@ -130,6 +145,7 @@ function splitRomanString(romanString: string): ParsedRomanLexeme {
       pureRoman: match[2],
       chordSuffix: match[3] || "",
       bassRoman: match[5] || undefined,
+      octaveMark: match[6] || undefined,
     };
   }
 
