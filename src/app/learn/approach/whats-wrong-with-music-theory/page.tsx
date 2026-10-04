@@ -36,10 +36,10 @@ const C_MAJOR_TRIAD = [
 
 const C_MAJOR_KEYS = [ixActual(0), ixActual(4), ixActual(7)];
 
-const C_MAJOR_TRIAD_ALL_NATURAL = [
+const C_MAJOR_TRIAD_IN_E_MAJOR = [
   [
     createNoteWithOctave("C", AccidentalType.Natural),
-    createNoteWithOctave("E", AccidentalType.Natural),
+    createNoteWithOctave("E", AccidentalType.None),
     createNoteWithOctave("G", AccidentalType.Natural),
   ],
 ];
@@ -71,27 +71,24 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <h2 className={LEARN_STYLES.h2}>Historical accidents</h2>
 
       <p>
-        The seven-letter alphabet, the black-and-white keyboard layout, sharps and flats bolted on
-        as modifiers - none of this was designed for the harmony we use. It&apos;s a holdover from
-        a much older system, built for monophonic chant centuries before chromatic harmony
-        existed. A chromatic scale has twelve evenly spaced notes, and nothing about how it sounds
-        explains why seven get plain letters and the other five are treated as exceptions. Which
-        keys are white and which are black is a bit arbitrary.
-      </p>
-
-      <p>
-        None of this is going anywhere. The convention is strong and well established, on the
-        staff and on the linear keyboard alike, so we use the notation built around the white keys
-        too. It&apos;s just worth remembering it&apos;s a convention, not a fact about sound.
+        This is what we have: 7 letters on the white keys, with sharps and flats bolted on for the
+        black ones. Notice how arbitrary it is - a chromatic scale has 12 evenly spaced notes, and
+        which keys end up white and which black is a historical accident.
       </p>
 
       <div className="mx-auto w-full max-w-xl">
         <StaticStaffFigure
           chords={C_MAJOR_SCALE}
           highlightedNoteIndices={[]}
-          caption="The 7 letters, C D E F G A B C - and the 5 keys left unlabeled"
+          caption="The 7 letters, C D E F G A B - and the 5 black keys left to be notated with ♯ or ♭ "
         />
       </div>
+
+      <p>
+        None of this is going anywhere. The convention is strong and well established, on the
+        staff and on the linear keyboard alike, so we use the notation built around the white keys
+        too. It&apos;s just worth remembering it&apos;s a convention, not a fact about sound.
+      </p>
 
       <h2 className={LEARN_STYLES.h2}>Enharmonic notation</h2>
 
@@ -122,6 +119,13 @@ export default function WhatsWrongWithMusicTheoryPage() {
         />
       </ComparisonGrid2>
 
+      <p>
+        A remarkable amount of theory instruction is spent litigating which spelling
+        &ldquo;should&rdquo; be used, as if the wrong label were a musical error rather than a
+        clerical one. It&apos;s an argument about convention wearing the costume of an argument
+        about music.
+      </p>
+
       <h2 className={LEARN_STYLES.h2}>Musical keys</h2>
 
       <p>
@@ -136,8 +140,8 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <p>
         The signature also gets in the way of plain chords. Write a C major chord in C minor and the
         signature has already flattened E, so the chord&apos;s E needs a natural sign just to be
-        itself. Push the key further - C♯ major sharps every letter - and the same chord needs a
-        natural on all three notes, just to spell a C major triad.
+        itself. In E major, with 4 sharps, the C and G are sharpened, so the same chord needs
+        naturals on both of them.
       </p>
 
       <ComparisonGrid2>
@@ -148,10 +152,10 @@ export default function WhatsWrongWithMusicTheoryPage() {
           caption="C major chord in the key of C minor"
         />
         <StaticStaffFigure
-          chords={C_MAJOR_TRIAD_ALL_NATURAL}
-          keySignature="C#"
+          chords={C_MAJOR_TRIAD_IN_E_MAJOR}
+          keySignature="E"
           highlightedNoteIndices={C_MAJOR_KEYS}
-          caption="C major chord in the key of C♯ major"
+          caption="C major chord in the key of E major"
         />
       </ComparisonGrid2>
 
@@ -182,16 +186,6 @@ export default function WhatsWrongWithMusicTheoryPage() {
           caption={"6 flats: B♭, E♭, A♭, D♭, G♭, C♭\nBefore Eating A Donut, Get Coffee First"}
         />
       </div>
-
-      <h2 className={LEARN_STYLES.h2}>Turf wars around spelling</h2>
-
-      <p>
-        A remarkable amount of theory instruction is spent litigating whether something
-        &ldquo;should&rdquo; be spelled one way or another - is this a diminished 4th or a major
-        3rd, a G♯ or an A♭ - as if getting the label wrong were a musical error rather than
-        a clerical one. None of it changes what&apos;s sounding. It&apos;s an argument about
-        convention wearing the costume of an argument about music.
-      </p>
 
       <p>
         See{" "}
