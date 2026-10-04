@@ -26,7 +26,7 @@ review progress is visible in git history.
 |---|---|---|---|---|
 | Approach index | `approach/page.tsx` | 0 | | |
 | Why this app | `approach/why-this-app/page.tsx` | 0 | | |
-| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 0 | Examples of painful spellings, context dependencies keys etc. Memorization of key signatures. Excessive focus on memetic tricks that are not that helpful (WHHW)| |
+| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 3.5 | Examples of painful spellings, context dependencies keys etc. Memorization of key signatures. Excessive focus on memetic tricks that are not that helpful (WHHW)| |
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4 | Link to Circle of fifths example| |
 | Color coding | `approach/color-coding/page.tsx` | 3 | | |
 | Accidentals | `approach/accidentals/page.tsx` | 4 | | |

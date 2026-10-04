@@ -1,6 +1,12 @@
 import { AbsoluteChord } from "@/types/AbsoluteChord";
 import { ChordType } from "@/types/enums/ChordType";
-import { InversionIndex, ixActual, toNoteIndices, ixInversion } from "@/types/IndexTypes";
+import {
+  InversionIndex,
+  ixActual,
+  toNoteIndices,
+  ixInversion,
+  ixOctaveOffset,
+} from "@/types/IndexTypes";
 import { NoteConverter } from "@/utils/NoteConverter";
 import { KeyType } from "@/types/enums/KeyType";
 import { DEFAULT_MUSICAL_KEY } from "@/types/Keys/MusicalKey";
@@ -209,7 +215,9 @@ describe("ChordUtils", () => {
   describe("noteIndicesFromAbsoluteChord", () => {
     it("uses root position when bass equals root", () => {
       const chord = new AbsoluteChord("C", ChordType.Major);
-      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(toNoteIndices([0, 4, 7]));
+      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, ixOctaveOffset(0))).toEqual(
+        toNoteIndices([0, 4, 7]),
+      );
     });
 
     it("uses inversion when bass differs (C major / G bass)", () => {
@@ -218,7 +226,9 @@ describe("ChordUtils", () => {
         ChordType.Major,
         NoteConverter.toChromaticIndex("G"),
       );
-      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, 0)).toEqual(toNoteIndices([7, 12, 16]));
+      expect(ChordUtils.noteIndicesFromAbsoluteChord(chord, ixOctaveOffset(0))).toEqual(
+        toNoteIndices([7, 12, 16]),
+      );
     });
   });
 });

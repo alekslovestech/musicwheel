@@ -6,6 +6,7 @@ import {
   ixInversion,
   ActualIndex,
   OffsetIndex,
+  OctaveOffset,
 } from "../types/IndexTypes";
 import { AbsoluteChord } from "../types/AbsoluteChord";
 import { ChromaticIndex, makeChromaticIndex } from "../types/ChromaticIndex";
@@ -16,7 +17,10 @@ import { IndexUtils } from "./IndexUtils";
 import { ChordReference, makeChordReference } from "@/types/interfaces/ChordReference";
 
 export class ChordUtils {
-  static noteIndicesFromAbsoluteChord(chord: AbsoluteChord, rootOctaveOffset: number): NoteIndices {
+  static noteIndicesFromAbsoluteChord(
+    chord: AbsoluteChord,
+    rootOctaveOffset: OctaveOffset,
+  ): NoteIndices {
     return this.calculateChordNotesFromChordReference(
       this.chordReferenceFromAbsoluteChord(chord, rootOctaveOffset),
     );
@@ -89,7 +93,7 @@ export class ChordUtils {
 
   private static chordReferenceFromAbsoluteChord(
     chord: AbsoluteChord,
-    rootOctaveOffset: number,
+    rootOctaveOffset: OctaveOffset,
   ): ChordReference {
     const inversion = this.inversionIndexForSlashBass(
       chord.chordType,
