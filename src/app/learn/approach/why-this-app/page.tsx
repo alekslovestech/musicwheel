@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
+import { IntervalType } from "@/types/enums/IntervalType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -24,39 +24,66 @@ export default function WhyThisAppPage() {
       <h1 className={LEARN_STYLES.h1}>Why This App</h1>
 
       <p>
-        Music theory is worth learning. It explains why some combinations of notes feel settled and
-        others feel restless, and it gives you a vocabulary for talking about that. But a lot of
-        what gets taught alongside it isn&apos;t really about how music works - it&apos;s about how
-        music got written down, or how it happens to sit on a particular instrument. Those are
-        different things, and conflating them is where a lot of the confusion comes from. A student
-        can spend an hour arguing about whether a note is A-sharp or B-flat and come away having
-        learned nothing about how the chord actually sounds.
+        <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
+          What&apos;s Wrong with Music Theory
+        </Link>{" "}
+        covers the parts of theory that are about notation rather than sound. This page is about
+        the rest - the parts that describe harmony itself, which is what this app is built around.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>12 equal notes</h2>
+
+      <p>
+        We show a piano for reference, because it&apos;s a familiar layout and a convenient way to
+        play a sound back. But the arrangement of black and white keys doesn&apos;t explain the
+        harmony, and understanding a chord doesn&apos;t require a piano, or any instrument at all.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>Intervals are distances</h2>
+
+      <p>
+        Intervals and chord quality are a small, useful vocabulary for what you&apos;re hearing. Terms like
+        &ldquo;Minor 3rd,&rdquo; &ldquo;Perfect 5th,&rdquo; &ldquo;dominant 7th&rdquo; are worth
+        knowing because they name something about the sound, not about how it's written.
       </p>
 
       <p>
-        This app is opinionated about which is which. It keeps the parts of theory that describe
-        harmony itself, and it deliberately drops the parts that exist for notational or historical
-        reasons - the ones that tend to confuse a learner or start a pointless argument about
-        naming, without changing anything about what you&apos;d hear.
+        An interval is a number of semitones. The notes of a Major 3rd are always the same "distance" from each other. 
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>What actually matters</h2>
+      <div className="mx-auto w-full max-w-sm">
+        <StaticChordFigure
+          rootNote="C"
+          chordType={IntervalType.Major3}
+          inversionIndex={0}
+          isCompact={true}
+          caption="C–E or C–F♭: one picture, 4 semitones"
+        />
+      </div>
+
+      <h2 className={LEARN_STYLES.h2}>Keys don&apos;t change the harmony</h2>
 
       <p>
-        <strong>The harmony itself</strong> - which notes are sounding together, and what that
-        combination feels like. Everything else on this page is in service of this one thing.
+        A chord sounds the same whatever key it&apos;s in, so on the wheel it looks the same too -
+        no key signature to work against, no naturals to cancel it. The same goes for chord
+        progressions: a ii-V-I is the same shape whether it starts on C or on F♯.
       </p>
 
-      <p>
-        <strong>Intervals and chord quality</strong> - a small, useful vocabulary for what
-        you&apos;re hearing. &ldquo;Minor third,&rdquo; &ldquo;major triad,&rdquo; &ldquo;dominant
-        seventh&rdquo; are worth knowing because they name something about the sound, not about the
-        page.
-      </p>
+      <div className="mx-auto w-full max-w-sm">
+        <StaticChordFigure
+          rootNote="C"
+          chordType={ChordType.Major}
+          inversionIndex={0}
+          isCompact={true}
+          caption="C major, whatever key it's in"
+        />
+      </div>
+
+      <h2 className={LEARN_STYLES.h2}>See the pattern, don&apos;t recite it</h2>
 
       <p>
-        <strong>Scale names</strong> - Dorian, harmonic minor, and the rest are shorthand for
-        specific, recognizable patterns of steps. Worth learning the pattern; see{" "}
+        Scale names - Dorian, harmonic minor, and the rest - are shorthand for specific,
+        recognizable patterns of semitones. Worth learning the pattern; see{" "}
         <Link href="/learn/scales" className={LEARN_STYLES.link}>
           Scales
         </Link>{" "}
@@ -64,74 +91,16 @@ export default function WhyThisAppPage() {
       </p>
 
       <p>
-        <strong>Chord progressions and harmony over time</strong> - how one chord moves to the next,
-        and how that motion repeats and develops, regardless of which key it happens to be
-        transposed into. A ii-V-I is the same shape whether it starts on C or on F-sharp.
-      </p>
-
-      <h2 className={LEARN_STYLES.h2}>What we leave out</h2>
-
-      <p>
-        <strong>Chord spelling.</strong> Whether a note is written as G-sharp or A-flat matters to
-        someone reading sheet music in a particular key, and not at all to your ear. You will never
-        see a double sharp or a double flat in this app, even on the rare chord where that&apos;s
-        the &ldquo;correct&rdquo; spelling - the wheel just shows the note.
-      </p>
-
-      <p>
-        <strong>Whole-whole-half-whole-whole-whole-half.</strong> The step recipe is a real pattern,
-        but memorizing a string of letters is a workaround for not being able to see the pattern
-        directly. Once you can see it, you don&apos;t need to recite it.
-      </p>
-
-      <p>
-        <strong>What key you&apos;re in.</strong> Key signatures tell you how a piece is notated,
-        not how it sounds. The wheel doesn&apos;t care what key a chord or scale is in - transposing
-        just rotates the same shape to a different starting point.
-      </p>
-
-      <p>
-        <strong>Where it sits on an instrument.</strong> We show a piano for reference, because
-        it&apos;s a familiar layout and a convenient way to play a sound back. But the specific
-        arrangement of black and white keys is an accident of one particular instrument&apos;s
-        design - it doesn&apos;t explain the harmony, and it can make an otherwise simple
-        relationship look irregular for no musical reason. Understanding a chord doesn&apos;t
-        require a piano, or a guitar, or any instrument at all.
-      </p>
-
-      <h2 className={LEARN_STYLES.h2}>Why the wheel</h2>
-
-      <p>
-        The chromatic circle is a cleaner way to look at harmony than a keyboard or a staff, because
-        it&apos;s built around one idea: distance. Notes are arranged by how far apart they are, not
-        by which letter they&apos;re named after or where they happen to fall on a particular
-        instrument. Transposing a chord to a new key doesn&apos;t reshape it or relabel half its
-        notes - it just spins the same shape to a new position.
-      </p>
-
-      <ComparisonGrid2>
-        <StaticChordFigure
-          rootNote="C"
-          chordType={ChordType.Minor7}
-          inversionIndex={0}
-          caption="C minor 7th: one shape, one set of colors."
-        />
-        <StaticChordFigure
-          rootNote="F#"
-          chordType={ChordType.Minor7}
-          inversionIndex={0}
-          caption="F-sharp minor 7th: the exact same shape, just rotated - nothing about it got harder to read."
-        />
-      </ComparisonGrid2>
-
-      <p>
-        That&apos;s also why the wheel is colored the way it is: things that sound similar, look
-        similar. Every wedge and every chord blend is derived from interval distance rather than
-        note names, so a relationship you can hear shows up as a relationship you can see - see{" "}
+        The wheel arranges and colors notes by distance, so a relationship you can hear shows up as
+        one you can see. See{" "}
+        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+          The Chromatic Circle
+        </Link>{" "}
+        for how it works, and{" "}
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>{" "}
-        for how that works.
+        for the colors.
       </p>
     </>
   );

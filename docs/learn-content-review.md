@@ -25,9 +25,9 @@ review progress is visible in git history.
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
 | Approach index | `approach/page.tsx` | 0 | | |
-| Why this app | `approach/why-this-app/page.tsx` | 0 | | |
-| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 3.5 | Examples of painful spellings, context dependencies keys etc. Memorization of key signatures. Excessive focus on memetic tricks that are not that helpful (WHHW)| |
-| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4 | Link to Circle of fifths example| |
+| Why this app | `approach/why-this-app/page.tsx` | 4 | | |
+| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4 | | |
+| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4 | | |
 | Color coding | `approach/color-coding/page.tsx` | 3 | | |
 | Accidentals | `approach/accidentals/page.tsx` | 4 | | |
 | What's useful about music theory | Not created yet | 0 | What mood does this create? What's the easiest way to recognize a Harmonic Major? A half-diminished chord? | | |
