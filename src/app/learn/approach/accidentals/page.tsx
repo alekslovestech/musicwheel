@@ -10,7 +10,7 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/accidentals",
   "Accidentals",
-  "Why the app plays down sharps and flats on the keyboard, resolves a real spelling once you're in a key, and never once shows a double sharp or double flat.",
+  "Why the app plays down sharps and flats on the keyboard, and never once shows a double sharp or double flat.",
 );
 
 export default function AccidentalsPage() {
@@ -59,8 +59,8 @@ export default function AccidentalsPage() {
 
       <p>
         See{" "}
-        <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
-          What&apos;s Wrong with Music Theory
+        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
+          Why This App
         </Link>{" "}
         for why that trade is worth making, and{" "}
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>

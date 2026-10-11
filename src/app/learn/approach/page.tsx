@@ -38,14 +38,21 @@ export default function ApproachIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/approach/whats-useful-about-music-theory" className={LEARN_STYLES.link}>
+          What&apos;s Useful About Music Theory
+        </Link>
+      </h2>
+      <p>
+        The parts that describe sound: 12 equal notes, intervals as distances, chords as shapes, and
+        the vocabulary for recognizing what you hear.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
           Why This App
         </Link>
       </h2>
-      <p>
-        The problems we&apos;re trying to solve: what matters about harmony, and what&apos;s just
-        historical noise.
-      </p>
+      <p>How those useful parts shaped the way the app draws harmony.</p>
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>

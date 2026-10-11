@@ -11,7 +11,7 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/why-this-app",
   "Why This App",
-  "The problems this app is trying to solve: which parts of music theory actually matter for hearing harmony, and which parts are historical noise.",
+  "How the useful parts of music theory shaped the app: a circle of 12 notes, distance shown as position and color, chords as shapes, and keys as rotation.",
 );
 
 export default function WhyThisAppPage() {
@@ -24,31 +24,35 @@ export default function WhyThisAppPage() {
       <h1 className={LEARN_STYLES.h1}>Why This App</h1>
 
       <p>
-        <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
-          What&apos;s Wrong with Music Theory
+        <Link href="/learn/approach/whats-useful-about-music-theory" className={LEARN_STYLES.link}>
+          What&apos;s Useful About Music Theory
         </Link>{" "}
-        covers the parts of theory that are about notation rather than sound. This page is about
-        the rest - the parts that describe harmony itself, which is what this app is built around.
+        lists the parts of theory that describe sound. Each one shaped a decision about how this app
+        draws harmony.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>12 equal notes</h2>
+      <h2 className={LEARN_STYLES.h2}>A circle, not a keyboard</h2>
 
       <p>
-        We show a piano for reference, because it&apos;s a familiar layout and a convenient way to
-        play a sound back. But the arrangement of black and white keys doesn&apos;t explain the
-        harmony, and understanding a chord doesn&apos;t require a piano, or any instrument at all.
+        There are 12 equal notes and the pattern repeats every octave, so the wheel places them
+        evenly around a circle. We also show a piano, because it&apos;s a familiar layout and a
+        convenient way to play a sound back - but its arrangement of black and white keys
+        doesn&apos;t explain the harmony. See{" "}
+        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+          The Chromatic Circle
+        </Link>{" "}
+        for why a circle beats a line.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>Intervals are distances</h2>
+      <h2 className={LEARN_STYLES.h2}>Distance you can see</h2>
 
       <p>
-        Intervals and chord quality are a small, useful vocabulary for what you&apos;re hearing. Terms like
-        &ldquo;Minor 3rd,&rdquo; &ldquo;Perfect 5th,&rdquo; &ldquo;dominant 7th&rdquo; are worth
-        knowing because they name something about the sound, not about how it's written.
-      </p>
-
-      <p>
-        An interval is a number of semitones. The notes of a Major 3rd are always the same "distance" from each other. 
+        Intervals are distances, so the wheel shows them as distances: 2 notes a major 3rd apart are
+        always the same angle apart, and wear the same color, wherever they sit. See{" "}
+        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
+          Color Coding
+        </Link>{" "}
+        for how the colors are assigned.
       </p>
 
       <div className="mx-auto w-full max-w-sm">
@@ -57,16 +61,16 @@ export default function WhyThisAppPage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           isCompact={true}
-          caption="C–E or C–F♭: one picture, 4 semitones"
+          caption="C–E: major 3rd, 4 semitones"
         />
       </div>
 
-      <h2 className={LEARN_STYLES.h2}>Keys don&apos;t change the harmony</h2>
+      <h2 className={LEARN_STYLES.h2}>Chords are polygons</h2>
 
       <p>
-        A chord sounds the same whatever key it&apos;s in, so on the wheel it looks the same too -
-        no key signature to work against, no naturals to cancel it. The same goes for chord
-        progressions: a ii-V-I is the same shape whether it starts on C or on F♯.
+        A chord is a shape made of intervals, so on the wheel it&apos;s literally a shape. Every
+        major triad is the same triangle; every minor triad is that triangle flipped. Chord quality
+        becomes something you recognize at a glance.
       </p>
 
       <div className="mx-auto w-full max-w-sm">
@@ -75,32 +79,34 @@ export default function WhyThisAppPage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           isCompact={true}
-          caption="C major, whatever key it's in"
+          caption="C major: the major-triad triangle"
         />
       </div>
 
-      <h2 className={LEARN_STYLES.h2}>See the pattern, don&apos;t recite it</h2>
+      <h2 className={LEARN_STYLES.h2}>Keys rotate, they don&apos;t respell</h2>
 
       <p>
-        Scale names - Dorian, harmonic minor, and the rest - are shorthand for specific,
-        recognizable patterns of semitones. Worth learning the pattern; see{" "}
-        <Link href="/learn/scales" className={LEARN_STYLES.link}>
-          Scales
-        </Link>{" "}
-        for how they relate to each other.
+        Transposing doesn&apos;t change any relationship, so changing key on the wheel just rotates
+        the shape. There&apos;s no key signature to work against and no naturals to cancel it, and a
+        ii-V-I traces the same path whether it starts on C or on F♯.
       </p>
 
+      <h2 className={LEARN_STYLES.h2}>Spelling stays out of the way</h2>
+
       <p>
-        The wheel arranges and colors notes by distance, so a relationship you can hear shows up as
-        one you can see. See{" "}
-        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-          The Chromatic Circle
+        Since G♯ and A♭ sound the same, the app follows one consistent convention for naming the
+        black keys rather than making spelling a lesson of its own. See{" "}
+        <Link href="/learn/approach/accidentals" className={LEARN_STYLES.link}>
+          Accidentals
         </Link>{" "}
-        for how it works, and{" "}
-        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-          Color Coding
-        </Link>{" "}
-        for the colors.
+        for the details.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>Hear it as you build it</h2>
+
+      <p>
+        Recognition comes from hearing, not from reading. Everything you build in the app can be
+        played, so each shape on the wheel gets connected to the sound it makes.
       </p>
     </>
   );
