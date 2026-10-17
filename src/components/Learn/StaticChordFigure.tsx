@@ -24,7 +24,7 @@ export function StaticChordFigure({
   rootNote: string;
   chordType: NoteGroupingId;
   inversionIndex: number;
-  caption: string;
+  caption: React.ReactNode;
   isCompact?: boolean;
   showLabels?: boolean;
 }) {

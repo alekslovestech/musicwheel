@@ -9,12 +9,23 @@ import { LEARN_STYLES } from "@/lib/design";
  * silently broken layout.
  */
 
+/** `caption` is a shared caption for the pair, centered underneath both figures - for when what
+ * the 2 figures have in common (or how they relate) is the point, rather than either one alone. */
 export function ComparisonGrid2({
   children,
+  caption,
 }: {
   children: readonly [React.ReactNode, React.ReactNode];
+  caption?: React.ReactNode;
 }) {
-  return <div className={LEARN_STYLES.comparisonGrid}>{children}</div>;
+  const grid = <div className={LEARN_STYLES.comparisonGrid}>{children}</div>;
+  if (!caption) return grid;
+  return (
+    <figure className="flex flex-col gap-tight">
+      {grid}
+      <figcaption className="text-center text-sm text-labels-textDefault">{caption}</figcaption>
+    </figure>
+  );
 }
 
 /** Two figures side by side in portrait, the third centered underneath; all three in one row
