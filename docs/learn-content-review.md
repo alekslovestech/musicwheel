@@ -27,7 +27,7 @@ review progress is visible in git history.
 | Approach index | `approach/page.tsx` | 4 | | |
 | What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 | | |
 | What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |  | |
-| Why this app | `approach/why-this-app/page.tsx` | 3 | Rewritten as design consequences of What's Useful (fact → how the app draws it). No new theory claims here - those live in What's Useful. | |
+| Why this app | `approach/why-this-app/page.tsx` | 3.5 | | |
 
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 | | |
 | Color coding | `approach/color-coding/page.tsx` | 4.5 | | |
@@ -50,12 +50,12 @@ review progress is visible in git history.
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
 | Scales index | `scales/page.tsx` | 0 | | |
-| Scale degrees | `scales/scale-degrees/page.tsx` | 0 | | |
+| Scale degrees | `scales/scale-degrees/page.tsx` | 3 | | |
 | Greek modes | `scales/greek-modes/page.tsx` | 3 | | |
-| Modal families | `scales/modal-families/page.tsx` | 0 | | |
-| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 0 | | |
+| Modal families | `scales/modal-families/page.tsx` | 3 | | |
+| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3 | | |
 | Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4 | | |
-| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 0 | | |
+| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3 | | |
 
 ## Scales / Comparisons
 
