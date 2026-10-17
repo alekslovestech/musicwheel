@@ -21,7 +21,8 @@ export default function MajorVsMixolydianPage() {
       <h1 className={LEARN_STYLES.h1}>Major vs. Mixolydian</h1>
 
       <p>
-        The first of these is the major scale - Ionian, in Greek-mode terms - and both start on C.
+        The first of these is the <i>major scale</i> - <i>Ionian</i>, in Greek-mode terms - and both
+        start on C.
       </p>
 
       <ScaleDegreeComparison
@@ -35,10 +36,10 @@ export default function MajorVsMixolydianPage() {
 
       <p>
         That single degree is the difference between a leading tone that pulls back to the tonic and
-        a flat seventh that doesn&apos;t - the note that gives Mixolydian its bluesy,
-        dominant-seventh pull instead of the major scale&apos;s settled resolution. Reading it is
-        one thing; the difference is much more obvious held under a drone, which is what the links
-        under each figure are for.
+        a flat seventh that doesn&apos;t - the note that gives <i>Mixolydian</i> its bluesy,
+        dominant-seventh pull instead of the <i>major scale</i>&apos;s settled resolution. Reading
+        it is one thing; the difference is much more obvious held under a drone, which is what the
+        links under each figure are for.
       </p>
     </>
   );

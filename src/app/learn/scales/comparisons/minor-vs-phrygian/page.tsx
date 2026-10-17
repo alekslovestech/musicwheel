@@ -21,8 +21,8 @@ export default function MinorVsPhrygianPage() {
       <h1 className={LEARN_STYLES.h1}>Minor vs. Phrygian</h1>
 
       <p>
-        The first of these is the natural minor scale - Aeolian, in Greek-mode terms - and both
-        start on C.
+        The first of these is the <i>natural minor scale</i> - <i>Aeolian</i>, in Greek-mode terms -
+        and both start on C.
       </p>
 
       <ScaleDegreeComparison
@@ -35,11 +35,11 @@ export default function MinorVsPhrygianPage() {
       />
 
       <p>
-        That single degree is the whole reason Phrygian sounds unsettled where the natural minor
-        sounds merely sad: a half-step down from the tonic is the tightest interval a scale can open
-        right at its root, and no other common minor mode has it. Reading it is one thing; the
-        difference is much more obvious held under a drone, which is what the links under each
-        figure are for.
+        That single degree is the whole reason <i>Phrygian</i> sounds unsettled where the{" "}
+        <i>natural minor</i> sounds merely sad: a half-step down from the tonic is the tightest
+        interval a scale can open right at its root, and no other common minor mode has it. Reading
+        it is one thing; the difference is much more obvious held under a drone, which is what the
+        links under each figure are for.
       </p>
     </>
   );

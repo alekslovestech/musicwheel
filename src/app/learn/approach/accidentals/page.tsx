@@ -49,8 +49,7 @@ export default function AccidentalsPage() {
       <h2 className={LEARN_STYLES.h2}>Never a double accidental (𝄪/♭♭)</h2>
 
       <p>
-        Push the proper spelling rules far enough and you end up with a double accidental. A fully
-        diminished 7th stacks minor 3rds all the way up, so strict spelling of C dim7 is C, E♭, G♭,
+        Push the proper spelling rules far enough and you end up with a double accidental. A fully <i>diminished 7th</i> stacks minor 3rds all the way up, so strict spelling of C dim7 is C, E♭, G♭,
         B𝄫 - not the A you&apos;d actually play. That&apos;s standard notation, and here the app
         breaks with it: its accidental type only has natural, sharp, and flat, so it falls back to
         the plain single-accidental name (A) instead. You will never see a double sharp or double

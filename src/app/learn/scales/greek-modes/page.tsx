@@ -29,13 +29,13 @@ export default function GreekModesPage() {
       </p>
 
       <ol className="list-decimal pl-6">
-        <li>Ionian</li>
-        <li>Dorian</li>
-        <li>Phrygian</li>
-        <li>Lydian</li>
-        <li>Mixolydian</li>
-        <li>Aeolian</li>
-        <li>Locrian</li>
+        <li><i>Ionian</i></li>
+        <li><i>Dorian</i></li>
+        <li><i>Phrygian</i></li>
+        <li><i>Lydian</i></li>
+        <li><i>Mixolydian</i></li>
+        <li><i>Aeolian</i></li>
+        <li><i>Locrian</i></li>
       </ol>
 
       <p>
@@ -49,15 +49,13 @@ export default function GreekModesPage() {
       <h2 className={LEARN_STYLES.h2}>One pattern, seven tonics</h2>
 
       <p>
-        Play only the white keys on a piano, starting and ending on C, and you get C Ionian. Start
-        that same run of white keys on D instead and stop an octave later, and you get D Dorian -
+        Play only the white keys on a piano, starting and ending on C, and you get C <i>Ionian</i>. Start
+        that same run of white keys on D instead and stop an octave later, and you get D <i>Dorian</i> -
         Every Greek mode works this way: rotate which note you start on within one fixed collection, and
-        you move between all 7 modes without ever picking up or dropping a single note. C
-        Ionian&apos;s six other rotations are D Dorian, E Phrygian, F Lydian, G Mixolydian, A
-        Aeolian, and B Locrian - all seven sharing one key signature, distinguished only by which
+        you move between all 7 modes without ever picking up or dropping a single note. C <i>Ionian</i>&apos;s six other rotations are D <i>Dorian</i>, E <i>Phrygian</i>, F <i>Lydian</i>, G <i>Mixolydian</i>, A <i>Aeolian</i>, and B <i>Locrian</i> - all seven sharing one key signature, distinguished only by which
         note is the tonic. &ldquo;A minor&rdquo; being called the relative minor of C major is just
-        this same idea under its more familiar name: Aeolian is the Greek name for the natural
-        minor scale, and A Aeolian is C Ionian&apos;s sixth rotation.
+        this same idea under its more familiar name: <i>Aeolian</i> is the Greek name for the <i>natural
+        minor scale</i>, and A <i>Aeolian</i> is C <i>Ionian</i>&apos;s sixth rotation.
       </p>
 
       <ComparisonGrid2>
@@ -85,12 +83,11 @@ export default function GreekModesPage() {
 
       <p>
         Because relative modes share every note, they also share every chord you can build from
-        those notes. The triads available in C Ionian - C, D minor, E minor, F, G, A minor, and B
-        diminished - are the same seven triads available in A Aeolian, D Dorian, or any of the other
+        those notes. The triads available in C <i>Ionian</i> - C, D minor, E minor, F, G, A minor, and B
+        diminished - are the same seven triads available in A <i>Aeolian</i>, D <i>Dorian</i>, or any of the other
         five. Nothing about the chord palette changes when you move between relative modes; only
         which chord acts as home does. C major resolves strongly to C because C is the tonic in that
-        context - the same C major chord, played in A Aeolian&apos;s context, is just the bright
-        major chord sitting on the third degree, with no special claim on being &ldquo;home.&rdquo;
+        context - the same C <i>major chord</i>, played in A <i>Aeolian</i>&apos;s context, is just the bright <i>major chord</i> sitting on the third degree, with no special claim on being &ldquo;home.&rdquo;
       </p>
     </>
   );

@@ -67,8 +67,8 @@ export default function HarmonicScalesPage() {
 
       <p>
         Both of the Double Harmonic scales carry two of these <i>augmented 2nd</i> intervals instead of one: the ♭6-to-7 gap, plus
-        a second, identical interval elsewhere - between ♭2 and 3 in Double Harmonic Major, between ♭3 and
-        ♯4 in Hungarian Minor.
+        a second, identical interval elsewhere - between ♭2 and 3 in <i>Double Harmonic Major</i>, between ♭3 and
+        ♯4 in <i>Hungarian Minor</i>.
       </p>
 
       <ComparisonGrid2>

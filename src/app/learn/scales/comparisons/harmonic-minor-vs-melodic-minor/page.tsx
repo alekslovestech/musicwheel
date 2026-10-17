@@ -21,7 +21,7 @@ export default function HarmonicMinorVsMelodicMinorPage() {
       <h1 className={LEARN_STYLES.h1}>Harmonic Minor vs. Melodic Minor</h1>
 
       <p>
-        Both of these start on C, and both keep the raised seventh that a plain natural minor
+        Both of these start on C, and both keep the raised seventh that a plain <i>natural minor</i>{" "}
         doesn&apos;t have - the leading tone that pulls back to the tonic.
       </p>
 
@@ -34,12 +34,12 @@ export default function HarmonicMinorVsMelodicMinorPage() {
       />
 
       <p>
-        That single degree is the whole reason Harmonic Minor has its stretched, almost
+        That single degree is the whole reason <i>Harmonic Minor</i> has its stretched, almost
         Middle-Eastern gap between the sixth and seventh - a step and a half that no other common
-        scale leaves open. Melodic Minor closes it by raising the sixth, trading that exotic leap
-        for a scale that runs smoothly in both directions, which is the whole point of its name.
-        Reading it is one thing; the difference is much more obvious held under a drone, which is
-        what the links under each figure are for.
+        scale leaves open. <i>Melodic Minor</i> closes it by raising the sixth, trading that exotic
+        leap for a scale that runs smoothly in both directions, which is the whole point of its
+        name. Reading it is one thing; the difference is much more obvious held under a drone, which
+        is what the links under each figure are for.
       </p>
     </>
   );

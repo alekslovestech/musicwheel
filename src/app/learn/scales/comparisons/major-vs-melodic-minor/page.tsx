@@ -35,13 +35,13 @@ export default function MajorVsMelodicMinorPage() {
       />
 
       <p>
-        That single note is the cleanest way to describe Melodic Minor there is - not the natural
-        minor scale with two degrees raised, but the major scale with exactly one degree lowered.
-        Every other minor color a scale can have - the flat sixth of harmonic minor, the flat
-        seventh of natural minor - is simply absent here; Melodic Minor keeps the major scale&apos;s
-        brighter upper half intact and touches only the third. Reading it is one thing; the
-        difference is much more obvious held under a drone, which is what the links under each
-        figure are for.
+        That single note is the cleanest way to describe <i>Melodic Minor</i> there is - not the{" "}
+        <i>natural minor scale</i> with two degrees raised, but the <i>major scale</i> with exactly
+        one degree lowered. Every other minor color a scale can have - the flat sixth of{" "}
+        <i>harmonic minor</i>, the flat seventh of <i>natural minor</i> - is simply absent here;{" "}
+        <i>Melodic Minor</i> keeps the <i>major scale</i>&apos;s brighter upper half intact and
+        touches only the third. Reading it is one thing; the difference is much more obvious held
+        under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

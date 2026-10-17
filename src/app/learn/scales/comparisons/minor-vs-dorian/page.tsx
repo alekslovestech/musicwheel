@@ -21,8 +21,8 @@ export default function MinorVsDorianPage() {
       <h1 className={LEARN_STYLES.h1}>Minor vs. Dorian</h1>
 
       <p>
-        The first of these is the natural minor scale - Aeolian, in Greek-mode terms - and both
-        start on C.
+        The first of these is the <i>natural minor scale</i> - <i>Aeolian</i>, in Greek-mode terms -
+        and both start on C.
       </p>
 
       <ScaleDegreeComparison
@@ -34,9 +34,10 @@ export default function MinorVsDorianPage() {
       />
 
       <p>
-        That single degree is why Dorian is the brighter minor - it is the scale that keeps a minor
-        third but refuses the minor sixth. Reading it is one thing; the difference is much more
-        obvious held under a drone, which is what the links under each figure are for.
+        That single degree is why <i>Dorian</i> is the brighter minor - it is the scale that keeps a{" "}
+        <i>minor third</i> but refuses the <i>minor sixth</i>. Reading it is one thing; the
+        difference is much more obvious held under a drone, which is what the links under each
+        figure are for.
       </p>
     </>
   );

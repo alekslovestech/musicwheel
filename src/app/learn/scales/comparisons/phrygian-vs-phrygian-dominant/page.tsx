@@ -21,7 +21,7 @@ export default function PhrygianVsPhrygianDominantPage() {
       <h1 className={LEARN_STYLES.h1}>Phrygian vs. Phrygian Dominant</h1>
 
       <p>
-        Both of these start on C, and both hold the flat second that gives Phrygian its
+        Both of these start on C, and both hold the flat second that gives <i>Phrygian</i> its
         unmistakable, unsettled sound - the half-step down from the tonic that no other minor mode
         has.
       </p>
@@ -35,11 +35,11 @@ export default function PhrygianVsPhrygianDominantPage() {
       />
 
       <p>
-        That single degree is the whole difference between a minor mode and what is really a major
-        third sitting one half-step above a flat second - the gap listeners hear as “exotic,” and
-        the reason Phrygian Dominant turns up under names like the Spanish or Gypsy scale. Reading
-        the two side by side is one thing; the difference is much more obvious held under a drone,
-        which is what the links under each figure are for.
+        That single degree is the whole difference between a minor mode and what is really a{" "}
+        <i>major third</i> sitting one half-step above a flat second - the gap listeners hear as
+        “exotic,” and the reason <i>Phrygian Dominant</i> turns up under names like the Spanish or
+        Gypsy scale. Reading the two side by side is one thing; the difference is much more obvious
+        held under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

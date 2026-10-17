@@ -119,8 +119,8 @@ export default function IntervalInversionsPage() {
       <h2 className={LEARN_STYLES.h2}>Same starting note, two complementary distances</h2>
 
       <p>
-        Start from C and go up a semitone, and you land on Db - a minor 2nd. Start from that same C
-        and go up eleven semitones instead, and you land on B - a major 7th. Same starting note both
+        Start from C and go up a semitone, and you land on Db - a <i>minor 2nd</i>. Start from that same C
+        and go up eleven semitones instead, and you land on B - a <i>major 7th</i>. Same starting note both
         times; the two distances always add up to twelve semitones between them.
       </p>
 
@@ -152,7 +152,7 @@ export default function IntervalInversionsPage() {
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>{" "}
-        showing up again: a minor 2nd and a major 7th get the same color on the wheel because
+        showing up again: a <i>minor 2nd</i> and a <i>major 7th</i> get the same color on the wheel because
         they&apos;re the same distance, just going the short way around versus the long way around.
       </p>
 
@@ -160,7 +160,7 @@ export default function IntervalInversionsPage() {
 
       <p>
         The same pattern holds all the way through. Six of the seven interval classes pair up this
-        way; the tritone doesn&apos;t - six semitones is exactly half of twelve, so subtracting it
+        way; the <i>tritone</i> doesn&apos;t - six semitones is exactly half of twelve, so subtracting it
         from twelve just gives you six back. It&apos;s its own inversion, with nowhere else to land.
       </p>
 

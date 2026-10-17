@@ -72,7 +72,7 @@ export default function ScalesIndexPage() {
         </Link>
         <LearnTags tags={[LearnTag.Scales]} />
       </h2>
-      <p>Other scales with famous rotations of their own, the way the major scale has the Greek modes.</p>
+      <p>Other scales with famous rotations of their own, the way the <i>major scale</i> has the Greek modes.</p>
     </>
   );
 }

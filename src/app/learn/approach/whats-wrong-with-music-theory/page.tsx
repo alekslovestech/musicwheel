@@ -93,7 +93,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <h2 className={LEARN_STYLES.h2}>Enharmonic notation</h2>
 
       <p>
-        G♯ and A♭ are the same pitch. Which name is &ldquo;correct&rdquo; in a given passage
+        F♯ and G♭ are the same pitch. Which name is &ldquo;correct&rdquo; in a given passage
         is a rule about how a scale&apos;s letters are supposed to avoid repeating, not a fact you
         can hear. Push that rule far enough and it produces double sharps and double flats - a
         symbol whose entire job is to keep the spelling grammatically tidy on a page, for a note
@@ -101,8 +101,8 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <p>
-        The same goes for intervals. C up to F♯ is an augmented 4th; C up to G♭ is a diminished
-        5th. On paper they sit on different lines and carry different names. On the keyboard
+        The same goes for intervals. C up to F♯ is an <i>augmented 4th</i>; C up to G♭ is a <i>diminished
+        5th</i>. On paper they sit on different lines and carry different names. On the keyboard
         they&apos;re the same two keys, 6 semitones apart.
       </p>
 
@@ -138,7 +138,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <p>
-        The signature also gets in the way of plain chords. Write a C major chord in C minor and the
+        The signature also gets in the way of plain chords. Write a C <i>major chord</i> in C minor and the
         signature has already flattened E, so the chord&apos;s E needs a natural sign just to be
         itself. In E major, with 4 sharps, the C and G are sharpened, so the same chord needs
         naturals on both of them.

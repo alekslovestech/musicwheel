@@ -24,7 +24,7 @@ export default function MajorVsMinorPage() {
       <h1 className={LEARN_STYLES.h1}>Major and Minor Triads</h1>
 
       <p>
-        The major triad and the minor triad are the two chords Western music leans on most. Built
+        The <i>major triad</i> and the <i>minor triad</i> are the two chords Western music leans on most. Built
         on the same root, they differ by exactly one note - the 3rd - and that single semitone is
         the whole difference between bright and dark. G major is G, B, D; G minor is the same G and
         D with the third dropped to Bb.

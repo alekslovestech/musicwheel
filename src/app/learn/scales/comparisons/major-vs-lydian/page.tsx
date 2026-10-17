@@ -21,7 +21,8 @@ export default function MajorVsLydianPage() {
       <h1 className={LEARN_STYLES.h1}>Major vs. Lydian</h1>
 
       <p>
-        The first of these is the major scale - Ionian, in Greek-mode terms - and both start on C.
+        The first of these is the <i>major scale</i> - <i>Ionian</i>, in Greek-mode terms - and both
+        start on C.
       </p>
 
       <ScaleDegreeComparison
@@ -33,10 +34,10 @@ export default function MajorVsLydianPage() {
       />
 
       <p>
-        That single degree is why Lydian is called the brighter major - raising the fourth removes
-        the only note in the major scale that leans toward the tonic from above, leaving a scale
-        that floats rather than resolves. Reading it is one thing; the difference is much more
-        obvious held under a drone, which is what the links under each figure are for.
+        That single degree is why <i>Lydian</i> is called the brighter major - raising the fourth
+        removes the only note in the <i>major scale</i> that leans toward the tonic from above,
+        leaving a scale that floats rather than resolves. Reading it is one thing; the difference is
+        much more obvious held under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

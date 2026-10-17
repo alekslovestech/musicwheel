@@ -21,8 +21,8 @@ export default function HarmonicMinorVsHungarianMinorPage() {
       <h1 className={LEARN_STYLES.h1}>Harmonic Minor vs. Hungarian Minor</h1>
 
       <p>
-        Both of these start on C, and both keep the raised seventh that gives Harmonic Minor its
-        pull back to the tonic.
+        Both of these start on C, and both keep the raised seventh that gives <i>Harmonic Minor</i>{" "}
+        its pull back to the tonic.
       </p>
 
       <ScaleDegreeComparison
@@ -34,11 +34,11 @@ export default function HarmonicMinorVsHungarianMinorPage() {
       />
 
       <p>
-        That single degree adds a second stretched, augmented-second gap to a scale that already has
-        one: alongside the wide step between the flat sixth and the leading tone, Hungarian Minor
-        opens a matching one between the raised fourth and the fifth, which is what gives it its
-        dramatic, folk-tinged color. Reading it is one thing; the difference is much more obvious
-        held under a drone, which is what the links under each figure are for.
+        That single degree adds a second stretched, <i>augmented-second</i> gap to a scale that
+        already has one: alongside the wide step between the flat sixth and the leading tone,{" "}
+        <i>Hungarian Minor</i> opens a matching one between the raised fourth and the fifth, which
+        is what gives it its dramatic, folk-tinged color. Reading it is one thing; the difference is
+        much more obvious held under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

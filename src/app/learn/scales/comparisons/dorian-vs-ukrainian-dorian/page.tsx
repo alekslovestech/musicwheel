@@ -21,8 +21,8 @@ export default function DorianVsUkrainianDorianPage() {
       <h1 className={LEARN_STYLES.h1}>Dorian vs. Ukrainian Dorian</h1>
 
       <p>
-        Both of these start on C, and both are Dorian: a minor third and, unusually for a minor
-        mode, a natural sixth.
+        Both of these start on C, and both are <i>Dorian</i>: a <i>minor third</i> and, unusually
+        for a minor mode, a natural sixth.
       </p>
 
       <ScaleDegreeComparison
@@ -34,11 +34,11 @@ export default function DorianVsUkrainianDorianPage() {
       />
 
       <p>
-        That single degree turns a plain minor scale into something with a foot in two camps: a
-        minor third below the raised fourth, and a major-feeling gap above it, the combination that
-        gives Ukrainian Dorian its name and its use in Eastern European folk melodies. Reading it is
-        one thing; the difference is much more obvious held under a drone, which is what the links
-        under each figure are for.
+        That single degree turns a plain <i>minor scale</i> into something with a foot in two camps:
+        a <i>minor third</i> below the raised fourth, and a major-feeling gap above it, the
+        combination that gives <i>Ukrainian Dorian</i> its name and its use in Eastern European folk
+        melodies. Reading it is one thing; the difference is much more obvious held under a drone,
+        which is what the links under each figure are for.
       </p>
     </>
   );

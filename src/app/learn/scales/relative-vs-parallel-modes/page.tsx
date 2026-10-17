@@ -34,9 +34,9 @@ export default function RelativeVsParallelModesPage() {
       <h2 className={LEARN_STYLES.h2}>Relative: C Ionian and F Lydian</h2>
 
       <p>
-        C Ionian and F Lydian are built from the exact same seven notes - the white keys on a piano
-        - just started from a different one: F is the fourth note of that same C Ionian scale, and
-        starting those seven white keys there instead gives Lydian. Because the note collection is
+        C <i>Ionian</i> and F <i>Lydian</i> are built from the exact same seven notes - the white keys on a piano
+        - just started from a different one: F is the fourth note of that same C <i>Ionian</i> scale, and
+        starting those seven white keys there instead gives <i>Lydian</i>. Because the note collection is
         identical, the pattern of whole and half steps between neighboring notes is identical too,
         at the same physical points around the wheel. Only the flag marking the tonic moves.
       </p>
@@ -66,9 +66,9 @@ export default function RelativeVsParallelModesPage() {
       <h2 className={LEARN_STYLES.h2}>Parallel: C Ionian and C Lydian</h2>
 
       <p>
-        C Ionian and C Lydian keep the same tonic, but they are not the same seven notes. They
-        differ on exactly one degree - the fourth, natural in Ionian and sharp in Lydian - which is
-        the whole reason Lydian has its floating, unresolved quality.
+        C <i>Ionian</i> and C <i>Lydian</i> keep the same tonic, but they are not the same seven notes. They
+        differ on exactly one degree - the fourth, natural in <i>Ionian</i> and sharp in <i>Lydian</i> - which is
+        the whole reason <i>Lydian</i> has its floating, unresolved quality.
       </p>
 
       <ScaleDegreeComparison
@@ -86,7 +86,7 @@ export default function RelativeVsParallelModesPage() {
         <Link href="/learn/scales/scale-degrees" className={LEARN_STYLES.link}>
           scale degree
         </Link>{" "}
-        - every mode gets described this way, as Ionian&apos;s seven degrees with some subset
+        - every mode gets described this way, as <i>Ionian</i>&apos;s seven degrees with some subset
         raised or lowered, which is exactly what a parallel comparison measures. For a closer look
         at this exact pair, see{" "}
         <Link href="/learn/scales/comparisons/major-vs-lydian" className={LEARN_STYLES.link}>
@@ -100,8 +100,8 @@ export default function RelativeVsParallelModesPage() {
       </p>
 
       <p>
-        Notice both examples above reach for the same two modes, Ionian and Lydian - only the tonic
-        assigned to Lydian changes. Give it F, and it&apos;s relative to C Ionian: same notes,
+        Notice both examples above reach for the same two modes, <i>Ionian</i> and <i>Lydian</i> - only the tonic
+        assigned to <i>Lydian</i> changes. Give it F, and it&apos;s relative to C <i>Ionian</i>: same notes,
         different home. Give it C instead, and it&apos;s parallel: same home, different notes.
         Relative and parallel aren&apos;t opposites so much as two different questions you can ask
         about the same pair of modes - for the fuller picture, including how the modes are numbered

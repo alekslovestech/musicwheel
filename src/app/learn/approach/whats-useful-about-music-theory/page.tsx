@@ -9,6 +9,18 @@ import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ixActual } from "@/types/IndexTypes";
 import { createNoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 
+const C_TO_E = [
+  [createNoteWithOctave("C", AccidentalType.None), createNoteWithOctave("E", AccidentalType.None)],
+];
+
+const C_TO_E_KEYS = [ixActual(0), ixActual(4)];
+
+const E_TO_G_SHARP = [
+  [createNoteWithOctave("E", AccidentalType.None), createNoteWithOctave("G", AccidentalType.Sharp)],
+];
+
+const E_TO_G_SHARP_KEYS = [ixActual(4), ixActual(8)];
+
 const C_MAJOR_TRIAD = [
   [
     createNoteWithOctave("C", AccidentalType.None),
@@ -49,8 +61,8 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
           What&apos;s Wrong with Music Theory
         </Link>{" "}
-        covers the parts of theory that are about notation. Strip those away and what&apos;s left
-        is small: a handful of facts about sound that hold on any instrument, in any key.
+        covers the parts of theory that are about notation. Strip those away and what&apos;s left is
+        small: a handful of facts about sound that hold on any instrument, in any key.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>12 equal notes</h2>
@@ -64,18 +76,32 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <h2 className={LEARN_STYLES.h2}>Intervals are distances</h2>
 
       <p>
-        An interval is the distance between 2 notes, counted in semitones. Names like &ldquo;minor
-        3rd&rdquo; (3 semitones), &ldquo;major 3rd&rdquo; (4) and &ldquo;perfect 5th&rdquo; (7) are
-        worth knowing, because each one names a distinct sound - and that sound is the same wherever
-        the interval starts.
+        An interval is the distance between 2 notes, counted in semitones. Names like{" "}
+        <i>minor 3rd</i> (3 semitones), <i>major 3rd</i> (4) and <i>perfect 5th</i> (7) are worth
+        knowing, because each one names a distinct sound - and that sound is the same wherever the
+        interval starts.
       </p>
+
+      <ComparisonGrid2>
+        <StaticStaffFigure
+          chords={C_TO_E}
+          highlightedNoteIndices={C_TO_E_KEYS}
+          caption="C–E: major 3rd, 4 semitones"
+        />
+        <StaticStaffFigure
+          chords={E_TO_G_SHARP}
+          highlightedNoteIndices={E_TO_G_SHARP_KEYS}
+          caption="E–G♯: major 3rd, 4 semitones"
+        />
+      </ComparisonGrid2>
 
       <h2 className={LEARN_STYLES.h2}>Chords are shapes</h2>
 
       <p>
-        A chord is a stack of intervals above a root. A major triad is a major 3rd with a minor 3rd
-        on top; a minor triad swaps the two. Chord quality - major, minor, diminished, dominant 7th -
-        is the name for that shape, and it&apos;s what you actually hear. See{" "}
+        A chord is a stack of intervals above a root. A <i>major triad</i> is a <i>major 3rd</i>{" "}
+        with a <i>minor 3rd</i> on top; a <i>minor triad</i> swaps the two. Chord quality -{" "}
+        <i>major</i>, <i>minor</i>, <i>diminished</i>, <i>dominant 7th</i> - is the name for that
+        shape, and it&apos;s what you actually hear. See{" "}
         <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
           Chord Quality
         </Link>{" "}
@@ -110,9 +136,8 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <h2 className={LEARN_STYLES.h2}>Scales are patterns</h2>
 
       <p>
-        A scale is a selection from the 12 notes, defined by the gaps between them. Dorian, harmonic
-        minor and the rest are names for specific gap patterns, and each one has a recognizable
-        color. See{" "}
+        A scale is a selection from the 12 notes, defined by the gaps between them. <i>Dorian</i>
+        ,&nbsp;<i>Phrygian</i>, <i>harmonic minor</i> etc., are names for specific gap patterns. See{" "}
         <Link href="/learn/scales" className={LEARN_STYLES.link}>
           Scales
         </Link>{" "}
@@ -122,15 +147,16 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <h2 className={LEARN_STYLES.h2}>What it&apos;s for: recognizing what you hear</h2>
 
       <p>
-        The point of the vocabulary is recognition. A major triad sounds bright and settled, a minor
-        triad darker. A dominant 7th pulls toward the chord a 5th below it; a diminished chord is
-        unstable and wants to move somewhere. A V-I sounds like arriving home.
+        The point of the vocabulary is recognition. A <i>major</i> triad sounds bright and settled,
+        a <i>minor</i> triad darker. A <i>dominant 7th</i> pulls toward the chord a 5th below it; a{" "}
+        <i>diminished</i> chord is unstable and wants to move somewhere. A V-I sounds like arriving
+        home.
       </p>
 
       <p>
-        Once these sounds have names, you can hear a song and know what it&apos;s doing, play it back
-        without guessing, and reach for a specific mood on purpose instead of by accident. That&apos;s
-        the part of theory worth keeping.
+        Once these sounds have names, you can hear a song and know what it&apos;s doing, play it
+        back without guessing, and reach for a specific mood on purpose instead of by accident.
+        That&apos;s the part of theory worth keeping.
       </p>
 
       <p>

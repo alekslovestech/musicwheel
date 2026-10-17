@@ -21,8 +21,8 @@ export default function HarmonicMajorVsDoubleHarmonicMajorPage() {
       <h1 className={LEARN_STYLES.h1}>Harmonic Major vs. Double Harmonic Major</h1>
 
       <p>
-        Both of these start on C, and both hold the flat sixth that gives Harmonic Major its name -
-        a major scale with one note pulled toward minor.
+        Both of these start on C, and both hold the flat sixth that gives <i>Harmonic Major</i> its
+        name - a <i>major scale</i> with one note pulled toward minor.
       </p>
 
       <ScaleDegreeComparison
@@ -35,12 +35,12 @@ export default function HarmonicMajorVsDoubleHarmonicMajorPage() {
       />
 
       <p>
-        That single degree is what turns one flattened note into two: Double Harmonic Major pairs
-        the flat second against the major third right above it, the same tight, augmented-second gap
-        that gives Phrygian Dominant its exotic color - only here it shows up twice, once low in the
-        scale and once again between the flat sixth and the major seventh. Reading it is one thing;
-        the difference is much more obvious held under a drone, which is what the links under each
-        figure are for.
+        That single degree is what turns one flattened note into two: <i>Double Harmonic Major</i>{" "}
+        pairs the flat second against the <i>major third</i> right above it, the same tight,{" "}
+        <i>augmented-second</i> gap that gives <i>Phrygian Dominant</i> its exotic color - only here
+        it shows up twice, once low in the scale and once again between the flat sixth and the{" "}
+        <i>major seventh</i>. Reading it is one thing; the difference is much more obvious held
+        under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

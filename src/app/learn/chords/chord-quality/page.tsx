@@ -27,7 +27,7 @@ export default function ChordQualityPage() {
       <p>
         &ldquo;Major,&rdquo; &ldquo;minor,&rdquo; &ldquo;diminished,&rdquo; &ldquo;augmented&rdquo;
         - these name a chord&apos;s quality, not its root. A quality is the pattern of intervals
-        stacked on top of the root: major is a stack of a major 3rd then a minor 3rd, minor is the
+        stacked on top of the root: major is a stack of a <i>major 3rd</i> then a <i>minor 3rd</i>, minor is the
         same two intervals in the other order. The root just says where the pattern starts; the
         pattern itself is what makes it major.
       </p>
@@ -36,8 +36,8 @@ export default function ChordQualityPage() {
 
       <p>
         Because quality is a pattern rather than a specific set of notes, it doesn&apos;t care what
-        key you&apos;re in or which note you build it on. A major triad rooted on C and a major
-        triad rooted on G are different chords - different notes, different sound in context - but
+        key you&apos;re in or which note you build it on. A <i>major triad</i> rooted on C and a <i>major
+        triad</i> rooted on G are different chords - different notes, different sound in context - but
         the same quality, the same shape, just rotated to a different starting wedge.
       </p>
 
@@ -61,7 +61,7 @@ export default function ChordQualityPage() {
       <p>
         Transposing a chord - sliding it to a different root - shifts every note by the same
         distance, so the gaps between the notes stay exactly the same. Those gaps are what your
-        ear actually tracks: the frequency ratios between the notes of a major triad are the same
+        ear actually tracks: the frequency ratios between the notes of a <i>major triad</i> are the same
         whether it&apos;s rooted on C or G or any other note, which is why &ldquo;major&rdquo; is
         one recognizable sound rather than twelve unrelated ones. Quality is what survives
         transposition; root is what doesn&apos;t.
@@ -103,7 +103,7 @@ export default function ChordQualityPage() {
       </table>
 
       <p>
-        The most symmetrical qualities - augmented and diminished 7th chords - take that
+        The most symmetrical qualities - augmented and <i>diminished 7th</i> chords - take that
         rotation-independence a step further: not only does the quality stay the same when you
         transpose it, several of its own notes are equally valid roots for the identical shape.
         See{" "}

@@ -48,8 +48,8 @@ export default function LearnIndexPage() {
         <LearnTags tags={[LearnTag.BasicConcepts]} />
       </h2>
       <p>
-        Flip an interval upside down and the number changes - but a minor 2nd and a major 7th still
-        sound like close relatives.
+        Flip an interval upside down and the number changes - but a <i>minor 2nd</i> and a{" "}
+        <i>major 7th</i> still sound like close relatives.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
@@ -59,8 +59,8 @@ export default function LearnIndexPage() {
         <LearnTags tags={[LearnTag.Geometry]} />
       </h2>
       <p>
-        Why the tritone, the augmented triad, and the diminished 7th all sound unsettled: split the
-        octave evenly and no note is left to call home.
+        Why the <i>tritone</i>, the <i>augmented triad</i>, and the <i>diminished 7th</i> all sound
+        unsettled: split the octave evenly and no note is left to call home.
       </p>
     </>
   );
