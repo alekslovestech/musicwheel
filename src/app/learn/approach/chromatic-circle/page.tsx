@@ -27,6 +27,14 @@ export default function ChromaticCirclePage() {
       <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
+        For why the app uses a wheel at all, see{" "}
+        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
+          Why This App
+        </Link>
+        . This page is about how it works.
+      </p>
+
+      <p>
         A keyboard or a staff lays the twelve notes out in a line. The chromatic circle bends that
         same line into a loop:
       </p>

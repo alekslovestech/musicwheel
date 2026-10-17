@@ -189,11 +189,10 @@ export default function WhatsWrongWithMusicTheoryPage() {
 
       <p>
         See{" "}
-        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
+        <Link href="/learn/approach/whats-useful-about-music-theory" className={LEARN_STYLES.link}>
+          What&apos;s Useful About Music Theory
         </Link>{" "}
-        for what we keep instead, and why the wheel sidesteps all of this by drawing harmony as
-        distance rather than as spelling.
+        for what&apos;s worth keeping instead.
       </p>
     </>
   );
