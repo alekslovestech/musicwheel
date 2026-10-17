@@ -31,11 +31,11 @@ export default function MinorVsHarmonicMinorPage() {
       />
 
       <p>
-        That single degree is what gives Harmonic Minor its name and its pull: a natural minor has
-        no note that leans back into the tonic, but raising the seventh creates one, at the cost of
-        stretching the gap behind it into the wide, exotic step between the sixth and seventh.
-        Reading it is one thing; the difference is much more obvious held under a drone, which is
-        what the links under each figure are for.
+        That single degree is what gives <i>Harmonic Minor</i> its name and its pull: a{" "}
+        <i>natural minor</i> has no note that leans back into the tonic, but raising the seventh
+        creates one, at the cost of stretching the gap behind it into the wide, exotic step between
+        the sixth and seventh. Reading it is one thing; the difference is much more obvious held
+        under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

@@ -47,12 +47,8 @@ export default function WhyThisAppPage() {
       <h2 className={LEARN_STYLES.h2}>Distance you can see</h2>
 
       <p>
-        Intervals are distances, so the wheel shows them as distances: 2 notes a major 3rd apart are
-        always the same angle apart, and wear the same color, wherever they sit. See{" "}
-        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-          Color Coding
-        </Link>{" "}
-        for how the colors are assigned.
+        Intervals are distances, so the wheel shows them as distances: 2 notes a <i>major 3rd</i>{" "}
+        apart are always the same angle apart, wherever they sit.
       </p>
 
       <div className="mx-auto w-full max-w-sm">
@@ -65,12 +61,25 @@ export default function WhyThisAppPage() {
         />
       </div>
 
+      <h2 className={LEARN_STYLES.h2}>Color, so you don&apos;t have to count</h2>
+
+      <p>
+        The chromatic circle is an established idea; the color coding is this app&apos;s own
+        addition. Each kind of interval gets its own color, so you can recognize a <i>major 3rd</i>{" "}
+        at a glance instead of counting the semitones between its notes. Chords blend the colors of
+        the intervals inside them. See{" "}
+        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
+          Color Coding
+        </Link>{" "}
+        for how the colors are assigned.
+      </p>
+
       <h2 className={LEARN_STYLES.h2}>Chords are polygons</h2>
 
       <p>
-        A chord is a shape made of intervals, so on the wheel it&apos;s literally a shape. Every
-        major triad is the same triangle; every minor triad is that triangle flipped. Chord quality
-        becomes something you recognize at a glance.
+        A chord is a shape made of intervals, so on the wheel it&apos;s literally a shape. Every{" "}
+        <i>major triad</i> is the same triangle; every <i>minor triad</i> is that triangle flipped.
+        Chord quality becomes something you recognize at a glance.
       </p>
 
       <div className="mx-auto w-full max-w-sm">
@@ -94,8 +103,8 @@ export default function WhyThisAppPage() {
       <h2 className={LEARN_STYLES.h2}>Spelling stays out of the way</h2>
 
       <p>
-        Since G♯ and A♭ sound the same, the app follows one consistent convention for naming the
-        black keys rather than making spelling a lesson of its own. See{" "}
+        Since G♯ and A♭ sound the same, the app does not focus on the spelling aspect, but rather
+        uses it for reference and familiarity. See{" "}
         <Link href="/learn/approach/accidentals" className={LEARN_STYLES.link}>
           Accidentals
         </Link>{" "}

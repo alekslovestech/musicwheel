@@ -31,22 +31,21 @@ export default function RomanNumeralsPage() {
           Scale degrees
         </Link>{" "}
         number notes, counted from the tonic. Roman numerals number chords the same way, one built
-        on each degree: <RomanQuality degree={1} chordType={ChordType.Major} /> is the major chord on
+        on each degree: <RomanQuality degree={1} chordType={ChordType.Major} /> is the <i>major chord</i> on
         the 1st degree, <RomanQuality degree={5} chordType={ChordType.Major} /> on the 5th, and
         so on.
       </p>
 
       <p>
         Case carries the chord&apos;s quality: uppercase for major, lowercase for minor. In C
-        major, the 1st degree carries a major triad and the 6th a minor one, so that&apos;s shown as {" "}
+        major, the 1st degree carries a <i>major triad</i> and the 6th a minor one, so that&apos;s shown as {" "}
         <RomanQuality degree={1} chordType={ChordType.Major} /> and {" "}
         <RomanQuality degree={6} chordType={ChordType.Minor} /> 
       </p>
 
       <p>
-        Another common chord is the diminished triad, shown in its traditional notation as <b>°</b> next to the Roman numeral, for example{" "}
-        <RomanQuality degree={7} chordType={ChordType.Diminished} /> is the diminished triad
-        on the 7th degree. See{" "}
+        Another common chord is the <i>diminished triad</i>, shown in its traditional notation as <b>°</b> next to the Roman numeral, for example{" "}
+        <RomanQuality degree={7} chordType={ChordType.Diminished} /> is the <i>diminished triad</i> on the 7th degree. See{" "}
         <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
           Chord Quality
         </Link>{" "}
@@ -56,7 +55,7 @@ export default function RomanNumeralsPage() {
       <h2 className={LEARN_STYLES.h2}>All 7, in one scale</h2>
 
       <p>
-        Every major scale produces the same seven triads, a few major and minor triads, and one diminished chord at the 7th degree, 
+        Every <i>major scale</i> produces the same seven triads, a few major and minor triads, and one <i>diminished chord</i> at the 7th degree, 
         i.e. the sequence of triads here would be I, ii, iii, IV, V, vi, vii°         
       </p>
 

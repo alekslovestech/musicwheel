@@ -25,7 +25,7 @@ export default function TriadInversionsPage() {
 
       <p>
         A triad is 3 notes played at once, its first inversion is the bottom note moved up 1 octave. Interestingly, this operation changes very little about how we hear the chord quality.
-        For example a major chord and its first and second inversion sound almost identical, even though they have different bass notes. On the chromatic circle, this shows up as essentially the same
+        For example a <i>major chord</i> and its first and second inversion sound almost identical, even though they have different bass notes. On the chromatic circle, this shows up as essentially the same
         shape with a different starting point. 
       </p>
       <ComparisonGrid3>   

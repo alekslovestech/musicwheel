@@ -22,10 +22,7 @@ export default function ApproachIndexPage() {
 
       <h1 className={LEARN_STYLES.h1}>Approach</h1>
 
-      <p>
-        Not lessons about a specific music concept - the opinions behind why this app exists and
-        why it&apos;s built the way it is.
-      </p>
+      <p>Motivation behind this app, why it exists and why it&apos;s built the way it is.</p>
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>

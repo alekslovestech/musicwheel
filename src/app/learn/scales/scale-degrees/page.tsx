@@ -26,8 +26,8 @@ export default function ScaleDegreesPage() {
       <p>
         A scale degree is just a numbered position: 1 through 7, counting up from the tonic. Every
         mode has seven of them, but the numbers alone don&apos;t say what note actually sits at each
-        position - for that, every mode gets measured against the same reference: Ionian, the major
-        scale. Ionian&apos;s own seven notes are the plain, unaltered degrees - 1, 2, 3, 4, 5, 6,
+        position - for that, every mode gets measured against the same reference: <i>Ionian</i>, the <i>major
+        scale</i>. <i>Ionian</i>&apos;s own seven notes are the plain, unaltered degrees - 1, 2, 3, 4, 5, 6,
         7, no sharps or flats attached - which is what makes it the yardstick everything else is
         described against, rather than one more mode with equal claim to the naming.
       </p>
@@ -41,7 +41,7 @@ export default function ScaleDegreesPage() {
         isCompact
       />
 
-      <p>Lydian is Ionian with the 4th degree raised a semitone: sharp 4.</p>
+      <p><i>Lydian</i> is <i>Ionian</i> with the 4th degree raised a semitone: sharp 4.</p>
 
       <ScaleFigure
         tonic="C"
@@ -53,7 +53,7 @@ export default function ScaleDegreesPage() {
       />
 
       <p>
-        Aeolian (natural minor) is Ionian with the 3rd, 6th, and 7th degrees each lowered a
+        <i>Aeolian</i> (<i>natural minor</i>) is <i>Ionian</i> with the 3rd, 6th, and 7th degrees each lowered a
         semitone.
       </p>
 

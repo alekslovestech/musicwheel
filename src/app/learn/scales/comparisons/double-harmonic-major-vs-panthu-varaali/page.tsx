@@ -21,9 +21,9 @@ export default function DoubleHarmonicMajorVsPanthuVaraaliPage() {
       <h1 className={LEARN_STYLES.h1}>Double Harmonic Major vs. Panthu Varaali</h1>
 
       <p>
-        Both of these start on C, and both carry the same pair of flattened notes that give Double
-        Harmonic Major its double augmented-second color: a flat second and a flat sixth around a
-        major third and seventh.
+        Both of these start on C, and both carry the same pair of flattened notes that give{" "}
+        <i>Double Harmonic Major</i> its double <i>augmented-second</i> color: a flat second and a
+        flat sixth around a <i>major third</i> and seventh.
       </p>
 
       <ScaleDegreeComparison
@@ -36,9 +36,9 @@ export default function DoubleHarmonicMajorVsPanthuVaraaliPage() {
 
       <p>
         That single degree adds a third tight interval to a scale that already has two: alongside
-        the flat-second-to-third gap and the flat-sixth-to-seventh gap, Panthu Varaali opens a third
-        one between the raised fourth and the fifth. Reading it is one thing; the difference is much
-        more obvious held under a drone, which is what the links under each figure are for.
+        the flat-second-to-third gap and the flat-sixth-to-seventh gap, <i>Panthu Varaali</i> opens
+        a third one between the raised fourth and the fifth. Reading it is one thing; the difference
+        is much more obvious held under a drone, which is what the links under each figure are for.
       </p>
     </>
   );

@@ -4,45 +4,14 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { StaticStaffFigure } from "@/components/Learn/StaticStaffFigure";
 import { LEARN_STYLES } from "@/lib/design";
+import {
+  AUGMENTED_4TH,
+  C_MAJOR_SCALE,
+  C_MAJOR_TRIAD_IN_C_MINOR,
+  C_MAJOR_TRIAD_IN_E_MAJOR,
+  DIMINISHED_5TH,
+} from "@/lib/learn/staffFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
-import { AccidentalType } from "@/types/enums/AccidentalType";
-import { ixActual } from "@/types/IndexTypes";
-import { createNoteWithOctave } from "@/types/interfaces/NoteWithOctave";
-
-const C_MAJOR_SCALE = [
-  ...["C", "D", "E", "F", "G", "A", "B"].map((name) => [
-    createNoteWithOctave(name, AccidentalType.None),
-  ]),
-  [createNoteWithOctave("C", AccidentalType.None, 1)],
-];
-
-const AUGMENTED_4TH = [
-  [createNoteWithOctave("C", AccidentalType.None), createNoteWithOctave("F", AccidentalType.Sharp)],
-];
-
-const DIMINISHED_5TH = [
-  [createNoteWithOctave("C", AccidentalType.None), createNoteWithOctave("G", AccidentalType.Flat)],
-];
-
-const TRITONE_KEYS = [ixActual(0), ixActual(6)];
-
-const C_MAJOR_TRIAD = [
-  [
-    createNoteWithOctave("C", AccidentalType.None),
-    createNoteWithOctave("E", AccidentalType.Natural),
-    createNoteWithOctave("G", AccidentalType.None),
-  ],
-];
-
-const C_MAJOR_KEYS = [ixActual(0), ixActual(4), ixActual(7)];
-
-const C_MAJOR_TRIAD_IN_E_MAJOR = [
-  [
-    createNoteWithOctave("C", AccidentalType.Natural),
-    createNoteWithOctave("E", AccidentalType.None),
-    createNoteWithOctave("G", AccidentalType.Natural),
-  ],
-];
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -78,8 +47,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
 
       <div className="mx-auto w-full max-w-xl">
         <StaticStaffFigure
-          chords={C_MAJOR_SCALE}
-          highlightedNoteIndices={[]}
+          {...C_MAJOR_SCALE}
           caption="The 7 letters, C D E F G A B - and the 5 black keys left to be notated with ♯ or ♭ "
         />
       </div>
@@ -93,7 +61,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <h2 className={LEARN_STYLES.h2}>Enharmonic notation</h2>
 
       <p>
-        G♯ and A♭ are the same pitch. Which name is &ldquo;correct&rdquo; in a given passage
+        F♯ and G♭ are the same pitch. Which name is &ldquo;correct&rdquo; in a given passage
         is a rule about how a scale&apos;s letters are supposed to avoid repeating, not a fact you
         can hear. Push that rule far enough and it produces double sharps and double flats - a
         symbol whose entire job is to keep the spelling grammatically tidy on a page, for a note
@@ -101,20 +69,18 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <p>
-        The same goes for intervals. C up to F♯ is an augmented 4th; C up to G♭ is a diminished
-        5th. On paper they sit on different lines and carry different names. On the keyboard
+        The same goes for intervals. C up to F♯ is an <i>augmented 4th</i>; C up to G♭ is a <i>diminished
+        5th</i>. On paper they sit on different lines and carry different names. On the keyboard
         they&apos;re the same two keys, 6 semitones apart.
       </p>
 
       <ComparisonGrid2>
         <StaticStaffFigure
-          chords={AUGMENTED_4TH}
-          highlightedNoteIndices={TRITONE_KEYS}
+          {...AUGMENTED_4TH}
           caption="C–F♯ (augmented 4th)"
         />
         <StaticStaffFigure
-          chords={DIMINISHED_5TH}
-          highlightedNoteIndices={TRITONE_KEYS}
+          {...DIMINISHED_5TH}
           caption="C–G♭ (diminished 5th)"
         />
       </ComparisonGrid2>
@@ -138,7 +104,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <p>
-        The signature also gets in the way of plain chords. Write a C major chord in C minor and the
+        The signature also gets in the way of plain chords. Write a C <i>major chord</i> in C minor and the
         signature has already flattened E, so the chord&apos;s E needs a natural sign just to be
         itself. In E major, with 4 sharps, the C and G are sharpened, so the same chord needs
         naturals on both of them.
@@ -146,15 +112,13 @@ export default function WhatsWrongWithMusicTheoryPage() {
 
       <ComparisonGrid2>
         <StaticStaffFigure
-          chords={C_MAJOR_TRIAD}
+          {...C_MAJOR_TRIAD_IN_C_MINOR}
           keySignature="Cm"
-          highlightedNoteIndices={C_MAJOR_KEYS}
           caption="C major chord in the key of C minor"
         />
         <StaticStaffFigure
-          chords={C_MAJOR_TRIAD_IN_E_MAJOR}
+          {...C_MAJOR_TRIAD_IN_E_MAJOR}
           keySignature="E"
-          highlightedNoteIndices={C_MAJOR_KEYS}
           caption="C major chord in the key of E major"
         />
       </ComparisonGrid2>

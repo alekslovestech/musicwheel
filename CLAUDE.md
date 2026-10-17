@@ -14,3 +14,4 @@ Apply this in code, comments, UI copy, and documentation.
 
 - Avoid stating the same concept twice in different words within the same passage (e.g. don't say "three semitones" and then restate it as "a step and a half").
 - Prefer semitones over steps/tones for interval sizes (e.g. "3 semitones" instead of "1½ steps" or "1½ tones").
+- Italicize full names of scales/modes, intervals, and chords in narrative text (e.g. *Dorian*, *minor 3rd*, *dominant 7th*) with `<i>`. Don't italicize abbreviations or symbols (m3, V7, Cmaj7), or anything inside figures, captions, or tables.

@@ -54,7 +54,7 @@ export default function ChromaticCirclePage() {
         On a linear keyboard, where an interval sits changes how it looks - e.g. it can depend on
         whether we start on a black or a white key. On the circle, an interval is just an angular
         distance between two points, and that distance is the same wherever the two points happen to
-        sit. A major 3rd starting on C and a major 3rd starting on C♯ are the same arc, just rotated
+        sit. A <i>major 3rd</i> starting on C and a <i>major 3rd</i> starting on C♯ are the same arc, just rotated
         to a different starting point:
       </p>
 
@@ -63,7 +63,7 @@ export default function ChromaticCirclePage() {
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
-          caption="C to E: a major 3rd."
+          caption="C–E: major 3rd"
           isCompact
         />
         <StaticChordFigure
@@ -71,7 +71,7 @@ export default function ChromaticCirclePage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption={
-            "C♯ to F: also a major 3rd\nlooks very different on a linear keyboard, but exactly the same on the circular one"
+            "C♯–F: major 3rd\nlooks very different on a linear keyboard, but exactly the same on the circular one"
           }
           isCompact
         />
@@ -80,7 +80,7 @@ export default function ChromaticCirclePage() {
       <p>
         Nothing about the shape changes depending on which key you&apos;re in, the way the same
         interval can look visually different in different positions on a keyboard or a staff. The
-        same holds for a chord: a C major triad and a D♭ major triad are the same three-note shape,
+        same holds for a chord: a C <i>major triad</i> and a D♭ <i>major triad</i> are the same three-note shape,
         just rotated to a different starting point.
       </p>
 
@@ -89,7 +89,7 @@ export default function ChromaticCirclePage() {
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
-          caption="C major."
+          caption="C major"
           isCompact
         />
         <StaticChordFigure

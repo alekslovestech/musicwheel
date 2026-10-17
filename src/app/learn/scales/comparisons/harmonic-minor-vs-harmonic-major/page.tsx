@@ -23,7 +23,7 @@ export default function HarmonicMinorVsHarmonicMajorPage() {
 
       <p>
         Both of these start on C, and both already carry a flat sixth and a raised seventh - the
-        same augmented-second gap between them, reached from opposite directions (see{" "}
+        same <i>augmented-second</i> gap between them, reached from opposite directions (see{" "}
         <Link href="/learn/scales/comparisons/minor-vs-harmonic-minor" className={LEARN_STYLES.link}>
           Minor vs. Harmonic Minor
         </Link>{" "}
@@ -43,9 +43,9 @@ export default function HarmonicMinorVsHarmonicMajorPage() {
       />
 
       <p>
-        That single degree is the last mile between them: Harmonic Minor&apos;s flat third is what
-        makes it read as minor at all, and Harmonic Major&apos;s natural third is what keeps it
-        major despite the borrowed flat sixth. Everything else - the augmented second, the leading
+        That single degree is the last mile between them: <i>Harmonic Minor</i>&apos;s flat third is what
+        makes it read as minor at all, and <i>Harmonic Major</i>&apos;s natural third is what keeps it
+        major despite the borrowed flat sixth. Everything else - the <i>augmented second</i>, the leading
         tone - is already identical. Reading it is one thing; the difference is much more obvious
         held under a drone, which is what the links under each figure are for.
       </p>

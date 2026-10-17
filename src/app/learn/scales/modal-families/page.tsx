@@ -26,12 +26,13 @@ export default function ModalRotationsPage() {
         <Link href="/learn/scales/greek-modes" className={LEARN_STYLES.link}>
           Greek Modes
         </Link>{" "}
-        showed that Dorian, Phrygian, and the rest aren&apos;t separate scales - they&apos;re the
-        major scale&apos;s seven notes, started from different points. That&apos;s not a special
-        property of the major scale. Any seven-note collection has seven rotations, each landing on
-        a different note as tonic - the major scale&apos;s just happen to all have familiar Greek
-        names. A few other collections have rotations well-known enough to have earned their own
-        names too, and they&apos;re a different relationship from{" "}
+        showed that <i>Dorian</i>, <i>Phrygian</i>, and the rest aren&apos;t separate scales -
+        they&apos;re the <i>major scale</i>&apos;s seven notes, started from different points.
+        That&apos;s not a special property of the <i>major scale</i>. Any seven-note collection has
+        seven rotations, each landing on a different note as tonic - the <i>major scale</i>&apos;s
+        just happen to all have familiar Greek names. A few other collections have rotations
+        well-known enough to have earned their own names too, and they&apos;re a different
+        relationship from{" "}
         <Link href="/learn/scales/harmonic" className={LEARN_STYLES.link}>
           why a scale gets built
         </Link>{" "}
@@ -67,14 +68,15 @@ export default function ModalRotationsPage() {
       </h2>
 
       <p>
-        Rotate Harmonic Minor to start on its own 5th degree and you get Phrygian Dominant - the
-        same seven notes, a perfect 5th away. It goes by several other names depending on the
-        tradition it&apos;s cited from: Spanish Phrygian, Freygish in Klezmer music, Ahava Rabbah in
-        Jewish liturgical music. (&ldquo;Byzantine scale&rdquo; is sometimes used for this one too,
-        though that name is used inconsistently - some sources use it for Double Harmonic Major
-        instead.) Whatever it&apos;s called, it&apos;s the same augmented-second gap Harmonic Minor
-        has, just heard starting from a different note in the collection - which is why it carries
-        the same exotic character even though nothing was rebuilt to get there.
+        Rotate <i>Harmonic Minor</i> to start on its own 5th degree and you get{" "}
+        <i>Phrygian Dominant</i> - the same seven notes, a <i>perfect 5th</i> away. It goes by
+        several other names depending on the tradition it&apos;s cited from: Spanish <i>Phrygian</i>
+        , Freygish in Klezmer music, Ahava Rabbah in Jewish liturgical music. (&ldquo;Byzantine
+        scale&rdquo; is sometimes used for this one too, though that name is used inconsistently -
+        some sources use it for <i>Double Harmonic Major</i> instead.) Whatever it&apos;s called,
+        it&apos;s the same <i>augmented-second</i> gap <i>Harmonic Minor</i> has, just heard
+        starting from a different note in the collection - which is why it carries the same exotic
+        character even though nothing was rebuilt to get there.
       </p>
 
       <ScaleFigure
@@ -90,9 +92,10 @@ export default function ModalRotationsPage() {
       </h2>
 
       <p>
-        Harmonic Major&apos;s 5th-degree rotation is Mixolydian ♭2 - a Mixolydian scale with its
-        second degree flattened, carrying the same lowered-sixth augmented second as its parent,
-        just relocated by starting the collection from a different note.
+        <i>Harmonic Major</i>&apos;s 5th-degree rotation is <i>Mixolydian</i> ♭2 - a{" "}
+        <i>Mixolydian</i> scale with its second degree flattened, carrying the same lowered-sixth{" "}
+        <i>augmented second</i> as its parent, just relocated by starting the collection from a
+        different note.
       </p>
 
       <ScaleFigure
@@ -108,14 +111,14 @@ export default function ModalRotationsPage() {
       </h2>
 
       <p>
-        Double Harmonic Major&apos;s 4th-degree rotation turns out to be Hungarian Minor - not an
-        obvious pairing, since{" "}
+        <i>Double Harmonic Major</i>&apos;s 4th-degree rotation turns out to be{" "}
+        <i>Hungarian Minor</i> - not an obvious pairing, since{" "}
         <Link href="/learn/scales/harmonic" className={LEARN_STYLES.link}>
           the two are built by different edits
         </Link>{" "}
-        of different parent scales. But C Double Harmonic Major (C, D♭, E, F, G, A♭, B) and F
-        Hungarian Minor turn out to share the exact same seven notes - the same collection, reached
-        by two unrelated-looking routes and rooted a perfect 4th apart.
+        of different parent scales. But C <i>Double Harmonic Major</i> (C, D♭, E, F, G, A♭, B) and F{" "}
+        <i>Hungarian Minor</i> turn out to share the exact same seven notes - the same collection,
+        reached by two unrelated-looking routes and rooted a <i>perfect 4th</i> apart.
       </p>
 
       <ScaleFigure
@@ -131,9 +134,9 @@ export default function ModalRotationsPage() {
       </h2>
 
       <p>
-        Melodic Minor has the most famous rotation family outside the major scale, mostly through
-        jazz, where each of its seven modes has its own name and its own standard use against a
-        specific chord type. Most of the seven aren&apos;t in the app yet - see{" "}
+        <i>Melodic Minor</i> has the most famous rotation family outside the <i>major scale</i>,
+        mostly through jazz, where each of its seven modes has its own name and its own standard use
+        against a specific chord type. Most of the seven aren&apos;t in the app yet - see{" "}
         <Link href="/learn/scales/melodic-minor-modes" className={LEARN_STYLES.link}>
           Modes of Melodic Minor
         </Link>{" "}
