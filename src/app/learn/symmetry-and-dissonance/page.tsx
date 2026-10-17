@@ -42,8 +42,8 @@ export default function SymmetryAndDissonancePage() {
       <h2 className={LEARN_STYLES.h2}>The tritone: splitting the octave in two</h2>
 
       <p>
-        Twelve semitones split into two equal halves is six and six. C up to F# is a <i>tritone</i>;
-        continue the same six semitones past F# and you land back on C. As{" "}
+        Twelve semitones split into two equal halves is six and six. C up to F♯ is a <i>tritone</i>;
+        continue the same six semitones past F♯ and you land back on C. As{" "}
         <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
           Interval Inversions
         </Link>{" "}
@@ -58,13 +58,13 @@ export default function SymmetryAndDissonancePage() {
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={0}
-          caption="C to F#: 6 semitones apart"
+          caption="C–F♯: 6 semitones apart"
         />
         <StaticChordFigure
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={1}
-          caption="F# to C: still 6 semitones apart"
+          caption="F♯–C: still 6 semitones apart"
         />
       </ComparisonGrid2>
 
@@ -73,7 +73,7 @@ export default function SymmetryAndDissonancePage() {
       <p>
         Twelve semitones split into three equal parts is four apiece - three stacked major thirds.
         Unlike the <i>major triad</i>, rotating this shape doesn&apos;t change the gap pattern at all:
-        every gap is the same four semitones, so C augmented, E augmented, and G# augmented
+        every gap is the same four semitones, so C augmented, E augmented, and G♯ augmented
         aren&apos;t three different chords that happen to share a color - they&apos;re the same
         three wedges on the wheel, lit for the same reason, no matter which note you call the root.
       </p>
@@ -89,20 +89,20 @@ export default function SymmetryAndDissonancePage() {
           rootNote="E"
           chordType={ChordType.Augmented}
           inversionIndex={0}
-          caption="Caug/E (or E aug) "
+          caption="Caug/E (or Eaug) "
         />
         <StaticChordFigure
           rootNote="G#"
           chordType={ChordType.Augmented}
           inversionIndex={0}
-          caption="Caug/G# (or Gaug)"
+          caption="Caug/G♯ (or G♯aug)"
         />
       </ComparisonGrid3>
 
       <p>
         That&apos;s three equally valid roots for one shape, which in practice means none of them is
         privileged - the chord doesn&apos;t resolve toward C any more than it resolves toward E or
-        G#. Composers use exactly that: an <i>augmented triad</i> is a natural pivot, since it&apos;s
+        G♯. Composers use exactly that: an <i>augmented triad</i> is a natural pivot, since it&apos;s
         already sitting equidistant from three different keys at once.
       </p>
 
@@ -110,7 +110,7 @@ export default function SymmetryAndDissonancePage() {
 
       <p>
         Twelve semitones split into four equal parts is three apiece - four stacked minor thirds.
-        The same logic applies with one more note added: C, D#, F#, and A are all three semitones
+        The same logic applies with one more note added: C, D♯, F♯, and A are all three semitones
         from their neighbor, so the shape has four-fold symmetry instead of the <i>augmented
         triad</i>&apos;s three-fold. Root any of those four notes and you light the identical four
         wedges.
@@ -127,13 +127,13 @@ export default function SymmetryAndDissonancePage() {
           rootNote="D#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
-          caption="Cdim7/D# (or D#dim7)"
+          caption="Cdim7/D♯ (or D♯dim7)"
         />
         <StaticChordFigure
           rootNote="F#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
-          caption="Cdim7/F# (or F#dim7)"
+          caption="Cdim7/F♯ (or F♯dim7)"
         />
         <StaticChordFigure
           rootNote="A"
@@ -169,14 +169,14 @@ export default function SymmetryAndDissonancePage() {
         <ScaleFigure
           tonic="C"
           scaleType={OtherScaleType.WholeTone}
-          caption="Root C: C, D, E, F#, G#, A#."
+          caption="Root C: C, D, E, F♯, G♯, A♯."
           showStepAnnotations
           showLinearKeyboard
         />
         <ScaleFigure
           tonic="D"
           scaleType={OtherScaleType.WholeTone}
-          caption="Call D the root instead - the same six wedges, D, E, F#, G#, A#, C."
+          caption="Call D the root instead - the same six wedges, D, E, F♯, G♯, A♯, C."
           showStepAnnotations
           showLinearKeyboard
         />

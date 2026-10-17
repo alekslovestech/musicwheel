@@ -176,11 +176,11 @@ export default function ColorCodingPage() {
           caption="C major"
         />
         <StaticChordFigure
-          rootNote="F"
+          rootNote="E"
           chordType={ChordType.Major}
           inversionIndex={0}
           isCompact={true}
-          caption="F major"
+          caption="E major"
         />
       </ComparisonGrid2>
 

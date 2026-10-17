@@ -63,7 +63,7 @@ export default function ChromaticCirclePage() {
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
-          caption="C to E: a major 3rd."
+          caption="C–E: major 3rd"
           isCompact
         />
         <StaticChordFigure
@@ -71,7 +71,7 @@ export default function ChromaticCirclePage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption={
-            "C♯ to F: also a major 3rd\nlooks very different on a linear keyboard, but exactly the same on the circular one"
+            "C♯–F: major 3rd\nlooks very different on a linear keyboard, but exactly the same on the circular one"
           }
           isCompact
         />
@@ -89,7 +89,7 @@ export default function ChromaticCirclePage() {
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
-          caption="C major."
+          caption="C major"
           isCompact
         />
         <StaticChordFigure

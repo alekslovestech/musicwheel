@@ -37,7 +37,7 @@ export default function ChordQualityPage() {
       <p>
         Because quality is a pattern rather than a specific set of notes, it doesn&apos;t care what
         key you&apos;re in or which note you build it on. A <i>major triad</i> rooted on C and a <i>major
-        triad</i> rooted on G are different chords - different notes, different sound in context - but
+        triad</i> rooted on E are different chords - different notes, different sound in context - but
         the same quality, the same shape, just rotated to a different starting wedge.
       </p>
 
@@ -49,10 +49,10 @@ export default function ChordQualityPage() {
           caption="C major - major 3rd, then minor 3rd, from C"
         />
         <StaticChordFigure
-          rootNote="G"
+          rootNote="E"
           chordType={ChordType.Major}
           inversionIndex={0}
-          caption="G major - the same stack of intervals, from G"
+          caption="E major - the same stack of intervals, from E"
         />
       </ComparisonGrid2>
 
@@ -62,7 +62,7 @@ export default function ChordQualityPage() {
         Transposing a chord - sliding it to a different root - shifts every note by the same
         distance, so the gaps between the notes stay exactly the same. Those gaps are what your
         ear actually tracks: the frequency ratios between the notes of a <i>major triad</i> are the same
-        whether it&apos;s rooted on C or G or any other note, which is why &ldquo;major&rdquo; is
+        whether it&apos;s rooted on C or E or any other note, which is why &ldquo;major&rdquo; is
         one recognizable sound rather than twelve unrelated ones. Quality is what survives
         transposition; root is what doesn&apos;t.
       </p>

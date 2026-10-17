@@ -99,7 +99,7 @@ export default function IntervalInversionsPage() {
               inversionIndex={0}
               caption={
                 <>
-                  C to {noteA}: <i>{nameA}</i>
+                  C–{noteA}: <i>{nameA}</i>
                 </>
               }
               isCompact
@@ -110,10 +110,10 @@ export default function IntervalInversionsPage() {
               inversionIndex={0}
               caption={
                 intervalA === intervalB ? (
-                  <>C to {noteB}, again</>
+                  <>C–{noteB}, again</>
                 ) : (
                   <>
-                    C to {noteB}: <i>{nameB}</i>
+                    C–{noteB}: <i>{nameB}</i>
                   </>
                 )
               }
