@@ -5,6 +5,7 @@ import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { INTERVAL_CLASS_PALETTE } from "@/lib/design/palette";
+import { INTERVAL_PAIRS } from "@/lib/learn/intervalPairs";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
@@ -21,19 +22,18 @@ export const metadata: Metadata = metadataForSlugPage(
 );
 
 // Each row is an inversion pair sharing one interval class - label2 is what label1 becomes when
-// flipped. The tritone has no partner (it inverts to itself), so it's the one row without a label2.
+// flipped. The tritone inverts to itself, so both its labels match.
 const INTERVAL_ROWS: {
   ic: keyof typeof INTERVAL_CLASS_PALETTE;
   label1: string;
   label2: string;
 }[] = [
   { ic: 0, label1: "Unison", label2: "(Octave)" },
-  { ic: 1, label1: "Minor 2nd", label2: "Major 7th" },
-  { ic: 2, label1: "Major 2nd", label2: "Minor 7th" },
-  { ic: 3, label1: "Minor 3rd", label2: "Major 6th" },
-  { ic: 4, label1: "Major 3rd", label2: "Minor 6th" },
-  { ic: 5, label1: "Perfect 4th", label2: "Perfect 5th" },
-  { ic: 6, label1: "Tritone", label2: "Tritone" }, // tritone inverts to itself, so it has no label2
+  ...INTERVAL_PAIRS.map(({ intervalClass, nameA, nameB }) => ({
+    ic: intervalClass,
+    label1: nameA,
+    label2: nameB,
+  })),
 ];
 
 const CHORD_COLOR_GROUPS = getJoinedColorLegendGroupsForIds(

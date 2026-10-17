@@ -4,42 +4,8 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { StaticStaffFigure } from "@/components/Learn/StaticStaffFigure";
 import { LEARN_STYLES } from "@/lib/design";
+import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/staffFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
-import { AccidentalType } from "@/types/enums/AccidentalType";
-import { ixActual } from "@/types/IndexTypes";
-import { createNoteWithOctave } from "@/types/interfaces/NoteWithOctave";
-
-const C_TO_E = [
-  [createNoteWithOctave("C", AccidentalType.None), createNoteWithOctave("E", AccidentalType.None)],
-];
-
-const C_TO_E_KEYS = [ixActual(0), ixActual(4)];
-
-const E_TO_G_SHARP = [
-  [createNoteWithOctave("E", AccidentalType.None), createNoteWithOctave("G", AccidentalType.Sharp)],
-];
-
-const E_TO_G_SHARP_KEYS = [ixActual(4), ixActual(8)];
-
-const C_MAJOR_TRIAD = [
-  [
-    createNoteWithOctave("C", AccidentalType.None),
-    createNoteWithOctave("E", AccidentalType.None),
-    createNoteWithOctave("G", AccidentalType.None),
-  ],
-];
-
-const C_MAJOR_KEYS = [ixActual(0), ixActual(4), ixActual(7)];
-
-const E_MAJOR_TRIAD = [
-  [
-    createNoteWithOctave("E", AccidentalType.None),
-    createNoteWithOctave("G", AccidentalType.Sharp),
-    createNoteWithOctave("B", AccidentalType.None),
-  ],
-];
-
-const E_MAJOR_KEYS = [ixActual(4), ixActual(8), ixActual(11)];
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -84,13 +50,11 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
 
       <ComparisonGrid2>
         <StaticStaffFigure
-          chords={C_TO_E}
-          highlightedNoteIndices={C_TO_E_KEYS}
+          {...C_TO_E}
           caption="C–E: major 3rd, 4 semitones"
         />
         <StaticStaffFigure
-          chords={E_TO_G_SHARP}
-          highlightedNoteIndices={E_TO_G_SHARP_KEYS}
+          {...E_TO_G_SHARP}
           caption="E–G♯: major 3rd, 4 semitones"
         />
       </ComparisonGrid2>
@@ -110,13 +74,11 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
 
       <ComparisonGrid2>
         <StaticStaffFigure
-          chords={C_MAJOR_TRIAD}
-          highlightedNoteIndices={C_MAJOR_KEYS}
+          {...C_MAJOR_TRIAD}
           caption="C major: 4 + 3 semitones"
         />
         <StaticStaffFigure
-          chords={E_MAJOR_TRIAD}
-          highlightedNoteIndices={E_MAJOR_KEYS}
+          {...E_MAJOR_TRIAD}
           caption="E major: 4 + 3 semitones"
         />
       </ComparisonGrid2>

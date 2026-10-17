@@ -5,7 +5,7 @@ import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
 import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
-import { IntervalType } from "@/types/enums/IntervalType";
+import { INTERVAL_PAIRS, type IntervalPair } from "@/lib/learn/intervalPairs";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -14,72 +14,26 @@ export const metadata: Metadata = metadataForSlugPage(
   "Every interval has a complementary partner that adds up with it to an octave - a different number, but usually a strikingly similar character.",
 );
 
-const INVERSION_PAIRS: {
-  intervalA: IntervalType;
-  intervalB: IntervalType;
-  noteA: string;
-  noteB: string;
-  nameA: string;
-  nameB: string;
-  character: string;
-}[] = [
-  {
-    intervalA: IntervalType.Minor2,
-    intervalB: IntervalType.Major7,
-    noteA: "D♭",
-    noteB: "B",
-    nameA: "minor 2nd",
-    nameB: "major 7th",
-    character: "the tightest possible clash - both sharp and biting.",
-  },
-  {
-    intervalA: IntervalType.Major2,
-    intervalB: IntervalType.Minor7,
-    noteA: "D",
-    noteB: "B♭",
-    nameA: "major 2nd",
-    nameB: "minor 7th",
-    character: "open and a little restless",
-  },
-  {
-    intervalA: IntervalType.Minor3,
-    intervalB: IntervalType.Major6,
-    noteA: "E♭",
-    noteB: "A",
-    nameA: "minor 3rd",
-    nameB: "major 6th",
-    character: "mellow and a bit wistful.",
-  },
-  {
-    intervalA: IntervalType.Major3,
-    intervalB: IntervalType.Minor6,
+/** What this page says about each pair, which is written for "every interval starts from C". */
+const PAIR_DETAILS: Record<
+  IntervalPair["intervalClass"],
+  { noteA: string; noteB: string; character: string }
+> = {
+  1: { noteA: "D♭", noteB: "B", character: "the tightest possible clash - both sharp and biting." },
+  2: { noteA: "D", noteB: "B♭", character: "open and a little restless" },
+  3: { noteA: "E♭", noteB: "A", character: "mellow and a bit wistful." },
+  4: {
     noteA: "E",
     noteB: "A♭",
-    nameA: "major 3rd",
-    nameB: "minor 6th",
     character: "the two sweetest, most settled intervals in the system.",
   },
-  {
-    intervalA: IntervalType.Fourth,
-    intervalB: IntervalType.Fifth,
-    noteA: "F",
-    noteB: "G",
-    nameA: "perfect 4th",
-    nameB: "perfect 5th",
-    character: "clean, open, and stable.",
-  },
-  {
-    intervalA: IntervalType.Tritone,
-    intervalB: IntervalType.Tritone,
+  5: { noteA: "F", noteB: "G", character: "clean, open, and stable." },
+  6: {
     noteA: "F♯",
     noteB: "F♯",
-    nameA: "tritone",
-    nameB: "tritone",
     character: "splits the octave exactly in half, so it inverts to itself.",
   },
-];
-
-const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+};
 
 export default function IntervalInversionsPage() {
   return (
@@ -122,18 +76,19 @@ export default function IntervalInversionsPage() {
         the <i>tritone</i>&nbsp;is a special case where it is its own inversion, and 6 + 6 = 12.
       </p>
 
-      {INVERSION_PAIRS.map(
-        ({ intervalA, intervalB, noteA, noteB, nameA, nameB, character }) => (
+      {INTERVAL_PAIRS.map(({ intervalClass, intervalA, intervalB, nameA, nameB }) => {
+        const { noteA, noteB, character } = PAIR_DETAILS[intervalClass];
+        return (
           <ComparisonGrid2
             key={`${intervalA}-${intervalB}`}
             caption={
               intervalA === intervalB ? (
                 <>
-                  <i>{capitalize(nameA)}</i>: {character}
+                  <i>{nameA}</i>: {character}
                 </>
               ) : (
                 <>
-                  <i>{capitalize(nameA)}</i> and <i>{nameB}</i>: {character}
+                  <i>{nameA}</i> and <i>{nameB}</i>: {character}
                 </>
               )
             }
@@ -165,8 +120,8 @@ export default function IntervalInversionsPage() {
               isCompact
             />
           </ComparisonGrid2>
-        ),
-      )}
+        );
+      })}
     </>
   );
 }
