@@ -25,12 +25,12 @@ review progress is visible in git history.
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
 | Approach index | `approach/page.tsx` | 4 | | |
-| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4 | | |
-| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 3.5 |  | |
+| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 | | |
+| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |  | |
 | Why this app | `approach/why-this-app/page.tsx` | 3 | Rewritten as design consequences of What's Useful (fact → how the app draws it). No new theory claims here - those live in What's Useful. | |
 
-| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4 | | |
-| Color coding | `approach/color-coding/page.tsx` | 4 | | |
+| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 | | |
+| Color coding | `approach/color-coding/page.tsx` | 4.5 | | |
 | Accidentals | `approach/accidentals/page.tsx` | 4 | | |
 
 
@@ -40,7 +40,7 @@ review progress is visible in git history.
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
 | Chords index | `chords/page.tsx` | 0 | | |
-| Chord quality | `chords/chord-quality/page.tsx` | 0 | | |
+| Chord quality | `chords/chord-quality/page.tsx` | 3.5 | | |
 | Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3 | | |
 | Roman numerals | `chords/roman-numerals/page.tsx` | 4 | | |
 | Triad inversions | `chords/triad-inversions/page.tsx` | 4 | | |
@@ -82,5 +82,5 @@ Each entry: score — notes — last reviewed.
 
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
-| Interval inversions | `interval-inversions/page.tsx` | 4 | | |
-| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 4 | | |
+| Interval inversions | `interval-inversions/page.tsx` | 4.5 | | |
+| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 4.5 | | |
