@@ -10,13 +10,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Magnifies the figure so it fills the 1200x630 frame. */
-const FIGURE_ZOOM = 3.6;
+/** Magnifies the figure so it fills the 1200x630 frame; link previews get shrunk a lot, so big wins. */
+const FIGURE_ZOOM = 6.4;
+/** The staff drawing carries more blank space on its left than its right; shift to look centered. */
+const NUDGE_LEFT_PX = 55;
 
 export default function WhatsWrongPromoPage() {
   return (
-    <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white">
-      <div className="w-[12rem]" style={{ zoom: FIGURE_ZOOM }}>
+    <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white pt-32">
+      <div className="w-[12rem] [&_figure]:border-transparent [&_figure]:bg-transparent" style={{ zoom: FIGURE_ZOOM, marginRight: `${NUDGE_LEFT_PX * 2 / FIGURE_ZOOM}px` }}>
         <StaticStaffFigure
           chords={C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords}
           keySignature="E"
