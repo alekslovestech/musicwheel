@@ -15,8 +15,8 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
 const PROMO_IMAGE = {
   url: "/whats-wrong-with-music-theory.png",
-  width: 1120,
-  height: 680,
+  width: 1200,
+  height: 630,
   alt: "A C major chord on a staff in the key of E major, with natural signs cancelling the key signature's sharps",
 };
 
