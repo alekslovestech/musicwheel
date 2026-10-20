@@ -13,12 +13,25 @@ import {
 } from "@/lib/learn/staffFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
-export const metadata: Metadata = metadataForSlugPage(
+const PROMO_IMAGE = {
+  url: "/whats-wrong-with-music-theory.png",
+  width: 1120,
+  height: 680,
+  alt: "A C major chord on a staff in the key of E major, with natural signs cancelling the key signature's sharps",
+};
+
+const baseMetadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/whats-wrong-with-music-theory",
   "What's Wrong with Music Theory",
   "A tour of the parts of standard music theory that are historical accidents, notational bookkeeping, or turf wars - not descriptions of how harmony actually sounds.",
 );
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  openGraph: { ...baseMetadata.openGraph, images: [PROMO_IMAGE] },
+  twitter: { ...baseMetadata.twitter, images: [PROMO_IMAGE.url] },
+};
 
 export default function WhatsWrongWithMusicTheoryPage() {
   return (
@@ -71,7 +84,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <p>
         The same goes for intervals. C up to F♯ is an <i>augmented 4th</i>; C up to G♭ is a <i>diminished
         5th</i>. On paper they sit on different lines and carry different names. On the keyboard
-        they&apos;re the same two keys, 6 semitones apart.
+        they&apos;re the same two keys, 6 semitones apart. 
       </p>
 
       <ComparisonGrid2>

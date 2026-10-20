@@ -5,13 +5,11 @@ import { Factory } from "vexflow";
 
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { COMMON_STYLES, FIGURE_KEY_BORDER, LEARN_STYLES, STAFF_HEIGHT_PX } from "@/lib/design";
-import { makeDurated } from "@/types/Durated";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import type { NoteIndices } from "@/types/IndexTypes";
 import type { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import { VexFlowUtils } from "@/utils/VexFlowUtils";
+import { drawStaticStaff } from "@/utils/StaticStaffRenderer";
 
 const C_MAJOR = MusicalKey.fromGreekMode("C", ScaleModeType.Ionian);
 
@@ -22,12 +20,15 @@ export function StaticStaffFigure({
   caption,
   keySignature,
   highlightedNoteIndices,
+  showKeyboard = true,
 }: {
   chords: readonly (readonly NoteWithOctave[])[];
   caption: string;
   /** VexFlow key spec, e.g. "Cm" or "F#". */
   keySignature?: string;
   highlightedNoteIndices?: NoteIndices;
+  /** Set false to omit the keyboard even when highlightedNoteIndices is given. */
+  showKeyboard?: boolean;
 }) {
   const staffId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,16 +54,7 @@ export function StaticStaffFigure({
     const factory = new Factory({
       renderer: { elementId: staffId, width, height: container.clientHeight },
     });
-    const stave = VexFlowUtils.createStaveForContainer(factory, width);
-    stave.addClef("treble");
-    if (keySignature) stave.addKeySignature(keySignature);
-    stave.setContext(factory.getContext()).draw();
-    if (chords.length === 0) return;
-
-    const steps = chords.map((chord) => makeDurated([...chord], 1));
-    VexFlowUtils.drawVoice(factory, stave, VexFlowFormatter.createStaveChordNotes(steps, factory), {
-      voiceTime: `${chords.length}/1`,
-    });
+    drawStaticStaff(factory, width, chords, keySignature);
   }, [chords, keySignature, staffId, width]);
 
   return (
@@ -74,7 +66,7 @@ export function StaticStaffFigure({
       >
         <div id={staffId} ref={staffDivRef} style={{ width: "100%", height: "100%" }} />
       </div>
-      {highlightedNoteIndices && (
+      {showKeyboard && highlightedNoteIndices && (
         <LinearKeyboardView
           musicalKey={C_MAJOR}
           highlightedNoteIndices={highlightedNoteIndices}

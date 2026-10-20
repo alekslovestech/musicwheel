@@ -1,5 +1,5 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
-import type { NoteIndices } from "@/types/IndexTypes";
+import { ixOctaveOffset, type NoteIndices } from "@/types/IndexTypes";
 import { createNoteWithOctave, type NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { NoteConverter } from "@/utils/NoteConverter";
 
@@ -51,4 +51,9 @@ export const C_MAJOR_TRIAD_IN_E_MAJOR = chordFigure(
   note("C", Natural),
   note("E", None),
   note("G", Natural),
+);
+export const C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1 = chordFigure(
+  note("C", Natural, ixOctaveOffset(1)),
+  note("E", None, ixOctaveOffset(1)),
+  note("G", Natural, ixOctaveOffset(1)),
 );
