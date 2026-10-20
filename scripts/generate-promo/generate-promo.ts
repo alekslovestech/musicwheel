@@ -2,122 +2,126 @@
 export {}; // makes this a module so its top-level names don't clash with other scripts
 const sharp = require("sharp");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
-const { JSDOM } = require("jsdom");
-const opentype = require("opentype.js");
-const tsconfigPaths = require("tsconfig-paths");
+const { spawn, spawnSync } = require("child_process");
 
-/** Renders the promo figures with VexFlow (SVG, in jsdom) and saves each as public/<slug>.png.
- * No browser or running server needed. The figure definitions below are the source. */
+/** Screenshots each promo page (src/app/promo/<slug>/page.tsx) in headless Chrome and saves it
+ * as public/<slug>.png. Reuses a dev server already running at PROMO_BASE_URL, else starts one. */
+
+const SLUGS: string[] = ["whats-wrong-with-music-theory"];
 
 const ROOT = path.join(__dirname, "../..");
 const PUBLIC_DIR = path.join(ROOT, "public");
+// 1200x630 is the 1.91:1 ratio social platforms crop link previews to.
+const OUT_WIDTH = 1200;
+const OUT_HEIGHT = 630;
+const RENDER_SCALE = 2;
+const DEFAULT_BASE_URL = "http://localhost:3000";
+const OWN_SERVER_PORT = 3100;
+const SERVER_TIMEOUT_MS = 180_000;
 
-// Lets the app's "@/..." imports resolve when running outside Next.
-tsconfigPaths.register({ baseUrl: ROOT, paths: { "@/*": ["src/*"] } });
+const CHROME_CANDIDATES: string[] = [
+  process.env.CHROME_PATH ?? "",
+  "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
+  "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/usr/bin/google-chrome",
+  "/usr/bin/chromium",
+].filter(Boolean);
 
-const SCALE = 4;
-const STAFF_WIDTH = 200;
-const STAFF_HEIGHT = 90;
-const CARD_PADDING = 16;
-const CARD_RADIUS = 8;
-const CARD_FILL = "#dcdcdc";
-const CARD_STROKE = "#c4c4c4";
-const MARGIN = 24;
+function findChrome(): string {
+  const found = CHROME_CANDIDATES.find((candidate) => fs.existsSync(candidate));
+  if (!found) throw new Error("Chrome/Edge not found. Set CHROME_PATH to its executable.");
+  return found;
+}
 
-const PX_PER_PT = 4 / 3;
-
-/** VexFlow draws notation as <text> in the Bravura font, which the SVG rasterizer doesn't have.
- * Swap each one for the equivalent outline path. */
-function textToPaths(holder: Element, font: any): void {
-  for (const text of Array.from(holder.querySelectorAll("text"))) {
-    const sizePt = parseFloat(text.getAttribute("font-size") ?? "10");
-    const x = parseFloat(text.getAttribute("x") ?? "0");
-    const y = parseFloat(text.getAttribute("y") ?? "0");
-    const d = font.getPath(text.textContent ?? "", x, y, sizePt * PX_PER_PT).toPathData(3);
-    const path = text.ownerDocument.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", d);
-    path.setAttribute("stroke", "none");
-    text.replaceWith(path);
+async function isUp(url: string): Promise<boolean> {
+  try {
+    return (await fetch(url)).ok;
+  } catch {
+    return false;
   }
 }
 
-/** jsdom has no canvas, which VexFlow uses to measure glyph sizes while laying out the staff.
- * Answer those measurements from the Bravura font file instead. */
-function installTextMeasurement(window: any, font: any): void {
-  window.HTMLCanvasElement.prototype.getContext = () => ({
-    font: "",
-    measureText(this: { font: string }, text: string) {
-      const match = /(\d+(?:\.\d+)?)\s*(pt|px)/.exec(this.font);
-      const sizePx = match ? parseFloat(match[1]) * (match[2] === "pt" ? PX_PER_PT : 1) : 10 * PX_PER_PT;
-      const box = font.getPath(text, 0, 0, sizePx).getBoundingBox();
-      return {
-        width: font.getAdvanceWidth(text, sizePx),
-        actualBoundingBoxAscent: -box.y1,
-        actualBoundingBoxDescent: box.y2,
-        actualBoundingBoxLeft: -box.x1,
-        actualBoundingBoxRight: box.x2,
-      };
-    },
-  });
+async function waitUntilUp(url: string): Promise<void> {
+  const deadline = Date.now() + SERVER_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    if (await isUp(url)) return;
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  throw new Error(`Timed out waiting for ${url}`);
+}
+
+function stopServer(server: { pid: number; kill: () => void }): void {
+  if (process.platform === "win32") {
+    spawnSync("taskkill", ["/pid", String(server.pid), "/T", "/F"]);
+  } else {
+    server.kill();
+  }
+}
+
+async function renderSlug(chrome: string, baseUrl: string, slug: string): Promise<string> {
+  const url = `${baseUrl}/promo/${slug}`;
+  await waitUntilUp(url);
+
+  const tmpPath = path.join(os.tmpdir(), `promo-${slug}-${Date.now()}.png`);
+  const result = spawnSync(chrome, [
+    "--headless=new",
+    "--disable-gpu",
+    "--hide-scrollbars",
+    `--force-device-scale-factor=${RENDER_SCALE}`,
+    `--window-size=${OUT_WIDTH},${OUT_HEIGHT}`,
+    "--virtual-time-budget=8000",
+    `--screenshot=${tmpPath}`,
+    url,
+  ]);
+  if (!fs.existsSync(tmpPath)) {
+    throw new Error(`Chrome produced no screenshot for ${url}: ${result.stderr?.toString()}`);
+  }
+
+  // Headless windows can come out slightly off the requested size, so fix the frame explicitly.
+  const outPath = path.join(PUBLIC_DIR, `${slug}.png`);
+  await sharp(tmpPath)
+    .resize(OUT_WIDTH, OUT_HEIGHT, { fit: "cover", position: "centre" })
+    .png()
+    .toFile(outPath);
+  fs.unlinkSync(tmpPath);
+  return outPath;
 }
 
 async function generatePromo(): Promise<void> {
   console.log("📣 Starting promo image generation...");
+  const chrome = findChrome();
 
-  // VexFlow needs a DOM; set the globals before loading anything that uses it.
-  const dom = new JSDOM("<!doctype html><html><body></body></html>");
-  (global as any).window = dom.window;
-  (global as any).document = dom.window.document;
+  let baseUrl = process.env.PROMO_BASE_URL ?? DEFAULT_BASE_URL;
+  let server: { pid: number; kill: () => void } | null = null;
+  if (await isUp(baseUrl)) {
+    console.log(`🌐 Using the server already running at ${baseUrl}`);
+  } else {
+    baseUrl = `http://localhost:${OWN_SERVER_PORT}`;
+    console.log(`🚀 Starting a dev server on ${baseUrl}...`);
+    server = spawn(
+      process.execPath,
+      [path.join(ROOT, "node_modules/next/dist/bin/next"), "dev", "-p", String(OWN_SERVER_PORT)],
+      { cwd: ROOT, stdio: "ignore" },
+    );
+  }
 
-  const { Factory } = require("vexflow");
-  const { drawStaticStaff } = require("@/utils/StaticStaffRenderer");
-  const { C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1 } = require("@/lib/learn/staffFigures");
-
-  const figures: { slug: string; chords: unknown; keySignature?: string }[] = [
-    {
-      slug: "whats-wrong-with-music-theory",
-      chords: C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords,
-      keySignature: "E",
-    },
-  ];
-
-  const fontBuffer: Buffer = fs.readFileSync(require.resolve("@vexflow-fonts/bravura/bravura.otf"));
-  const font = opentype.parse(
-    fontBuffer.buffer.slice(fontBuffer.byteOffset, fontBuffer.byteOffset + fontBuffer.byteLength),
-  );
-  installTextMeasurement(dom.window, font);
-  fs.mkdirSync(PUBLIC_DIR, { recursive: true });
-  for (const { slug, chords, keySignature } of figures) {
-    console.log(`🖼️ Rendering ${slug}...`);
-    const holder = dom.window.document.createElement("div");
-    holder.id = `staff-${slug}`;
-    dom.window.document.body.appendChild(holder);
-    const factory = new Factory({
-      renderer: { elementId: holder.id, width: STAFF_WIDTH, height: STAFF_HEIGHT },
-    });
-    drawStaticStaff(factory, STAFF_WIDTH, chords, keySignature);
-
-    textToPaths(holder, font);
-    const innerSvg: string = holder.innerHTML;
-    const cardWidth = STAFF_WIDTH + CARD_PADDING * 2;
-    const cardHeight = STAFF_HEIGHT + CARD_PADDING * 2;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth + MARGIN * 2}" height="${cardHeight + MARGIN * 2}">
-  <rect width="100%" height="100%" fill="#ffffff"/>
-  <rect x="${MARGIN}" y="${MARGIN}" width="${cardWidth}" height="${cardHeight}" rx="${CARD_RADIUS}" fill="${CARD_FILL}" stroke="${CARD_STROKE}"/>
-  <g transform="translate(${MARGIN + CARD_PADDING} ${MARGIN + CARD_PADDING})">${innerSvg}</g>
-</svg>`;
-
-    const outPath = path.join(PUBLIC_DIR, `${slug}.png`);
-    await sharp(Buffer.from(svg), { density: 72 * SCALE })
-      .png()
-      .toFile(outPath);
-    console.log(`✅ Saved ${outPath}`);
+  try {
+    fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+    for (const slug of SLUGS) {
+      console.log(`🖼️ Rendering ${slug}...`);
+      console.log(`✅ Saved ${await renderSlug(chrome, baseUrl, slug)}`);
+    }
+  } finally {
+    if (server) stopServer(server);
   }
   console.log("✨ Promo image generation complete!");
 }
 
 generatePromo().catch((error: Error) => {
-  console.error("❌ Error generating promo image:", error.stack ?? error.message);
+  console.error("❌ Error generating promo image:", error.message);
   process.exit(1);
 });
