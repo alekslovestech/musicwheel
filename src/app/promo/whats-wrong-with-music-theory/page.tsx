@@ -10,13 +10,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Magnifies the figure so it fills the 1200x630 frame. */
-const FIGURE_ZOOM = 3.6;
+/** Magnifies the figure so it fills the 1200x630 frame; link previews get shrunk a lot, so big wins. */
+const FIGURE_ZOOM = 4.4;
 
 export default function WhatsWrongPromoPage() {
   return (
-    <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white">
-      <div className="w-[12rem]" style={{ zoom: FIGURE_ZOOM }}>
+    <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-canvas-bgScales pt-20">
+      <div className="w-[12rem] [&_figure]:border-transparent" style={{ zoom: FIGURE_ZOOM }}>
         <StaticStaffFigure
           chords={C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords}
           keySignature="E"
