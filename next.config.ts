@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
         destination: "/learn/scales/melodic-minor-modes",
         permanent: true,
       },
+      // The thumbnail used to live at the site root; shared links may still point there.
+      {
+        source: "/whats-wrong-with-music-theory.png",
+        destination: "/thumbnails/whats-wrong-with-music-theory.png",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

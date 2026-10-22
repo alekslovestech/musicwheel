@@ -15,6 +15,10 @@ export const metadata: Metadata = metadataForSlugPage(
   "/learn/approach/chromatic-circle",
   "The Chromatic Circle",
   "Why arranging the twelve notes in a circle instead of a line makes intervals and inversions easier to see - and how that's different from the circle of fifths.",
+  {
+    slug: "chromatic-circle",
+    alt: "The chromatic circle: the 12 notes arranged as a ring of white and black wedges",
+  },
 );
 
 export default function ChromaticCirclePage() {
