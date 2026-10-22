@@ -7,15 +7,15 @@ const path = require("path");
 const { spawn, spawnSync } = require("child_process");
 
 /** Screenshots each promo page (src/app/promo/<slug>/page.tsx) in headless Chrome and saves it
- * as public/<slug>.png. Reuses a dev server already running at PROMO_BASE_URL, else starts one. */
+ * as public/thumbnails/<slug>.png. Reuses a dev server already running at PROMO_BASE_URL, else starts one. */
 
-const SLUGS: string[] = ["whats-wrong-with-music-theory"];
+const SLUGS: string[] = ["whats-wrong-with-music-theory", "chromatic-circle"];
 
 const ROOT = path.join(__dirname, "../..");
-const PUBLIC_DIR = path.join(ROOT, "public");
-// 1200x630 is the 1.91:1 ratio social platforms crop link previews to.
-const OUT_WIDTH = 1200;
-const OUT_HEIGHT = 630;
+const { THUMBNAIL_FOLDER, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT } = require("../../src/lib/thumbnail");
+const OUTPUT_DIR = path.join(ROOT, "public", THUMBNAIL_FOLDER);
+const OUT_WIDTH: number = THUMBNAIL_WIDTH;
+const OUT_HEIGHT: number = THUMBNAIL_HEIGHT;
 const RENDER_SCALE = 2;
 const DEFAULT_BASE_URL = "http://localhost:3000";
 const OWN_SERVER_PORT = 3100;
@@ -82,7 +82,7 @@ async function renderSlug(chrome: string, baseUrl: string, slug: string): Promis
   }
 
   // Headless windows can come out slightly off the requested size, so fix the frame explicitly.
-  const outPath = path.join(PUBLIC_DIR, `${slug}.png`);
+  const outPath = path.join(OUTPUT_DIR, `${slug}.png`);
   await sharp(tmpPath)
     .resize(OUT_WIDTH, OUT_HEIGHT, { fit: "cover", position: "centre" })
     .png()
@@ -110,7 +110,7 @@ async function generatePromo(): Promise<void> {
   }
 
   try {
-    fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
     for (const slug of SLUGS) {
       console.log(`🖼️ Rendering ${slug}...`);
       console.log(`✅ Saved ${await renderSlug(chrome, baseUrl, slug)}`);

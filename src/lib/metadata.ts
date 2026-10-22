@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
+import { type Thumbnail, thumbnailImages } from "./thumbnail";
+
 const DEFAULT_SITE_URL = "https://musicwheel.app";
 
 /** Canonical site origin for metadata and OG URLs. */
@@ -148,14 +150,17 @@ export const learnViewMetadata: Metadata = {
 
 // Per-slug metadata for scales and progressions (canonical path, no query params). `description`
 // overrides the base view's generic description; omitted, it falls back to `base.description`.
+// `thumbnail` replaces the site-wide preview image for this page.
 export function metadataForSlugPage(
   base: Metadata,
   pathname: string,
   itemTitle: string,
   description?: string,
+  thumbnail?: Thumbnail,
 ): Metadata {
   const pageTitle = `Music Wheel - ${itemTitle}`;
   const pageDescription = description ?? base.description ?? undefined;
+  const images = thumbnail && thumbnailImages(thumbnail);
 
   return {
     ...base,
@@ -166,11 +171,13 @@ export function metadataForSlugPage(
       title: pageTitle,
       description: pageDescription,
       url: pathname,
+      ...images?.openGraph,
     },
     twitter: {
       ...base.twitter,
       title: pageTitle,
       description: pageDescription,
+      ...images?.twitter,
     },
     alternates: {
       canonical: pathname,

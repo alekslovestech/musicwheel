@@ -20,6 +20,7 @@ export function StaticChordFigure({
   caption,
   isCompact = false,
   showLabels = false,
+  showKeyboard = true,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
@@ -27,6 +28,8 @@ export function StaticChordFigure({
   caption: React.ReactNode;
   isCompact?: boolean;
   showLabels?: boolean;
+  /** Set false to show only the wheel. */
+  showKeyboard?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
   const chordRef = makeChordReference(
@@ -44,15 +47,17 @@ export function StaticChordFigure({
         isScales={false}
         onKeyClick={null}
       />
-      <LinearKeyboardView
-        musicalKey={musicalKey}
-        highlightedNoteIndices={chordNotes}
-        isScales={false}
-        onKeyClick={null}
-        isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
-        showLabels={showLabels}
-        isCompact={isCompact}
-      />
+      {showKeyboard && (
+        <LinearKeyboardView
+          musicalKey={musicalKey}
+          highlightedNoteIndices={chordNotes}
+          isScales={false}
+          onKeyClick={null}
+          isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
+          showLabels={showLabels}
+          isCompact={isCompact}
+        />
+      )}
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span className="whitespace-pre-line">{caption}</span>
       </figcaption>

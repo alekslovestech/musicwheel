@@ -13,25 +13,16 @@ import {
 } from "@/lib/learn/staffFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
-const PROMO_IMAGE = {
-  url: "/whats-wrong-with-music-theory.png",
-  width: 1200,
-  height: 630,
-  alt: "A C major chord on a staff in the key of E major, with natural signs cancelling the key signature's sharps",
-};
-
-const baseMetadata = metadataForSlugPage(
+export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/whats-wrong-with-music-theory",
   "What's Wrong with Music Theory",
   "A tour of the parts of standard music theory that are historical accidents, notational bookkeeping, or turf wars - not descriptions of how harmony actually sounds.",
+  {
+    slug: "whats-wrong-with-music-theory",
+    alt: "A C major chord on a staff in the key of E major, with natural signs cancelling the key signature's sharps",
+  },
 );
-
-export const metadata: Metadata = {
-  ...baseMetadata,
-  openGraph: { ...baseMetadata.openGraph, images: [PROMO_IMAGE] },
-  twitter: { ...baseMetadata.twitter, images: [PROMO_IMAGE.url] },
-};
 
 export default function WhatsWrongWithMusicTheoryPage() {
   return (

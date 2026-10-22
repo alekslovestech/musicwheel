@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { StaticStaffFigure } from "@/components/Learn/StaticStaffFigure";
 import { C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1 } from "@/lib/learn/staffFigures";
 
-/** Source for public/whats-wrong-with-music-theory.png, the link preview image for the article.
+/** Source for public/thumbnails/whats-wrong-with-music-theory.png, the link preview image for the article.
  * Not linked from the site. `yarn generate-promo` screenshots this page at 1200x630. */
 export const metadata: Metadata = {
   title: "Promo: What's Wrong with Music Theory",
