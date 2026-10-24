@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -52,7 +52,7 @@ export default function WhyThisAppPage() {
       </p>
 
       <div className="mx-auto w-full max-w-sm">
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
@@ -83,7 +83,7 @@ export default function WhyThisAppPage() {
       </p>
 
       <div className="mx-auto w-full max-w-sm">
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}

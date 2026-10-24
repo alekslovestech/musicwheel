@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { ProgressionStaffFigure } from "@/components/Learn/ProgressionStaffFigure";
-import { ScaleStaffFigure } from "@/components/Learn/ScaleStaffFigure";
-import { ChordStaffFigure } from "@/components/Learn/ChordStaffFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
+import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
-import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/staffFigures";
+import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/spelledFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -62,11 +62,11 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <ChordStaffFigure
+        <SpelledStaff
           {...C_TO_E}
           caption="C–E: major 3rd, 4 semitones"
         />
-        <ChordStaffFigure
+        <SpelledStaff
           {...E_TO_G_SHARP}
           caption="E–G♯: major 3rd, 4 semitones"
         />
@@ -86,11 +86,11 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <ChordStaffFigure
+        <SpelledStaff
           {...C_MAJOR_TRIAD}
           caption="C major: 4 + 3 semitones"
         />
-        <ChordStaffFigure
+        <SpelledStaff
           {...E_MAJOR_TRIAD}
           caption="E major: 4 + 3 semitones"
         />
@@ -108,7 +108,13 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <div className="mx-auto w-full max-w-xl">
-        <ScaleStaffFigure tonic="C" scaleType={ScaleModeType.MelodicMinor} caption="C melodic minor" isCompact/>
+        <ScaleFigure
+          tonic="C"
+          scaleType={ScaleModeType.MelodicMinor}
+          caption="C melodic minor"
+          views={["staff", "linear"]}
+          isCompact
+        />
       </div>
 
       <h2 className={LEARN_STYLES.h2}>Progressions are relationships</h2>
@@ -125,13 +131,13 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <ProgressionStaffFigure
+        <ProgressionStaff
           tonic="C"
           progression={ChordProgressionType.Two_Five_One}
           caption="The 2-5-1 in C major"
           showRomanNumerals={false}
         />
-        <ProgressionStaffFigure
+        <ProgressionStaff
           tonic="D"
           progression={ChordProgressionType.Two_Five_One}
           caption="The 2-5-1 in D major"

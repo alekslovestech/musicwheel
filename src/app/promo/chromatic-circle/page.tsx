@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { SpecialType } from "@/types/enums/SpecialType";
 
 /** Source for public/thumbnails/chromatic-circle.png, the link preview image for the chromatic circle
@@ -14,7 +14,7 @@ export default function ChromaticCirclePromoPage() {
   return (
     <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white">
       <div className="h-[660px] w-[660px] [&_figure]:border-transparent [&_figure]:bg-transparent">
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={SpecialType.None}
           inversionIndex={0}

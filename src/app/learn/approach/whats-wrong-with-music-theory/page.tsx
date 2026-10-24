@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { ChordStaffFigure } from "@/components/Learn/ChordStaffFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
 import {
   AUGMENTED_4TH,
@@ -10,7 +10,7 @@ import {
   C_MAJOR_TRIAD_IN_C_MINOR,
   C_MAJOR_TRIAD_IN_E_MAJOR,
   DIMINISHED_5TH,
-} from "@/lib/learn/staffFigures";
+} from "@/lib/learn/spelledFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
 export const metadata: Metadata = metadataForSlugPage(
@@ -23,6 +23,9 @@ export const metadata: Metadata = metadataForSlugPage(
     alt: "A C major chord on a staff in the key of E major, with natural signs cancelling the key signature's sharps",
   },
 );
+
+/** Just wide enough for a clef and 6 accidentals; the staff has no notes to make room for. */
+const KEY_SIGNATURE_STAFF_WIDTH = 130;
 
 export default function WhatsWrongWithMusicTheoryPage() {
   return (
@@ -50,7 +53,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <div className="mx-auto w-full max-w-xl">
-        <ChordStaffFigure
+        <SpelledStaff
           {...C_MAJOR_SCALE}
           caption="The 7 letters, C D E F G A B - and the 5 black keys left to be notated with ♯ or ♭ "
         />
@@ -79,11 +82,11 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <ChordStaffFigure
+        <SpelledStaff
           {...AUGMENTED_4TH}
           caption="C–F♯ (augmented 4th)"
         />
-        <ChordStaffFigure
+        <SpelledStaff
           {...DIMINISHED_5TH}
           caption="C–G♭ (diminished 5th)"
         />
@@ -115,12 +118,12 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <ChordStaffFigure
+        <SpelledStaff
           {...C_MAJOR_TRIAD_IN_C_MINOR}
           keySignature="Cm"
           caption="C major chord in the key of C minor"
         />
-        <ChordStaffFigure
+        <SpelledStaff
           {...C_MAJOR_TRIAD_IN_E_MAJOR}
           keySignature="E"
           caption="C major chord in the key of E major"
@@ -143,14 +146,16 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-        <ChordStaffFigure
+        <SpelledStaff
           chords={[]}
           keySignature="F#"
+          staffMaxWidth={KEY_SIGNATURE_STAFF_WIDTH}
           caption={"6 sharps: F♯, C♯, G♯, D♯, A♯, E♯\nFast Cars Go Dangerously Around Every Bend"}
         />
-        <ChordStaffFigure
+        <SpelledStaff
           chords={[]}
           keySignature="Gb"
+          staffMaxWidth={KEY_SIGNATURE_STAFF_WIDTH}
           caption={"6 flats: B♭, E♭, A♭, D♭, G♭, C♭\nBefore Eating A Donut, Get Coffee First"}
         />
       </div>

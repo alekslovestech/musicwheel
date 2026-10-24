@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ScaleDegreeComparison } from "@/components/Learn/ScaleDegreeComparison";
-import { ComparisonsBackLink } from "@/components/Learn/ComparisonsBackLink";
+import { ScaleDegreeComparison } from "@/components/Learn/figures/ScaleDegreeComparison";
+import { ComparisonsBackLink } from "@/components/Learn/layout/ComparisonsBackLink";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";

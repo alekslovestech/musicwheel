@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";

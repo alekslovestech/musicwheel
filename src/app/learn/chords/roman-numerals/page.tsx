@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { RomanQuality } from "@/components/Learn/RomanQuality";
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
+import { RomanQuality } from "@/components/Learn/prose/RomanQuality";
+import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -65,7 +65,7 @@ export default function RomanNumeralsPage() {
         scalePlaybackMode={ScalePlaybackMode.Triad}
         highlightedDegree={ixScaleDegree(4)}
         caption="All seven degrees of C major, with IV selected (the 4th degree's major triad)."
-        showRibbon
+        views={["wheel", "ribbon", "linear"]}
         linearShowLabels
         isCompact
       />

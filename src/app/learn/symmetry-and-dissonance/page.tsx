@@ -5,9 +5,9 @@ import {
   ComparisonGrid2,
   ComparisonGrid3,
   ComparisonGrid4,
-} from "@/components/Learn/ComparisonGrid";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
+} from "@/components/Learn/layout/ComparisonGrid";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -54,13 +54,13 @@ export default function SymmetryAndDissonancePage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={0}
           caption="C–F♯: 6 semitones apart"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={1}
@@ -79,19 +79,19 @@ export default function SymmetryAndDissonancePage() {
       </p>
 
       <ComparisonGrid3>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Augmented}
           inversionIndex={0}
           caption="Caug"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="E"
           chordType={ChordType.Augmented}
           inversionIndex={0}
           caption="Caug/E (or Eaug) "
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="G#"
           chordType={ChordType.Augmented}
           inversionIndex={0}
@@ -117,25 +117,25 @@ export default function SymmetryAndDissonancePage() {
       </p>
 
       <ComparisonGrid4>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="D#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7/D♯ (or D♯dim7)"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="F#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7/F♯ (or F♯dim7)"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="A"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
@@ -171,14 +171,12 @@ export default function SymmetryAndDissonancePage() {
           scaleType={OtherScaleType.WholeTone}
           caption="Root C: C, D, E, F♯, G♯, A♯."
           showStepAnnotations
-          showLinearKeyboard
         />
         <ScaleFigure
           tonic="D"
           scaleType={OtherScaleType.WholeTone}
           caption="Call D the root instead - the same six wedges, D, E, F♯, G♯, A♯, C."
           showStepAnnotations
-          showLinearKeyboard
         />
       </ComparisonGrid2>
 
