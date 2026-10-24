@@ -3,9 +3,9 @@ import { ixOctaveOffset, type NoteIndices } from "@/types/IndexTypes";
 import { createNoteWithOctave, type NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { NoteConverter } from "@/utils/NoteConverter";
 
-/** The notes and highlighted keys for a ChordStaffFigure, spread straight into it:
- * `<ChordStaffFigure {...C_MAJOR_TRIAD} caption="..." />`. */
-export interface StaffFigureData {
+/** The notes and highlighted keys for a SpelledStaff, spread straight into it:
+ * `<SpelledStaff {...C_MAJOR_TRIAD} caption="..." />`. */
+export interface SpelledStaffData {
   chords: readonly (readonly NoteWithOctave[])[];
   highlightedNoteIndices: NoteIndices;
 }
@@ -15,14 +15,14 @@ const note = createNoteWithOctave;
 
 /** One chord on the staff, with its keys highlighted - worked out from the notes, so the two
  * can't drift apart. */
-function chordFigure(...notes: NoteWithOctave[]): StaffFigureData {
+function chordFigure(...notes: NoteWithOctave[]): SpelledStaffData {
   return {
     chords: [notes],
     highlightedNoteIndices: notes.map((n) => NoteConverter.noteWithOctaveToActual(n)),
   };
 }
 
-export const C_MAJOR_SCALE: StaffFigureData = {
+export const C_MAJOR_SCALE: SpelledStaffData = {
   chords: [
     ...["C", "D", "E", "F", "G", "A", "B"].map((name) => [note(name, None)]),
     [note("C", None, 1)],

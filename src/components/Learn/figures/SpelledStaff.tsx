@@ -1,28 +1,32 @@
 "use client";
 
-import { useCallback } from "react";
-import type { Factory } from "vexflow";
+import { useMemo } from "react";
 
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
-import { StaffCanvas } from "@/components/Learn/StaffCanvas";
+import { Staff } from "@/components/Learn/figures/Staff";
 import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
+import { makeDurated } from "@/types/Durated";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import type { NoteIndices } from "@/types/IndexTypes";
 import type { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
-import { drawChordStaff } from "@/utils/ChordStaffRenderer";
 
 const C_MAJOR = MusicalKey.fromGreekMode("C", ScaleModeType.Ionian);
 
 /** Explicitly spelled whole-note chords on a treble staff, optionally over the linear keyboard.
- * Spelling is taken as given, so it can show notation the app itself avoids. */
-export function ChordStaffFigure({
+ *
+ * The exception among the Learn figures: every other figure derives its notes, spelling and
+ * highlighting from the app's own logic, so it can only show what the app shows. This one takes
+ * the spelling as given, for the few articles that need to show
+ * notation the app itself avoids. Don't reach for it to illustrate ordinary chords or scales. */
+export function SpelledStaff({
   chords,
   caption,
   keySignature,
   highlightedNoteIndices,
   showKeyboard = true,
   isCompact = true,
+  staffMaxWidth,
 }: {
   chords: readonly (readonly NoteWithOctave[])[];
   caption: string;
@@ -33,15 +37,19 @@ export function ChordStaffFigure({
   showKeyboard?: boolean;
   /** Single-octave keyboard (the default, matching the chords' range), or the full two octaves. */
   isCompact?: boolean;
+  /** One-off: a staff narrower than its card, for a key signature shown with no notes. */
+  staffMaxWidth?: number;
 }) {
-  const draw = useCallback(
-    (factory: Factory, width: number) => drawChordStaff(factory, width, chords, keySignature),
-    [chords, keySignature],
-  );
+  const steps = useMemo(() => chords.map((chord) => makeDurated([...chord], 1)), [chords]);
 
   return (
     <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
-      <StaffCanvas draw={draw} />
+      <Staff
+        keySignature={keySignature}
+        steps={steps}
+        voiceTime={`${steps.length}/1`}
+        maxWidth={staffMaxWidth}
+      />
       {showKeyboard && highlightedNoteIndices && (
         <LinearKeyboardView
           musicalKey={C_MAJOR}

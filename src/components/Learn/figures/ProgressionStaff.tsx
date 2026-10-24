@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo } from "react";
-import type { Factory } from "vexflow";
+import { useMemo } from "react";
 
-import { StaffCanvas } from "@/components/Learn/StaffCanvas";
+import { Staff } from "@/components/Learn/figures/Staff";
 import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
@@ -17,13 +16,12 @@ import {
 } from "@/utils/slug/progressionSelection";
 import { prepareChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 import { StaffUtils } from "@/utils/StaffUtils";
-import { VexFlowUtils } from "@/utils/VexFlowUtils";
 
 /** A chord progression on the staff the way the app draws it - same chord spelling and key
  * signature - in the given tonic, with its chord names (and optionally Roman numerals) underneath and a link to hear it in the
  * app. Meant for short patterns that fit one line; each chord is a whole note. The tonic must be
  * one the progression can legally take (see legalTonicsForProgression). */
-export function ProgressionStaffFigure({
+export function ProgressionStaff({
   tonic,
   progression,
   caption,
@@ -52,32 +50,23 @@ export function ProgressionStaffFigure({
     };
   }, [musicalKey, progression]);
 
-  const draw = useCallback(
-    (factory: Factory, width: number) => {
-      const spellingKey = musicalKey.getStaffSpellingKey();
-      const stave = VexFlowUtils.createStaveForContainer(factory, width);
-      stave.addClef("treble").addKeySignature(VexFlowFormatter.getKeySignatureForVex(spellingKey));
-      stave.setContext(factory.getContext()).draw();
-
-      const prepared = prepareChordProgressionSequence(progression, musicalKey);
-      const steps = StaffUtils.buildDuratedChordStepsForBar(
-        prepared,
-        prepared.steps.map((_, index) => index),
-        spellingKey,
-      );
-      VexFlowUtils.drawVoice(
-        factory,
-        stave,
-        VexFlowFormatter.createStaveChordNotes(steps, factory),
-        { voiceTime: `${steps.length}/1` },
-      );
-    },
-    [musicalKey, progression],
+  const keySignature = useMemo(
+    () => VexFlowFormatter.getKeySignatureForVex(musicalKey.getStaffSpellingKey()),
+    [musicalKey],
   );
+
+  const steps = useMemo(() => {
+    const prepared = prepareChordProgressionSequence(progression, musicalKey);
+    return StaffUtils.buildDuratedChordStepsForBar(
+      prepared,
+      prepared.steps.map((_, index) => index),
+      musicalKey.getStaffSpellingKey(),
+    );
+  }, [musicalKey, progression]);
 
   return (
     <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
-      <StaffCanvas draw={draw} />
+      <Staff keySignature={keySignature} steps={steps} voiceTime={`${steps.length}/1`} />
       <figcaption className={LEARN_STYLES.figureCaption}>
         <span>{caption}</span>
         {showRomanNumerals && <span>{romanNumerals}</span>}
