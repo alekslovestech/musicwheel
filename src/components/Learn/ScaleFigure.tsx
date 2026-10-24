@@ -10,7 +10,7 @@ import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { actualToChromatic } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
-import { AnyScaleType, isOtherScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
+import { AnyScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
 import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 // One scale figure: the wheel, optionally the keyboard, and a link to the live app. 
@@ -50,9 +50,7 @@ export function ScaleFigure({
    * same as the rest of the figure. */
   showRibbon?: boolean;
 }) {
-  const musicalKey = isOtherScaleType(scaleType)
-    ? MusicalKey.fromOtherScale(tonic, scaleType)
-    : MusicalKey.fromGreekMode(tonic, scaleType);
+  const musicalKey = MusicalKey.fromScale(tonic, scaleType);
   // Leave undefined rather than [] when nothing's highlighted - CircularKeyboardView and
   // LinearKeyboardView already default highlightedNoteIndices to [] themselves.
   const highlightedNoteIndices =

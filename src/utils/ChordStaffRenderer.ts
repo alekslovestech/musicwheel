@@ -5,9 +5,9 @@ import type { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { VexFlowUtils } from "@/utils/VexFlowUtils";
 
-/** Draws a treble staff of whole-note chords onto a factory's render context. Shared by the
- * StaticStaffFigure component and the promo image script, so both render identically. */
-export function drawStaticStaff(
+/** Draws a treble staff of explicitly spelled whole-note chords onto a factory's render context -
+ * the chord counterpart to the scale drawing in ScaleStaffFigure. */
+export function drawChordStaff(
   factory: Factory,
   width: number,
   chords: readonly (readonly NoteWithOctave[])[],

@@ -1,8 +1,7 @@
 import { GlobalMode } from "@/types/enums/GlobalMode";
-import { ScaleModeType } from "@/types/enums/ScaleModeType";
-import { OtherScaleType } from "@/types/enums/OtherScaleType";
 import { KeyType } from "@/types/enums/KeyType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
+import { type AnyScaleType, isOtherScaleType } from "@/types/AnyScaleType";
 import { classicalModeForScaleMode } from "@/types/Keys/MusicalKey";
 
 import {
@@ -18,12 +17,8 @@ import { slugToTonic, tonicToSlug } from "./tonicSlug";
 
 export { tonicToSlug, slugToTonic } from "./tonicSlug";
 
-/** A scale selectable in the Scales view - diatonic (ScaleModeType) or not (OtherScaleType). */
-export type AnyScaleType = ScaleModeType | OtherScaleType;
-
-export function isOtherScaleType(scaleMode: AnyScaleType): scaleMode is OtherScaleType {
-  return Object.values(OtherScaleType).includes(scaleMode as OtherScaleType);
-}
+export { isOtherScaleType } from "@/types/AnyScaleType";
+export type { AnyScaleType } from "@/types/AnyScaleType";
 
 export interface ScaleSelection {
   tonic: string;

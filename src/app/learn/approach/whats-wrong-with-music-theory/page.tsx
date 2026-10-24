@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { StaticStaffFigure } from "@/components/Learn/StaticStaffFigure";
+import { ChordStaffFigure } from "@/components/Learn/ChordStaffFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import {
   AUGMENTED_4TH,
@@ -50,7 +50,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <div className="mx-auto w-full max-w-xl">
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...C_MAJOR_SCALE}
           caption="The 7 letters, C D E F G A B - and the 5 black keys left to be notated with ♯ or ♭ "
         />
@@ -79,11 +79,11 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...AUGMENTED_4TH}
           caption="C–F♯ (augmented 4th)"
         />
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...DIMINISHED_5TH}
           caption="C–G♭ (diminished 5th)"
         />
@@ -115,12 +115,12 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...C_MAJOR_TRIAD_IN_C_MINOR}
           keySignature="Cm"
           caption="C major chord in the key of C minor"
         />
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...C_MAJOR_TRIAD_IN_E_MAJOR}
           keySignature="E"
           caption="C major chord in the key of E major"
@@ -143,12 +143,12 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
-        <StaticStaffFigure
+        <ChordStaffFigure
           chords={[]}
           keySignature="F#"
           caption={"6 sharps: F♯, C♯, G♯, D♯, A♯, E♯\nFast Cars Go Dangerously Around Every Bend"}
         />
-        <StaticStaffFigure
+        <ChordStaffFigure
           chords={[]}
           keySignature="Gb"
           caption={"6 flats: B♭, E♭, A♭, D♭, G♭, C♭\nBefore Eating A Donut, Get Coffee First"}

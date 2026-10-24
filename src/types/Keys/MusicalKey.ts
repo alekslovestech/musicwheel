@@ -1,3 +1,4 @@
+import { type AnyScaleType, isOtherScaleType } from "@/types/AnyScaleType";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { ScaleModeGroup, getScaleModeGroup } from "@/types/enums/ScaleModeGroup";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -118,6 +119,13 @@ export class MusicalKey {
    * signature-relative spelling; tonic spelling just uses the Major tonic list. */
   static fromOtherScale(tonicAsString: string, otherScaleType: OtherScaleType): MusicalKey {
     return new MusicalKey(tonicAsString, KeyType.Major, null, otherScaleType);
+  }
+
+  /** The key for any selectable scale, diatonic or not. */
+  static fromScale(tonicAsString: string, scaleType: AnyScaleType): MusicalKey {
+    return isOtherScaleType(scaleType)
+      ? MusicalKey.fromOtherScale(tonicAsString, scaleType)
+      : MusicalKey.fromGreekMode(tonicAsString, scaleType);
   }
 
   getOppositeKey(): MusicalKey {

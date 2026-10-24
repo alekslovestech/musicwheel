@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { StaticStaffFigure } from "@/components/Learn/StaticStaffFigure";
+import { ProgressionStaffFigure } from "@/components/Learn/ProgressionStaffFigure";
+import { ScaleStaffFigure } from "@/components/Learn/ScaleStaffFigure";
+import { ChordStaffFigure } from "@/components/Learn/ChordStaffFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/staffFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
+import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
+import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -36,7 +40,12 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <p>
         An octave is divided into 12 evenly spaced notes, and after the 12th the pattern repeats.
         All of Western harmony is built by choosing among those 12. The 7 letter names are one way
-        of labeling them, not a property of the notes themselves.
+        of labeling them, not a property of the notes themselves. Since they repeat, they fit
+        naturally on a circle - see{" "}
+        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+          The Chromatic Circle
+        </Link>
+        .
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Intervals are distances</h2>
@@ -45,15 +54,19 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         An interval is the distance between 2 notes, counted in semitones. Names like{" "}
         <i>minor 3rd</i> (3 semitones), <i>major 3rd</i> (4) and <i>perfect 5th</i> (7) are worth
         knowing, because each one names a distinct sound - and that sound is the same wherever the
-        interval starts.
+        interval starts. See{" "}
+        <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
+          Interval Inversions
+        </Link>{" "}
+        for what happens when you flip one.
       </p>
 
       <ComparisonGrid2>
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...C_TO_E}
           caption="C–E: major 3rd, 4 semitones"
         />
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...E_TO_G_SHARP}
           caption="E–G♯: major 3rd, 4 semitones"
         />
@@ -73,27 +86,15 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...C_MAJOR_TRIAD}
           caption="C major: 4 + 3 semitones"
         />
-        <StaticStaffFigure
+        <ChordStaffFigure
           {...E_MAJOR_TRIAD}
           caption="E major: 4 + 3 semitones"
         />
       </ComparisonGrid2>
-
-      <h2 className={LEARN_STYLES.h2}>Relationships survive transposition</h2>
-
-      <p>
-        Move every note of a chord or progression by the same number of semitones and nothing about
-        how it works changes - only how high or low it sits. A ii-V-I in C and a ii-V-I in F♯ are
-        the same progression. That&apos;s what makes{" "}
-        <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
-          Roman numerals
-        </Link>{" "}
-        useful: they name the relationship rather than the letters.
-      </p>
 
       <h2 className={LEARN_STYLES.h2}>Scales are patterns</h2>
 
@@ -106,27 +107,48 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         for how they relate to each other.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>What it&apos;s for: recognizing what you hear</h2>
+      <div className="mx-auto w-full max-w-xl">
+        <ScaleStaffFigure tonic="C" scaleType={ScaleModeType.MelodicMinor} caption="C melodic minor" isCompact/>
+      </div>
+
+      <h2 className={LEARN_STYLES.h2}>Progressions are relationships</h2>
 
       <p>
-        The point of the vocabulary is recognition. A <i>major</i> triad sounds bright and settled,
-        a <i>minor</i> triad darker. A <i>dominant 7th</i> pulls toward the chord a 5th below it; a{" "}
-        <i>diminished</i> chord is unstable and wants to move somewhere. A V-I sounds like arriving
-        home.
+        Move every note of a chord or progression by the same number of semitones and nothing about
+        how it works changes - only how high or low it sits. That&apos;s why we hear &ldquo;the same
+        song&rdquo; in any key. The 2-5-1 below uses different chords in C and in D, but the same
+        pattern, which{" "}
+        <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
+          Roman numerals
+        </Link>{" "}
+        name by each chord&apos;s place in the key.
       </p>
 
-      <p>
-        Once these sounds have names, you can hear a song and know what it&apos;s doing, play it
-        back without guessing, and reach for a specific mood on purpose instead of by accident.
-        That&apos;s the part of theory worth keeping.
-      </p>
+      <ComparisonGrid2>
+        <ProgressionStaffFigure
+          tonic="C"
+          progression={ChordProgressionType.Two_Five_One}
+          caption="The 2-5-1 in C major"
+          showRomanNumerals={false}
+        />
+        <ProgressionStaffFigure
+          tonic="D"
+          progression={ChordProgressionType.Two_Five_One}
+          caption="The 2-5-1 in D major"
+          showRomanNumerals={false}
+        />
+      </ComparisonGrid2>
 
       <p>
         See{" "}
         <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
           Why This App
         </Link>{" "}
-        for how the app is built around these facts.
+        for how the app is built around these facts, and{" "}
+        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
+          Color Coding
+        </Link>{" "}
+        for what its colors show.
       </p>
     </>
   );

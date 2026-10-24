@@ -3,8 +3,8 @@ import { ixOctaveOffset, type NoteIndices } from "@/types/IndexTypes";
 import { createNoteWithOctave, type NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 import { NoteConverter } from "@/utils/NoteConverter";
 
-/** The notes and highlighted keys for a StaticStaffFigure, spread straight into it:
- * `<StaticStaffFigure {...C_MAJOR_TRIAD} caption="..." />`. */
+/** The notes and highlighted keys for a ChordStaffFigure, spread straight into it:
+ * `<ChordStaffFigure {...C_MAJOR_TRIAD} caption="..." />`. */
 export interface StaffFigureData {
   chords: readonly (readonly NoteWithOctave[])[];
   highlightedNoteIndices: NoteIndices;

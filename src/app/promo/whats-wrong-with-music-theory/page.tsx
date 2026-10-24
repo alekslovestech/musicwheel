@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { StaticStaffFigure } from "@/components/Learn/StaticStaffFigure";
+import { ChordStaffFigure } from "@/components/Learn/ChordStaffFigure";
 import { C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1 } from "@/lib/learn/staffFigures";
 
 /** Source for public/thumbnails/whats-wrong-with-music-theory.png, the link preview image for the article.
@@ -19,7 +19,7 @@ export default function WhatsWrongPromoPage() {
   return (
     <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white pt-32">
       <div className="w-[12rem] [&_figure]:border-transparent [&_figure]:bg-transparent" style={{ zoom: FIGURE_ZOOM, marginRight: `${NUDGE_LEFT_PX * 2 / FIGURE_ZOOM}px` }}>
-        <StaticStaffFigure
+        <ChordStaffFigure
           chords={C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords}
           keySignature="E"
           caption=""
