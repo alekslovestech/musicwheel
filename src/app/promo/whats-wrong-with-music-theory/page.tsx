@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 
 /** Magnifies the figure so it fills the 1200x630 frame; link previews get shrunk a lot, so big wins. */
 const FIGURE_ZOOM = 6.4;
+/** The staff's width before zoom: just enough for the clef, key signature and chord. */
+const STAFF_WIDTH = 160;
 /** The staff drawing carries more blank space on its left than its right; shift to look centered. */
 const NUDGE_LEFT_PX = 55;
 
@@ -20,14 +22,20 @@ export default function WhatsWrongPromoPage() {
   return (
     <PromoStage>
       <div className="flex h-full w-full items-center justify-center pt-32">
-      <div className="w-[10rem]" style={{ zoom: FIGURE_ZOOM, marginRight: `${NUDGE_LEFT_PX * 2 / FIGURE_ZOOM}px` }}>
-        <SpelledStaff
-          chords={C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords}
-          keySignature="E"
-          caption=""
-          bare
-        />
-      </div>
+        <div
+          style={{
+            width: STAFF_WIDTH,
+            zoom: FIGURE_ZOOM,
+            marginRight: `${(NUDGE_LEFT_PX * 2) / FIGURE_ZOOM}px`,
+          }}
+        >
+          <SpelledStaff
+            chords={C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords}
+            keySignature="E"
+            caption=""
+            bare
+          />
+        </div>
       </div>
     </PromoStage>
   );

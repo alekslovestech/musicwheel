@@ -3,8 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const STAGE_WIDTH = 1200;
-const STAGE_HEIGHT = 630;
+import { THUMBNAIL_HEIGHT, THUMBNAIL_WIDTH } from "@/lib/thumbnail";
 
 /** Query flag the generator script adds: the page renders the bare 1200x630 stage in the top-left
  * corner, so the screenshot can be cropped to exactly the stage. Also what the preview iframe
@@ -13,7 +12,7 @@ const CAPTURE_PARAM = "capture";
 
 type Mode = "pending" | "capture" | "preview";
 
-/** A fixed 1200x630 white stage - the size of a link-preview image.
+/** A fixed white stage the size of a thumbnail (see lib/thumbnail).
  *
  * With ?capture (the generator script) it renders the stage itself, unscaled. Opened normally in
  * a browser it shows that same capture view in a 1200x630 iframe, centered and scaled to fit the
@@ -41,7 +40,9 @@ export function PromoStage({ children }: { children: React.ReactNode }) {
     const frame = frameRef.current;
     if (mode !== "preview" || !frame) return;
     const update = () =>
-      setScale(Math.min(frame.clientWidth / STAGE_WIDTH, frame.clientHeight / STAGE_HEIGHT));
+      setScale(
+        Math.min(frame.clientWidth / THUMBNAIL_WIDTH, frame.clientHeight / THUMBNAIL_HEIGHT),
+      );
     update();
     const observer = new ResizeObserver(update);
     observer.observe(frame);
@@ -60,8 +61,8 @@ export function PromoStage({ children }: { children: React.ReactNode }) {
       <div
         className="flex items-center justify-center overflow-hidden bg-white"
         style={{
-          width: STAGE_WIDTH,
-          height: STAGE_HEIGHT,
+          width: THUMBNAIL_WIDTH,
+          height: THUMBNAIL_HEIGHT,
           visibility: mode === "capture" ? "visible" : "hidden",
         }}
       >
@@ -79,8 +80,8 @@ export function PromoStage({ children }: { children: React.ReactNode }) {
         onLoad={() => setIsLoaded(true)}
         className="absolute left-1/2 top-1/2 border-0 bg-white"
         style={{
-          width: STAGE_WIDTH,
-          height: STAGE_HEIGHT,
+          width: THUMBNAIL_WIDTH,
+          height: THUMBNAIL_HEIGHT,
           visibility: isLoaded && scale !== null ? "visible" : "hidden",
           transform: `translate(-50%, -50%) scale(${scale ?? 1})`,
         }}

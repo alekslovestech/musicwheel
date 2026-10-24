@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/** The wheel's width. Smaller than the stage is tall, to leave room for the ribbon underneath. */
+const WHEEL_WIDTH = 468;
+/** The ribbon is magnified, so it's laid out narrow and zoomed: WIDTH * ZOOM is its on-screen
+ * width, picked so its four swatches span the wheel's own width. */
+const RIBBON_WIDTH = 170;
 const RIBBON_ZOOM = 3;
 
 const FIGURE_PROPS = {
@@ -33,13 +38,19 @@ export default function ColorCodingPromoPage() {
   return (
     <PromoStage>
       <div className="flex flex-col items-center justify-center gap-6">
-      {/* One-off: mute the wedge labels so the green triangle is the loudest thing on the wheel. */}
-      <div className="w-[468px] [&_text]:opacity-30">
-        <ScaleFigure {...FIGURE_PROPS} views={["wheel"]} bare />
-      </div>
-      <div className="w-[170px]" style={{ zoom: RIBBON_ZOOM }}>
-        <ScaleFigure {...FIGURE_PROPS} views={["ribbon"]} ribbonCount={4} ribbonShowLabels={false} bare />
-      </div>
+        {/* One-off: mute the wedge labels so the green triangle is the loudest thing on the wheel. */}
+        <div className="[&_text]:opacity-30" style={{ width: WHEEL_WIDTH }}>
+          <ScaleFigure {...FIGURE_PROPS} views={["wheel"]} bare />
+        </div>
+        <div style={{ width: RIBBON_WIDTH, zoom: RIBBON_ZOOM }}>
+          <ScaleFigure
+            {...FIGURE_PROPS}
+            views={["ribbon"]}
+            ribbonCount={4}
+            ribbonShowLabels={false}
+            bare
+          />
+        </div>
       </div>
     </PromoStage>
   );
