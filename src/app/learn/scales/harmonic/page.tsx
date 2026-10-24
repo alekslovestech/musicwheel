@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -49,7 +49,7 @@ export default function HarmonicScalesPage() {
           showStepAnnotations
           caption="C Harmonic Minor: the ♭6 and 7, an augmented 2nd apart."
           isCompact
-          showRibbon
+          views={["wheel", "ribbon", "linear"]}
         />
         <ScaleFigure
           tonic="C"
@@ -57,7 +57,7 @@ export default function HarmonicScalesPage() {
           showStepAnnotations
           caption="C Harmonic Major: the same ♭6 and 7, an augmented 2nd apart."
           isCompact
-          showRibbon
+          views={["wheel", "ribbon", "linear"]}
         />
       </ComparisonGrid2>
 
@@ -78,7 +78,7 @@ export default function HarmonicScalesPage() {
           showStepAnnotations
           caption="C Double Harmonic Major: two augmented 2nd intervals, on opposite sides of the wheel."
           isCompact
-          showRibbon
+          views={["wheel", "ribbon", "linear"]}
         />
         <ScaleFigure
           tonic="C"
@@ -86,7 +86,7 @@ export default function HarmonicScalesPage() {
           showStepAnnotations
           caption="C Hungarian Minor: the same two-interval shape, but starting from a different tonic."
           isCompact
-          showRibbon
+          views={["wheel", "ribbon", "linear"]}
         />
       </ComparisonGrid2>
 

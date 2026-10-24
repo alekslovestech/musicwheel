@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -31,13 +31,13 @@ export default function MajorVsMinorPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="G"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="G major (G)"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="G"
           chordType={ChordType.Minor}
           inversionIndex={0}

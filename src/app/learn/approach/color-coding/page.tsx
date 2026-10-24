@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { INTERVAL_CLASS_PALETTE } from "@/lib/design/palette";
 import { INTERVAL_PAIRS } from "@/lib/learn/intervalPairs";
@@ -140,14 +140,14 @@ export default function ColorCodingPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
           isCompact={true}
           caption="C–E: major 3rd"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="E"
           chordType={IntervalType.Major3}
           inversionIndex={0}
@@ -168,14 +168,14 @@ export default function ColorCodingPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           isCompact={true}
           caption="C major"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="E"
           chordType={ChordType.Major}
           inversionIndex={0}

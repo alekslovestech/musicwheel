@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { INTERVAL_PAIRS, type IntervalPair } from "@/lib/learn/intervalPairs";
@@ -93,7 +93,7 @@ export default function IntervalInversionsPage() {
               )
             }
           >
-            <StaticChordFigure
+            <ChordWheel
               rootNote="C"
               chordType={intervalA}
               inversionIndex={0}
@@ -104,7 +104,7 @@ export default function IntervalInversionsPage() {
               }
               isCompact
             />
-            <StaticChordFigure
+            <ChordWheel
               rootNote="C"
               chordType={intervalB}
               inversionIndex={0}

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { GoodForRow } from "@/components/Learn/GoodForRow";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -20,6 +19,31 @@ export const metadata: Metadata = metadataForSlugPage(
     alt: "The chromatic circle: the 12 notes arranged as a ring of white and black wedges",
   },
 );
+
+/** What each of the two circles is good for, one row per concept. */
+const GOOD_FOR = [
+  { concept: "Notes arranged in a circle", chromatic: true, fifths: true },
+  { concept: "Intuition around intervals", chromatic: true, fifths: false },
+  { concept: "Intuition around interval and chord inversions", chromatic: true, fifths: false },
+  { concept: "Key signatures and accidentals", chromatic: false, fifths: true },
+  { concept: "Which keys share the most notes", chromatic: false, fifths: true },
+];
+
+function GoodForCell({ isGood }: { isGood: boolean }) {
+  return (
+    <td className="px-snug py-tight text-center">
+      {isGood ? (
+        <span className="text-green-600" aria-label="Good for this">
+          ✓
+        </span>
+      ) : (
+        <span className="text-red-500" aria-label="Not what this is for">
+          ✗
+        </span>
+      )}
+    </td>
+  );
+}
 
 export default function ChromaticCirclePage() {
   return (
@@ -43,7 +67,7 @@ export default function ChromaticCirclePage() {
         same line into a loop:
       </p>
 
-      <StaticChordFigure
+      <ChordWheel
         rootNote="C"
         chordType={SpecialType.None}
         inversionIndex={0}
@@ -63,14 +87,14 @@ export default function ChromaticCirclePage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption="C–E: major 3rd"
           isCompact
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C#"
           chordType={IntervalType.Major3}
           inversionIndex={0}
@@ -89,14 +113,14 @@ export default function ChromaticCirclePage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="C major"
           isCompact
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="Db"
           chordType={ChordType.Major}
           inversionIndex={0}
@@ -148,11 +172,13 @@ export default function ChromaticCirclePage() {
           </tr>
         </thead>
         <tbody>
-          <GoodForRow concept="Notes arranged in a circle" chromatic fifths />
-          <GoodForRow concept="Intuition around intervals" chromatic fifths={false} />
-          <GoodForRow concept="Intuition around interval and chord inversions" chromatic fifths={false} />
-          <GoodForRow concept="Key signatures and accidentals" chromatic={false} fifths />
-          <GoodForRow concept="Which keys share the most notes" chromatic={false} fifths />
+          {GOOD_FOR.map(({ concept, chromatic, fifths }) => (
+            <tr key={concept} className={LEARN_STYLES.comparisonTableRow}>
+              <td className="px-snug py-tight">{concept}</td>
+              <GoodForCell isGood={chromatic} />
+              <GoodForCell isGood={fifths} />
+            </tr>
+          ))}
         </tbody>
       </table>
     </>

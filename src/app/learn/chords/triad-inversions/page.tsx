@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
-import { ComparisonGrid3 } from "@/components/Learn/ComparisonGrid";
+import { ComparisonGrid3 } from "@/components/Learn/layout/ComparisonGrid";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -29,21 +29,21 @@ export default function TriadInversionsPage() {
         shape with a different starting point. 
       </p>
       <ComparisonGrid3>   
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="C major (C)"
         />
 
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={1}
           caption="First inversion: C/E"
         />
 
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={2}

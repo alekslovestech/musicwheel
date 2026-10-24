@@ -1,5 +1,5 @@
 import { ColorSwatch } from "@/components/ColorLegend/ColorSwatch";
-import { Roman } from "@/components/Learn/Roman";
+import { Roman } from "@/components/Learn/prose/Roman";
 import { ChordType } from "@/types/enums/ChordType";
 import { RomanChord } from "@/types/RomanChord";
 import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";

@@ -26,7 +26,7 @@ review progress is visible in git history.
 |---|---|---|---|---|
 | Approach index | `approach/page.tsx` | 4 | | |
 | What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 | | |
-| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |  | |
+| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 3.5 |  | |
 | Why this app | `approach/why-this-app/page.tsx` | 3.5 | | |
 
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 | | |

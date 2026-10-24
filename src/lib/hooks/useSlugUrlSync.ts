@@ -11,7 +11,6 @@ import { slugToProgressionType } from "@/utils/slug/codecs";
 import { slugToTonic } from "@/utils/slug/tonicSlug";
 import {
   isLegalTonic,
-  isOtherScaleType,
   routeMatchesScaleSelection,
   scaleSelectionFromRoute,
   scaleSelectionPath,
@@ -77,11 +76,7 @@ export function useScaleSlugPage() {
 
     pendingRouteSyncRef.current = routeKey;
     if (keyChanged) {
-      setSelectedMusicalKey(
-        isOtherScaleType(routeSelection.scaleMode)
-          ? MusicalKey.fromOtherScale(routeSelection.tonic, routeSelection.scaleMode)
-          : MusicalKey.fromGreekMode(routeSelection.tonic, routeSelection.scaleMode),
-      );
+      setSelectedMusicalKey(MusicalKey.fromScale(routeSelection.tonic, routeSelection.scaleMode));
     }
     if (playbackChanged) {
       setScalePlaybackMode(routeSelection.playbackMode);

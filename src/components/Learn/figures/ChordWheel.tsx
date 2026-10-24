@@ -13,7 +13,7 @@ import { NoteConverter } from "@/utils/NoteConverter";
 
 /** A chord on the wheel and linear keyboard, Harmony-mode colors (no diatonic shading, no tonic
  * flag). The wheel's base-note dot follows whichever note is first in the chord's note array. */
-export function StaticChordFigure({
+export function ChordWheel({
   rootNote,
   chordType,
   inversionIndex,

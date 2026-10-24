@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { QualityRow } from "@/components/Learn/QualityRow";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { QualityRow } from "@/components/Learn/prose/QualityRow";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -42,13 +42,13 @@ export default function ChordQualityPage() {
       </p>
 
       <ComparisonGrid2>
-        <StaticChordFigure
+        <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="C major - major 3rd, then minor 3rd, from C"
         />
-        <StaticChordFigure
+        <ChordWheel
           rootNote="E"
           chordType={ChordType.Major}
           inversionIndex={0}

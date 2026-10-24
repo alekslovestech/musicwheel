@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
-import { StaticChordFigure } from "@/components/Learn/StaticChordFigure";
+import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { SpecialType } from "@/types/enums/SpecialType";
 
 export const metadata: Metadata = metadataForSlugPage(
@@ -37,7 +37,7 @@ export default function AccidentalsPage() {
         <i>downplay</i> the accidentals. The first black key of the linear keyboard is just in
         between a C and a D, and you can put whatever label on it you want mentally. 
       </p>
-      <StaticChordFigure
+      <ChordWheel
         rootNote="C"
         chordType={SpecialType.None}
         inversionIndex={0}

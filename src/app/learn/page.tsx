@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { LearnTags } from "@/components/Learn/LearnTags";
+import { LearnTags } from "@/components/Learn/layout/LearnTags";
 import { LEARN_STYLES } from "@/lib/design";
 import { LearnTag } from "@/types/enums/LearnTag";
 

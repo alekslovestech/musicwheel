@@ -1,5 +1,5 @@
-import { ComparisonGrid2 } from "@/components/Learn/ComparisonGrid";
-import { ScaleFigure } from "@/components/Learn/ScaleFigure";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
+import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
