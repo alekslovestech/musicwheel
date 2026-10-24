@@ -67,9 +67,9 @@ export function ScaleDegreeComparison({
 
       <p>
         The wheel makes the difference positional rather than verbal: the {ordinal}-degree wedge
-        sits one wedge further {direction} in <i>{modeB}</i>, and the spoke drawn from the center recolors
-        to the interval that degree now forms with the tonic. Everything else on the two wheels is
-        identical.
+        sits one wedge further {direction} in <i>{modeB}</i>, and the spoke drawn from the center
+        recolors to the interval that degree now forms with the tonic. Everything else on the two
+        wheels is identical.
       </p>
     </>
   );

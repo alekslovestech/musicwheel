@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import { Staff } from "@/components/Learn/figures/Staff";
-import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
+import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
+import { LEARN_STYLES } from "@/lib/design";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -26,15 +27,19 @@ export function ProgressionStaff({
   progression,
   caption,
   showRomanNumerals = true,
+  bare = false,
 }: {
   tonic: string;
   progression: ChordProgressionType;
   caption: string;
   /** Roman numerals above the chord names. */
   showRomanNumerals?: boolean;
+  /** Render just the figure - no card, padding or caption - for use as an image. */
+  bare?: boolean;
 }) {
   const musicalKey = useMemo(
-    () => MusicalKey.fromClassicalMode(tonic, suggestedKeyForProgression(progression).classicalMode),
+    () =>
+      MusicalKey.fromClassicalMode(tonic, suggestedKeyForProgression(progression).classicalMode),
     [tonic, progression],
   );
 
@@ -65,19 +70,23 @@ export function ProgressionStaff({
   }, [musicalKey, progression]);
 
   return (
-    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
+    <FigureFrame
+      bare={bare}
+      caption={
+        <>
+          <span>{caption}</span>
+          {showRomanNumerals && <span>{romanNumerals}</span>}
+          <span>{chordNames}</span>
+          <Link
+            href={progressionSelectionPath({ tonic, progression })}
+            className={LEARN_STYLES.link}
+          >
+            Hear it in the app
+          </Link>
+        </>
+      }
+    >
       <Staff keySignature={keySignature} steps={steps} voiceTime={`${steps.length}/1`} />
-      <figcaption className={LEARN_STYLES.figureCaption}>
-        <span>{caption}</span>
-        {showRomanNumerals && <span>{romanNumerals}</span>}
-        <span>{chordNames}</span>
-        <Link
-          href={progressionSelectionPath({ tonic, progression })}
-          className={LEARN_STYLES.link}
-        >
-          Hear it in the app
-        </Link>
-      </figcaption>
-    </figure>
+    </FigureFrame>
   );
 }

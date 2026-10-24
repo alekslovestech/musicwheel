@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { PromoStage } from "@/app/promo/PromoStage";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { SpecialType } from "@/types/enums/SpecialType";
 
@@ -12,16 +13,17 @@ export const metadata: Metadata = {
 
 export default function ChromaticCirclePromoPage() {
   return (
-    <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white">
-      <div className="h-[660px] w-[660px] [&_figure]:border-transparent [&_figure]:bg-transparent">
+    <PromoStage>
+      <div className="h-[628px] w-[628px]">
         <ChordWheel
           rootNote="C"
           chordType={SpecialType.None}
           inversionIndex={0}
           caption=""
           showKeyboard={false}
+          bare
         />
       </div>
-    </main>
+    </PromoStage>
   );
 }

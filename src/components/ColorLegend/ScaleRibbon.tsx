@@ -14,6 +14,7 @@ export function ScaleRibbon({
   caption,
   stepAnnotations,
   showTitle = true,
+  showLabels = true,
 }: {
   ribbon: ScaleRibbonData;
   activeDegreeIndex?: number | null;
@@ -27,6 +28,9 @@ export function ScaleRibbon({
    * lens can change, e.g. SequenceLegendPanel. A figure that only ever shows one static ribbon
    * has nothing for the title to disambiguate. */
   showTitle?: boolean;
+  /** The label under each cell. Off leaves bare color swatches. Applies to the swatch ribbons
+   * (Triads, Sevenths); the Notes ribbon is nothing but its labels. */
+  showLabels?: boolean;
 }) {
   return (
     <div id="scale-ribbon" className="flex flex-col gap-tight">
@@ -51,6 +55,7 @@ export function ScaleRibbon({
           notes={ribbon.notes}
           activeDegreeIndex={activeDegreeIndex}
           onSelectStep={onSelectStep}
+          showLabels={showLabels}
         />
       )}
 
@@ -97,10 +102,12 @@ function NotesRibbonLayout({
   notes,
   activeDegreeIndex,
   onSelectStep,
+  showLabels,
 }: {
   notes: LabelWithColor[];
   activeDegreeIndex: number | null;
   onSelectStep?: (stepIndex: number) => void;
+  showLabels: boolean;
 }) {
   // No outer gap - every layout uses equal-width flex-1 cells with zero gap, so a note's center
   // is always at index+0.5 slots. See LabelsRibbonLayout, which depends on that being exact.
@@ -115,6 +122,7 @@ function NotesRibbonLayout({
           key={`${note.label}-${index}`}
           note={note}
           stepIndex={index}
+          showLabel={showLabels}
           {...cellProps}
         />
       )}
@@ -219,11 +227,13 @@ function RibbonNoteSwatch({
   stepIndex,
   isActive,
   onSelect,
+  showLabel,
 }: {
   note: LabelWithColor;
   stepIndex: number;
   isActive: boolean;
   onSelect?: () => void;
+  showLabel: boolean;
 }) {
   return (
     <RibbonNoteCell
@@ -233,9 +243,11 @@ function RibbonNoteSwatch({
       className={RIBBON_STYLES.noteCell}
     >
       <ColorSwatch color={note.color} isActive={isActive} />
-      <span className={`w-full truncate text-center ${TYPOGRAPHY.degreeLabelText}`}>
-        {note.label}
-      </span>
+      {showLabel && (
+        <span className={`w-full truncate text-center ${TYPOGRAPHY.degreeLabelText}`}>
+          {note.label}
+        </span>
+      )}
     </RibbonNoteCell>
   );
 }

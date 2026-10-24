@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { PromoStage } from "@/app/promo/PromoStage";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1 } from "@/lib/learn/spelledFigures";
 
@@ -17,14 +18,17 @@ const NUDGE_LEFT_PX = 55;
 
 export default function WhatsWrongPromoPage() {
   return (
-    <main className="flex h-screen w-screen items-center justify-center overflow-hidden bg-white pt-32">
-      <div className="w-[12rem] [&_figure]:border-transparent [&_figure]:bg-transparent" style={{ zoom: FIGURE_ZOOM, marginRight: `${NUDGE_LEFT_PX * 2 / FIGURE_ZOOM}px` }}>
+    <PromoStage>
+      <div className="flex h-full w-full items-center justify-center pt-32">
+      <div className="w-[10rem]" style={{ zoom: FIGURE_ZOOM, marginRight: `${NUDGE_LEFT_PX * 2 / FIGURE_ZOOM}px` }}>
         <SpelledStaff
           chords={C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1.chords}
           keySignature="E"
           caption=""
+          bare
         />
       </div>
-    </main>
+      </div>
+    </PromoStage>
   );
 }
