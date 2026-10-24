@@ -12,7 +12,7 @@ export interface Thumbnail {
   alt: string;
 }
 
-export function thumbnailUrl(slug: string): string {
+function thumbnailUrl(slug: string): string {
   return `/${THUMBNAIL_FOLDER}/${slug}.png`;
 }
 

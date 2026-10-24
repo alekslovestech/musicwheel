@@ -7,15 +7,17 @@ const path = require("path");
 const { spawn, spawnSync } = require("child_process");
 
 /** Screenshots each promo page (src/app/promo/<slug>/page.tsx) in headless Chrome and saves it
- * as public/thumbnails/<slug>.png. Reuses a dev server already running at PROMO_BASE_URL, else starts one. */
-
-const SLUGS: string[] = ["whats-wrong-with-music-theory", "chromatic-circle"];
+ * as public/thumbnails/<slug>.png. Reuses a dev server already running at PROMO_BASE_URL, else
+ * starts one. */
 
 const ROOT = path.join(__dirname, "../..");
-const { THUMBNAIL_FOLDER, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT } = require("../../src/lib/thumbnail");
+const PROMO_PAGES_DIR = path.join(ROOT, "src", "app", "promo");
+const {
+  THUMBNAIL_FOLDER,
+  THUMBNAIL_WIDTH: OUT_WIDTH,
+  THUMBNAIL_HEIGHT: OUT_HEIGHT,
+} = require("../../src/lib/thumbnail");
 const OUTPUT_DIR = path.join(ROOT, "public", THUMBNAIL_FOLDER);
-const OUT_WIDTH: number = THUMBNAIL_WIDTH;
-const OUT_HEIGHT: number = THUMBNAIL_HEIGHT;
 const RENDER_SCALE = 2;
 const DEFAULT_BASE_URL = "http://localhost:3000";
 const OWN_SERVER_PORT = 3100;
@@ -35,6 +37,17 @@ function findChrome(): string {
   const found = CHROME_CANDIDATES.find((candidate) => fs.existsSync(candidate));
   if (!found) throw new Error("Chrome/Edge not found. Set CHROME_PATH to its executable.");
   return found;
+}
+
+/** Every promo page: each folder in src/app/promo that has a page.tsx is one image, named after
+ * the folder. */
+function findSlugs(): string[] {
+  return fs
+    .readdirSync(PROMO_PAGES_DIR, { withFileTypes: true })
+    .filter((entry: any) => entry.isDirectory())
+    .map((entry: any) => entry.name)
+    .filter((name: string) => fs.existsSync(path.join(PROMO_PAGES_DIR, name, "page.tsx")))
+    .sort();
 }
 
 async function isUp(url: string): Promise<boolean> {
@@ -63,7 +76,7 @@ function stopServer(server: { pid: number; kill: () => void }): void {
 }
 
 async function renderSlug(chrome: string, baseUrl: string, slug: string): Promise<string> {
-  const url = `${baseUrl}/promo/${slug}`;
+  const url = `${baseUrl}/promo/${slug}?capture`;
   await waitUntilUp(url);
 
   const tmpPath = path.join(os.tmpdir(), `promo-${slug}-${Date.now()}.png`);
@@ -72,7 +85,8 @@ async function renderSlug(chrome: string, baseUrl: string, slug: string): Promis
     "--disable-gpu",
     "--hide-scrollbars",
     `--force-device-scale-factor=${RENDER_SCALE}`,
-    `--window-size=${OUT_WIDTH},${OUT_HEIGHT}`,
+    // Bigger than the stage: a headless window's viewport is smaller than the window itself.
+    `--window-size=${OUT_WIDTH + 200},${OUT_HEIGHT + 300}`,
     "--virtual-time-budget=8000",
     `--screenshot=${tmpPath}`,
     url,
@@ -81,10 +95,11 @@ async function renderSlug(chrome: string, baseUrl: string, slug: string): Promis
     throw new Error(`Chrome produced no screenshot for ${url}: ${result.stderr?.toString()}`);
   }
 
-  // Headless windows can come out slightly off the requested size, so fix the frame explicitly.
+  // The ?capture flag pins the stage to the page's top-left corner, so crop exactly that.
   const outPath = path.join(OUTPUT_DIR, `${slug}.png`);
   await sharp(tmpPath)
-    .resize(OUT_WIDTH, OUT_HEIGHT, { fit: "cover", position: "centre" })
+    .extract({ left: 0, top: 0, width: OUT_WIDTH * RENDER_SCALE, height: OUT_HEIGHT * RENDER_SCALE })
+    .resize(OUT_WIDTH, OUT_HEIGHT)
     .png()
     .toFile(outPath);
   fs.unlinkSync(tmpPath);
@@ -111,7 +126,7 @@ async function generatePromo(): Promise<void> {
 
   try {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-    for (const slug of SLUGS) {
+    for (const slug of findSlugs()) {
       console.log(`🖼️ Rendering ${slug}...`);
       console.log(`✅ Saved ${await renderSlug(chrome, baseUrl, slug)}`);
     }

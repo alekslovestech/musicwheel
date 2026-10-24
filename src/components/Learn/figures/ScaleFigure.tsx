@@ -7,7 +7,8 @@ import { ScaleRibbon } from "@/components/ColorLegend/ScaleRibbon";
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { Staff } from "@/components/Learn/figures/Staff";
-import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
+import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
+import { LEARN_STYLES } from "@/lib/design";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { actualToChromatic, NoteIndices } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -19,7 +20,7 @@ import { SCALE_STAFF_DRAW_OPTIONS, StaffUtils } from "@/utils/StaffUtils";
 import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
 /** The parts a scale figure can show. */
-export type ScaleView = "wheel" | "ribbon" | "staff" | "linear";
+type ScaleView = "wheel" | "ribbon" | "staff" | "linear";
 
 const DEFAULT_VIEWS: readonly ScaleView[] = ["wheel", "linear"];
 
@@ -43,8 +44,11 @@ export function ScaleFigure({
   scalePlaybackMode = ScalePlaybackMode.SingleNote,
   highlightedDegree,
   showStepAnnotations = false,
+  ribbonCount,
+  ribbonShowLabels = true,
   linearShowLabels,
   isCompact = false,
+  bare = false,
 }: {
   tonic: string;
   scaleType: AnyScaleType;
@@ -58,6 +62,11 @@ export function ScaleFigure({
   highlightedDegree?: ScaleDegree;
   /** Step arcs on the wheel and step sizes on the ribbon. */
   showStepAnnotations?: boolean;
+  /** Show only the first N cells of the ribbon - for a Triad or Seventh ribbon, where each cell
+   * is a degree's chord. Has no effect on the Notes ribbons. */
+  ribbonCount?: number;
+  /** The label under each ribbon cell; off leaves bare swatches. Triad and Seventh ribbons only. */
+  ribbonShowLabels?: boolean;
   /** The note-name letter and accidental ticks on the linear keyboard - see PianoKeyLinear.
    * Defaults to off, except when the keyboard just shows the staff's notes. */
   linearShowLabels?: boolean;
@@ -65,6 +74,8 @@ export function ScaleFigure({
    * looks right when tonic is C, since a compact keyboard always starts there regardless of
    * tonic. See LinearKeyboardView.isCompact. */
   isCompact?: boolean;
+  /** Render just the figure - no card, padding or caption - for use as an image. */
+  bare?: boolean;
 }) {
   const musicalKey = useMemo(() => MusicalKey.fromScale(tonic, scaleType), [tonic, scaleType]);
   const showsStaff = views.includes("staff");
@@ -102,6 +113,13 @@ export function ScaleFigure({
     [musicalKey, scalePlaybackMode],
   );
 
+  const ribbonData = useMemo(() => {
+    const ribbon = buildScaleRibbonData(musicalKey, scalePlaybackMode, showStepAnnotations);
+    return ribbonCount !== undefined && ribbon.kind === "swatches"
+      ? { ...ribbon, notes: ribbon.notes.slice(0, ribbonCount) }
+      : ribbon;
+  }, [musicalKey, scalePlaybackMode, showStepAnnotations, ribbonCount]);
+
   function renderView(view: ScaleView) {
     switch (view) {
       case "wheel":
@@ -117,11 +135,12 @@ export function ScaleFigure({
       case "ribbon":
         return (
           <ScaleRibbon
-            ribbon={buildScaleRibbonData(musicalKey, scalePlaybackMode, showStepAnnotations)}
+            ribbon={ribbonData}
             activeDegreeIndex={
               highlightedDegree == null ? null : scaleDegreeToIndex(highlightedDegree)
             }
             showTitle={false}
+            showLabels={ribbonShowLabels}
           />
         );
       case "staff":
@@ -150,20 +169,27 @@ export function ScaleFigure({
   }
 
   return (
-    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
+    <FigureFrame
+      bare={bare}
+      caption={
+        <>
+          <span>{caption}</span>
+          <Link
+            href={scaleSelectionPath({
+              tonic,
+              scaleMode: scaleType,
+              playbackMode: scalePlaybackMode,
+            })}
+            className={LEARN_STYLES.link}
+          >
+            Hear {tonic} {scaleType} in the app
+          </Link>
+        </>
+      }
+    >
       {views.map((view) => (
         <Fragment key={view}>{renderView(view)}</Fragment>
       ))}
-
-      <figcaption className={LEARN_STYLES.figureCaption}>
-        <span>{caption}</span>
-        <Link
-          href={scaleSelectionPath({ tonic, scaleMode: scaleType, playbackMode: scalePlaybackMode })}
-          className={LEARN_STYLES.link}
-        >
-          Hear {tonic} {scaleType} in the app
-        </Link>
-      </figcaption>
-    </figure>
+    </FigureFrame>
   );
 }

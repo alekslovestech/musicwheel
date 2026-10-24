@@ -12,7 +12,6 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\" \"scripts/**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate-icons": "ts-node scripts/generate-icons/generate-icons.ts",
     "generate-promo": "ts-node scripts/generate-promo/generate-promo.ts",
-    "generate-assets": "yarn generate-icons && yarn generate-promo",
     "test": "jest",
     "test:watch": "jest --watch"
   },

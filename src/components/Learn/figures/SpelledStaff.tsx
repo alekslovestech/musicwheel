@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { Staff } from "@/components/Learn/figures/Staff";
-import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
+import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
 import { makeDurated } from "@/types/Durated";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import type { NoteIndices } from "@/types/IndexTypes";
@@ -27,6 +27,7 @@ export function SpelledStaff({
   showKeyboard = true,
   isCompact = true,
   staffMaxWidth,
+  bare = false,
 }: {
   chords: readonly (readonly NoteWithOctave[])[];
   caption: string;
@@ -39,11 +40,20 @@ export function SpelledStaff({
   isCompact?: boolean;
   /** One-off: a staff narrower than its card, for a key signature shown with no notes. */
   staffMaxWidth?: number;
+  /** Render just the figure - no card, padding or caption - for use as an image. */
+  bare?: boolean;
 }) {
   const steps = useMemo(() => chords.map((chord) => makeDurated([...chord], 1)), [chords]);
 
   return (
-    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
+    <FigureFrame
+      bare={bare}
+      caption={
+        <>
+          <span className="whitespace-pre-line">{caption}</span>
+        </>
+      }
+    >
       <Staff
         keySignature={keySignature}
         steps={steps}
@@ -59,9 +69,6 @@ export function SpelledStaff({
           isCompact={isCompact}
         />
       )}
-      <figcaption className={LEARN_STYLES.figureCaption}>
-        <span className="whitespace-pre-line">{caption}</span>
-      </figcaption>
-    </figure>
+    </FigureFrame>
   );
 }

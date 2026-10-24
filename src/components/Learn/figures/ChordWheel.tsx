@@ -2,7 +2,7 @@
 
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
-import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
+import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { actualToChromatic, chromaticToActual } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -21,6 +21,7 @@ export function ChordWheel({
   isCompact = false,
   showLabels = false,
   showKeyboard = true,
+  bare = false,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
@@ -30,6 +31,8 @@ export function ChordWheel({
   showLabels?: boolean;
   /** Set false to show only the wheel. */
   showKeyboard?: boolean;
+  /** Render just the figure - no card, padding or caption - for use as an image. */
+  bare?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
   const chordRef = makeChordReference(
@@ -40,7 +43,14 @@ export function ChordWheel({
   const chordNotes = ChordUtils.calculateChordNotesFromChordReference(chordRef);
 
   return (
-    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
+    <FigureFrame
+      bare={bare}
+      caption={
+        <>
+          <span className="whitespace-pre-line">{caption}</span>
+        </>
+      }
+    >
       <CircularKeyboardView
         musicalKey={musicalKey}
         highlightedNoteIndices={chordNotes}
@@ -58,9 +68,6 @@ export function ChordWheel({
           isCompact={isCompact}
         />
       )}
-      <figcaption className={LEARN_STYLES.figureCaption}>
-        <span className="whitespace-pre-line">{caption}</span>
-      </figcaption>
-    </figure>
+    </FigureFrame>
   );
 }
