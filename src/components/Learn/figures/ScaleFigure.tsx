@@ -11,7 +11,7 @@ import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
 import { LEARN_STYLES } from "@/lib/design";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { actualToChromatic, NoteIndices } from "@/types/IndexTypes";
-import { MusicalKey } from "@/types/Keys/MusicalKey";
+import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
 import { getScaleStepAtSequenceIndex } from "@/utils/SequencePlaybackUtils";
@@ -48,6 +48,7 @@ export function ScaleFigure({
   ribbonShowLabels = true,
   linearShowLabels,
   isCompact = false,
+  hasKeySignature = true,
   bare = false,
 }: {
   tonic: string;
@@ -74,6 +75,9 @@ export function ScaleFigure({
    * looks right when tonic is C, since a compact keyboard always starts there regardless of
    * tonic. See LinearKeyboardView.isCompact. */
   isCompact?: boolean;
+  /** Set false to draw the staff in C major's empty signature, so the scale's altered notes carry
+   * their own accidentals instead of the app's usual key signature. */
+  hasKeySignature?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
 }) {
@@ -98,19 +102,19 @@ export function ScaleFigure({
     ).flatMap((step) => step.notesToPlay);
   }, [musicalKey, highlightedDegree, scalePlaybackMode, showsStaff]);
 
+  const staffSpellingKey = useMemo(
+    () => (hasKeySignature ? musicalKey.getStaffSpellingKey() : DEFAULT_MUSICAL_KEY),
+    [musicalKey, hasKeySignature],
+  );
+
   const staffKeySignature = useMemo(
-    () => VexFlowFormatter.getKeySignatureForVex(musicalKey.getStaffSpellingKey()),
-    [musicalKey],
+    () => VexFlowFormatter.getKeySignatureForVex(staffSpellingKey),
+    [staffSpellingKey],
   );
 
   const staffSteps = useMemo(
-    () =>
-      StaffUtils.buildDuratedScaleStepsForBar(
-        musicalKey,
-        scalePlaybackMode,
-        musicalKey.getStaffSpellingKey(),
-      ),
-    [musicalKey, scalePlaybackMode],
+    () => StaffUtils.buildDuratedScaleStepsForBar(musicalKey, scalePlaybackMode, staffSpellingKey),
+    [musicalKey, scalePlaybackMode, staffSpellingKey],
   );
 
   const ribbonData = useMemo(() => {

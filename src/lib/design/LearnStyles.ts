@@ -23,12 +23,13 @@ export const LEARN_STYLES = {
     "m-0 flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-tight sm:gap-snug sm:p-normal",
   figureCaption: "flex flex-col gap-tight text-center text-xs text-labels-textDefault sm:text-sm",
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
-  link: "underline underline-offset-2",
+  link: "text-links-text underline underline-offset-2 hover:text-links-textHover",
 
   /** Marks an index-page link that leads to more than one page (e.g. "Comparisons"), instead of a
    * single article - a distinct font stands in for the old "Section" text badge. Use instead of
    * `link` on the heading's <Link>. */
-  sectionLink: "underline underline-offset-2 font-mono uppercase tracking-wide",
+  sectionLink:
+    "text-links-text underline underline-offset-2 hover:text-links-textHover font-mono uppercase tracking-wide",
 
   /** Row of topic tags (see LearnTag) following a heading's link. */
   tagRow: "ml-2 inline-flex gap-1 align-middle",
