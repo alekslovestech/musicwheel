@@ -65,6 +65,11 @@ const config: Config = {
         labels: {
           textDefault: "rgb(31, 31, 31)", //"#1f1f1f",
         },
+        // Inline text links in the learn section; dark enough to stay readable on canvas.bgDefault.
+        links: {
+          text: "rgb(36, 84, 168)",
+          textHover: "rgb(22, 46, 158)",
+        },
         keys: {
           bgWhite: "rgb(250, 250, 246)", //"#fafaf6",
           bgBlack: "rgb(68, 68, 68)", //"#444444",

@@ -6,7 +6,12 @@ import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
-import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/spelledFigures";
+import {
+  C_MAJOR_TRIAD,
+  C_TO_E,
+  E_MAJOR_TRIAD,
+  E_TO_G_SHARP,
+} from "@/lib/learn/spelledFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -15,7 +20,11 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/whats-useful-about-music-theory",
   "What's Useful About Music Theory",
-  "The parts of music theory that describe sound: 12 equal notes, intervals as distances, chords as shapes, and the vocabulary for recognizing what you hear.",
+  "The parts of music theory worth keeping: terms for intervals, chords, progressions and scales that describe what you hear, whatever the spelling, key or instrument.",
+  {
+    slug: "whats-useful-about-music-theory",
+    alt: "Terms and concepts of music theory that don't depend on notation, key or instrument",
+  },
 );
 
 export default function WhatsUsefulAboutMusicTheoryPage() {
@@ -28,134 +37,147 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <h1 className={LEARN_STYLES.h1}>What&apos;s Useful About Music Theory</h1>
 
       <p>
-        <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
-          What&apos;s Wrong with Music Theory
-        </Link>{" "}
-        covers the parts of theory that are about notation. Strip those away and what&apos;s left is
-        small: a handful of facts about sound that hold on any instrument, in any key.
+        Most Western music divides the octave into 12 evenly spaced notes, a tuning known as 12
+        equal divisions of the octave (12 EDO). After 12 notes we reach a new octave and the pattern
+        repeats. Many of music theory&apos;s concepts are built on this division; below are some of
+        the more useful ones, which depend on neither how the music is notated nor the key
+        it&apos;s in.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>12 equal notes</h2>
+      <h2 className={LEARN_STYLES.h2}>Intervals</h2>
 
       <p>
-        An octave is divided into 12 evenly spaced notes, and after the 12th the pattern repeats.
-        All of Western harmony is built by choosing among those 12. The 7 letter names are one way
-        of labeling them, not a property of the notes themselves. Since they repeat, they fit
-        naturally on a circle - see{" "}
-        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-          The Chromatic Circle
+        An interval is the distance between 2 notes, and each distance has its own term.
+      </p>
+
+      <p>
+        Take the <i>major 3rd</i>, starting on 2 different notes:
+      </p>
+
+      <ComparisonGrid2>
+        <SpelledStaff {...C_TO_E} caption="C–E" />
+        <SpelledStaff {...E_TO_G_SHARP} caption="E–G♯" />
+      </ComparisonGrid2>
+
+      <p>
+        On the staff they sit on different lines, and one has a ♯. To the ear they&apos;re the same
+        interval.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>Chords</h2>
+
+      <p>
+        A chord is a stack of intervals, and its term describes that stack. A <i>major chord</i> is a{" "}
+        <i>triad</i>: a <i>major 3rd</i> (4 semitones) with a <i>minor 3rd</i> (3) on top, from any
+        starting note, and it&apos;s still the same chord when its notes are rearranged (an{" "}
+        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
+          inversion
         </Link>
-        .
-      </p>
-
-      <h2 className={LEARN_STYLES.h2}>Intervals are distances</h2>
-
-      <p>
-        An interval is the distance between 2 notes, counted in semitones. Names like{" "}
-        <i>minor 3rd</i> (3 semitones), <i>major 3rd</i> (4) and <i>perfect 5th</i> (7) are worth
-        knowing, because each one names a distinct sound - and that sound is the same wherever the
-        interval starts. See{" "}
-        <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
-          Interval Inversions
-        </Link>{" "}
-        for what happens when you flip one.
+        ).
       </p>
 
       <ComparisonGrid2>
-        <SpelledStaff
-          {...C_TO_E}
-          caption="C–E: major 3rd, 4 semitones"
-        />
-        <SpelledStaff
-          {...E_TO_G_SHARP}
-          caption="E–G♯: major 3rd, 4 semitones"
-        />
+        <SpelledStaff {...C_MAJOR_TRIAD} caption="C major" />
+        <SpelledStaff {...E_MAJOR_TRIAD} caption="E major" />
       </ComparisonGrid2>
 
-      <h2 className={LEARN_STYLES.h2}>Chords are shapes</h2>
+      <h2 className={LEARN_STYLES.h2}>Chord progressions</h2>
 
       <p>
-        A chord is a stack of intervals above a root. A <i>major triad</i> is a <i>major 3rd</i>{" "}
-        with a <i>minor 3rd</i> on top; a <i>minor triad</i> swaps the two. Chord quality -{" "}
-        <i>major</i>, <i>minor</i>, <i>diminished</i>, <i>dominant 7th</i> - is the name for that
-        shape, and it&apos;s what you actually hear. See{" "}
-        <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
-          Chord Quality
-        </Link>{" "}
-        for the full set.
-      </p>
-
-      <ComparisonGrid2>
-        <SpelledStaff
-          {...C_MAJOR_TRIAD}
-          caption="C major: 4 + 3 semitones"
-        />
-        <SpelledStaff
-          {...E_MAJOR_TRIAD}
-          caption="E major: 4 + 3 semitones"
-        />
-      </ComparisonGrid2>
-
-      <h2 className={LEARN_STYLES.h2}>Scales are patterns</h2>
-
-      <p>
-        A scale is a selection from the 12 notes, defined by the gaps between them. <i>Dorian</i>
-        ,&nbsp;<i>Phrygian</i>, <i>harmonic minor</i> etc., are names for specific gap patterns. See{" "}
-        <Link href="/learn/scales" className={LEARN_STYLES.link}>
-          Scales
-        </Link>{" "}
-        for how they relate to each other.
-      </p>
-
-      <div className="mx-auto w-full max-w-xl">
-        <ScaleFigure
-          tonic="C"
-          scaleType={ScaleModeType.MelodicMinor}
-          caption="C melodic minor"
-          views={["staff", "linear"]}
-          isCompact
-        />
-      </div>
-
-      <h2 className={LEARN_STYLES.h2}>Progressions are relationships</h2>
-
-      <p>
-        Move every note of a chord or progression by the same number of semitones and nothing about
-        how it works changes - only how high or low it sits. That&apos;s why we hear &ldquo;the same
-        song&rdquo; in any key. The 2-5-1 below uses different chords in C and in D, but the same
-        pattern, which{" "}
+        A chord progression is a sequence of chords, and it&apos;s what you recognize when you
+        hear the same song in a different key. The chords below are different, but the progression
+        is the same ii–V–I. The{" "}
         <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
           Roman numerals
         </Link>{" "}
-        name by each chord&apos;s place in the key.
+        are a handy way to write it down: each one names a chord by its place in the key, not by its
+        letter.
       </p>
 
       <ComparisonGrid2>
         <ProgressionStaff
           tonic="C"
           progression={ChordProgressionType.Two_Five_One}
-          caption="The 2-5-1 in C major"
-          showRomanNumerals={false}
+          caption=""
         />
         <ProgressionStaff
           tonic="D"
           progression={ChordProgressionType.Two_Five_One}
-          caption="The 2-5-1 in D major"
-          showRomanNumerals={false}
+          caption=""
         />
       </ComparisonGrid2>
 
+      <h2 className={LEARN_STYLES.h2}>Scales</h2>
+
       <p>
-        See{" "}
-        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
-        </Link>{" "}
-        for how the app is built around these facts, and{" "}
-        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-          Color Coding
-        </Link>{" "}
-        for what its colors show.
+        A scale is a pattern of gaps between notes, and each pattern has its own sound, whatever
+        note it starts on.
       </p>
+
+      <ComparisonGrid2>
+        <ScaleFigure
+          tonic="C"
+          scaleType={ScaleModeType.Dorian}
+          caption="C Dorian"
+          views={["staff", "linear"]}
+          isCompact
+          hasKeySignature={false}
+        />
+        <ScaleFigure
+          tonic="C"
+          scaleType={ScaleModeType.Lydian}
+          caption="C Lydian"
+          views={["staff", "linear"]}
+          isCompact
+          hasKeySignature={false}
+        />
+      </ComparisonGrid2>
+
+      <h2 className={LEARN_STYLES.h2}>Go deeper</h2>
+
+      <ul className="list-disc pl-6">
+        <li>
+          <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+            The Chromatic Circle
+          </Link>
+          : intervals as distances
+        </li>
+        <li>
+          <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
+            Chord Quality
+          </Link>
+          : the full set of chord types
+        </li>
+        <li>
+          <Link href="/learn/scales" className={LEARN_STYLES.link}>
+            Scales
+          </Link>
+          : how the patterns relate to each other
+        </li>
+      </ul>
+
+      <h2 className={LEARN_STYLES.h2}>About this approach</h2>
+
+      <ul className="list-disc pl-6">
+        <li>
+          <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
+            Why This App
+          </Link>
+          : how the app is built around these ideas
+        </li>
+        <li>
+          <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
+            Color Coding
+          </Link>
+          : what the colors show
+        </li>
+        <li>
+          <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
+            What&apos;s Wrong with Music Theory
+          </Link>
+          : the terms that depend on notation instead
+        </li>
+      </ul>
     </>
   );
 }

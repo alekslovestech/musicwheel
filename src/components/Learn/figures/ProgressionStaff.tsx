@@ -75,7 +75,7 @@ export function ProgressionStaff({
       caption={
         <>
           <span>{caption}</span>
-          {showRomanNumerals && <span>{romanNumerals}</span>}
+          {showRomanNumerals && <span className="font-bold">{romanNumerals}</span>}
           <span>{chordNames}</span>
           <Link
             href={progressionSelectionPath({ tonic, progression })}

@@ -123,13 +123,13 @@ export default function ColorCodingPage() {
       </p>
 
       <div className="flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-normal">
-        <p className="text-center text-sm font-semibold">Interval colors</p>
+        <p className={`text-center ${LEARN_STYLES.blockTitle}`}>Interval colors</p>
         {INTERVAL_ROWS.map((row) => (
           <div key={row.ic} className="grid grid-cols-[1fr_1.25rem_1fr] items-center gap-snug">
             <span className="min-w-0 text-right text-sm">{row.label1}</span>
             <div
               role="img"
-              aria-label={`Color for ${row.label1}${row.label2 ? ` and its inversion, ${row.label2}` : ""}`}
+              aria-label={`Color for ${row.label1} and its inversion, ${row.label2}`}
               className="h-5 w-5 shrink-0 justify-self-center rounded-sm border border-containers-divider/40"
               style={{ backgroundColor: INTERVAL_CLASS_PALETTE[row.ic] }}
             />
@@ -189,7 +189,7 @@ export default function ColorCodingPage() {
       </ComparisonGrid2>
 
       <table className="w-full border-collapse rounded-lg border border-containers-divider bg-canvas-bgScales text-left">
-        <caption className="py-tight text-sm font-semibold">Chord colors</caption>
+        <caption className={`py-tight ${LEARN_STYLES.blockTitle}`}>Chord colors</caption>
         <thead>
           <tr className="border-y border-containers-divider">
             <th className="w-1/2 px-snug py-tight text-sm">Triads</th>
