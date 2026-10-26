@@ -23,7 +23,7 @@ export const metadata: Metadata = metadataForSlugPage(
   "The parts of music theory worth keeping: terms for intervals, chords, progressions and scales that describe what you hear, whatever the spelling, key or instrument.",
   {
     slug: "whats-useful-about-music-theory",
-    alt: "Two staves, a C major and an E major chord, both labeled major chord: 4 + 3 semitones",
+    alt: "Terms and concepts of music theory that don't depend on notation, key or instrument",
   },
 );
 
