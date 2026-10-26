@@ -22,6 +22,9 @@ export const LEARN_STYLES = {
   figureCard:
     "m-0 flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-tight sm:gap-snug sm:p-normal",
   figureCaption: "flex flex-col gap-tight text-center text-xs text-labels-textDefault sm:text-sm",
+  /** Title of a legend or table block (e.g. "Interval colors"). Add `text-center` where the
+   * element isn't centered already. */
+  blockTitle: "text-sm font-semibold",
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "text-links-text underline underline-offset-2 hover:text-links-textHover",
 
