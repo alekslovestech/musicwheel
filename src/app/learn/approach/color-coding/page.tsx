@@ -128,7 +128,7 @@ export default function ColorCodingPage() {
           <div key={row.ic} className="grid grid-cols-[1fr_1.25rem_1fr] items-center gap-snug">
             <span className="min-w-0 text-right text-sm">{row.label1}</span>
             <div
-              role="img" 
+              role="img"
               aria-label={`Color for ${row.label1}${row.label2 ? ` and its inversion, ${row.label2}` : ""}`}
               className="h-5 w-5 shrink-0 justify-self-center rounded-sm border border-containers-divider/40"
               style={{ backgroundColor: INTERVAL_CLASS_PALETTE[row.ic] }}
