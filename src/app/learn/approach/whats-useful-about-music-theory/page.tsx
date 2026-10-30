@@ -82,6 +82,12 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         <SpelledStaff {...E_MAJOR_TRIAD} caption="E major" />
       </ComparisonGrid2>
 
+      <p>
+        A chord is a shape made of intervals, so on the wheel it&apos;s literally a shape. Every{" "}
+        <i>major triad</i> is the same triangle, and every <i>minor triad</i> is that triangle
+        flipped. Chord quality becomes something you recognize at a glance.
+      </p>
+
       <h2 className={LEARN_STYLES.h2}>Chord progressions</h2>
 
       <p>
@@ -107,6 +113,11 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
           caption=""
         />
       </ComparisonGrid2>
+
+      <p>
+        Transposing doesn&apos;t change any relationship, so changing key on the wheel just rotates
+        the shape. There&apos;s no key signature to work against and no naturals to cancel it.
+      </p>
 
       <h2 className={LEARN_STYLES.h2}>Scales</h2>
 
@@ -134,38 +145,20 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         />
       </ComparisonGrid2>
 
+      <h2 className={LEARN_STYLES.h2}>Hear it as you build it</h2>
+
+      <p>
+        Recognition comes from hearing, not from reading. Everything you build in the app can be
+        played, so each shape on the wheel gets connected to the sound it makes.
+      </p>
+
       <SeeAlso
         items={[
-          {
-            href: "/learn/approach/chromatic-circle",
-            title: "The Chromatic Circle",
-            blurb: "Intervals as distances",
-          },
-          {
-            href: "/learn/chords/chord-quality",
-            title: "Chord Quality",
-            blurb: "The full set of chord types",
-          },
-          {
-            href: "/learn/scales",
-            title: "Scales",
-            blurb: "How the patterns relate to each other",
-          },
-          {
-            href: "/learn/approach/why-this-app",
-            title: "Why This App",
-            blurb: "How the app is built around these ideas",
-          },
-          {
-            href: "/learn/approach/color-coding",
-            title: "Color Coding",
-            blurb: "What the colors show",
-          },
-          {
-            href: "/learn/approach/whats-wrong-with-music-theory",
-            title: "What's Wrong with Music Theory",
-            blurb: "The terms that depend on notation instead",
-          },
+          "chromatic-circle",
+          "chord-quality",
+          "scales",
+          "color-coding",
+          "whats-wrong-with-music-theory",
         ]}
       />
     </>

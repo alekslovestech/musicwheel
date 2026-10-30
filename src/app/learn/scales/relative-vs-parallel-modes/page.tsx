@@ -106,16 +106,8 @@ export default function RelativeVsParallelModesPage() {
             title: "Major vs. Lydian",
             blurb: "A closer look at the parallel pair above",
           },
-          {
-            href: "/learn/scales/comparisons",
-            title: "Scale Comparisons",
-            blurb: "Other parallel pairs like it",
-          },
-          {
-            href: "/learn/scales/greek-modes",
-            title: "How the Greek Modes Relate to Each Other",
-            blurb: "The fuller picture, including how the modes are numbered and why relative modes always share the same chords",
-          },
+          "comparisons",
+          "greek-modes",
         ]}
       />
     </>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { QualityRow } from "@/components/Learn/prose/QualityRow";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -106,12 +107,15 @@ export default function ChordQualityPage() {
         The most symmetrical qualities - augmented and <i>diminished 7th</i> chords - take that
         rotation-independence a step further: not only does the quality stay the same when you
         transpose it, several of its own notes are equally valid roots for the identical shape.
-        See{" "}
-        <Link href="/learn/symmetry-and-dissonance" className={LEARN_STYLES.link}>
-          Symmetry and Dissonance
-        </Link>{" "}
-        for why that makes them sound the way they do.
       </p>
+
+      <SeeAlso
+        items={[
+          "symmetry-and-dissonance",
+          "major-vs-minor-triads",
+          "triad-inversions",
+        ]}
+      />
     </>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -52,12 +53,17 @@ export default function TriadInversionsPage() {
       </ComparisonGrid3>
       <p>
         Inversions are often interchangeable for the original chord, and are used to create smoother bass lines in chord progressions.
-        A chord's inversion preserves the{" "}
-        <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
-          chord quality
-        </Link>
-        , and shows up as the same shape and color in the MusicWheel's interface.
+        A chord's inversion preserves the chord quality, and shows up as the same shape and color in the MusicWheel's interface.
       </p>
+
+      <SeeAlso
+        items={[
+          "chord-quality",
+          "interval-inversions",
+          "chromatic-circle",
+          "major-vs-minor-triads",
+        ]}
+      />
     </>
   );
 }

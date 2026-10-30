@@ -27,7 +27,6 @@ review progress is visible in git history.
 | Approach index | `approach/page.tsx` | 4 | | |
 | What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 | | |
 | What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |  | |
-| Why this app | `approach/why-this-app/page.tsx` | 3.5 | | |
 
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 | | |
 | Color coding | `approach/color-coding/page.tsx` | 4.5 | | |
@@ -40,10 +39,10 @@ review progress is visible in git history.
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
 | Chords index | `chords/page.tsx` | 0 | | |
-| Chord quality | `chords/chord-quality/page.tsx` | 3.5 | | |
-| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3 | | |
+| Chord quality | `chords/chord-quality/page.tsx` | 4 | | |
+| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3.5 | | |
 | Roman numerals | `chords/roman-numerals/page.tsx` | 4 | | |
-| Triad inversions | `chords/triad-inversions/page.tsx` | 4 | | |
+| Triad inversions | `chords/triad-inversions/page.tsx` | 4.5 | | |
 
 ## Scales
 
@@ -51,11 +50,11 @@ review progress is visible in git history.
 |---|---|---|---|---|
 | Scales index | `scales/page.tsx` | 3 | | |
 | Scale degrees | `scales/scale-degrees/page.tsx` | 3.5 | | |
-| Greek modes | `scales/greek-modes/page.tsx` | 3 | | |
+| Greek modes | `scales/greek-modes/page.tsx` | 3.5 | | |
 | Modal families | `scales/modal-families/page.tsx` | 3 | | |
 | Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3.5 | | |
 | Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4.5 | | |
-| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3 | | |
+| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3.5 | | |
 
 ## Scales / Comparisons
 
@@ -82,5 +81,5 @@ Each entry: score — notes — last reviewed.
 
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
-| Interval inversions | `interval-inversions/page.tsx` | 4.5 | | |
-| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 4.5 | | |
+| Interval inversions | `interval-inversions/page.tsx` | 5 | | |
+| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 5 | | |

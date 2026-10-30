@@ -8,6 +8,7 @@ import {
 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -190,6 +191,17 @@ export default function SymmetryAndDissonancePage() {
         to settle on. The more symmetrical the shape, the less it has to say about where it belongs,
         and the more it seems to demand somewhere to go.
       </p>
+
+      <SeeAlso
+        items={[
+          "chord-quality",
+          "chromatic-circle",
+          {
+            id: "accidentals",
+            blurb: "Why a symmetrical chord like Cdim7 needs a double flat on paper, and why the app skips it",
+          },
+        ]}
+      />
     </>
   );
 }

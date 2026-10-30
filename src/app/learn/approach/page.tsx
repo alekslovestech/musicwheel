@@ -45,13 +45,6 @@ export default function ApproachIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
-        </Link>
-      </h2>
-      <p>How those useful parts shaped the way the app draws harmony.</p>
-
-      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
           Color Coding
         </Link>

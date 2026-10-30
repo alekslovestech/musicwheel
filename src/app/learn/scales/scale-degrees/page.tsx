@@ -77,16 +77,8 @@ export default function ScaleDegreesPage() {
 
       <SeeAlso
         items={[
-          {
-            href: "/learn/scales/comparisons",
-            title: "Scale Comparisons",
-            blurb: "More mode pairs described this way, one degree at a time",
-          },
-          {
-            href: "/learn/chords/roman-numerals",
-            title: "Roman Numeral Notation",
-            blurb: "Chords, not just notes, get numbered from the tonic too",
-          },
+          "comparisons",
+          "roman-numerals",
         ]}
       />
     </>

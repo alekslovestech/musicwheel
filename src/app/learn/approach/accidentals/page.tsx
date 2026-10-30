@@ -84,21 +84,8 @@ export default function AccidentalsPage() {
 
       <SeeAlso
         items={[
-          {
-            href: "/learn/symmetry-and-dissonance",
-            title: "Symmetry and Dissonance",
-            blurb: "Why chords with a clean, even shape sound the way they do",
-          },
-          {
-            href: "/learn/approach/why-this-app",
-            title: "Why This App",
-            blurb: "Why trading spelling for sound is worth it",
-          },
-          {
-            href: "/learn/approach/chromatic-circle",
-            title: "The Chromatic Circle",
-            blurb: "Drawing harmony by distance rather than by letter",
-          },
+          "symmetry-and-dissonance",
+          "chromatic-circle",
         ]}
       />
     </>
