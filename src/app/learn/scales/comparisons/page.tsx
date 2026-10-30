@@ -8,7 +8,7 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/scales/comparisons",
-  "Comparisons",
+  "Scale Comparisons",
   "Pairs of scales on the same tonic, one note apart - what each degree changes and why.",
 );
 
@@ -19,7 +19,7 @@ export default function ComparisonsIndexPage() {
         ← Scales
       </Link>
 
-      <h1 className={LEARN_STYLES.h1}>Comparisons</h1>
+      <h1 className={LEARN_STYLES.h1}>Scale Comparisons</h1>
       <p>Two modes on the same tonic, one note apart.</p>
 
       <table className="w-full border-collapse text-left">

@@ -97,6 +97,13 @@ export default function ColorCodingPage() {
       <h1 className={LEARN_STYLES.h1}>Color Coding</h1>
 
       <p>
+        The chromatic circle is an established idea; the color coding is this app&apos;s own
+        addition. Each kind of interval gets its own color, so you can recognize a <i>major 3rd</i>{" "}
+        at a glance instead of counting semitones, and chords blend the colors of the intervals
+        inside them.
+      </p>
+
+      <p>
         Colors on the wheel follow one idea: distance matters more than direction. A{" "}
         <i>minor 3rd</i> above the root and a <i>minor 3rd</i> below it get the same color.
       </p>

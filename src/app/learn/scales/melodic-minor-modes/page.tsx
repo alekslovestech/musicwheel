@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -77,6 +78,22 @@ export default function MelodicMinorModesPage() {
         showStepAnnotations
         caption="B Super Locrian: the same seven notes as C Melodic Minor, started on the 7th
           degree - the leading tone - instead of the 1st."
+      />
+
+      <SeeAlso
+        items={[
+          {
+            href: "/learn/scales/comparisons/major-vs-melodic-minor",
+            title: "Major vs. Melodic Minor",
+            blurb: "Separated by a single note: the 3rd degree",
+          },
+          {
+            href: "/learn/scales/comparisons/harmonic-minor-vs-melodic-minor",
+            title: "Harmonic Minor vs. Melodic Minor",
+            blurb: "Separated by a single note: the 6th degree",
+          },
+          "harmonic",
+        ]}
       />
     </>
   );

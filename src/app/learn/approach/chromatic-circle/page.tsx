@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -55,14 +56,6 @@ export default function ChromaticCirclePage() {
       <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
-        For why the app uses a wheel at all, see{" "}
-        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
-        </Link>
-        . This page is about how it works.
-      </p>
-
-      <p>
         A keyboard or a staff lays the twelve notes out in a line. The chromatic circle bends that
         same line into a loop:
       </p>
@@ -75,6 +68,11 @@ export default function ChromaticCirclePage() {
         isCompact={true}
         showLabels={true}
       />
+
+      <p>
+        The app shows both. The piano is a familiar layout and a convenient way to play a sound
+        back, but its arrangement of black and white keys doesn&apos;t explain the harmony.
+      </p>
 
       <h2 className={LEARN_STYLES.h2}>Intervals as distance</h2>
 
@@ -181,6 +179,13 @@ export default function ChromaticCirclePage() {
           ))}
         </tbody>
       </table>
+
+      <SeeAlso
+        items={[
+          "color-coding",
+          "symmetry-and-dissonance",
+        ]}
+      />
     </>
   );
 }

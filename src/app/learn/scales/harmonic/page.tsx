@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -90,36 +91,26 @@ export default function HarmonicScalesPage() {
         />
       </ComparisonGrid2>
 
-      <h2 className={LEARN_STYLES.h2}>Comparisons</h2>
-
-      <p>For a closer look at pairs of harmonic scales, see:</p>
-
-      <ul className="list-disc pl-6">
-        <li>
-          <Link
-            href="/learn/scales/comparisons/harmonic-minor-vs-harmonic-major"
-            className={LEARN_STYLES.link}
-          >
-            Harmonic Minor vs. Harmonic Major
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/learn/scales/comparisons/harmonic-major-vs-double-harmonic-major"
-            className={LEARN_STYLES.link}
-          >
-            Harmonic Major vs. Double Harmonic Major
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/learn/scales/comparisons/harmonic-minor-vs-hungarian-minor"
-            className={LEARN_STYLES.link}
-          >
-            Harmonic Minor vs. Hungarian Minor
-          </Link>
-        </li>
-      </ul>
+      <SeeAlso
+        title="Scale Comparisons"
+        items={[
+          {
+            href: "/learn/scales/comparisons/harmonic-minor-vs-harmonic-major",
+            title: "Harmonic Minor vs. Harmonic Major",
+            blurb: "Same ♭6 and raised 7th - only the 3rd differs",
+          },
+          {
+            href: "/learn/scales/comparisons/harmonic-major-vs-double-harmonic-major",
+            title: "Harmonic Major vs. Double Harmonic Major",
+            blurb: "The 2nd drops a semitone, from natural to ♭2",
+          },
+          {
+            href: "/learn/scales/comparisons/harmonic-minor-vs-hungarian-minor",
+            title: "Harmonic Minor vs. Hungarian Minor",
+            blurb: "The 4th rises a semitone, from natural to ♯4",
+          },
+        ]}
+      />
     </>
   );
 }

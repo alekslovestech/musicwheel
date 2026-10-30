@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { INTERVAL_PAIRS, type IntervalPair } from "@/lib/learn/intervalPairs";
@@ -45,11 +46,7 @@ export default function IntervalInversionsPage() {
       <h1 className={LEARN_STYLES.h1}>Interval Inversions</h1>
 
       <p>
-        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
-          Triad inversions
-        </Link>{" "}
-        showed three notes that stay the same chord no matter which one is on the bottom. A bare
-        interval - just two notes - has an inversion too, and it&apos;s really about distance:
+        A bare interval - just two notes - has an inversion, and it&apos;s really about distance:
         whatever&apos;s left over after subtracting the interval from a full octave.
       </p>
 
@@ -122,6 +119,14 @@ export default function IntervalInversionsPage() {
           </ComparisonGrid2>
         );
       })}
+
+      <SeeAlso
+        items={[
+          "triad-inversions",
+          "symmetry-and-dissonance",
+          "chromatic-circle",
+        ]}
+      />
     </>
   );
 }
