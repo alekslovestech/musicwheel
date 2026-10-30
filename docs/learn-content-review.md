@@ -26,12 +26,12 @@ review progress is visible in git history.
 |---|---|---|---|---|
 | Approach index | `approach/page.tsx` | 4 | | |
 | What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 | | |
-| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 3.5 |  | |
+| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |  | |
 | Why this app | `approach/why-this-app/page.tsx` | 3.5 | | |
 
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 | | |
 | Color coding | `approach/color-coding/page.tsx` | 4.5 | | |
-| Accidentals | `approach/accidentals/page.tsx` | 4 | | |
+| Accidentals | `approach/accidentals/page.tsx` | 4.5 | | |
 
 
 
@@ -49,19 +49,19 @@ review progress is visible in git history.
 
 | Page | Path | Score | Notes | Last reviewed |
 |---|---|---|---|---|
-| Scales index | `scales/page.tsx` | 0 | | |
-| Scale degrees | `scales/scale-degrees/page.tsx` | 3 | | |
+| Scales index | `scales/page.tsx` | 3 | | |
+| Scale degrees | `scales/scale-degrees/page.tsx` | 3.5 | | |
 | Greek modes | `scales/greek-modes/page.tsx` | 3 | | |
 | Modal families | `scales/modal-families/page.tsx` | 3 | | |
-| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3 | | |
-| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4 | | |
+| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3.5 | | |
+| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4.5 | | |
 | Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3 | | |
 
 ## Scales / Comparisons
 
 Each entry: score — notes — last reviewed.
 
-- **Comparisons index** — `scales/comparisons/page.tsx` — 0 — —
+- **Comparisons index** — `scales/comparisons/page.tsx` — 3 — —
 - **Major vs Lydian** — `scales/comparisons/major-vs-lydian/page.tsx` — 0 — —
 - **Major vs Mixolydian** — `scales/comparisons/major-vs-mixolydian/page.tsx` — 0 — —
 - **Minor vs Dorian** — `scales/comparisons/minor-vs-dorian/page.tsx` — 0 — —

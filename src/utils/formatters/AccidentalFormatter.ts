@@ -18,6 +18,8 @@ export class AccidentalFormatter {
         return "♯";
       case AccidentalType.Flat:
         return "♭";
+      case AccidentalType.DoubleFlat:
+        return "𝄫";
       default:
         return "";
     }
@@ -33,6 +35,8 @@ export class AccidentalFormatter {
         return "#";
       case AccidentalType.Flat:
         return "b";
+      case AccidentalType.DoubleFlat:
+        return "bb";
       default:
         return "";
     }
@@ -49,6 +53,8 @@ export class AccidentalFormatter {
         return "#";
       case AccidentalType.Flat:
         return "b";
+      case AccidentalType.DoubleFlat:
+        return "bb";
       default:
         return "";
     }
@@ -63,6 +69,9 @@ export class AccidentalFormatter {
       case "b":
       case "♭":
         return AccidentalType.Flat;
+      case "bb":
+      case "𝄫":
+        return AccidentalType.DoubleFlat;
       case "n":
       case "♮":
         return AccidentalType.Natural;
@@ -74,6 +83,7 @@ export class AccidentalFormatter {
   static toSemitoneOffset(accidental: AccidentalType): number {
     if (accidental === AccidentalType.Sharp) return 1;
     if (accidental === AccidentalType.Flat) return -1;
+    if (accidental === AccidentalType.DoubleFlat) return -2;
     return 0;
   }
 }

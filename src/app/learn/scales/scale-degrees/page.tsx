@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -71,17 +72,23 @@ export default function ScaleDegreesPage() {
         <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
           parallel
         </Link>{" "}
-        comparison. See{" "}
-        <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
-          Comparisons
-        </Link>{" "}
-        for more mode pairs described this way, one degree at a time. Chords, not just notes, get
-        numbered from the tonic too - see{" "}
-        <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
-          Roman Numeral Notation
-        </Link>
-        .
+        comparison.
       </p>
+
+      <SeeAlso
+        items={[
+          {
+            href: "/learn/scales/comparisons",
+            title: "Scale Comparisons",
+            blurb: "More mode pairs described this way, one degree at a time",
+          },
+          {
+            href: "/learn/chords/roman-numerals",
+            title: "Roman Numeral Notation",
+            blurb: "Chords, not just notes, get numbered from the tonic too",
+          },
+        ]}
+      />
     </>
   );
 }

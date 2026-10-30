@@ -4,6 +4,10 @@ import Link from "next/link";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
+import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
+import { C_DIM7_SPELLED } from "@/lib/learn/spelledFigures";
+import { ChordType } from "@/types/enums/ChordType";
 import { SpecialType } from "@/types/enums/SpecialType";
 
 export const metadata: Metadata = metadataForSlugPage(
@@ -46,27 +50,57 @@ export default function AccidentalsPage() {
         showLabels={true}
       />
 
-      <h2 className={LEARN_STYLES.h2}>Never a double accidental (𝄪/♭♭)</h2>
+      <h2 className={LEARN_STYLES.h2}>What about double accidentals? (𝄪/𝄫)</h2>
 
       <p>
-        Push the proper spelling rules far enough and you end up with a double accidental. A fully <i>diminished 7th</i> stacks minor 3rds all the way up, so strict spelling of C dim7 is C, E♭, G♭,
-        B𝄫 - not the A you&apos;d actually play. That&apos;s standard notation, and here the app
-        breaks with it: its accidental type only has natural, sharp, and flat, so it falls back to
-        the plain single-accidental name (A) instead. You will never see a double sharp or double
-        flat in this app, however standard one might be on paper.
+        Strict spelling can sometimes force a double accidental. A fully <i>diminished 7th</i> stacks{" "}
+        <i>minor 3rds</i>, so C dim7 is spelled C, E♭, G♭, B𝄫.
       </p>
+      <SpelledStaff
+        {...C_DIM7_SPELLED}
+        showKeyboard={false}
+        crossedOut={true}
+        caption={"Cdim7 by the book:\ncorrect, but beside the point"}
+      />
 
       <p>
-        See{" "}
-        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
-        </Link>{" "}
-        for why that trade is worth making, and{" "}
-        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-          The Chromatic Circle
-        </Link>{" "}
-        for the bigger idea it&apos;s part of - drawing harmony by distance rather than by letter.
+        B𝄫 is the same key as A, and the changing the key doesn't really help the spelling much. What you actually
+        hear is the shape: 4 notes, each 3 semitones apart.
       </p>
+      <ChordWheel
+        rootNote="C"
+        chordType={ChordType.Diminished7}
+        inversionIndex={0}
+        caption={"Cdim7 as the app shows it:\n4 notes, each 3 semitones apart"}
+        isCompact={true}
+        showLabels={true}
+      />
+
+      <p>
+        The app puts the focus on distances between the notes rather than their spelling, so you
+        will never see a double sharp or double flat here, even where standard notation requires
+        one.
+      </p>
+
+      <SeeAlso
+        items={[
+          {
+            href: "/learn/symmetry-and-dissonance",
+            title: "Symmetry and Dissonance",
+            blurb: "Why chords with a clean, even shape sound the way they do",
+          },
+          {
+            href: "/learn/approach/why-this-app",
+            title: "Why This App",
+            blurb: "Why trading spelling for sound is worth it",
+          },
+          {
+            href: "/learn/approach/chromatic-circle",
+            title: "The Chromatic Circle",
+            blurb: "Drawing harmony by distance rather than by letter",
+          },
+        ]}
+      />
     </>
   );
 }

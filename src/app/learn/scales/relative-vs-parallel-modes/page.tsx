@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ScaleDegreeComparison } from "@/components/Learn/figures/ScaleDegreeComparison";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -87,16 +88,7 @@ export default function RelativeVsParallelModesPage() {
           scale degree
         </Link>{" "}
         - every mode gets described this way, as <i>Ionian</i>&apos;s seven degrees with some subset
-        raised or lowered, which is exactly what a parallel comparison measures. For a closer look
-        at this exact pair, see{" "}
-        <Link href="/learn/scales/comparisons/major-vs-lydian" className={LEARN_STYLES.link}>
-          Major vs. Lydian
-        </Link>
-        , or{" "}
-        <Link href="/learn/scales/comparisons" className={LEARN_STYLES.link}>
-          Comparisons
-        </Link>{" "}
-        for others like it.
+        raised or lowered, which is exactly what a parallel comparison measures.
       </p>
 
       <p>
@@ -104,13 +96,28 @@ export default function RelativeVsParallelModesPage() {
         assigned to <i>Lydian</i> changes. Give it F, and it&apos;s relative to C <i>Ionian</i>: same notes,
         different home. Give it C instead, and it&apos;s parallel: same home, different notes.
         Relative and parallel aren&apos;t opposites so much as two different questions you can ask
-        about the same pair of modes - for the fuller picture, including how the modes are numbered
-        and why relative modes always share the same chords, see{" "}
-        <Link href="/learn/scales/greek-modes" className={LEARN_STYLES.link}>
-          How the Greek Modes Relate to Each Other
-        </Link>
-        .
+        about the same pair of modes.
       </p>
+
+      <SeeAlso
+        items={[
+          {
+            href: "/learn/scales/comparisons/major-vs-lydian",
+            title: "Major vs. Lydian",
+            blurb: "A closer look at the parallel pair above",
+          },
+          {
+            href: "/learn/scales/comparisons",
+            title: "Scale Comparisons",
+            blurb: "Other parallel pairs like it",
+          },
+          {
+            href: "/learn/scales/greek-modes",
+            title: "How the Greek Modes Relate to Each Other",
+            blurb: "The fuller picture, including how the modes are numbered and why relative modes always share the same chords",
+          },
+        ]}
+      />
     </>
   );
 }

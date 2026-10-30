@@ -52,7 +52,7 @@ export default function ScalesIndexPage() {
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/scales/comparisons" className={LEARN_STYLES.sectionLink}>
-          Comparisons
+          Scale Comparisons
         </Link>
         <LearnTags tags={[LearnTag.Scales]} />
       </h2>

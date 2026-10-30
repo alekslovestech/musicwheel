@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
 import {
@@ -133,51 +134,40 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         />
       </ComparisonGrid2>
 
-      <h2 className={LEARN_STYLES.h2}>Go deeper</h2>
-
-      <ul className="list-disc pl-6">
-        <li>
-          <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-            The Chromatic Circle
-          </Link>
-          : intervals as distances
-        </li>
-        <li>
-          <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
-            Chord Quality
-          </Link>
-          : the full set of chord types
-        </li>
-        <li>
-          <Link href="/learn/scales" className={LEARN_STYLES.link}>
-            Scales
-          </Link>
-          : how the patterns relate to each other
-        </li>
-      </ul>
-
-      <h2 className={LEARN_STYLES.h2}>About this approach</h2>
-
-      <ul className="list-disc pl-6">
-        <li>
-          <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-            Why This App
-          </Link>
-          : how the app is built around these ideas
-        </li>
-        <li>
-          <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-            Color Coding
-          </Link>
-          : what the colors show
-        </li>
-        <li>
-          <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
-            What&apos;s Wrong with Music Theory
-          </Link>
-          : the terms that depend on notation instead
-        </li>
-      </ul>
+      <SeeAlso
+        items={[
+          {
+            href: "/learn/approach/chromatic-circle",
+            title: "The Chromatic Circle",
+            blurb: "Intervals as distances",
+          },
+          {
+            href: "/learn/chords/chord-quality",
+            title: "Chord Quality",
+            blurb: "The full set of chord types",
+          },
+          {
+            href: "/learn/scales",
+            title: "Scales",
+            blurb: "How the patterns relate to each other",
+          },
+          {
+            href: "/learn/approach/why-this-app",
+            title: "Why This App",
+            blurb: "How the app is built around these ideas",
+          },
+          {
+            href: "/learn/approach/color-coding",
+            title: "Color Coding",
+            blurb: "What the colors show",
+          },
+          {
+            href: "/learn/approach/whats-wrong-with-music-theory",
+            title: "What's Wrong with Music Theory",
+            blurb: "The terms that depend on notation instead",
+          },
+        ]}
+      />
     </>
   );
 }
