@@ -1,43 +1,42 @@
 import { AccidentalType } from "@/types/enums/AccidentalType";
 
-import { ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
+import { addChromatic, ChromaticIndex, ixChromatic } from "@/types/ChromaticIndex";
 import { ActualIndex, chromaticToActual } from "@/types/IndexTypes";
-import { NoteInfo } from "@/types/interfaces/NoteInfo";
+import { createNoteInfo, NoteInfo } from "@/types/interfaces/NoteInfo";
 import { NoteWithOctave } from "@/types/interfaces/NoteWithOctave";
 
+import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { NoteFormatter } from "@/utils/formatters/NoteFormatter";
 import { ActualNoteResolver } from "@/utils/resolvers/ActualNoteResolver";
 
-const NOTE_TO_CHROMATIC: Record<string, number> = {
+const NATURAL_TO_CHROMATIC: Record<string, number> = {
   C: 0,
-  "C#": 1,
-  Db: 1,
   D: 2,
-  "D#": 3,
-  Eb: 3,
   E: 4,
   F: 5,
-  "F#": 6,
-  Gb: 6,
   G: 7,
-  "G#": 8,
-  Ab: 8,
   A: 9,
-  "A#": 10,
-  Bb: 10,
   B: 11,
 };
+
+const NOTE_STRING_REGEX = /^([A-G])(♯|#|♭|bb|b|𝄫|♮|n)?$/;
 
 export class NoteConverter {
   // For testing and input - converts text to index
   static toChromaticIndex(note: string): ChromaticIndex {
-    const chromatic = NOTE_TO_CHROMATIC[this.sanitizeNoteString(note)];
-    return ixChromatic(chromatic ?? -1);
+    return this.tryToChromaticIndex(note) ?? ixChromatic(-1);
   }
 
   static tryToChromaticIndex(note: string): ChromaticIndex | null {
-    const chromatic = NOTE_TO_CHROMATIC[this.sanitizeNoteString(note)];
-    return chromatic === undefined ? null : ixChromatic(chromatic);
+    const noteInfo = this.parseNoteInfo(note);
+    return noteInfo && this.noteInfoToChromaticIndex(noteInfo);
+  }
+
+  /** Letter plus optional accidental, in display (♯ ♭ ♮ 𝄫) or plain (# b n bb) form. */
+  static parseNoteInfo(note: string): NoteInfo | null {
+    const match = note.match(NOTE_STRING_REGEX);
+    if (!match) return null;
+    return createNoteInfo(match[1], AccidentalFormatter.parseAccidentalType(match[2] ?? ""));
   }
 
   static sanitizeNoteString(noteString: string): string {
@@ -88,21 +87,16 @@ export class NoteConverter {
   }
 
   static noteInfoToChromaticIndex(noteInfo: NoteInfo): ChromaticIndex {
-    return this.toChromaticIndex(this.noteInfoToText(noteInfo));
+    return addChromatic(
+      NATURAL_TO_CHROMATIC[noteInfo.noteName],
+      AccidentalFormatter.toSemitoneOffset(noteInfo.accidental),
+    );
   }
 
   static tryNoteInfoToChromaticIndex(noteInfo: NoteInfo): ChromaticIndex | null {
-    return this.tryToChromaticIndex(this.noteInfoToText(noteInfo));
-  }
-
-  private static noteInfoToText(noteInfo: NoteInfo): string {
-    const suffix =
-      noteInfo.accidental === AccidentalType.Sharp
-        ? "#"
-        : noteInfo.accidental === AccidentalType.Flat
-          ? "b"
-          : "";
-    return noteInfo.noteName + suffix;
+    return noteInfo.noteName in NATURAL_TO_CHROMATIC
+      ? this.noteInfoToChromaticIndex(noteInfo)
+      : null;
   }
 
   static noteWithOctaveToActual(note: NoteWithOctave): ActualIndex {

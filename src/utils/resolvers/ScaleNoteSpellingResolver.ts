@@ -4,7 +4,6 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { createNoteInfo, NoteInfo } from "@/types/interfaces/NoteInfo";
 import { ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
-import { AccidentalFormatter } from "@/utils/formatters/AccidentalFormatter";
 import { NoteConverter } from "@/utils/NoteConverter";
 import { ChromaticNoteResolver } from "@/utils/resolvers/ChromaticNoteResolver";
 
@@ -31,14 +30,10 @@ export class ScaleNoteSpellingResolver {
     const scaleDegreeInfo = musicalKey.getScaleDegreeInfo(chromaticIndex);
     if (!scaleDegreeInfo) return null;
 
-    if (scaleDegreeInfo.scaleDegree === 1) {
-      return this.parseTonicNoteInfo(musicalKey.tonicString);
-    }
+    const tonic = this.parseTonicNoteInfo(musicalKey.tonicString);
+    if (scaleDegreeInfo.scaleDegree === 1) return tonic;
 
-    const letterName = this.getDiatonicLetterAtDegree(
-      musicalKey.tonicString,
-      scaleDegreeInfo.scaleDegree,
-    );
+    const letterName = this.getDiatonicLetterAtDegree(tonic, scaleDegreeInfo.scaleDegree);
     return this.spellLetterToChromatic(
       letterName,
       chromaticIndex,
@@ -46,26 +41,17 @@ export class ScaleNoteSpellingResolver {
     );
   }
 
-  private static getDiatonicLetterAtDegree(tonicString: string, scaleDegree: ScaleDegree): string {
-    const tonicLetter = NoteConverter.stripAccidentals(
-      NoteConverter.sanitizeNoteString(tonicString),
-    );
+  private static getDiatonicLetterAtDegree(tonic: NoteInfo, scaleDegree: ScaleDegree): string {
     const tonicLetterIndex = DIATONIC_LETTERS.indexOf(
-      tonicLetter as (typeof DIATONIC_LETTERS)[number],
+      tonic.noteName as (typeof DIATONIC_LETTERS)[number],
     );
-    if (tonicLetterIndex === -1) {
-      throw new Error(`Invalid tonic letter: ${tonicString}`);
-    }
     return DIATONIC_LETTERS[(tonicLetterIndex + scaleDegree - 1) % DIATONIC_LETTERS.length];
   }
 
   private static parseTonicNoteInfo(tonicString: string): NoteInfo {
-    const sanitized = NoteConverter.sanitizeNoteString(tonicString);
-    const match = sanitized.match(/^([A-G])([#b]?)$/);
-    if (!match) {
-      throw new Error(`Invalid tonic string: ${tonicString}`);
-    }
-    return createNoteInfo(match[1], AccidentalFormatter.parseAccidentalType(match[2] ?? ""));
+    const tonic = NoteConverter.parseNoteInfo(tonicString);
+    if (!tonic) throw new Error(`Invalid tonic string: ${tonicString}`);
+    return tonic;
   }
 
   private static spellLetterToChromatic(

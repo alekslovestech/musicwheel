@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -45,13 +46,13 @@ export default function MajorVsMinorPage() {
         />
       </ComparisonGrid2>
 
-      <p>
-        Both chords come up constantly in all three of their positions - see{" "}
-        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
-          Triad Inversions
-        </Link>{" "}
-        for how a triad carries its identity even as the bass note underneath it changes.
-      </p>
+      <SeeAlso
+        items={[
+          "triad-inversions",
+          "chord-quality",
+          "roman-numerals",
+        ]}
+      />
     </>
   );
 }

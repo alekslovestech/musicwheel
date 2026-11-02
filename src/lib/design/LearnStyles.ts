@@ -25,10 +25,13 @@ export const LEARN_STYLES = {
   /** Title of a legend or table block (e.g. "Interval colors"). Add `text-center` where the
    * element isn't centered already. */
   blockTitle: "text-sm font-semibold",
+  /** End-of-article onward reading (see SeeAlso): a ruled-off block, titles over one-line blurbs. */
+  seeAlso: "flex flex-col gap-tight border-t border-containers-divider pt-normal",
+  seeAlsoList: "m-0 flex list-none flex-col gap-snug p-0 text-sm",
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "text-links-text underline underline-offset-2 hover:text-links-textHover",
 
-  /** Marks an index-page link that leads to more than one page (e.g. "Comparisons"), instead of a
+  /** Marks an index-page link that leads to more than one page (e.g. "Scale Comparisons"), instead of a
    * single article - a distinct font stands in for the old "Section" text badge. Use instead of
    * `link` on the heading's <Link>. */
   sectionLink:

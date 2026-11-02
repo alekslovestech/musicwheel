@@ -48,8 +48,8 @@ export default function LearnIndexPage() {
         <LearnTags tags={[LearnTag.BasicConcepts]} />
       </h2>
       <p>
-        Flip an interval upside down and the number changes - but a <i>minor 2nd</i> and a{" "}
-        <i>major 7th</i> still sound like close relatives.
+        Flip an interval upside down and the number changes - but a <i>minor second</i> and a{" "}
+        <i>major seventh</i> still sound like close relatives.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { QualityRow } from "@/components/Learn/prose/QualityRow";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -27,7 +28,7 @@ export default function ChordQualityPage() {
       <p>
         &ldquo;Major,&rdquo; &ldquo;minor,&rdquo; &ldquo;diminished,&rdquo; &ldquo;augmented&rdquo;
         - these name a chord&apos;s quality, not its root. A quality is the pattern of intervals
-        stacked on top of the root: major is a stack of a <i>major 3rd</i> then a <i>minor 3rd</i>, minor is the
+        stacked on top of the root: major is a stack of a <i>major third</i> then a <i>minor third</i>, minor is the
         same two intervals in the other order. The root just says where the pattern starts; the
         pattern itself is what makes it major.
       </p>
@@ -46,7 +47,7 @@ export default function ChordQualityPage() {
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
-          caption="C major - major 3rd, then minor 3rd, from C"
+          caption="C major - major third, then minor third, from C"
         />
         <ChordWheel
           rootNote="E"
@@ -106,12 +107,15 @@ export default function ChordQualityPage() {
         The most symmetrical qualities - augmented and <i>diminished 7th</i> chords - take that
         rotation-independence a step further: not only does the quality stay the same when you
         transpose it, several of its own notes are equally valid roots for the identical shape.
-        See{" "}
-        <Link href="/learn/symmetry-and-dissonance" className={LEARN_STYLES.link}>
-          Symmetry and Dissonance
-        </Link>{" "}
-        for why that makes them sound the way they do.
       </p>
+
+      <SeeAlso
+        items={[
+          "symmetry-and-dissonance",
+          "major-vs-minor-triads",
+          "triad-inversions",
+        ]}
+      />
     </>
   );
 }

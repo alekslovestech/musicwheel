@@ -69,7 +69,7 @@ export default function ModalRotationsPage() {
 
       <p>
         Rotate <i>Harmonic Minor</i> to start on its own 5th degree and you get{" "}
-        <i>Phrygian Dominant</i> - the same seven notes, a <i>perfect 5th</i> away. It goes by
+        <i>Phrygian Dominant</i> - the same seven notes, a <i>perfect fifth</i> away. It goes by
         several other names depending on the tradition it&apos;s cited from: Spanish <i>Phrygian</i>
         , Freygish in Klezmer music, Ahava Rabbah in Jewish liturgical music. (&ldquo;Byzantine
         scale&rdquo; is sometimes used for this one too, though that name is used inconsistently -
@@ -118,7 +118,7 @@ export default function ModalRotationsPage() {
         </Link>{" "}
         of different parent scales. But C <i>Double Harmonic Major</i> (C, D♭, E, F, G, A♭, B) and F{" "}
         <i>Hungarian Minor</i> turn out to share the exact same seven notes - the same collection,
-        reached by two unrelated-looking routes and rooted a <i>perfect 4th</i> apart.
+        reached by two unrelated-looking routes and rooted a <i>perfect fourth</i> apart.
       </p>
 
       <ScaleFigure

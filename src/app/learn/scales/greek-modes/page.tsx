@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -73,12 +74,7 @@ export default function GreekModesPage() {
 
       <p>
         This is what makes the modes &ldquo;relative&rdquo; to each other rather than
-        &ldquo;parallel&rdquo; - for that distinction in general, and how modes compare when the
-        tonic stays fixed instead, see{" "}
-        <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
-          Relative vs. Parallel Modes
-        </Link>
-        .
+        &ldquo;parallel&rdquo;.
       </p>
 
       <p>
@@ -89,6 +85,14 @@ export default function GreekModesPage() {
         which chord acts as home does. C major resolves strongly to C because C is the tonic in that
         context - the same C <i>major chord</i>, played in A <i>Aeolian</i>&apos;s context, is just the bright <i>major chord</i> sitting on the third degree, with no special claim on being &ldquo;home.&rdquo;
       </p>
+
+      <SeeAlso
+        items={[
+          "relative-vs-parallel-modes",
+          "modal-families",
+          "scale-degrees",
+        ]}
+      />
     </>
   );
 }

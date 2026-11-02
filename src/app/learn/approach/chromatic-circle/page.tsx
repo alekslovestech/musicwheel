@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -55,14 +56,6 @@ export default function ChromaticCirclePage() {
       <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
-        For why the app uses a wheel at all, see{" "}
-        <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-          Why This App
-        </Link>
-        . This page is about how it works.
-      </p>
-
-      <p>
         A keyboard or a staff lays the twelve notes out in a line. The chromatic circle bends that
         same line into a loop:
       </p>
@@ -76,13 +69,18 @@ export default function ChromaticCirclePage() {
         showLabels={true}
       />
 
+      <p>
+        The app shows both. The piano is a familiar layout and a convenient way to play a sound
+        back, but its arrangement of black and white keys doesn&apos;t explain the harmony.
+      </p>
+
       <h2 className={LEARN_STYLES.h2}>Intervals as distance</h2>
 
       <p>
         On a linear keyboard, where an interval sits changes how it looks - e.g. it can depend on
         whether we start on a black or a white key. On the circle, an interval is just an angular
         distance between two points, and that distance is the same wherever the two points happen to
-        sit. A <i>major 3rd</i> starting on C and a <i>major 3rd</i> starting on C♯ are the same arc, just rotated
+        sit. A <i>major third</i> starting on C and a <i>major third</i> starting on C♯ are the same arc, just rotated
         to a different starting point:
       </p>
 
@@ -91,7 +89,7 @@ export default function ChromaticCirclePage() {
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
-          caption="C–E: major 3rd"
+          caption="C–E: major third"
           isCompact
         />
         <ChordWheel
@@ -99,7 +97,7 @@ export default function ChromaticCirclePage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption={
-            "C♯–F: major 3rd\nlooks very different on a linear keyboard, but exactly the same on the circular one"
+            "C♯–F: major third\nlooks very different on a linear keyboard, but exactly the same on the circular one"
           }
           isCompact
         />
@@ -181,6 +179,13 @@ export default function ChromaticCirclePage() {
           ))}
         </tbody>
       </table>
+
+      <SeeAlso
+        items={[
+          "color-coding",
+          "symmetry-and-dissonance",
+        ]}
+      />
     </>
   );
 }

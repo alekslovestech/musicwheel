@@ -10,7 +10,7 @@ export interface SpelledStaffData {
   highlightedNoteIndices: NoteIndices;
 }
 
-const { None, Natural, Sharp, Flat } = AccidentalType;
+const { None, Natural, Sharp, Flat, DoubleFlat } = AccidentalType;
 const note = createNoteWithOctave;
 
 /** One chord on the staff, with its keys highlighted - worked out from the notes, so the two
@@ -56,4 +56,12 @@ export const C_MAJOR_TRIAD_IN_E_MAJOR_OCTAVE1 = chordFigure(
   note("C", Natural, ixOctaveOffset(1)),
   note("E", None, ixOctaveOffset(1)),
   note("G", Natural, ixOctaveOffset(1)),
+);
+
+/** Strict spelling of a fully diminished 7th: stacked minor 3rds force a B𝄫, which is the A key. */
+export const C_DIM7_SPELLED = chordFigure(
+  note("C", None),
+  note("E", Flat),
+  note("G", Flat),
+  note("B", DoubleFlat),
 );

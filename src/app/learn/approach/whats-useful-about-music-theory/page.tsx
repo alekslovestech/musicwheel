@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
+import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
 import {
@@ -51,7 +52,7 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <p>
-        Take the <i>major 3rd</i>, starting on 2 different notes:
+        Take the <i>major third</i> interval, starting on 2 different notes:
       </p>
 
       <ComparisonGrid2>
@@ -60,20 +61,17 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </ComparisonGrid2>
 
       <p>
-        On the staff they sit on different lines, and one has a ♯. To the ear they&apos;re the same
+        On the staff they sit on different lines, and one has a sharp (♯) next to it - but to the ear they&apos;re the same
         interval.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Chords</h2>
 
       <p>
-        A chord is a stack of intervals, and its term describes that stack. A <i>major chord</i> is a{" "}
-        <i>triad</i>: a <i>major 3rd</i> (4 semitones) with a <i>minor 3rd</i> (3) on top, from any
-        starting note, and it&apos;s still the same chord when its notes are rearranged (an{" "}
-        <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
-          inversion
-        </Link>
-        ).
+        A chord is a stack of intervals, and its term describes that stack. 
+        A <i>major chord</i> is a triad, consisting of 
+        a <i>major third</i> (4 semitones) with a <i>minor third</i>&nbsp;(3 semitones)
+        on top, from any starting note.
       </p>
 
       <ComparisonGrid2>
@@ -133,51 +131,23 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         />
       </ComparisonGrid2>
 
-      <h2 className={LEARN_STYLES.h2}>Go deeper</h2>
+      <h2 className={LEARN_STYLES.h2}>Hear it</h2>
 
-      <ul className="list-disc pl-6">
-        <li>
-          <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-            The Chromatic Circle
-          </Link>
-          : intervals as distances
-        </li>
-        <li>
-          <Link href="/learn/chords/chord-quality" className={LEARN_STYLES.link}>
-            Chord Quality
-          </Link>
-          : the full set of chord types
-        </li>
-        <li>
-          <Link href="/learn/scales" className={LEARN_STYLES.link}>
-            Scales
-          </Link>
-          : how the patterns relate to each other
-        </li>
-      </ul>
+      <p>
+        Recognition comes from hearing, not from reading. Every idea above is a way of describing a
+        sound, and it only really sticks once you can hear it.
+      </p>
 
-      <h2 className={LEARN_STYLES.h2}>About this approach</h2>
-
-      <ul className="list-disc pl-6">
-        <li>
-          <Link href="/learn/approach/why-this-app" className={LEARN_STYLES.link}>
-            Why This App
-          </Link>
-          : how the app is built around these ideas
-        </li>
-        <li>
-          <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-            Color Coding
-          </Link>
-          : what the colors show
-        </li>
-        <li>
-          <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
-            What&apos;s Wrong with Music Theory
-          </Link>
-          : the terms that depend on notation instead
-        </li>
-      </ul>
+      <SeeAlso
+        items={[
+          "chromatic-circle",
+          "chord-quality",
+          "triad-inversions",
+          "scales",
+          "color-coding",
+          "whats-wrong-with-music-theory",
+        ]}
+      />
     </>
   );
 }
