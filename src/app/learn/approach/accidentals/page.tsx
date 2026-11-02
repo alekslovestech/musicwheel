@@ -54,7 +54,7 @@ export default function AccidentalsPage() {
 
       <p>
         Strict spelling can sometimes force a double accidental. A fully <i>diminished 7th</i> stacks{" "}
-        <i>minor 3rds</i>, so C dim7 is spelled C, E♭, G♭, B𝄫.
+        <i>minor thirds</i>, so C dim7 is spelled C, E♭, G♭, B𝄫.
       </p>
       <SpelledStaff
         {...C_DIM7_SPELLED}

@@ -76,7 +76,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       </p>
 
       <p>
-        The same goes for intervals. C up to F♯ is an <i>augmented 4th</i>; C up to G♭ is a <i>diminished
+        The same goes for intervals. C up to F♯ is an <i>augmented fourth</i>; C up to G♭ is a <i>diminished
         5th</i>. On paper they sit on different lines and carry different names. On the keyboard
         they&apos;re the same two keys, 6 semitones apart. 
       </p>
@@ -84,11 +84,11 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <ComparisonGrid2>
         <SpelledStaff
           {...AUGMENTED_4TH}
-          caption="C–F♯ (augmented 4th)"
+          caption="C–F♯ (augmented fourth)"
         />
         <SpelledStaff
           {...DIMINISHED_5TH}
-          caption="C–G♭ (diminished 5th)"
+          caption="C–G♭ (diminished fifth)"
         />
       </ComparisonGrid2>
 

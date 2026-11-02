@@ -80,7 +80,7 @@ export default function ChromaticCirclePage() {
         On a linear keyboard, where an interval sits changes how it looks - e.g. it can depend on
         whether we start on a black or a white key. On the circle, an interval is just an angular
         distance between two points, and that distance is the same wherever the two points happen to
-        sit. A <i>major 3rd</i> starting on C and a <i>major 3rd</i> starting on C♯ are the same arc, just rotated
+        sit. A <i>major third</i> starting on C and a <i>major third</i> starting on C♯ are the same arc, just rotated
         to a different starting point:
       </p>
 
@@ -89,7 +89,7 @@ export default function ChromaticCirclePage() {
           rootNote="C"
           chordType={IntervalType.Major3}
           inversionIndex={0}
-          caption="C–E: major 3rd"
+          caption="C–E: major third"
           isCompact
         />
         <ChordWheel
@@ -97,7 +97,7 @@ export default function ChromaticCirclePage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption={
-            "C♯–F: major 3rd\nlooks very different on a linear keyboard, but exactly the same on the circular one"
+            "C♯–F: major third\nlooks very different on a linear keyboard, but exactly the same on the circular one"
           }
           isCompact
         />

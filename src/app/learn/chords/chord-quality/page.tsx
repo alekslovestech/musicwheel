@@ -28,7 +28,7 @@ export default function ChordQualityPage() {
       <p>
         &ldquo;Major,&rdquo; &ldquo;minor,&rdquo; &ldquo;diminished,&rdquo; &ldquo;augmented&rdquo;
         - these name a chord&apos;s quality, not its root. A quality is the pattern of intervals
-        stacked on top of the root: major is a stack of a <i>major 3rd</i> then a <i>minor 3rd</i>, minor is the
+        stacked on top of the root: major is a stack of a <i>major third</i> then a <i>minor third</i>, minor is the
         same two intervals in the other order. The root just says where the pattern starts; the
         pattern itself is what makes it major.
       </p>
@@ -47,7 +47,7 @@ export default function ChordQualityPage() {
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
-          caption="C major - major 3rd, then minor 3rd, from C"
+          caption="C major - major third, then minor third, from C"
         />
         <ChordWheel
           rootNote="E"

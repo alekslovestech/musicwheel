@@ -9,6 +9,7 @@ import { INTERVAL_PAIRS } from "@/lib/learn/intervalPairs";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
+import { NoteGroupingLibrary } from "@/types/NoteGroupingLibrary";
 import {
   getJoinedColorLegendGroupsForIds,
   legendLabelForGroup,
@@ -33,10 +34,10 @@ const INTERVAL_ROWS: {
   label2: string;
 }[] = [
   { ic: 0, label1: "Unison", label2: "(Octave)" },
-  ...INTERVAL_PAIRS.map(({ intervalClass, nameA, nameB }) => ({
+  ...INTERVAL_PAIRS.map(({ intervalClass, intervalA, intervalB }) => ({
     ic: intervalClass,
-    label1: nameA,
-    label2: nameB,
+    label1: NoteGroupingLibrary.getGroupingById(intervalA).longForm,
+    label2: NoteGroupingLibrary.getGroupingById(intervalB).longForm,
   })),
 ];
 
@@ -98,19 +99,19 @@ export default function ColorCodingPage() {
 
       <p>
         The chromatic circle is an established idea; the color coding is this app&apos;s own
-        addition. Each kind of interval gets its own color, so you can recognize a <i>major 3rd</i>{" "}
+        addition. Each kind of interval gets its own color, so you can recognize a <i>major third</i>{" "}
         at a glance instead of counting semitones, and chords blend the colors of the intervals
         inside them.
       </p>
 
       <p>
         Colors on the wheel follow one idea: distance matters more than direction. A{" "}
-        <i>minor 3rd</i> above the root and a <i>minor 3rd</i> below it get the same color.
+        <i>minor third</i> above the root and a <i>minor third</i> below it get the same color.
       </p>
 
       <p>
-        The same rule carries over to inversions. Flip an interval over - a <i>major 3rd</i> becomes
-        a <i>minor 6th</i>, for instance - and it&apos;s still the same interval class, so it keeps
+        The same rule carries over to inversions. Flip an interval over - a <i>major third</i> becomes
+        a <i>minor sixth</i>, for instance - and it&apos;s still the same interval class, so it keeps
         the same color; see{" "}
         <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
           interval inversions
@@ -146,7 +147,7 @@ export default function ColorCodingPage() {
       </div>
 
       <p>
-        The color follows the interval, not the notes. A <i>major 3rd</i> wears the same color
+        The color follows the interval, not the notes. A <i>major third</i> wears the same color
         whether it starts on C or on E.
       </p>
 
@@ -156,14 +157,14 @@ export default function ColorCodingPage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           isCompact={true}
-          caption="C–E: major 3rd"
+          caption="C–E: major third"
         />
         <ChordWheel
           rootNote="E"
           chordType={IntervalType.Major3}
           inversionIndex={0}
           isCompact={true}
-          caption="E–G♯: major 3rd"
+          caption="E–G♯: major third"
         />
       </ComparisonGrid2>
 
@@ -171,7 +172,7 @@ export default function ColorCodingPage() {
         A single note or a bare interval just wears its interval class&apos;s color directly. A
         chord has several intervals stacked on top of each other, so the app blends their colors
         together rather than picking one and discarding the rest. The blend isn&apos;t an even
-        average: the unstable intervals - the <i>minor 2nd</i>/<i>major 7th</i> and the{" "}
+        average: the unstable intervals - the <i>minor second</i>/<i>major seventh</i> and the{" "}
         <i>tritone</i> - are weighted more heavily, since they&apos;re usually what gives a chord
         its particular color to the ear. A plain <i>major triad</i> comes out as a fairly settled
         blend; add a 7th or a sharp dissonance and the mix visibly shifts toward that

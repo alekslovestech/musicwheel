@@ -11,75 +11,74 @@ and needs to be reviewed against what I actually want to say.
 - 4 = close, minor tweaks only
 - 5 = ready to promote
 
-Update the score/notes/date columns as pages are reviewed. Keep this file in the repo so
+Update the score column as pages are reviewed. Keep this file in the repo so
 review progress is visible in git history.
 
 ## Learn index
 
-| Page | Path | Score | Notes | Last reviewed |
-|---|---|---|---|---|
-| Learn home | `page.tsx` | 0 | | |
+| Page | Path | Score |
+|---|---|---|
+| Learn home | `page.tsx` | 0 |
 
 ## Approach
 
-| Page | Path | Score | Notes | Last reviewed |
-|---|---|---|---|---|
-| Approach index | `approach/page.tsx` | 4 | | |
-| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 | | |
-| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |  | |
-
-| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 | | |
-| Color coding | `approach/color-coding/page.tsx` | 4.5 | | |
-| Accidentals | `approach/accidentals/page.tsx` | 4.5 | | |
+| Page | Path | Score |
+|---|---|---|
+| Approach index | `approach/page.tsx` | 4 |
+| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 |
+| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |
+| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 |
+| Color coding | `approach/color-coding/page.tsx` | 4.5 |
+| Accidentals | `approach/accidentals/page.tsx` | 4.5 |
 
 
 
 ## Chords
 
-| Page | Path | Score | Notes | Last reviewed |
-|---|---|---|---|---|
-| Chords index | `chords/page.tsx` | 0 | | |
-| Chord quality | `chords/chord-quality/page.tsx` | 4 | | |
-| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3.5 | | |
-| Roman numerals | `chords/roman-numerals/page.tsx` | 4 | | |
-| Triad inversions | `chords/triad-inversions/page.tsx` | 4.5 | | |
+| Page | Path | Score |
+|---|---|---|
+| Chords index | `chords/page.tsx` | 0 |
+| Chord quality | `chords/chord-quality/page.tsx` | 4 |
+| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3.5 |
+| Roman numerals | `chords/roman-numerals/page.tsx` | 4 |
+| Triad inversions | `chords/triad-inversions/page.tsx` | 4.5 |
 
 ## Scales
 
-| Page | Path | Score | Notes | Last reviewed |
-|---|---|---|---|---|
-| Scales index | `scales/page.tsx` | 3 | | |
-| Scale degrees | `scales/scale-degrees/page.tsx` | 3.5 | | |
-| Greek modes | `scales/greek-modes/page.tsx` | 3.5 | | |
-| Modal families | `scales/modal-families/page.tsx` | 3 | | |
-| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3.5 | | |
-| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4.5 | | |
-| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3.5 | | |
+| Page | Path | Score |
+|---|---|---|
+| Scales index | `scales/page.tsx` | 3 |
+| Scale degrees | `scales/scale-degrees/page.tsx` | 3.5 |
+| Greek modes | `scales/greek-modes/page.tsx` | 3.5 |
+| Modal families | `scales/modal-families/page.tsx` | 3 |
+| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3.5 |
+| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4.5 |
+| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3.5 |
 
 ## Scales / Comparisons
 
-Each entry: score — notes — last reviewed.
-
-- **Comparisons index** — `scales/comparisons/page.tsx` — 3 — —
-- **Major vs Lydian** — `scales/comparisons/major-vs-lydian/page.tsx` — 0 — —
-- **Major vs Mixolydian** — `scales/comparisons/major-vs-mixolydian/page.tsx` — 0 — —
-- **Minor vs Dorian** — `scales/comparisons/minor-vs-dorian/page.tsx` — 0 — —
-- **Minor vs Phrygian** — `scales/comparisons/minor-vs-phrygian/page.tsx` — 0 — —
-- **Locrian vs Phrygian** — `scales/comparisons/locrian-vs-phrygian/page.tsx` — 0 — —
-- **Dorian vs Ukrainian Dorian** — `scales/comparisons/dorian-vs-ukrainian-dorian/page.tsx` — 0 — —
-- **Phrygian vs Phrygian Dominant** — `scales/comparisons/phrygian-vs-phrygian-dominant/page.tsx` — 0 — —
-- **Minor vs Harmonic Minor** — `scales/comparisons/minor-vs-harmonic-minor/page.tsx` — 0 — —
-- **Major vs Harmonic Major** — `scales/comparisons/major-vs-harmonic-major/page.tsx` — 0 — —
-- **Harmonic Minor vs Harmonic Major** — `scales/comparisons/harmonic-minor-vs-harmonic-major/page.tsx` — 0 — —
-- **Harmonic Minor vs Melodic Minor** — `scales/comparisons/harmonic-minor-vs-melodic-minor/page.tsx` — 0 — —
-- **Harmonic Minor vs Hungarian Minor** — `scales/comparisons/harmonic-minor-vs-hungarian-minor/page.tsx` — 0 — —
-- **Harmonic Major vs Double Harmonic Major** — `scales/comparisons/harmonic-major-vs-double-harmonic-major/page.tsx` — 0 — —
-- **Double Harmonic Major vs Panthuvarali** — `scales/comparisons/double-harmonic-major-vs-panthu-varaali/page.tsx` — 0 — —
-- **Major vs Melodic Minor** — `scales/comparisons/major-vs-melodic-minor/page.tsx` — 0 — —
+| Page | Path | Score |
+|---|---|---|
+| Comparisons index | `scales/comparisons/page.tsx` | 3 |
+| Major vs Lydian | `scales/comparisons/major-vs-lydian/page.tsx` | 0 |
+| Major vs Mixolydian | `scales/comparisons/major-vs-mixolydian/page.tsx` | 0 |
+| Minor vs Dorian | `scales/comparisons/minor-vs-dorian/page.tsx` | 0 |
+| Minor vs Phrygian | `scales/comparisons/minor-vs-phrygian/page.tsx` | 0 |
+| Locrian vs Phrygian | `scales/comparisons/locrian-vs-phrygian/page.tsx` | 0 |
+| Dorian vs Ukrainian Dorian | `scales/comparisons/dorian-vs-ukrainian-dorian/page.tsx` | 0 |
+| Phrygian vs Phrygian Dominant | `scales/comparisons/phrygian-vs-phrygian-dominant/page.tsx` | 0 |
+| Minor vs Harmonic Minor | `scales/comparisons/minor-vs-harmonic-minor/page.tsx` | 0 |
+| Major vs Harmonic Major | `scales/comparisons/major-vs-harmonic-major/page.tsx` | 0 |
+| Harmonic Minor vs Harmonic Major | `scales/comparisons/harmonic-minor-vs-harmonic-major/page.tsx` | 0 |
+| Harmonic Minor vs Melodic Minor | `scales/comparisons/harmonic-minor-vs-melodic-minor/page.tsx` | 0 |
+| Harmonic Minor vs Hungarian Minor | `scales/comparisons/harmonic-minor-vs-hungarian-minor/page.tsx` | 0 |
+| Harmonic Major vs Double Harmonic Major | `scales/comparisons/harmonic-major-vs-double-harmonic-major/page.tsx` | 0 |
+| Double Harmonic Major vs Panthuvarali | `scales/comparisons/double-harmonic-major-vs-panthu-varaali/page.tsx` | 0 |
+| Major vs Melodic Minor | `scales/comparisons/major-vs-melodic-minor/page.tsx` | 0 |
 
 ## Other
 
-| Page | Path | Score | Notes | Last reviewed |
-|---|---|---|---|---|
-| Interval inversions | `interval-inversions/page.tsx` | 5 | | |
-| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 5 | | |
+| Page | Path | Score |
+|---|---|---|
+| Interval inversions | `interval-inversions/page.tsx` | 5 |
+| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 5 |
