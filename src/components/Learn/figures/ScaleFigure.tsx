@@ -49,6 +49,7 @@ export function ScaleFigure({
   linearShowLabels,
   isCompact = false,
   hasKeySignature = true,
+  showAppLink = true,
   bare = false,
 }: {
   tonic: string;
@@ -78,6 +79,9 @@ export function ScaleFigure({
   /** Set false to draw the staff in C major's empty signature, so the scale's altered notes carry
    * their own accidentals instead of the app's usual key signature. */
   hasKeySignature?: boolean;
+  /** The "Hear it in the app" link under the caption - off for an article that isn't ready to
+   * point at the app yet. */
+  showAppLink?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
 }) {
@@ -178,16 +182,18 @@ export function ScaleFigure({
       caption={
         <>
           <span>{caption}</span>
-          <Link
-            href={scaleSelectionPath({
-              tonic,
-              scaleMode: scaleType,
-              playbackMode: scalePlaybackMode,
-            })}
-            className={LEARN_STYLES.link}
-          >
-            Hear {tonic} {scaleType} in the app
-          </Link>
+          {showAppLink && (
+            <Link
+              href={scaleSelectionPath({
+                tonic,
+                scaleMode: scaleType,
+                playbackMode: scalePlaybackMode,
+              })}
+              className={LEARN_STYLES.link}
+            >
+              Hear {tonic} {scaleType} in the app
+            </Link>
+          )}
         </>
       }
     >

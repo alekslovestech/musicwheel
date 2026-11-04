@@ -13,8 +13,8 @@ function resolveItem(item: SeeAlsoItem): LearnPageInfo {
   return item;
 }
 
-/** Onward reading at the end of an article. For a link that supports a specific claim, link
- * inline in the prose instead - this is for pages the article doesn't depend on. */
+/** Onward reading at the end of an article. See CLAUDE.md for when to use it and how to order
+ * the items. */
 export function SeeAlso({
   items,
   title = "See also",

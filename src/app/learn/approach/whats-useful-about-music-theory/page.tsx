@@ -40,9 +40,7 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <p>
         Most Western music divides the octave into 12 evenly spaced notes, a tuning known as 12
         equal divisions of the octave (12 EDO). After 12 notes we reach a new octave and the pattern
-        repeats. Many of music theory&apos;s concepts are built on this division; below are some of
-        the more useful ones, which depend on neither how the music is notated nor the key
-        it&apos;s in.
+        repeats.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
@@ -62,34 +60,44 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
 
       <p>
         On the staff they sit on different lines, and one has a sharp (♯) next to it - but to the ear they&apos;re the same
-        interval.
+        interval, with the same bright, settled sound.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Chords</h2>
 
       <p>
-        A chord is a stack of intervals, and its term describes that stack. 
-        A <i>major chord</i> is a triad, consisting of 
-        a <i>major third</i> (4 semitones) with a <i>minor third</i>&nbsp;(3 semitones)
-        on top, from any starting note.
+        A chord is a stack of intervals, and its term describes that stack. A <i>major chord</i> is
+        a triad - 3 notes, built from 2 intervals:
       </p>
+
+      <ul className="list-disc pl-6">
+        <li>
+          a <i>major third</i> (4 semitones) from the bottom note to the middle one
+        </li>
+        <li>
+          a <i>minor third</i> (3 semitones) from the middle note to the top
+        </li>
+      </ul>
+
+      <p>Start on any note, and the same stack gives you a major chord.</p>
 
       <ComparisonGrid2>
         <SpelledStaff {...C_MAJOR_TRIAD} caption="C major" />
         <SpelledStaff {...E_MAJOR_TRIAD} caption="E major" />
       </ComparisonGrid2>
 
+      <p>
+        Again the staff makes them look different - the E major needs a ♯, while the C major doesn&apos;t - but both have the
+        same bright, stable sound of a <i>major chord</i>.
+      </p> 
+
       <h2 className={LEARN_STYLES.h2}>Chord progressions</h2>
 
       <p>
         A chord progression is a sequence of chords, and it&apos;s what you recognize when you
         hear the same song in a different key. The chords below are different, but the progression
-        is the same ii–V–I. The{" "}
-        <Link href="/learn/chords/roman-numerals" className={LEARN_STYLES.link}>
-          Roman numerals
-        </Link>{" "}
-        are a handy way to write it down: each one names a chord by its place in the key, not by its
-        letter.
+        is the same ii–V–I. That name works in any key because each number names a chord by its
+        place in the key, not by its letter.
       </p>
 
       <ComparisonGrid2>
@@ -97,13 +105,19 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
           tonic="C"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
+          showAppLink={false}
         />
         <ProgressionStaff
           tonic="D"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
+          showAppLink={false}
         />
       </ComparisonGrid2>
+
+      <p>
+        The notes and the accidentals change; the pull back home on the final chord doesn&apos;t.
+      </p>
 
       <h2 className={LEARN_STYLES.h2}>Scales</h2>
 
@@ -112,38 +126,48 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         note it starts on.
       </p>
 
-      <ComparisonGrid2>
-        <ScaleFigure
-          tonic="C"
-          scaleType={ScaleModeType.Dorian}
-          caption="C Dorian"
-          views={["staff", "linear"]}
-          isCompact
-          hasKeySignature={false}
-        />
-        <ScaleFigure
-          tonic="C"
-          scaleType={ScaleModeType.Lydian}
-          caption="C Lydian"
-          views={["staff", "linear"]}
-          isCompact
-          hasKeySignature={false}
-        />
-      </ComparisonGrid2>
-
-      <h2 className={LEARN_STYLES.h2}>Hear it</h2>
+      <ScaleFigure
+        tonic="C"
+        scaleType={ScaleModeType.Dorian}
+        caption="C Dorian"
+        views={["staff", "linear"]}
+        isCompact
+        hasKeySignature={false}
+        showAppLink={false}
+      />
+      <ScaleFigure
+        tonic="C"
+        scaleType={ScaleModeType.Lydian}
+        caption="C Lydian"
+        views={["staff", "linear"]}
+        isCompact
+        hasKeySignature={false}
+        showAppLink={false}
+      />
 
       <p>
-        Recognition comes from hearing, not from reading. Every idea above is a way of describing a
-        sound, and it only really sticks once you can hear it.
+        Same starting note, different pattern, different mood: C <i>Dorian</i> sounds darker, C{" "}
+        <i>Lydian</i> brighter and floating. On the staff, that whole difference comes down to a few
+        small accidentals that are easy to miss.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>The common thread</h2>
+
+      <p>
+        Intervals, chords, progressions, and scales each carry a character you can learn to hear,
+        in any key. Their names are worth knowing for exactly that reason. What standard notation
+        does poorly is show those characters: it records which notes to play, and leaves the shapes
+        behind them for you to work out. A way of seeing harmony that showed those shapes directly
+        would make them far easier to learn.
       </p>
 
       <SeeAlso
         items={[
-          "chromatic-circle",
           "chord-quality",
           "triad-inversions",
+          "roman-numerals",
           "scales",
+          "chromatic-circle",
           "color-coding",
           "whats-wrong-with-music-theory",
         ]}

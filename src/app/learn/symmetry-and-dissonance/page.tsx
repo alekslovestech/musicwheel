@@ -194,12 +194,12 @@ export default function SymmetryAndDissonancePage() {
 
       <SeeAlso
         items={[
-          "chord-quality",
-          "chromatic-circle",
           {
             id: "accidentals",
             blurb: "Why a symmetrical chord like Cdim7 needs a double flat on paper, and why the app skips it",
           },
+          "chord-quality",
+          "chromatic-circle",
         ]}
       />
     </>
