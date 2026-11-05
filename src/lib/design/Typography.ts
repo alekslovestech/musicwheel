@@ -6,8 +6,9 @@ export const TYPOGRAPHY = {
 
   // Keyboard text (flat, non-nested)
   circularNoteText: "text-lg font-bold",
-  /** Out-of-scale letter on the wheel: a reference point, not part of the pattern. */
-  circularNoteTextDim: "text-lg font-normal opacity-50",
+  // Out-of-scale letter on the wheel: a reference point, not part of the pattern. Its fade comes
+  // from the Muted tier's text color.
+  circularNoteTextDim: "text-lg font-normal",
   circularRomanText: "text-sm font-bold",
   circularAccidental: "text-base",
   linearNoteText: "text-lg font-bold",
@@ -19,11 +20,11 @@ export const TYPOGRAPHY = {
   degreeLabelText: "text-xs font-medium leading-none text-labels-textDefault",
 } as const;
 
-/** Longest chord name that still gets full size - "Absus2", "C#m7b5" and the like. */
+// Longest chord name that still gets full size - "Absus2", "C#m7b5" and the like.
 export const CHORD_NAME_FULL_SIZE_MAX_CHARS = 6;
 
-/** Bold glyphs average a little over half an em. Deliberately over-estimated, so a name that
- *  computes to exactly one container width still lands inside it. */
+// Bold glyphs average a little over half an em. Deliberately over-estimated, so a name that
+// computes to exactly one container width still lands inside it.
 const CHORD_NAME_GLYPH_EM = 0.62;
 
 const CHORD_NAME_MIN_SIZE = "0.75rem";

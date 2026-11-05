@@ -73,7 +73,8 @@ const config: Config = {
         keys: {
           bgWhite: "rgb(250, 250, 246)", //"#fafaf6",
           bgBlack: "rgb(68, 68, 68)", //"#444444",
-          bgBlackMuted: "rgb(150, 150, 150)", // Black key outside the scale
+          bgMuted: "rgb(228, 229, 230)", // Any key outside the scale, black or white
+          textOnMuted: "rgba(60, 60, 70, 0.6)",
           bgActive: KEY_BG_ACTIVE,
           textOnActive: "rgb(63, 105, 201)", // Blue, same on black and white keys
           textOnWhiteFaded: "rgba(100, 100, 110, 0.5)", //"#64646E",

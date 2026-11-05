@@ -62,6 +62,6 @@ describe("LinearKeyboardView", () => {
     expect(tonic).toHaveClass("bg-keys-bgActive");
 
     ReactTestUtils.expectElementToBeDisabled(nonDiatonic);
-    expect(nonDiatonic).toHaveClass("bg-keys-bgBlackMuted");
+    expect(nonDiatonic).toHaveClass("bg-keys-bgMuted");
   });
 });

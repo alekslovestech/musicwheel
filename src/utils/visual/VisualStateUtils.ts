@@ -7,8 +7,8 @@ interface KeyColors {
 }
 
 export class VisualStateUtils {
-  /** Colors for a key at the given tier. Only Plain depends on black vs. white for its fill;
-   * Active and Spotlight are the same on either, so their labels are too. */
+  // Colors for a key at the given tier. Only Plain depends on black vs. white for its fill;
+  // Muted, Active and Spotlight are the same on either, so their labels are too.
   static getKeyColors(
     tier: KeyTier,
     isBlack: boolean,
@@ -29,6 +29,8 @@ export class VisualStateUtils {
         return `${prefix}-keys-textOnActive`;
       case KeyTier.Spotlight:
         return `${prefix}-keys-textOnSpotlight`;
+      case KeyTier.Muted:
+        return `${prefix}-keys-textOnMuted`;
       default:
         return `${prefix}-keys-textOn${isBlack ? "Black" : "White"}Faded`;
     }
@@ -40,10 +42,8 @@ export class VisualStateUtils {
         return "bgActive";
       case KeyTier.Spotlight:
         return "bgSpotlight";
-      // Gray rather than full black: stays darker than a white key but doesn't compete with the
-      // Spotlight navy.
       case KeyTier.Muted:
-        return "bgBlackMuted";
+        return "bgMuted";
       default:
         return isBlack ? "bgBlack" : "bgWhite";
     }

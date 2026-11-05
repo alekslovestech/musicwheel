@@ -150,23 +150,21 @@ export class KeyboardUtils {
       selectedMusicalKey,
       scalePlaybackMode,
     );
-    const keyTier = this.getKeyTier(isScales, isDiatonicInScale, isSelected, isBlack);
+    const keyTier = this.getKeyTier(isScales, isDiatonicInScale, isSelected);
     return { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText, keyTier };
   }
 
-  /** Scales mode: the spotlighted note is navy, the rest of the scale is active, and what's
-   * outside it recedes (a black key greys out, a white key just stays plain). Harmony mode: the
-   * selected notes are active. */
+  // Scales mode: the spotlighted note is navy, the rest of the scale is active, and what's
+  // outside it recedes. Harmony mode: the selected notes are active.
   static getKeyTier(
     isScales: boolean,
     isDiatonicInScale: boolean,
     isSelected: boolean,
-    isBlack: boolean,
   ): KeyTier {
     if (!isScales) return isSelected ? KeyTier.Active : KeyTier.Plain;
     if (isSelected) return KeyTier.Spotlight;
     if (isDiatonicInScale) return KeyTier.Active;
-    return isBlack ? KeyTier.Muted : KeyTier.Plain;
+    return KeyTier.Muted;
   }
 
   static buildKeyClasses(
@@ -200,13 +198,13 @@ export class KeyboardUtils {
     }
   }
 
-  /** Roman-numeral wheel labels, i.e. the chordal playback modes. Single source for label styling. */
+  // Roman-numeral wheel labels, i.e. the chordal playback modes. Single source for label styling.
   static usesRomanScaleLabels(scalePlaybackMode: ScalePlaybackMode): boolean {
     const labelMode = this.resolveCircularScaleLabelMode(scalePlaybackMode);
     return labelMode === KeyDisplayMode.Roman || labelMode === KeyDisplayMode.RomanSeventh;
   }
 
-  /** Letters (note-name) wheel labels, i.e. the modes where a black wedge's ♯/♭ pair is shown. */
+  // Letters (note-name) wheel labels, i.e. the modes where a black wedge's ♯/♭ pair is shown.
   static usesNoteNameScaleLabels(scalePlaybackMode: ScalePlaybackMode): boolean {
     return this.resolveCircularScaleLabelMode(scalePlaybackMode) === KeyDisplayMode.NoteNames;
   }
@@ -227,8 +225,8 @@ export class KeyboardUtils {
       : this.computeNoteTextForDefaultMode(chromaticIndex);
   }
 
-  /** {@link resolveCircularScaleLabelMode}, but a non-diatonic key has no Roman-numeral chords to
-   * label with (see {@link OtherScaleInfo}) - falls back to plain scale degree instead. */
+  // {@link resolveCircularScaleLabelMode}, but a non-diatonic key has no Roman-numeral chords to
+  // label with (see {@link OtherScaleInfo}) - falls back to plain scale degree instead.
   private static resolveScaleLabelMode(
     selectedMusicalKey: MusicalKey,
     scalePlaybackMode?: ScalePlaybackMode,

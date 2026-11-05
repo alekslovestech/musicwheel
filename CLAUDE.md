@@ -12,6 +12,10 @@ Apply this in code, comments, UI copy, and documentation.
 
 Exception: spell out interval names in prose ("major third", "minor sixth", "perfect fifth", "augmented second"). The number in an interval name counts letters on the staff, not semitones (a major third is 4 semitones), so a word keeps it from reading as a size. Scale degrees ("the 4th degree"), chord names ("dominant 7th", "diminished 7th"), symbols (m3, M6, ♭3) and the color legend's abbreviated labels keep numerals.
 
+## Code comments
+
+Write a comment of 1 or 2 lines as `//` lines, never as `/** ... */` or `/* ... */`. Reserve `/** ... */` for comments of 3 or more lines.
+
 ## Learn section content
 
 - Avoid stating the same concept twice in different words within the same passage (e.g. don't say "three semitones" and then restate it as "a step and a half").

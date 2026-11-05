@@ -78,6 +78,6 @@ describe("CircularKeyboardView", () => {
     expect(tonic.querySelector("path")).toHaveClass("fill-keys-bgActive");
 
     ReactTestUtils.expectElementToBeDisabled(nonDiatonic);
-    expect(nonDiatonic.querySelector("path")).toHaveClass("fill-keys-bgBlackMuted");
+    expect(nonDiatonic.querySelector("path")).toHaveClass("fill-keys-bgMuted");
   });
 });
