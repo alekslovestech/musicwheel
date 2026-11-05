@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
@@ -180,12 +181,9 @@ export default function ChromaticCirclePage() {
         </tbody>
       </table>
 
-      <SeeAlso
-        items={[
-          "color-coding",
-          "symmetry-and-dissonance",
-        ]}
-      />
+      <SeeAlso items={["color-coding", "symmetry-and-dissonance"]} />
+
+      <ArticleNav id="chromatic-circle" />
     </>
   );
 }

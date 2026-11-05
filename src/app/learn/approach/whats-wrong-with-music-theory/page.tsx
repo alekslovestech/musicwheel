@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
@@ -78,7 +79,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
       <p>
         The same goes for intervals. C up to F♯ is an <i>augmented fourth</i>; C up to G♭ is a <i>diminished
         5th</i>. On paper they sit on different lines and carry different names. On the keyboard
-        they&apos;re the same two keys, 6 semitones apart. 
+        they&apos;re the same two keys, 6 semitones apart.
       </p>
 
       <ComparisonGrid2>
@@ -160,13 +161,7 @@ export default function WhatsWrongWithMusicTheoryPage() {
         />
       </div>
 
-      <p>
-        See{" "}
-        <Link href="/learn/approach/whats-useful-about-music-theory" className={LEARN_STYLES.link}>
-          What&apos;s Useful About Music Theory
-        </Link>{" "}
-        for what&apos;s worth keeping instead.
-      </p>
+      <ArticleNav id="whats-wrong-with-music-theory" />
     </>
   );
 }

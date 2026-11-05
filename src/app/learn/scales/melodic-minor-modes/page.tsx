@@ -82,6 +82,7 @@ export default function MelodicMinorModesPage() {
 
       <SeeAlso
         items={[
+          "harmonic",
           {
             href: "/learn/scales/comparisons/major-vs-melodic-minor",
             title: "Major vs. Melodic Minor",
@@ -92,7 +93,6 @@ export default function MelodicMinorModesPage() {
             title: "Harmonic Minor vs. Melodic Minor",
             blurb: "Separated by a single note: the 6th degree",
           },
-          "harmonic",
         ]}
       />
     </>

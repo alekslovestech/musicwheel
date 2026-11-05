@@ -1,6 +1,7 @@
 import { KeyDisplayMode } from "@/types/enums/KeyDisplayMode";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { KeyTier } from "@/types/enums/KeyTier";
 
 import { ChromaticIndex } from "@/types/ChromaticIndex";
 import { ActualIndex, actualToChromatic, chromaticToActual, NoteIndices } from "@/types/IndexTypes";
@@ -42,10 +43,21 @@ export class KeyboardUtils {
     keyDisplayMode: KeyDisplayMode,
   ): string {
     const isDiatonic = selectedMusicalKey.isNoteInScale(chromaticIndex);
+    if (!isDiatonic) {
+      // Only letters mode labels out-of-scale wedges (dimmed by the wheel), so a black wedge's
+      // ♯/♭ pair has neighbours to read against. Degree and Roman modes leave them blank.
+      return keyDisplayMode === KeyDisplayMode.NoteNames
+        ? this.computeNoteTextForDefaultMode(chromaticIndex)
+        : "";
+    }
 
-    return !isDiatonic
-      ? ""
-      : MusicalKeyNoteFormatter.formatNoteForDisplay(
+    // Note names stay unspelled, as in Harmony mode: the scale's own spelling changes when the
+    // scale is transposed and would pull attention from the interval pattern.
+    if (keyDisplayMode === KeyDisplayMode.NoteNames) {
+      return this.computeNoteTextForDefaultMode(chromaticIndex);
+    }
+
+    return MusicalKeyNoteFormatter.formatNoteForDisplay(
           selectedMusicalKey,
           chromaticIndex,
           keyDisplayMode,
@@ -97,11 +109,10 @@ export class KeyboardUtils {
   /**
    * The handful of derived values every key (circular or linear) needs before it can render:
    * which chromatic pitch it is, whether it's black, whether it's in the current scale, its
-   * base classes, its element id, and its label text. Identical between the two keyboards except
-   * for the UI type, so both PianoKeyCircular and PianoKeyLinear call this instead of re-deriving
-   * each value themselves. Key *colors* are deliberately not included here - they diverge too
-   * much between the two (different isSvg, a bass-note quirk on the circular wheel, Linear's
-   * realistic-colors branch) to fold in without a leaky parameter list.
+   * base classes, its element id, its label text, and its color tier. Identical between the two
+   * keyboards except for the UI type, so both PianoKeyCircular and PianoKeyLinear call this
+   * instead of re-deriving each value themselves. Colors themselves aren't included - they differ
+   * by isSvg and by the bass-note quirk on the circular wheel - but the tier they come from is.
    */
   static getKeyVisualState(
     actualIndex: ActualIndex,
@@ -118,6 +129,7 @@ export class KeyboardUtils {
     allBaseClasses: string;
     id: string;
     noteText: string;
+    keyTier: KeyTier;
   } {
     const chromaticIndex = actualToChromatic(actualIndex);
     const isBlack = BlackKeyUtils.isBlackKey(chromaticIndex);
@@ -138,7 +150,21 @@ export class KeyboardUtils {
       selectedMusicalKey,
       scalePlaybackMode,
     );
-    return { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText };
+    const keyTier = this.getKeyTier(isScales, isDiatonicInScale, isSelected);
+    return { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText, keyTier };
+  }
+
+  // Scales mode: the spotlighted note is navy, the rest of the scale is active, and what's
+  // outside it recedes. Harmony mode: the selected notes are active.
+  static getKeyTier(
+    isScales: boolean,
+    isDiatonicInScale: boolean,
+    isSelected: boolean,
+  ): KeyTier {
+    if (!isScales) return isSelected ? KeyTier.Active : KeyTier.Plain;
+    if (isSelected) return KeyTier.Spotlight;
+    if (isDiatonicInScale) return KeyTier.Active;
+    return KeyTier.Muted;
   }
 
   static buildKeyClasses(
@@ -172,10 +198,15 @@ export class KeyboardUtils {
     }
   }
 
-  /** Roman-numeral wheel labels, i.e. the chordal playback modes. Single source for label styling. */
+  // Roman-numeral wheel labels, i.e. the chordal playback modes. Single source for label styling.
   static usesRomanScaleLabels(scalePlaybackMode: ScalePlaybackMode): boolean {
     const labelMode = this.resolveCircularScaleLabelMode(scalePlaybackMode);
     return labelMode === KeyDisplayMode.Roman || labelMode === KeyDisplayMode.RomanSeventh;
+  }
+
+  // Letters (note-name) wheel labels, i.e. the modes where a black wedge's ♯/♭ pair is shown.
+  static usesNoteNameScaleLabels(scalePlaybackMode: ScalePlaybackMode): boolean {
+    return this.resolveCircularScaleLabelMode(scalePlaybackMode) === KeyDisplayMode.NoteNames;
   }
 
   static getNoteText(
@@ -194,8 +225,8 @@ export class KeyboardUtils {
       : this.computeNoteTextForDefaultMode(chromaticIndex);
   }
 
-  /** {@link resolveCircularScaleLabelMode}, but a non-diatonic key has no Roman-numeral chords to
-   * label with (see {@link OtherScaleInfo}) - falls back to plain scale degree instead. */
+  // {@link resolveCircularScaleLabelMode}, but a non-diatonic key has no Roman-numeral chords to
+  // label with (see {@link OtherScaleInfo}) - falls back to plain scale degree instead.
   private static resolveScaleLabelMode(
     selectedMusicalKey: MusicalKey,
     scalePlaybackMode?: ScalePlaybackMode,

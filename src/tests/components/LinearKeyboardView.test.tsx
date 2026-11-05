@@ -59,7 +59,7 @@ describe("LinearKeyboardView", () => {
     const nonDiatonic = document.getElementById("linearKey01")!; // C# - not in C major
 
     ReactTestUtils.expectElementToBeEnabled(tonic);
-    expect(tonic).toHaveClass("bg-keys-bgHighlighted");
+    expect(tonic).toHaveClass("bg-keys-bgActive");
 
     ReactTestUtils.expectElementToBeDisabled(nonDiatonic);
     expect(nonDiatonic).toHaveClass("bg-keys-bgMuted");

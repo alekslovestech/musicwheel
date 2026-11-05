@@ -84,8 +84,8 @@ export default function AccidentalsPage() {
 
       <SeeAlso
         items={[
-          "symmetry-and-dissonance",
           "chromatic-circle",
+          "symmetry-and-dissonance",
         ]}
       />
     </>

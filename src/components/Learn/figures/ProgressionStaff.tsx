@@ -27,6 +27,7 @@ export function ProgressionStaff({
   progression,
   caption,
   showRomanNumerals = true,
+  showAppLink = true,
   bare = false,
 }: {
   tonic: string;
@@ -34,6 +35,9 @@ export function ProgressionStaff({
   caption: string;
   /** Roman numerals above the chord names. */
   showRomanNumerals?: boolean;
+  /** The "Hear it in the app" link under the chord names - off for an article that isn't
+   * ready to point at the app yet. */
+  showAppLink?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
 }) {
@@ -77,12 +81,14 @@ export function ProgressionStaff({
           <span>{caption}</span>
           {showRomanNumerals && <span className="font-bold">{romanNumerals}</span>}
           <span>{chordNames}</span>
-          <Link
-            href={progressionSelectionPath({ tonic, progression })}
-            className={LEARN_STYLES.link}
-          >
-            Hear it in the app
-          </Link>
+          {showAppLink && (
+            <Link
+              href={progressionSelectionPath({ tonic, progression })}
+              className={LEARN_STYLES.link}
+            >
+              Hear it in the app
+            </Link>
+          )}
         </>
       }
     >

@@ -128,8 +128,8 @@ export default function IntervalInversionsPage() {
 
       <SeeAlso
         items={[
-          "triad-inversions",
           "symmetry-and-dissonance",
+          "triad-inversions",
           "chromatic-circle",
         ]}
       />

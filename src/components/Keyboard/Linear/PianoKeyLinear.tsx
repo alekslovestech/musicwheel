@@ -5,6 +5,7 @@ import { TYPOGRAPHY } from "@/lib/design/Typography";
 import { ActualIndex, NoteIndices } from "@/types/IndexTypes";
 import { AccidentalType } from "@/types/enums/AccidentalType";
 import { KeyboardUIType } from "@/types/enums/KeyboardUIType";
+import { KeyTier } from "@/types/enums/KeyTier";
 import {
   BLACK_KEY_WIDTH_RATIO,
   WHITE_KEYS_PER_OCTAVE,
@@ -32,8 +33,6 @@ interface PianoKeyLinearProps {
   selectedMusicalKey: MusicalKey;
   selectedNoteIndices: NoteIndices;
   isScales: boolean;
-  /** Real black/white key colors instead of the live app's blue Scales-mode theme. */
-  useRealisticColors?: boolean;
   showLabels?: boolean;
   isCompact?: boolean;
 }
@@ -46,7 +45,6 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   selectedMusicalKey,
   selectedNoteIndices,
   isScales,
-  useRealisticColors = false,
   showLabels = true,
   isCompact = false,
 }) => {
@@ -55,7 +53,7 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
     selectedNoteIndices,
     KeyboardUIType.Linear,
   );
-  const { chromaticIndex, isBlack: isShortKey, isDiatonicInScale, allBaseClasses, id, noteText } =
+  const { chromaticIndex, isBlack: isShortKey, isDiatonicInScale, allBaseClasses, id, noteText, keyTier } =
     KeyboardUtils.getKeyVisualState(
       actualIndex,
       KeyboardUIType.Linear,
@@ -79,26 +77,15 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   const totalWhiteKeys = isCompact ? WHITE_KEYS_PER_OCTAVE + 1 : WHITE_KEYS_PER_2OCTAVES;
   const keyWidthAsPercent = `${((widthRatio * 100) / totalWhiteKeys).toFixed(2)}%`;
 
-  const keyColors = useRealisticColors
-    ? VisualStateUtils.getRealisticScaleKeyColors(
-        isShortKey,
-        isDiatonicInScale,
-        isSelected,
-        isBassNote,
-        false,
-      )
-    : VisualStateUtils.getKeyColors(
-        isScales,
-        isDiatonicInScale,
-        isBassNote,
-        isShortKey,
-        isSelected,
-        false,
-      );
+  const keyColors = VisualStateUtils.getKeyColors(keyTier, isShortKey, isBassNote, false);
 
   const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {
     const isSharp = accidental === AccidentalType.Sharp;
-    const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(isSelected, false, false);
+    const colorClass = VisualStateUtils.getKeyTextColor(
+      isSelected ? KeyTier.Active : KeyTier.Plain,
+      false,
+      false,
+    );
     return (
       <span
         className={`${ACCIDENTAL_CLASSES} ${isSharp ? "right-0.5" : "left-0.5"} ${

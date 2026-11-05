@@ -58,9 +58,9 @@ export default function TriadInversionsPage() {
 
       <SeeAlso
         items={[
+          "chromatic-circle",
           "chord-quality",
           "interval-inversions",
-          "chromatic-circle",
           "major-vs-minor-triads",
         ]}
       />

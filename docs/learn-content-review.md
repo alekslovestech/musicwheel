@@ -28,6 +28,7 @@ review progress is visible in git history.
 | What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 |
 | What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |
 | Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 |
+| What the wheel shows | `approach/what-the-wheel-shows/page.tsx` | 0 |
 | Color coding | `approach/color-coding/page.tsx` | 4.5 |
 | Accidentals | `approach/accidentals/page.tsx` | 4.5 |
 

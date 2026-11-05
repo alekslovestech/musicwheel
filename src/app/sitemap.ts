@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/learn/approach/whats-useful-about-music-theory"),
     url("/learn/approach/color-coding"),
     url("/learn/approach/chromatic-circle"),
+    url("/learn/approach/what-the-wheel-shows"),
     url("/learn/approach/accidentals"),
 
     url("/learn/chords"),

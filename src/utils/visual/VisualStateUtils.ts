@@ -1,104 +1,52 @@
+import { KeyTier } from "@/types/enums/KeyTier";
+
 interface KeyColors {
   primary: string; // "fill-keys-bgWhite" or "bg-keys-bgWhite"
-  text: string; // "fill-keys-textOnWhite" or "text-keys-textOnWhite"
+  text: string; // "fill-keys-textOnWhiteFaded" or "text-keys-textOnWhiteFaded"
   border: string; // "border-keys-borderColor"
 }
 
 export class VisualStateUtils {
+  // Colors for a key at the given tier. Only Plain depends on black vs. white for its fill;
+  // Muted, Active and Spotlight are the same on either, so their labels are too.
   static getKeyColors(
-    isScales: boolean,
-    isDiatonicInScale: boolean,
-    isRootNote: boolean,
+    tier: KeyTier,
     isBlack: boolean,
-    isSelected: boolean,
+    isRootNote: boolean,
     isSvg: boolean,
   ): KeyColors {
-    const border = this.getBorder(isRootNote);
-
-    if (!isScales) {
-      const { primary, text } = this.blackWhiteColors(isBlack, isSelected, isSvg);
-      return { primary, text, border };
-    }
-
-    const stateColor = isDiatonicInScale ? "Highlighted" : "Muted";
-    const selectedString = isSelected ? "Selected" : "";
-    const primaryPrefix = this.getBgPrefix(isSvg);
-    const textPrefix = this.getTextPrefix(isSvg);
-
     return {
-      primary: `${primaryPrefix}-keys-bg${stateColor}${selectedString}`,
-      text: `${textPrefix}-keys-textOn${stateColor}`,
-      border,
+      primary: `${this.getBgPrefix(isSvg)}-keys-${this.getBgToken(tier, isBlack)}`,
+      text: this.getKeyTextColor(tier, isBlack, isSvg),
+      border: `border-${isRootNote ? "keys-borderRootNote" : "keys-borderColor"}`,
     };
   }
 
-  /**
-   * Realistic black/white keys (see PianoKeyLinear's useRealisticColors), three tiers: plain,
-   * in-scale (soft accent), and the specific interval a figure is spotlighting (navy - the wheel's
-   * own Highlighted/HighlightedSelected color).
-   */
-  static getRealisticScaleKeyColors(
-    isBlack: boolean,
-    isDiatonic: boolean,
-    isSelected: boolean,
-    isRootNote: boolean,
-    isSvg: boolean,
-  ): KeyColors {
-    const border = this.getBorder(isRootNote);
-    const primaryPrefix = this.getBgPrefix(isSvg);
-
-    if (isSelected) {
-      return {
-        primary: `${primaryPrefix}-keys-bgHighlightedSelected`,
-        text: `${this.getTextPrefix(isSvg)}-keys-textOnHighlighted`,
-        border,
-      };
-    }
-
-    // Muted gray rather than full black: stays darker than a white key but doesn't compete with
-    // the navy "specific interval" tier.
-    if (isBlack && !isDiatonic) {
-      return {
-        primary: `${primaryPrefix}-keys-bgBlackMuted`,
-        text: this.getTextColorClassForNonScaleMode(false, isBlack, isSvg),
-        border,
-      };
-    }
-
-    const { primary, text } = this.blackWhiteColors(isBlack, isDiatonic, isSvg);
-    return { primary, text, border };
-  }
-
-  static getTextColorClassForNonScaleMode(
-    isSelected: boolean,
-    isBlack: boolean,
-    isSvg: boolean,
-  ): string {
+  static getKeyTextColor(tier: KeyTier, isBlack: boolean, isSvg: boolean): string {
     const prefix = this.getTextPrefix(isSvg);
-    const state = isSelected ? "Selected" : "Faded";
-    const keyType = isBlack ? "Black" : "White";
-    return `${prefix}-keys-textOn${keyType}${state}`;
+    switch (tier) {
+      case KeyTier.Active:
+        return `${prefix}-keys-textOnActive`;
+      case KeyTier.Spotlight:
+        return `${prefix}-keys-textOnSpotlight`;
+      case KeyTier.Muted:
+        return `${prefix}-keys-textOnMuted`;
+      default:
+        return `${prefix}-keys-textOn${isBlack ? "Black" : "White"}Faded`;
+    }
   }
 
-  /** Plain black/white key, with an accent (Selected variant) when isAccented. Shared shape behind
-   * getKeyColors's Harmony-mode branch and getRealisticScaleKeyColors's default branch - they
-   * differ only in what drives the accent (current selection vs. scale membership). */
-  private static blackWhiteColors(
-    isBlack: boolean,
-    isAccented: boolean,
-    isSvg: boolean,
-  ): { primary: string; text: string } {
-    const primaryPrefix = this.getBgPrefix(isSvg);
-    const keyType = isBlack ? "Black" : "White";
-    const suffix = isAccented ? "Selected" : "";
-    return {
-      primary: `${primaryPrefix}-keys-bg${keyType}${suffix}`,
-      text: this.getTextColorClassForNonScaleMode(isAccented, isBlack, isSvg),
-    };
-  }
-
-  private static getBorder(isRootNote: boolean): string {
-    return `border-${isRootNote ? "keys-borderRootNote" : "keys-borderColor"}`;
+  private static getBgToken(tier: KeyTier, isBlack: boolean): string {
+    switch (tier) {
+      case KeyTier.Active:
+        return "bgActive";
+      case KeyTier.Spotlight:
+        return "bgSpotlight";
+      case KeyTier.Muted:
+        return "bgMuted";
+      default:
+        return isBlack ? "bgBlack" : "bgWhite";
+    }
   }
 
   private static getBgPrefix(isSvg: boolean): string {
