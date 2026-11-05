@@ -75,9 +75,9 @@ describe("CircularKeyboardView", () => {
 
     // The disabled/selected classes live on the <g>; the fill color is on its child <path>.
     ReactTestUtils.expectElementToBeEnabled(tonic);
-    expect(tonic.querySelector("path")).toHaveClass("fill-keys-bgHighlighted");
+    expect(tonic.querySelector("path")).toHaveClass("fill-keys-bgActive");
 
     ReactTestUtils.expectElementToBeDisabled(nonDiatonic);
-    expect(nonDiatonic.querySelector("path")).toHaveClass("fill-keys-bgMuted");
+    expect(nonDiatonic.querySelector("path")).toHaveClass("fill-keys-bgBlackMuted");
   });
 });

@@ -16,7 +16,6 @@ export const KeyboardLinear = () => {
       isScales={isScales}
       onKeyClick={onLinearKeyClick}
       isBassNote={checkIsBassNote}
-      useRealisticColors={isScales}
       showScaleBoundaryFlag
     />
   );

@@ -3,8 +3,8 @@ import type { Config } from "tailwindcss";
 
 import { INTERVAL_CLASS_PALETTE } from "./src/lib/design/palette";
 
-// Shared background color for selected black and white keys
-const KEY_BG_SELECTED = "rgb(190, 227, 236)"; //"#5A9CB3",
+// Shared background color for active (selected / in-scale) black and white keys
+const KEY_BG_ACTIVE = "rgb(190, 227, 236)"; //"#5A9CB3",
 
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}", "!./src/tests/**"],
@@ -73,23 +73,16 @@ const config: Config = {
         keys: {
           bgWhite: "rgb(250, 250, 246)", //"#fafaf6",
           bgBlack: "rgb(68, 68, 68)", //"#444444",
-          bgBlackMuted: "rgb(150, 150, 150)", // Non-diatonic black key in realistic scale figures
-          bgWhiteSelected: KEY_BG_SELECTED,
-          bgBlackSelected: KEY_BG_SELECTED,
-          textOnWhiteSelected: "rgb(63, 105, 201)", // Softer blue for selected white keys
-          textOnBlackSelected: "rgb(255, 255, 255)", // White for selected black keys
+          bgBlackMuted: "rgb(150, 150, 150)", // Black key outside the scale
+          bgActive: KEY_BG_ACTIVE,
+          textOnActive: "rgb(63, 105, 201)", // Blue, same on black and white keys
           textOnWhiteFaded: "rgba(100, 100, 110, 0.5)", //"#64646E",
           textOnBlackFaded: "rgba(200, 200, 210, 0.5)", //"#C8C8D2",
           borderColor: "rgb(110, 110, 110)", //"#6E6E6E",
           strokeOutline: "rgb(156, 163, 175)", // Outline around circular key wedges
 
-          bgHighlighted: "rgb(113, 182, 255)", //"#B0D6FD",
-          bgHighlightedSelected: "rgb(22, 46, 158)", //"#162E9E"
-          textOnHighlighted: "rgb(255, 255, 255)", // #FFFFFF
-
-          bgMuted: "rgb(228, 229, 230)", //"#E4E5E6",
-          bgMutedSelected: "rgb(150, 150, 150)", //"#969696",
-          textOnMuted: "rgb(51, 51, 51)", //"#333333",
+          bgSpotlight: "rgb(22, 46, 158)", //"#162E9E"
+          textOnSpotlight: "rgb(255, 255, 255)", // #FFFFFF
 
           bgRootNote: "rgb(222, 97, 59)", //"#DE613B",
 

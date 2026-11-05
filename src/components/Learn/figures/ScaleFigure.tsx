@@ -167,7 +167,6 @@ export function ScaleFigure({
             isScales={!echoesStaffNotes}
             onKeyClick={null}
             isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
-            useRealisticColors={!echoesStaffNotes}
             showLabels={linearShowLabels ?? echoesStaffNotes}
             isCompact={isCompact}
             showScaleBoundaryFlag={!echoesStaffNotes}

@@ -48,7 +48,7 @@ const PianoKeyCircularBase = ({
   selectedMusicalKey: MusicalKey;
   scalePlaybackMode: ScalePlaybackMode;
 }) => {
-  const { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText } =
+  const { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText, keyTier } =
     KeyboardUtils.getKeyVisualState(
       actualIndex,
       KeyboardUIType.Circular,
@@ -62,14 +62,7 @@ const PianoKeyCircularBase = ({
   const textPoint = ArcPathVisualizer.getTextPoint(chromaticIndex, outerRadius, innerRadius);
 
   // Ignores isBassNote - the wheel marks the bass note with a separate dot, not a color.
-  const keyColors = VisualStateUtils.getKeyColors(
-    isScales,
-    isDiatonicInScale,
-    false,
-    isBlack,
-    isSelected,
-    true,
-  );
+  const keyColors = VisualStateUtils.getKeyColors(keyTier, isBlack, false, true);
 
   const isRomanLabels =
     isScales &&
@@ -78,35 +71,29 @@ const PianoKeyCircularBase = ({
   const romanLabelFit = isRomanLabels
     ? ArcPathVisualizer.getRomanLabelFit(noteText, outerRadius, innerRadius)
     : undefined;
+  // Degree and Roman labels name the pattern, not the pitch - the ♯/♭ pair has no job there.
+  const showsAccidentalPair = !isScales || KeyboardUtils.usesNoteNameScaleLabels(scalePlaybackMode);
+  const isOutOfScaleLabel = isScales && !isDiatonicInScale && noteText !== "";
   const noteTextClass = romanLabelFit
     ? "font-bold"
     : isRomanLabels
       ? TYPOGRAPHY.circularRomanText
-      : TYPOGRAPHY.circularNoteText;
+      : isOutOfScaleLabel
+        ? TYPOGRAPHY.circularNoteTextDim
+        : TYPOGRAPHY.circularNoteText;
   const isRomanLabelDimmed = isRomanLabels && dimRomanLabel;
 
-  const renderAccidental = (
-    accidental: AccidentalType,
-    textPoint: CartesianPoint,
-    isSelected: boolean,
-  ) => {
-    const colorClass = VisualStateUtils.getTextColorClassForNonScaleMode(
-      isSelected,
-      isBlack,
-      true, // isSvg
-    );
-    return (
-      <text
-        x={textPoint.x}
-        y={textPoint.y}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        className={`text-center pointer-events-none ${TYPOGRAPHY.circularAccidental} ${colorClass}`}
-      >
-        {AccidentalFormatter.getAccidentalSignForDisplay(accidental)}
-      </text>
-    );
-  };
+  const renderAccidental = (accidental: AccidentalType, textPoint: CartesianPoint) => (
+    <text
+      x={textPoint.x}
+      y={textPoint.y}
+      textAnchor="middle"
+      dominantBaseline="middle"
+      className={`text-center pointer-events-none ${TYPOGRAPHY.circularAccidental} ${keyColors.text}`}
+    >
+      {AccidentalFormatter.getAccidentalSignForDisplay(accidental)}
+    </text>
+  );
 
   const textPointAccidentals: CartesianPointPair = ArcPathVisualizer.getAccidentalPositions(
     chromaticIndex,
@@ -137,10 +124,10 @@ const PianoKeyCircularBase = ({
       >
         {noteText}
       </text>
-      {!isScales && isBlack && (
+      {isBlack && !noteText && showsAccidentalPair && (
         <>
-          {renderAccidental(AccidentalType.Sharp, textPointAccidentals.start, isSelected)}
-          {renderAccidental(AccidentalType.Flat, textPointAccidentals.end, isSelected)}
+          {renderAccidental(AccidentalType.Sharp, textPointAccidentals.start)}
+          {renderAccidental(AccidentalType.Flat, textPointAccidentals.end)}
         </>
       )}
     </g>

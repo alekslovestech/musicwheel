@@ -6,6 +6,8 @@ export const TYPOGRAPHY = {
 
   // Keyboard text (flat, non-nested)
   circularNoteText: "text-lg font-bold",
+  /** Out-of-scale letter on the wheel: a reference point, not part of the pattern. */
+  circularNoteTextDim: "text-lg font-normal opacity-50",
   circularRomanText: "text-sm font-bold",
   circularAccidental: "text-base",
   linearNoteText: "text-lg font-bold",

@@ -36,7 +36,6 @@ export function LinearKeyboardView({
   onKeyClick,
   isBassNote = () => false,
   className,
-  useRealisticColors = false,
   showLabels = true,
   isCompact = false,
   showScaleBoundaryFlag = false,
@@ -47,7 +46,6 @@ export function LinearKeyboardView({
   onKeyClick: ((index: ActualIndex) => void) | null;
   isBassNote?: (index: ActualIndex) => boolean;
   className?: string;
-  useRealisticColors?: boolean;
   showLabels?: boolean;  
   isCompact?: boolean; /** Compact shows 1 octave, default shows 2. */  
   showScaleBoundaryFlag?: boolean;
@@ -85,7 +83,6 @@ export function LinearKeyboardView({
         selectedMusicalKey={musicalKey}
         selectedNoteIndices={highlightedNoteIndices}
         isScales={isScales}
-        useRealisticColors={useRealisticColors}
         showLabels={showLabels}
         isCompact={isCompact}
       />,
