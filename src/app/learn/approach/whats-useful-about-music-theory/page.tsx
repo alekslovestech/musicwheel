@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
-import {
-  C_MAJOR_TRIAD,
-  C_TO_E,
-  E_MAJOR_TRIAD,
-  E_TO_G_SHARP,
-} from "@/lib/learn/spelledFigures";
+import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/spelledFigures";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -162,16 +158,10 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <SeeAlso
-        items={[
-          "chord-quality",
-          "triad-inversions",
-          "roman-numerals",
-          "scales",
-          "chromatic-circle",
-          "color-coding",
-          "whats-wrong-with-music-theory",
-        ]}
+        items={["chord-quality", "triad-inversions", "roman-numerals", "scales", "color-coding"]}
       />
+
+      <ArticleNav id="whats-useful-about-music-theory" />
     </>
   );
 }

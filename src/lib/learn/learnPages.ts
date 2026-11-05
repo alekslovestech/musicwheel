@@ -36,6 +36,11 @@ export const LEARN_PAGES = {
     title: "What's Wrong with Music Theory",
     blurb: "The terms that depend on notation instead",
   },
+  "what-the-wheel-shows": {
+    href: "/learn/approach/what-the-wheel-shows",
+    title: "What the Wheel Shows",
+    blurb: "The same intervals, chords, progressions and scales, drawn instead of written",
+  },
   "chord-quality": {
     href: "/learn/chords/chord-quality",
     title: "Chord Quality",
@@ -104,3 +109,15 @@ export const LEARN_PAGES = {
 } as const satisfies Record<string, LearnPageInfo>;
 
 export type LearnPageId = keyof typeof LEARN_PAGES;
+
+/** The Approach section's introductory spine, in reading order: each builds on the last, and
+ * ArticleNav gives every one of them a Previous/Next into its neighbors. Color Coding and
+ * Accidentals are reference for this spine, not part of it - they stay reachable only through
+ * SeeAlso and the Approach index. Extend this list (not SeeAlso) when a new spine article is
+ * added. */
+export const APPROACH_SEQUENCE: readonly LearnPageId[] = [
+  "whats-wrong-with-music-theory",
+  "whats-useful-about-music-theory",
+  "chromatic-circle",
+  "what-the-wheel-shows",
+];

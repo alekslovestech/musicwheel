@@ -24,3 +24,9 @@ Exception: spell out interval names in prose ("major third", "minor sixth", "per
 - Don't list a page in the block if the text already links to it.
 - Order the items: those that elaborate something in the text come first, in the order that topic appears on the page; the rest follow, from closest to furthest from the page's topic.
 - Link to pages by id from `lib/learn/learnPages.ts`, which holds one title and blurb per page. Add a blurb of your own only when the reason for the link matters more than the page's topic.
+
+### The Approach spine
+
+- `APPROACH_SEQUENCE` in `lib/learn/learnPages.ts` is the Approach section's introductory path - a few articles meant to be read in order, each building on the last. Every article in it gets `<ArticleNav id="..." />` (`components/Learn/prose/ArticleNav.tsx`) at the end of the page, which derives its Previous/Next from the sequence - don't hand-write a "see the next article" link or add a spine neighbor to that page's own SeeAlso block; that's a duplicate once ArticleNav is there.
+- Color Coding and Accidentals are reference for the spine, not part of it: they stay reachable through SeeAlso and the Approach index, but never get added to `APPROACH_SEQUENCE`.
+- A new spine article joins the sequence in `APPROACH_SEQUENCE` (not by editing SeeAlso) and gets its own `<ArticleNav>`.

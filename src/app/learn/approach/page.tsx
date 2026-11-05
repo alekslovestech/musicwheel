@@ -24,6 +24,8 @@ export default function ApproachIndexPage() {
 
       <p>Motivation behind this app, why it exists and why it&apos;s built the way it is.</p>
 
+      <p>Start here and follow Next through to the end - each article builds on the last.</p>
+
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
           What&apos;s Wrong with Music Theory
@@ -45,14 +47,6 @@ export default function ApproachIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-          Color Coding
-        </Link>
-        <LearnTags tags={[LearnTag.Geometry]} />
-      </h2>
-      <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
-
-      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
           The Chromatic Circle
         </Link>
@@ -62,6 +56,27 @@ export default function ApproachIndexPage() {
         Why a circle instead of a line makes intervals and inversions easier to see - and how
         that&apos;s different from the circle of fifths.
       </p>
+
+      <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/approach/what-the-wheel-shows" className={LEARN_STYLES.link}>
+          What the Wheel Shows
+        </Link>
+      </h2>
+      <p>
+        The same intervals, chords, progressions and scales from What&apos;s Useful About Music
+        Theory, this time drawn on the wheel instead of written on the staff.
+      </p>
+
+      <h2 className={LEARN_STYLES.h2}>Reference</h2>
+      <p>Supporting detail for the sequence above, not part of its path.</p>
+
+      <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
+          Color Coding
+        </Link>
+        <LearnTags tags={[LearnTag.Geometry]} />
+      </h2>
+      <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/accidentals" className={LEARN_STYLES.link}>
