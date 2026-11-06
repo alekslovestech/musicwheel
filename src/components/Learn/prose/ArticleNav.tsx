@@ -21,8 +21,9 @@ function NavLink({ id, direction }: { id: LearnPageId; direction: "prev" | "next
 
 /** Previous/Next between the neighbors of a spine article (see APPROACH_SEQUENCE) - the
  * continuous path through the Approach section's introductory sequence. Only for a page in that
- * sequence; anything else links through SeeAlso instead. */
-export function ArticleNav({ id }: { id: LearnPageId }) {
+ * sequence; anything else links through SeeAlso instead. `compact` is the one-line version for
+ * the top of the page: titles only, no blurbs. */
+export function ArticleNav({ id, compact = false }: { id: LearnPageId; compact?: boolean }) {
   const index = APPROACH_SEQUENCE.indexOf(id);
   if (index === -1) {
     throw new Error(`ArticleNav: "${id}" isn't in APPROACH_SEQUENCE`);
@@ -30,6 +31,30 @@ export function ArticleNav({ id }: { id: LearnPageId }) {
   const prevId = index > 0 ? APPROACH_SEQUENCE[index - 1] : undefined;
   const nextId = index < APPROACH_SEQUENCE.length - 1 ? APPROACH_SEQUENCE[index + 1] : undefined;
   if (!prevId && !nextId) return null;
+
+  if (compact) {
+    return (
+      <nav
+        aria-label="Previous and next article"
+        className="flex justify-between gap-normal text-sm"
+      >
+        <div>
+          {prevId && (
+            <Link href={LEARN_PAGES[prevId].href} className={LEARN_STYLES.link}>
+              ← {LEARN_PAGES[prevId].title}
+            </Link>
+          )}
+        </div>
+        <div className="text-right">
+          {nextId && (
+            <Link href={LEARN_PAGES[nextId].href} className={LEARN_STYLES.link}>
+              {LEARN_PAGES[nextId].title} →
+            </Link>
+          )}
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav

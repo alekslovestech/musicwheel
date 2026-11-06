@@ -11,12 +11,13 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
+import { SpecialType } from "@/types/enums/SpecialType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/what-the-wheel-shows",
   "What the Wheel Shows",
-  "The same intervals, chords, progressions and scales from What's Useful About Music Theory, this time on the chromatic circle instead of the staff.",
+  "Intervals, chords, progressions and scales drawn as shapes on the chromatic circle, where each looks the same wherever it starts.",
 );
 
 export default function WhatTheWheelShowsPage() {
@@ -26,19 +27,33 @@ export default function WhatTheWheelShowsPage() {
         ← Approach
       </Link>
 
+      <ArticleNav id="what-the-wheel-shows" compact />
+
       <h1 className={LEARN_STYLES.h1}>What the Wheel Shows</h1>
 
       <p>
-        <Link
-          href="/learn/approach/whats-useful-about-music-theory"
-          className={LEARN_STYLES.link}
-        >
-          What&apos;s Useful About Music Theory
-        </Link>{" "}
-        showed 4 ideas that keep their character wherever they start, and a staff that kept
-        hiding it behind accidentals and key signatures. Same ideas, same order, on the wheel
-        instead.
+        Intervals, chords, progressions and scales each have a shape that stays the same wherever
+        it starts. On the wheel, that shape is what you see.
       </p>
+
+      <p>
+        The wheel is the keyboard&apos;s line of 12 notes bent into a loop, so the note after B is
+        C again. It&apos;s called the{" "}
+        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+          chromatic circle
+        </Link>
+        :
+      </p>
+
+      <ChordWheel
+        rootNote="C"
+        chordType={SpecialType.None}
+        inversionIndex={0}
+        caption="The same 12 notes, as a line and as a circle."
+        isCompact
+        showLabels
+        narrow
+      />
 
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
 

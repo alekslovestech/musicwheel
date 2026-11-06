@@ -21,6 +21,8 @@ export const LEARN_STYLES = {
 
   figureCard:
     "m-0 flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-tight sm:gap-snug sm:p-normal",
+  // Keeps a figure from filling the whole article column.
+  figureCardNarrow: "mx-auto w-full max-w-md",
   figureCaption: "flex flex-col gap-tight text-center text-xs text-labels-textDefault sm:text-sm",
   /** Title of a legend or table block (e.g. "Interval colors"). Add `text-center` where the
    * element isn't centered already. */

@@ -11,8 +11,8 @@ import { makeChordReference } from "@/types/interfaces/ChordReference";
 import { ChordUtils } from "@/utils/ChordUtils";
 import { NoteConverter } from "@/utils/NoteConverter";
 
-/** A chord on the wheel and linear keyboard, Harmony-mode colors (no diatonic shading, no tonic
- * flag). The wheel's base-note dot follows whichever note is first in the chord's note array. */
+// A chord on the wheel and linear keyboard, Harmony-mode colors (no diatonic shading, no tonic
+// flag). The wheel's base-note dot follows whichever note is first in the chord's note array.
 export function ChordWheel({
   rootNote,
   chordType,
@@ -22,6 +22,7 @@ export function ChordWheel({
   showLabels = false,
   showKeyboard = true,
   bare = false,
+  narrow = false,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
@@ -29,10 +30,12 @@ export function ChordWheel({
   caption: React.ReactNode;
   isCompact?: boolean;
   showLabels?: boolean;
-  /** Set false to show only the wheel. */
+  // Set false to show only the wheel.
   showKeyboard?: boolean;
-  /** Render just the figure - no card, padding or caption - for use as an image. */
+  // Render just the figure - no card, padding or caption - for use as an image.
   bare?: boolean;
+  // A narrower, centered figure instead of the full article width.
+  narrow?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
   const chordRef = makeChordReference(
@@ -45,11 +48,8 @@ export function ChordWheel({
   return (
     <FigureFrame
       bare={bare}
-      caption={
-        <>
-          <span className="whitespace-pre-line">{caption}</span>
-        </>
-      }
+      narrow={narrow}
+      caption={<span className="whitespace-pre-line">{caption}</span>}
     >
       <CircularKeyboardView
         musicalKey={musicalKey}

@@ -1,51 +1,41 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
-import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
-import { ChordType } from "@/types/enums/ChordType";
-import { IntervalType } from "@/types/enums/IntervalType";
 import { SpecialType } from "@/types/enums/SpecialType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/chromatic-circle",
   "The Chromatic Circle",
-  "Why arranging the twelve notes in a circle instead of a line makes intervals and inversions easier to see - and how that's different from the circle of fifths.",
+  "Why arranging the 12 notes in a circle instead of a line makes intervals and inversions easier to see - and how it compares to the circle of fifths and the Tonnetz.",
   {
     slug: "chromatic-circle",
     alt: "The chromatic circle: the 12 notes arranged as a ring of white and black wedges",
   },
 );
 
-/** What each of the two circles is good for, one row per concept. */
-const GOOD_FOR = [
-  { concept: "Notes arranged in a circle", chromatic: true, fifths: true },
-  { concept: "Intuition around intervals", chromatic: true, fifths: false },
-  { concept: "Intuition around interval and chord inversions", chromatic: true, fifths: false },
-  { concept: "Key signatures and accidentals", chromatic: false, fifths: true },
-  { concept: "Which keys share the most notes", chromatic: false, fifths: true },
+// The 3 note arrangements side by side, one row per system.
+const SYSTEMS = [
+  {
+    system: "Chromatic circle",
+    neighbors: "1 semitone",
+    makesVisible: "Interval sizes, chord shapes and inversions",
+  },
+  {
+    system: "Circle of fifths",
+    neighbors: "A perfect fifth",
+    makesVisible: "Key signatures, which keys share the most notes, chords a fifth apart",
+  },
+  {
+    system: "Tonnetz",
+    neighbors: "A perfect fifth, a major third or a minor third",
+    makesVisible: "Triads as triangles, and which triads differ by only 1 note",
+  },
 ];
-
-function GoodForCell({ isGood }: { isGood: boolean }) {
-  return (
-    <td className="px-snug py-tight text-center">
-      {isGood ? (
-        <span className="text-green-600" aria-label="Good for this">
-          ✓
-        </span>
-      ) : (
-        <span className="text-red-500" aria-label="Not what this is for">
-          ✗
-        </span>
-      )}
-    </td>
-  );
-}
 
 export default function ChromaticCirclePage() {
   return (
@@ -57,133 +47,108 @@ export default function ChromaticCirclePage() {
       <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
-        A keyboard or a staff lays the twelve notes out in a line. The chromatic circle bends that
-        same line into a loop:
+        A keyboard or a staff lays the 12 notes out in a line. The chromatic circle bends that same
+        line into a loop, so the note after B is C again. The piano is a familiar layout and a
+        convenient way to play a sound back, but its arrangement of black and white keys
+        doesn&apos;t explain the harmony.
       </p>
 
       <ChordWheel
         rootNote="C"
         chordType={SpecialType.None}
         inversionIndex={0}
-        caption="The same twelve notes, as a line and as a circle."
-        isCompact={true}
-        showLabels={true}
+        caption="The 12 notes as a circle."
+        isCompact
+        showLabels
+        showKeyboard={false}
+        narrow
       />
 
+      <h2 className={LEARN_STYLES.h2}>What a circle makes easy</h2>
+
       <p>
-        The app shows both. The piano is a familiar layout and a convenient way to play a sound
-        back, but its arrangement of black and white keys doesn&apos;t explain the harmony.
+        On a line, where an interval or chord sits changes how it looks, for example depending on
+        whether it starts on a black or a white key. On the circle, an interval is an angular
+        distance between 2 points, and a chord is a shape made of several points. Moving either to
+        a different starting note rotates it without changing it.{" "}
+        <Link href="/learn/approach/what-the-wheel-shows" className={LEARN_STYLES.link}>
+          What the Wheel Shows
+        </Link>{" "}
+        walks through intervals, chords, progressions and scales this way.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>Intervals as distance</h2>
-
       <p>
-        On a linear keyboard, where an interval sits changes how it looks - e.g. it can depend on
-        whether we start on a black or a white key. On the circle, an interval is just an angular
-        distance between two points, and that distance is the same wherever the two points happen to
-        sit. A <i>major third</i> starting on C and a <i>major third</i> starting on C♯ are the same arc, just rotated
-        to a different starting point:
-      </p>
-
-      <ComparisonGrid2>
-        <ChordWheel
-          rootNote="C"
-          chordType={IntervalType.Major3}
-          inversionIndex={0}
-          caption="C–E: major third"
-          isCompact
-        />
-        <ChordWheel
-          rootNote="C#"
-          chordType={IntervalType.Major3}
-          inversionIndex={0}
-          caption={
-            "C♯–F: major third\nlooks very different on a linear keyboard, but exactly the same on the circular one"
-          }
-          isCompact
-        />
-      </ComparisonGrid2>
-
-      <p>
-        Nothing about the shape changes depending on which key you&apos;re in, the way the same
-        interval can look visually different in different positions on a keyboard or a staff. The
-        same holds for a chord: a C <i>major triad</i> and a D♭ <i>major triad</i> are the same three-note shape,
-        just rotated to a different starting point.
-      </p>
-
-      <ComparisonGrid2>
-        <ChordWheel
-          rootNote="C"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="C major"
-          isCompact
-        />
-        <ChordWheel
-          rootNote="Db"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption={
-            "D♭ major\nlooks unrelated on a linear keyboard, but exactly the same shape on the circular one"
-          }
-          isCompact
-        />
-      </ComparisonGrid2>
-
-      <h2 className={LEARN_STYLES.h2}>Inversions become intuitive</h2>
-
-      <p>
-        The same circle makes both kinds of inversion visible instead of abstract. An{" "}
+        The same circle makes inversions visible. An{" "}
         <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
           interval&apos;s inversion
         </Link>{" "}
-        is just the same two points read around the circle the other way; a{" "}
+        is the same 2 points read around the circle the other way; a{" "}
         <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
           chord&apos;s inversion
         </Link>{" "}
-        is the same wedges lit up with a different bass note marked. 
+        is the same wedges lit up with a different bass note marked.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>What about the Circle of Fifths?</h2>
+      <h2 className={LEARN_STYLES.h2}>Other circles and maps</h2>
 
       <p>
-        This is a question I get a lot. Indeed the{" "}
+        The chromatic circle is one of several ways to arrange the 12 notes. What tells them apart
+        is which interval puts 2 notes next to each other.
+      </p>
+
+      <table className="w-full border-collapse text-left">
+        <thead>
+          <tr className={LEARN_STYLES.comparisonTableRow}>
+            <th className="px-snug py-tight">Arrangement</th>
+            <th className="px-snug py-tight">Neighbors differ by</th>
+            <th className="px-snug py-tight">Makes visible</th>
+          </tr>
+        </thead>
+        <tbody>
+          {SYSTEMS.map(({ system, neighbors, makesVisible }) => (
+            <tr key={system} className={LEARN_STYLES.comparisonTableRow}>
+              <td className="px-snug py-tight">{system}</td>
+              <td className="px-snug py-tight">{neighbors}</td>
+              <td className="px-snug py-tight">{makesVisible}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        The{" "}
         <Link
           href="https://www.circlefifth.com/app"
           className={LEARN_STYLES.link}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Circle of Fifths
+          circle of fifths
         </Link>{" "}
-        is a related, well-covered idea - which helps us explore key signatures, which keys share
-        the most notes. It&apos;s a useful concept, and plenty of good material already explains it
-        well; it&apos;s just not what we&apos;re here to explore. The chromatic circle in this app
-        answers a different question: what an interval or a chord actually sounds like, by ear.
+        orders the notes by <i>perfect fifth</i> instead of by semitone. That puts keys that share
+        most of their notes next to each other, which is why it&apos;s the usual way to explain key
+        signatures, and it turns a ii–V–I into a run of adjacent steps. The cost is that interval
+        sizes get scrambled: a perfect fifth is 1 step away, and a semitone is 5 steps away. Shapes
+        still rotate on it, but a shape&apos;s size is harder to read at a glance.
       </p>
 
-      <table className="w-full border-collapse text-left">
-        <thead>
-          <tr className={LEARN_STYLES.comparisonTableRow}>
-            <th className="px-snug py-tight">Good for...</th>
-            <th className="w-1/4 px-snug py-tight text-center">Chromatic Circle</th>
-            <th className="w-1/4 px-snug py-tight text-center">Circle of Fifths</th>
-          </tr>
-        </thead>
-        <tbody>
-          {GOOD_FOR.map(({ concept, chromatic, fifths }) => (
-            <tr key={concept} className={LEARN_STYLES.comparisonTableRow}>
-              <td className="px-snug py-tight">{concept}</td>
-              <GoodForCell isGood={chromatic} />
-              <GoodForCell isGood={fifths} />
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <p>
+        The Tonnetz goes a step further and arranges the notes on a lattice with 3 kinds of
+        neighbor: a <i>perfect fifth</i>, a <i>major third</i> and a <i>minor third</i>. Triads
+        become triangles. It&apos;s worth a look if you&apos;re curious how chords relate, and there
+        is an interactive one at{" "}
+        <Link
+          href="https://thetonnetz.com/"
+          className={LEARN_STYLES.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          thetonnetz.com
+        </Link>
+        .
+      </p>
 
       <SeeAlso items={["color-coding", "symmetry-and-dissonance"]} />
-
-      <ArticleNav id="chromatic-circle" />
     </>
   );
 }

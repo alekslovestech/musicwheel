@@ -19,7 +19,7 @@ export const LEARN_PAGES = {
   "chromatic-circle": {
     href: "/learn/approach/chromatic-circle",
     title: "The Chromatic Circle",
-    blurb: "Why a circle beats a line for seeing intervals and inversions",
+    blurb: "Why a circle beats a line for seeing intervals and inversions, and how it compares to the circle of fifths",
   },
   "color-coding": {
     href: "/learn/approach/color-coding",
@@ -111,13 +111,12 @@ export const LEARN_PAGES = {
 export type LearnPageId = keyof typeof LEARN_PAGES;
 
 /** The Approach section's introductory spine, in reading order: each builds on the last, and
- * ArticleNav gives every one of them a Previous/Next into its neighbors. Color Coding and
- * Accidentals are reference for this spine, not part of it - they stay reachable only through
- * SeeAlso and the Approach index. Extend this list (not SeeAlso) when a new spine article is
+ * ArticleNav gives every one of them a Previous/Next into its neighbors. The Chromatic Circle,
+ * Color Coding and Accidentals are reference for this spine, not part of it - they stay
+ * reachable only through SeeAlso and the Approach index. Extend this list (not SeeAlso) when a new spine article is
  * added. */
 export const APPROACH_SEQUENCE: readonly LearnPageId[] = [
   "whats-wrong-with-music-theory",
   "whats-useful-about-music-theory",
-  "chromatic-circle",
   "what-the-wheel-shows",
 ];
