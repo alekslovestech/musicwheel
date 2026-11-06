@@ -8,11 +8,14 @@ import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
 export function FigureFrame({
   caption,
   bare = false,
+  narrow = false,
   children,
 }: {
-  /** The caption's content - the frame supplies the `<figcaption>` and its styling. */
+  // The caption's content - the frame supplies the `<figcaption>` and its styling.
   caption: React.ReactNode;
   bare?: boolean;
+  // A narrower, centered card instead of the full article width.
+  narrow?: boolean;
   children: React.ReactNode;
 }) {
   if (bare) {
@@ -24,7 +27,10 @@ export function FigureFrame({
   }
 
   return (
-    <figure className={LEARN_STYLES.figureCard} style={FIGURE_KEY_BORDER}>
+    <figure
+      className={`${LEARN_STYLES.figureCard} ${narrow ? LEARN_STYLES.figureCardNarrow : ""}`}
+      style={FIGURE_KEY_BORDER}
+    >
       {children}
       <figcaption className={LEARN_STYLES.figureCaption}>{caption}</figcaption>
     </figure>

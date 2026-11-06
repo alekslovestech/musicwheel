@@ -13,8 +13,8 @@ import { MusicalKey } from "@/types/Keys/MusicalKey";
 
 const C_MAJOR = MusicalKey.fromGreekMode("C", ScaleModeType.Ionian);
 
-/** Room for a clef and one whole-note chord with its accidentals; anything wider is just empty
- * staff line. Not applied with a key signature, whose width depends on the key. */
+// Room for a clef and one whole-note chord with its accidentals; anything wider is just empty
+// staff line. Not applied with a key signature, whose width depends on the key.
 const SINGLE_CHORD_STAFF_WIDTH = 200;
 
 /** Explicitly spelled whole-note chords on a treble staff, optionally over the linear keyboard.
@@ -36,19 +36,19 @@ export function SpelledStaff({
 }: {
   chords: readonly (readonly NoteWithOctave[])[];
   caption: string;
-  /** VexFlow key spec, e.g. "Cm" or "F#". */
+  // VexFlow key spec, e.g. "Cm" or "F#".
   keySignature?: string;
   highlightedNoteIndices?: NoteIndices;
-  /** Set false to omit the keyboard even when highlightedNoteIndices is given. */
+  // Set false to omit the keyboard even when highlightedNoteIndices is given.
   showKeyboard?: boolean;
-  /** Single-octave keyboard (the default, matching the chords' range), or the full two octaves. */
+  // Single-octave keyboard (the default, matching the chords' range), or the full two octaves.
   isCompact?: boolean;
-  /** A staff narrower than its card. Defaults to a compact width for a lone chord with no key
-   * signature; otherwise the staff fills the card. */
+  // A staff narrower than its card. Defaults to a compact width for a lone chord with no key
+  // signature; otherwise the staff fills the card.
   staffMaxWidth?: number;
-  /** Render just the figure - no card, padding or caption - for use as an image. */
+  // Render just the figure - no card, padding or caption - for use as an image.
   bare?: boolean;
-  /** Strike through the staff, for a spelling the article shows only to set aside. */
+  // Strike through the staff, for a spelling the article shows only to set aside.
   crossedOut?: boolean;
 }) {
   const steps = useMemo(() => chords.map((chord) => makeDurated([...chord], 1)), [chords]);
