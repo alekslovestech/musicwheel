@@ -35,6 +35,8 @@ export default function WhatsWrongWithMusicTheoryPage() {
         ← Approach
       </Link>
 
+      <ArticleNav id="whats-wrong-with-music-theory" compact />
+
       <h1 className={LEARN_STYLES.h1}>What&apos;s Wrong with Music Theory</h1>
 
       <p>

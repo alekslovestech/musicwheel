@@ -47,17 +47,6 @@ export default function ApproachIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-          The Chromatic Circle
-        </Link>
-        <LearnTags tags={[LearnTag.Geometry]} />
-      </h2>
-      <p>
-        Why a circle instead of a line makes intervals and inversions easier to see - and how
-        that&apos;s different from the circle of fifths.
-      </p>
-
-      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/what-the-wheel-shows" className={LEARN_STYLES.link}>
           What the Wheel Shows
         </Link>
@@ -69,6 +58,17 @@ export default function ApproachIndexPage() {
 
       <h2 className={LEARN_STYLES.h2}>Reference</h2>
       <p>Supporting detail for the sequence above, not part of its path.</p>
+
+      <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
+          The Chromatic Circle
+        </Link>
+        <LearnTags tags={[LearnTag.Geometry]} />
+      </h2>
+      <p>
+        Why a circle instead of a line makes intervals and inversions easier to see, and how it
+        compares to the circle of fifths and the Tonnetz.
+      </p>
 
       <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>

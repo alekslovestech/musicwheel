@@ -33,4 +33,12 @@ describe("APPROACH_SEQUENCE", () => {
       expect(source).toContain(`<ArticleNav id="${id}" />`);
     }
   });
+
+  it("every spine page also renders the compact ArticleNav at the top", () => {
+    for (const id of APPROACH_SEQUENCE) {
+      const href = LEARN_PAGES[id].href;
+      const source = readFileSync(join(process.cwd(), "src/app", href, "page.tsx"), "utf-8");
+      expect(source).toContain(`<ArticleNav id="${id}" compact />`);
+    }
+  });
 });

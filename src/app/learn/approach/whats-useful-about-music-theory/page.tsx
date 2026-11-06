@@ -31,6 +31,8 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         ← Approach
       </Link>
 
+      <ArticleNav id="whats-useful-about-music-theory" compact />
+
       <h1 className={LEARN_STYLES.h1}>What&apos;s Useful About Music Theory</h1>
 
       <p>
