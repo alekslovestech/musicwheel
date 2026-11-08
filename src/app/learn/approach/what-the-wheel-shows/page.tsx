@@ -11,7 +11,6 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
-import { SpecialType } from "@/types/enums/SpecialType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -33,27 +32,12 @@ export default function WhatTheWheelShowsPage() {
 
       <p>
         Intervals, chords, progressions and scales each have a shape that stays the same wherever
-        it starts. On the wheel, that shape is what you see.
-      </p>
-
-      <p>
-        The wheel is the keyboard&apos;s line of 12 notes bent into a loop, so the note after B is
-        C again. It&apos;s called the{" "}
+        it starts. On the wheel, the keyboard&apos;s line of 12 notes bent into a loop (the{" "}
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
           chromatic circle
         </Link>
-        :
+        ), that shape is what you see.
       </p>
-
-      <ChordWheel
-        rootNote="C"
-        chordType={SpecialType.None}
-        inversionIndex={0}
-        caption="The same 12 notes, as a line and as a circle."
-        isCompact
-        showLabels
-        narrow
-      />
 
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
 
@@ -171,16 +155,16 @@ export default function WhatTheWheelShowsPage() {
           scaleType={ScaleModeType.Dorian}
           caption="C Dorian"
           views={["wheel", "linear"]}
-          showStepAnnotations
           isCompact
+          showAppLink={false}
         />
         <ScaleFigure
           tonic="C"
           scaleType={ScaleModeType.Lydian}
           caption="C Lydian"
           views={["wheel", "linear"]}
-          showStepAnnotations
           isCompact
+          showAppLink={false}
         />
       </ComparisonGrid2>
 
