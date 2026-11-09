@@ -90,7 +90,7 @@ export default function WhatTheWheelShowsPage() {
 
       <h2 className={LEARN_STYLES.h2}>Chord progressions</h2>
 
-      <p>ii–V–I in C, and the same ii–V–I in D:</p>
+      <p>The 2-5-1, ii–V–I, in C:</p>
 
       <ComparisonGrid3>
         <ChordWheel
@@ -98,51 +98,27 @@ export default function WhatTheWheelShowsPage() {
           chordType={ChordType.Minor}
           inversionIndex={0}
           caption="ii: D minor"
-          isCompact
+          showKeyboard={false}
         />
         <ChordWheel
           rootNote="G"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="V: G major"
-          isCompact
+          showKeyboard={false}
         />
         <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="I: C major"
-          isCompact
-        />
-      </ComparisonGrid3>
-
-      <ComparisonGrid3>
-        <ChordWheel
-          rootNote="E"
-          chordType={ChordType.Minor}
-          inversionIndex={0}
-          caption="ii: E minor"
-          isCompact
-        />
-        <ChordWheel
-          rootNote="A"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="V: A major"
-          isCompact
-        />
-        <ChordWheel
-          rootNote="D"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="I: D major"
-          isCompact
+          showKeyboard={false}
         />
       </ComparisonGrid3>
 
       <p>
-        3 triangles, 3 rotations, same relative spacing every time - that&apos;s the ii–V–I that
-        holds in any key.
+        A minor triangle, then 2 major ones. Start the same pattern on any other note and it&apos;s
+        the same 2-5-1 in that key.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Scales</h2>
@@ -181,7 +157,9 @@ export default function WhatTheWheelShowsPage() {
         letters and accidentals.
       </p>
 
-      <SeeAlso items={["color-coding", "symmetry-and-dissonance", "accidentals"]} />
+      <SeeAlso
+        items={["scales", "color-coding", "symmetry-and-dissonance", "accidentals"]}
+      />
 
       <ArticleNav id="what-the-wheel-shows" />
     </>

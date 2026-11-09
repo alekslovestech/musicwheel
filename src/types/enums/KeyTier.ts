@@ -1,6 +1,6 @@
 /**
  * How emphasized a key is, independent of whether it's black or white. Harmony mode uses Plain
- * and Active (selected); Scales mode uses Muted, Active and Spotlight (see
+ * and Spotlight (selected); Scales mode uses Muted, Active and Spotlight (see
  * KeyboardUtils.getKeyTier).
  */
 export enum KeyTier {
@@ -9,8 +9,8 @@ export enum KeyTier {
   // Scales mode, outside the scale. One tone for black and white keys, so the shape of the gaps
   // (the interval pattern) looks the same under rotation.
   Muted = "Muted",
-  // Selected in Harmony mode, in the scale in Scales mode.
+  // Scales mode, in the scale but not selected.
   Active = "Active",
-  // Scales mode, the specific note a figure or playback is spotlighting.
+  // Selected, in either mode: the notes of a chord or the note playback is spotlighting.
   Spotlight = "Spotlight",
 }

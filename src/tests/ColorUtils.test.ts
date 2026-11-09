@@ -1,6 +1,10 @@
 import { toNoteIndices } from "@/types/IndexTypes";
 import { expectDistinctColors, expectEqualColors } from "@/tests/utils/ColorTestUtils";
-import { ColorUtils } from "@/utils/visual/ColorUtils";
+import {
+  ColorUtils,
+  INTERVAL_CLASS_DISSONANCE,
+  ORDER_WEIGHT_MAX,
+} from "@/utils/visual/ColorUtils";
 
 describe("ColorUtils.getColorForSemitoneDistance", () => {
   it("P4 and P5 (IC 5) produce the same color", () => {
@@ -9,6 +13,50 @@ describe("ColorUtils.getColorForSemitoneDistance", () => {
 
   it("m2 and M7 (IC 1) produce the same color", () => {
     expectEqualColors(ColorUtils.getColorForSemitoneDistance(1), ColorUtils.getColorForSemitoneDistance(11));
+  });
+});
+
+describe("ColorUtils.getChordColorTerms", () => {
+  it("lists a triad's gaps from the smallest, in the order the mix weighs them", () => {
+    const major = ColorUtils.getChordColorTerms(toNoteIndices([0, 4, 7]));
+    const minor = ColorUtils.getChordColorTerms(toNoteIndices([0, 3, 7]));
+    expect(major.map((term) => term.semitones)).toEqual([3, 5, 4]);
+    expect(minor.map((term) => term.semitones)).toEqual([3, 4, 5]);
+  });
+
+  it("gives every transposition of a chord with tied smallest gaps the same terms and color", () => {
+    // Cadd9 [0, 2, 4, 7] has 2 gaps of 2; starting at the first of them depends on the root
+    const base = [0, 2, 4, 7];
+    const expectedTerms = ColorUtils.getChordColorTerms(toNoteIndices(base)).map(
+      (term) => term.semitones,
+    );
+    const expectedColor = ColorUtils.getColorForIndices(toNoteIndices(base));
+    for (let root = 1; root < 12; root++) {
+      const notes = toNoteIndices(base.map((note) => (note + root) % 12));
+      expect(ColorUtils.getChordColorTerms(notes).map((term) => term.semitones)).toEqual(
+        expectedTerms,
+      );
+      expectEqualColors(ColorUtils.getColorForIndices(notes), expectedColor);
+    }
+  });
+
+  it("adds the diagonals for 4 or more notes", () => {
+    // Maj7 [0, 4, 7, 11]: gaps [1, 4, 3, 4], then the spans across 2 gaps from the smallest, sorted
+    const terms = ColorUtils.getChordColorTerms(toNoteIndices([0, 4, 7, 11]));
+    expect(terms.map((term) => term.semitones)).toEqual([1, 4, 3, 4, 5, 7]);
+  });
+
+  it("weighs the first consonant gap most and an unstable interval by its dissonance", () => {
+    const [first, , last] = ColorUtils.getChordColorTerms(toNoteIndices([0, 4, 7]));
+    expect(first.orderWeight).toBeCloseTo(ORDER_WEIGHT_MAX);
+    expect(last.orderWeight).toBe(0);
+    const [m2] = ColorUtils.getChordColorTerms(toNoteIndices([0, 1, 5]));
+    expect(m2.dissonanceWeight).toBeCloseTo(1 + INTERVAL_CLASS_DISSONANCE[1]);
+    expect(m2.orderWeight).toBe(0);
+  });
+
+  it("has no terms for a single note", () => {
+    expect(ColorUtils.getChordColorTerms(toNoteIndices([0]))).toEqual([]);
   });
 });
 

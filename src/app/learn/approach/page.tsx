@@ -79,6 +79,14 @@ export default function ApproachIndexPage() {
       <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
 
       <h2 className={LEARN_STYLES.h2}>
+        <Link href="/learn/approach/chord-color-formula" className={LEARN_STYLES.link}>
+          How Chord Colors Are Computed
+        </Link>
+        <LearnTags tags={[LearnTag.Geometry]} />
+      </h2>
+      <p>The full recipe behind a chord&apos;s color: its intervals, their weights, and the mix.</p>
+
+      <h2 className={LEARN_STYLES.h2}>
         <Link href="/learn/approach/accidentals" className={LEARN_STYLES.link}>
           Accidentals
         </Link>

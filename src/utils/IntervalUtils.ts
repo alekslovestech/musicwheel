@@ -8,6 +8,23 @@ export class IntervalUtils {
     return this.cyclicIntervals(sortedPcs);
   }
 
+  // Start of the lexicographically smallest rotation, so every rotation of the same gaps agrees.
+  // Equal rotations are interchangeable.
+  private static canonicalStartIndex(intervals: IntervalDistance[]): number {
+    const len = intervals.length;
+    let best = 0;
+    for (let start = 1; start < len; start++) {
+      for (let k = 0; k < len; k++) {
+        const candidate = intervals[(start + k) % len];
+        const current = intervals[(best + k) % len];
+        if (candidate === current) continue;
+        if (candidate < current) best = start;
+        break;
+      }
+    }
+    return best;
+  }
+
   private static cyclicIntervals(sortedPcs: ChromaticIndex[]): IntervalDistance[] {
     if (sortedPcs.length <= 1) return [];
 
@@ -21,8 +38,7 @@ export class IntervalUtils {
       intervals.push(diff);
     }
 
-    const minInterval = Math.min(...intervals) as IntervalDistance;
-    const startIndex = intervals.indexOf(minInterval);
+    const startIndex = this.canonicalStartIndex(intervals);
 
     const reordered: IntervalDistance[] = [];
     for (let i = 0; i < len; i++) {

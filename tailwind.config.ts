@@ -72,18 +72,18 @@ const config: Config = {
         },
         keys: {
           bgWhite: "rgb(250, 250, 246)", //"#fafaf6",
-          bgBlack: "rgb(68, 68, 68)", //"#444444",
+          bgBlack: "rgb(84, 84, 84)", //"#545454",
           bgMuted: "rgb(228, 229, 230)", // Any key outside the scale, black or white
           textOnMuted: "rgba(60, 60, 70, 0.6)",
           bgActive: KEY_BG_ACTIVE,
           textOnActive: "rgb(63, 105, 201)", // Blue, same on black and white keys
           textOnWhiteFaded: "rgba(100, 100, 110, 0.5)", //"#64646E",
-          textOnBlackFaded: "rgba(200, 200, 210, 0.5)", //"#C8C8D2",
+          textOnBlackFaded: "rgba(200, 200, 210, 0.6)", //"#C8C8D2",
           borderColor: "rgb(110, 110, 110)", //"#6E6E6E",
           strokeOutline: "rgb(156, 163, 175)", // Outline around circular key wedges
 
-          bgSpotlight: "rgb(22, 46, 158)", //"#162E9E"
-          textOnSpotlight: "rgb(255, 255, 255)", // #FFFFFF
+          bgSpotlight: "rgb(104, 155, 240)", //"#689BF0"
+          textOnSpotlight: "rgb(20, 40, 120)", // Dark blue: white would be too faint on the lighter fill
 
           bgRootNote: "rgb(222, 97, 59)", //"#DE613B",
 

@@ -82,7 +82,7 @@ export const PianoKeyLinear: React.FC<PianoKeyLinearProps> = ({
   const renderAccidental = (accidental: AccidentalType, isSelected: boolean) => {
     const isSharp = accidental === AccidentalType.Sharp;
     const colorClass = VisualStateUtils.getKeyTextColor(
-      isSelected ? KeyTier.Active : KeyTier.Plain,
+      isSelected ? KeyTier.Spotlight : KeyTier.Plain,
       false,
       false,
     );
