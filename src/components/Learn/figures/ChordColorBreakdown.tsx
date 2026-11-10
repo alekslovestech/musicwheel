@@ -26,15 +26,28 @@ export function ChordColorBreakdown({
   );
   const indices = ChordUtils.calculateChordNotesFromChordReference(chordRef);
   const terms = ColorUtils.getChordColorTerms(indices);
-  const totalWeight = terms.reduce((sum, term) => sum + term.weight, 0);
+  // With no dissonant interval, every dissonance weight is just the base 1: nothing to show.
+  const showsDissonance = terms.some((term) => term.dissonanceWeight !== 1);
 
   return (
     <table className="w-full border-collapse rounded-lg border border-containers-divider bg-canvas-bgScales text-left">
       <caption className={`py-tight ${LEARN_STYLES.blockTitle}`}>{caption}</caption>
       <thead>
         <tr className="border-y border-containers-divider">
-          {["Interval", "Class", "Color", "1 + dissonance", "Order", "Weight"].map((heading) => (
-            <th key={heading} className="px-snug py-tight text-sm">
+          {[
+            "Interval",
+            "Color",
+            ...(showsDissonance
+              ? [
+                  <>
+                    1 + <i>d</i>
+                  </>,
+                ]
+              : []),
+            "Order",
+            "Weight",
+          ].map((heading, i) => (
+            <th key={i} className="px-snug py-tight text-sm">
               {heading}
             </th>
           ))}
@@ -44,27 +57,25 @@ export function ChordColorBreakdown({
         {terms.map((term, i) => (
           <tr key={i} className={LEARN_STYLES.comparisonTableRow}>
             <td className="px-snug py-tight text-sm">{term.semitones}</td>
-            <td className="px-snug py-tight text-sm">{term.intervalClass}</td>
             <td className="px-snug py-tight">
               <div className={SWATCH_CLASSES} style={{ backgroundColor: term.color.css() }} />
             </td>
-            <td className="px-snug py-tight text-sm">{term.dissonanceWeight.toFixed(2)}</td>
+            {showsDissonance && (
+              <td className="px-snug py-tight text-sm">{term.dissonanceWeight.toFixed(2)}</td>
+            )}
             <td className="px-snug py-tight text-sm">{term.orderWeight.toFixed(2)}</td>
             <td className="px-snug py-tight text-sm">{term.weight.toFixed(2)}</td>
           </tr>
         ))}
         <tr className="border-t border-containers-divider">
-          <td className="px-snug py-tight text-sm font-bold" colSpan={2}>
-            Mix
-          </td>
+          <td className="px-snug py-tight text-sm font-bold">Mix</td>
           <td className="px-snug py-tight">
             <div
               className={SWATCH_CLASSES}
               style={{ backgroundColor: ColorUtils.getColorForIndices(indices).css() }}
             />
           </td>
-          <td className="px-snug py-tight text-sm" colSpan={2} />
-          <td className="px-snug py-tight text-sm font-bold">{totalWeight.toFixed(2)}</td>
+          <td className="px-snug py-tight text-sm" colSpan={showsDissonance ? 3 : 2} />
         </tr>
       </tbody>
     </table>
