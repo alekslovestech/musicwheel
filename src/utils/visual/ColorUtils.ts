@@ -5,10 +5,28 @@ import { TWELVE } from "@/types/constants/NoteConstants";
 import { IntervalUtils } from "@/utils/IntervalUtils";
 import { DEFAULT_INTERVAL_CLASS_COLOR, colorForIntervalClass } from "@/utils/visual/IntervalClassColors";
 
+// Extra weight for a consonant interval at the start of a chord's interval list, decaying
+// linearly to 0 at the end. See ColorUtils.orderWeightForPosition.
+export const ORDER_WEIGHT_MAX = 1.5;
+
+// One interval's share of a chord's mixed color, with the pieces of its weight.
+export interface ChordColorTerm {
+  semitones: IntervalDistance;
+  intervalClass: IntervalClass;
+  color: chroma.Color;
+  dissonanceWeight: number;
+  orderWeight: number;
+  weight: number;
+}
+
 export class ColorUtils {
   static getColorForIndices(indices: NoteIndices): chroma.Color {
-    const cyclicIntervals = IntervalUtils.cyclicIntervalsFromActualIndices(indices);
-    return this.mixChordColor(cyclicIntervals, "lch");
+    return this.mixTerms(this.getChordColorTerms(indices), "lch");
+  }
+
+  // The intervals a chord's color is mixed from, in order, with the weight each one carries.
+  static getChordColorTerms(indices: NoteIndices): ChordColorTerm[] {
+    return this.termsForIntervals(IntervalUtils.cyclicIntervalsFromActualIndices(indices));
   }
 
   /** Single interval distance from root (or step size), without chord mixing. */
@@ -16,38 +34,35 @@ export class ColorUtils {
     return colorForIntervalClass(intervalClassFromSemitones(semitones));
   }
 
-  private static mixChordColor(
-    intervals: IntervalDistance[],
-    colorFormat: chroma.ColorFormat,
-  ): chroma.Color {
-    if (intervals.length === 0) return DEFAULT_INTERVAL_CLASS_COLOR;
-    const { colors, weights } = this.colorsAndWeightsForIntervals(intervals);
-    return this.mixColors(colors, weights, colorFormat);
+  private static mixTerms(terms: ChordColorTerm[], colorFormat: chroma.ColorFormat): chroma.Color {
+    if (terms.length === 0) return DEFAULT_INTERVAL_CLASS_COLOR;
+    return this.mixColors(
+      terms.map((term) => term.color),
+      terms.map((term) => term.weight),
+      colorFormat,
+    );
   }
 
-  private static colorsAndWeightsForIntervals(intervals: IntervalDistance[]): {
-    colors: chroma.Color[];
-    weights: number[];
-  } {
+  private static termsForIntervals(intervals: IntervalDistance[]): ChordColorTerm[] {
     const len = intervals.length;
-    const colors: chroma.Color[] = [];
-    const weights: number[] = [];
-
-    intervals.forEach((interval, i) => {
-      const ic = intervalClassFromSemitones(interval);
-      colors.push(colorForIntervalClass(ic));
-      const dissonance = INTERVAL_CLASS_DISSONANCE[ic];
+    return intervals.map((semitones, i) => {
+      const intervalClass = intervalClassFromSemitones(semitones);
+      const dissonance = INTERVAL_CLASS_DISSONANCE[intervalClass];
       const dissonanceWeight = 1 + dissonance;
       const orderWeight = dissonance === 0 ? this.orderWeightForPosition(i, len) : 0;
-      weights.push(dissonanceWeight + orderWeight);
+      return {
+        semitones,
+        intervalClass,
+        color: colorForIntervalClass(intervalClass),
+        dissonanceWeight,
+        orderWeight,
+        weight: dissonanceWeight + orderWeight,
+      };
     });
-
-    return { colors, weights };
   }
 
   /** Order weight: linear decay from ORDER_WEIGHT_MAX (first position) to 0 (last). Only applied to consonant ICs. */
   private static orderWeightForPosition(i: number, len: number): number {
-    const ORDER_WEIGHT_MAX = 1.5;
     if (len <= 1) return 0;
     return (ORDER_WEIGHT_MAX * (len - 1 - i)) / (len - 1);
   }
@@ -102,7 +117,7 @@ export class ColorUtils {
 }
 
 /** Only 1 (m2/M7) and 6 (tritone) pull extra; rest are flat. */
-const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
+export const INTERVAL_CLASS_DISSONANCE: Record<IntervalClass, number> = {
   0: 0,
   1: 0.9,
   2: 0,

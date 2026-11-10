@@ -11,7 +11,6 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
-import { SpecialType } from "@/types/enums/SpecialType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -33,27 +32,12 @@ export default function WhatTheWheelShowsPage() {
 
       <p>
         Intervals, chords, progressions and scales each have a shape that stays the same wherever
-        it starts. On the wheel, that shape is what you see.
-      </p>
-
-      <p>
-        The wheel is the keyboard&apos;s line of 12 notes bent into a loop, so the note after B is
-        C again. It&apos;s called the{" "}
+        it starts. On the wheel, the keyboard&apos;s line of 12 notes bent into a loop (the{" "}
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
           chromatic circle
         </Link>
-        :
+        ), that shape is what you see.
       </p>
-
-      <ChordWheel
-        rootNote="C"
-        chordType={SpecialType.None}
-        inversionIndex={0}
-        caption="The same 12 notes, as a line and as a circle."
-        isCompact
-        showLabels
-        narrow
-      />
 
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
 
@@ -106,7 +90,7 @@ export default function WhatTheWheelShowsPage() {
 
       <h2 className={LEARN_STYLES.h2}>Chord progressions</h2>
 
-      <p>ii–V–I in C, and the same ii–V–I in D:</p>
+      <p>The 2-5-1, ii–V–I, in C:</p>
 
       <ComparisonGrid3>
         <ChordWheel
@@ -114,51 +98,27 @@ export default function WhatTheWheelShowsPage() {
           chordType={ChordType.Minor}
           inversionIndex={0}
           caption="ii: D minor"
-          isCompact
+          showKeyboard={false}
         />
         <ChordWheel
           rootNote="G"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="V: G major"
-          isCompact
+          showKeyboard={false}
         />
         <ChordWheel
           rootNote="C"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="I: C major"
-          isCompact
-        />
-      </ComparisonGrid3>
-
-      <ComparisonGrid3>
-        <ChordWheel
-          rootNote="E"
-          chordType={ChordType.Minor}
-          inversionIndex={0}
-          caption="ii: E minor"
-          isCompact
-        />
-        <ChordWheel
-          rootNote="A"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="V: A major"
-          isCompact
-        />
-        <ChordWheel
-          rootNote="D"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="I: D major"
-          isCompact
+          showKeyboard={false}
         />
       </ComparisonGrid3>
 
       <p>
-        3 triangles, 3 rotations, same relative spacing every time - that&apos;s the ii–V–I that
-        holds in any key.
+        A minor triangle, then 2 major ones. Start the same pattern on any other note and it&apos;s
+        the same 2-5-1 in that key.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Scales</h2>
@@ -171,16 +131,16 @@ export default function WhatTheWheelShowsPage() {
           scaleType={ScaleModeType.Dorian}
           caption="C Dorian"
           views={["wheel", "linear"]}
-          showStepAnnotations
           isCompact
+          showAppLink={false}
         />
         <ScaleFigure
           tonic="C"
           scaleType={ScaleModeType.Lydian}
           caption="C Lydian"
           views={["wheel", "linear"]}
-          showStepAnnotations
           isCompact
+          showAppLink={false}
         />
       </ComparisonGrid2>
 
@@ -197,7 +157,9 @@ export default function WhatTheWheelShowsPage() {
         letters and accidentals.
       </p>
 
-      <SeeAlso items={["color-coding", "symmetry-and-dissonance", "accidentals"]} />
+      <SeeAlso
+        items={["scales", "color-coding", "symmetry-and-dissonance", "accidentals"]}
+      />
 
       <ArticleNav id="what-the-wheel-shows" />
     </>

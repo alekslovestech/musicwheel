@@ -26,6 +26,11 @@ export const LEARN_PAGES = {
     title: "Color Coding",
     blurb: "What the colors on the wheel show",
   },
+  "chord-color-formula": {
+    href: "/learn/approach/chord-color-formula",
+    title: "How Chord Colors Are Computed",
+    blurb: "The full recipe behind a chord's color: its intervals, their weights, and the mix",
+  },
   "whats-useful-about-music-theory": {
     href: "/learn/approach/whats-useful-about-music-theory",
     title: "What's Useful About Music Theory",

@@ -14,7 +14,6 @@ import { actualToChromatic, NoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import { getScaleStepAtSequenceIndex } from "@/utils/SequencePlaybackUtils";
 import { AnyScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
 import { SCALE_STAFF_DRAW_OPTIONS, StaffUtils } from "@/utils/StaffUtils";
 import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
@@ -30,10 +29,9 @@ const DEFAULT_VIEWS: readonly ScaleView[] = ["wheel", "linear"];
  * with a link to hear it in the app. Handles both diatonic and non-diatonic scales.
  *
  * Highlighting is shared by every view: `highlightedDegree` lights that one degree; without it,
- * a figure that shows the staff lights every note on the staff, and any other figure lights
- * nothing - just the scale's plain shape, or its step pattern. The linear keyboard is styled to
- * match: the scale-aware colors (a degree spotlighted against the scale) normally, but the same
- * plain highlight as the chord figures when it is simply showing the staff's notes.
+ * nothing is lit - just the scale's plain shape (its notes in the scale color), or its step
+ * pattern. The keyboards always use the scale-aware colors, so a scale's notes stay the same
+ * light blue whether or not the figure also shows the staff.
  *
  * For notation the app would never draw, see SpelledStaff. */
 export function ScaleFigure({
@@ -87,24 +85,18 @@ export function ScaleFigure({
 }) {
   const musicalKey = useMemo(() => MusicalKey.fromScale(tonic, scaleType), [tonic, scaleType]);
   const showsStaff = views.includes("staff");
-  // The keyboard is just echoing the staff's notes (no degree spotlighted against the scale).
+  // The keyboard is just showing the scale next to its staff (no degree spotlighted).
   const echoesStaffNotes = showsStaff && highlightedDegree == null;
 
   // Leave undefined rather than [] when nothing's highlighted - the keyboard views already
   // default highlightedNoteIndices to [] themselves.
   const highlightedNoteIndices = useMemo((): NoteIndices | undefined => {
-    if (highlightedDegree != null) {
-      return musicalKey.getNoteIndicesForScaleDegree(
-        scaleDegreeToIndex(highlightedDegree),
-        scalePlaybackMode,
-      );
-    }
-    if (!showsStaff) return undefined;
-    // Every note of the staff, including the octave return, so the top note lights up too.
-    return Array.from({ length: musicalKey.scalePatternLength + 1 }, (_, step) =>
-      getScaleStepAtSequenceIndex(musicalKey, step, scalePlaybackMode),
-    ).flatMap((step) => step.notesToPlay);
-  }, [musicalKey, highlightedDegree, scalePlaybackMode, showsStaff]);
+    if (highlightedDegree == null) return undefined;
+    return musicalKey.getNoteIndicesForScaleDegree(
+      scaleDegreeToIndex(highlightedDegree),
+      scalePlaybackMode,
+    );
+  }, [musicalKey, highlightedDegree, scalePlaybackMode]);
 
   const staffSpellingKey = useMemo(
     () => (hasKeySignature ? musicalKey.getStaffSpellingKey() : DEFAULT_MUSICAL_KEY),
@@ -164,7 +156,6 @@ export function ScaleFigure({
           <LinearKeyboardView
             musicalKey={musicalKey}
             highlightedNoteIndices={highlightedNoteIndices}
-            isScales={!echoesStaffNotes}
             onKeyClick={null}
             isBassNote={(actualIndex) => actualToChromatic(actualIndex) === musicalKey.tonicIndex}
             showLabels={linearShowLabels ?? echoesStaffNotes}

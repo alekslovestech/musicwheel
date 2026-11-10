@@ -154,15 +154,15 @@ export class KeyboardUtils {
     return { chromaticIndex, isBlack, isDiatonicInScale, allBaseClasses, id, noteText, keyTier };
   }
 
-  // Scales mode: the spotlighted note is navy, the rest of the scale is active, and what's
-  // outside it recedes. Harmony mode: the selected notes are active.
+  // A selected note is blue in both modes, so a chord looks the same with or without a scale
+  // behind it. Scales mode: the rest of the scale is active, and what's outside it recedes.
   static getKeyTier(
     isScales: boolean,
     isDiatonicInScale: boolean,
     isSelected: boolean,
   ): KeyTier {
-    if (!isScales) return isSelected ? KeyTier.Active : KeyTier.Plain;
     if (isSelected) return KeyTier.Spotlight;
+    if (!isScales) return KeyTier.Plain;
     if (isDiatonicInScale) return KeyTier.Active;
     return KeyTier.Muted;
   }
