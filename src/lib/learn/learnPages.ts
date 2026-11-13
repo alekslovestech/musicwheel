@@ -41,10 +41,10 @@ export const LEARN_PAGES = {
     title: "What's Wrong with Music Theory",
     blurb: "The terms that depend on notation instead",
   },
-  "what-the-wheel-shows": {
-    href: "/learn/approach/what-the-wheel-shows",
-    title: "What the Wheel Shows",
-    blurb: "The same intervals, chords, progressions and scales, drawn instead of written",
+  "music-theory-on-the-chromatic-circle": {
+    href: "/learn/approach/music-theory-on-the-chromatic-circle",
+    title: "Music Theory on the Chromatic Circle",
+    blurb: "The same intervals, chords, progressions and scales, drawn on the chromatic circle instead of written",
   },
   "chord-quality": {
     href: "/learn/chords/chord-quality",
@@ -123,5 +123,5 @@ export type LearnPageId = keyof typeof LEARN_PAGES;
 export const APPROACH_SEQUENCE: readonly LearnPageId[] = [
   "whats-wrong-with-music-theory",
   "whats-useful-about-music-theory",
-  "what-the-wheel-shows",
+  "music-theory-on-the-chromatic-circle",
 ];

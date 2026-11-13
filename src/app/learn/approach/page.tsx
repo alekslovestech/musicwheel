@@ -47,13 +47,13 @@ export default function ApproachIndexPage() {
       </p>
 
       <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/what-the-wheel-shows" className={LEARN_STYLES.link}>
-          What the Wheel Shows
+        <Link href="/learn/approach/music-theory-on-the-chromatic-circle" className={LEARN_STYLES.link}>
+          Music Theory on the Chromatic Circle
         </Link>
       </h2>
       <p>
         The same intervals, chords, progressions and scales from What&apos;s Useful About Music
-        Theory, this time drawn on the wheel instead of written on the staff.
+        Theory, this time drawn on the chromatic circle instead of written on the staff.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Reference</h2>

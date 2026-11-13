@@ -71,8 +71,8 @@ export default function ChromaticCirclePage() {
         whether it starts on a black or a white key. On the circle, an interval is an angular
         distance between 2 points, and a chord is a shape made of several points. Moving either to
         a different starting note rotates it without changing it.{" "}
-        <Link href="/learn/approach/what-the-wheel-shows" className={LEARN_STYLES.link}>
-          What the Wheel Shows
+        <Link href="/learn/approach/music-theory-on-the-chromatic-circle" className={LEARN_STYLES.link}>
+          Music Theory on the Chromatic Circle
         </Link>{" "}
         walks through intervals, chords, progressions and scales this way.
       </p>

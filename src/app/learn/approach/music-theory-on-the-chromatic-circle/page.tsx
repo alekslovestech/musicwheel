@@ -14,21 +14,21 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/approach/what-the-wheel-shows",
-  "What the Wheel Shows",
+  "/learn/approach/music-theory-on-the-chromatic-circle",
+  "Music Theory on the Chromatic Circle",
   "Intervals, chords, progressions and scales drawn as shapes on the chromatic circle, where each looks the same wherever it starts.",
 );
 
-export default function WhatTheWheelShowsPage() {
+export default function MusicTheoryOnTheChromaticCirclePage() {
   return (
     <>
       <Link href="/learn/approach" className={LEARN_STYLES.link}>
         ← Approach
       </Link>
 
-      <ArticleNav id="what-the-wheel-shows" compact />
+      <ArticleNav id="music-theory-on-the-chromatic-circle" compact />
 
-      <h1 className={LEARN_STYLES.h1}>What the Wheel Shows</h1>
+      <h1 className={LEARN_STYLES.h1}>Music Theory on the Chromatic Circle</h1>
 
       <p>
         Intervals, chords, progressions and scales each have a shape that stays the same wherever
@@ -42,7 +42,7 @@ export default function WhatTheWheelShowsPage() {
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
 
       <p>
-        A <i>major third</i> starting on C and one starting on E&nbsp;-&nbsp;the same angle, just
+        A <i>major third</i>&nbsp;starting on C and one starting on E&nbsp;-&nbsp;the same angle, just
         rotated:
       </p>
 
@@ -161,7 +161,7 @@ export default function WhatTheWheelShowsPage() {
         items={["scales", "color-coding", "symmetry-and-dissonance", "accidentals"]}
       />
 
-      <ArticleNav id="what-the-wheel-shows" />
-    </>
+      <ArticleNav id="music-theory-on-the-chromatic-circle" />
+</>
   );
 }
