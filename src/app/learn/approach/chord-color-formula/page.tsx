@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ChordColorBreakdown } from "@/components/Learn/figures/ChordColorBreakdown";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { IntervalColorTable } from "@/components/Learn/figures/IntervalColorTable";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { Equations, Formula, Frac, Sum, V } from "@/components/Learn/prose/Formula";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -34,11 +34,10 @@ function IversonDissonance() {
 
 export default function ChordColorFormulaPage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
+    <ArticlePage
+      id="chord-color-formula"
+      seeAlso={["chord-quality", "symmetry-and-dissonance"]}
+    >
       <h1 className={LEARN_STYLES.h1}>How Chord Colors Are Computed</h1>
 
       <p>
@@ -275,8 +274,6 @@ export default function ChordColorFormulaPage() {
         4 notes. Read the color as a cue to a chord&apos;s character, and the name as the way to
         tell chords apart.
       </p>
-
-      <SeeAlso items={["chord-quality", "symmetry-and-dissonance"]} />
-    </>
+    </ArticlePage>
   );
 }

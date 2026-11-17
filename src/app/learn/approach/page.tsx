@@ -1,24 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { LearnTags } from "@/components/Learn/layout/LearnTags";
+import { IndexEntry } from "@/components/Learn/layout/IndexEntry";
+import { BackLink } from "@/components/Learn/layout/BackLink";
 import { LEARN_STYLES } from "@/lib/design";
-import { LearnTag } from "@/types/enums/LearnTag";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach",
   "Approach",
-  "The app's own stance: what's wrong with how music theory usually gets taught, and what this app does about it.",
+  "The idea behind the app: the chromatic circle, and the parts of theory it makes easier to see.",
 );
 
 export default function ApproachIndexPage() {
   return (
     <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
-      </Link>
+      <BackLink to="learn" />
 
       <h1 className={LEARN_STYLES.h1}>Approach</h1>
 
@@ -26,75 +23,32 @@ export default function ApproachIndexPage() {
 
       <p>Start here and follow Next through to the end - each article builds on the last.</p>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/whats-wrong-with-music-theory" className={LEARN_STYLES.link}>
-          What&apos;s Wrong with Music Theory
-        </Link>
-      </h2>
-      <p>
-        Historical accidents, enharmonic confusion, key signatures, pointless memorization, and
-        turf wars around spelling - a tour of the parts of theory that aren&apos;t about sound.
-      </p>
+      <IndexEntry id="chromatic-circle">
+        Why a circle instead of a line makes intervals and inversions easier to see, and how it
+        compares to the circle of fifths and the Tonnetz.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/whats-useful-about-music-theory" className={LEARN_STYLES.link}>
-          What&apos;s Useful About Music Theory
-        </Link>
-      </h2>
-      <p>
+      <IndexEntry id="whats-useful-about-music-theory">
         The parts that describe sound: 12 equal notes, intervals as distances, chords as shapes, and
         the vocabulary for recognizing what you hear.
-      </p>
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/music-theory-on-the-chromatic-circle" className={LEARN_STYLES.link}>
-          Music Theory on the Chromatic Circle
-        </Link>
-      </h2>
-      <p>
+      <IndexEntry id="music-theory-on-the-chromatic-circle">
         The same intervals, chords, progressions and scales from What&apos;s Useful About Music
         Theory, this time drawn on the chromatic circle instead of written on the staff.
-      </p>
+      </IndexEntry>
 
       <h2 className={LEARN_STYLES.h2}>Reference</h2>
       <p>Supporting detail for the sequence above, not part of its path.</p>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
-          The Chromatic Circle
-        </Link>
-        <LearnTags tags={[LearnTag.Geometry]} />
-      </h2>
-      <p>
-        Why a circle instead of a line makes intervals and inversions easier to see, and how it
-        compares to the circle of fifths and the Tonnetz.
-      </p>
+      <IndexEntry id="color-coding">
+        What the colors on the wheel, the ribbon, and every legend actually mean.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/color-coding" className={LEARN_STYLES.link}>
-          Color Coding
-        </Link>
-        <LearnTags tags={[LearnTag.Geometry]} />
-      </h2>
-      <p>What the colors on the wheel, the ribbon, and every legend actually mean.</p>
-
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/chord-color-formula" className={LEARN_STYLES.link}>
-          How Chord Colors Are Computed
-        </Link>
-        <LearnTags tags={[LearnTag.Geometry]} />
-      </h2>
-      <p>The full recipe behind a chord&apos;s color: its intervals, their weights, and the mix.</p>
-
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach/accidentals" className={LEARN_STYLES.link}>
-          Accidentals
-        </Link>
-      </h2>
-      <p>
+      <IndexEntry id="accidentals">
         Why the keyboard plays down sharps and flats, resolves a real spelling once you&apos;re in
         a key, and never shows a double sharp or double flat.
-      </p>
+      </IndexEntry>
     </>
   );
 }

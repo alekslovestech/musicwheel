@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -12,16 +11,15 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/chords/triad-inversions",
   "Triad Inversions",
-  "Root position, first inversion, second inversion - the same three notes of a G major triad, marked with a different bass each time.",
+  "Root position, first inversion, second inversion - the same three notes of a C major triad, marked with a different bass each time.",
 );
 
 export default function TriadInversionsPage() {
   return (
-    <>
-      <Link href="/learn/chords" className={LEARN_STYLES.link}>
-        ← Chords
-      </Link>
-
+    <ArticlePage
+      id="triad-inversions"
+      seeAlso={["chromatic-circle", "chord-quality", "interval-inversions"]}
+    >
       <h1 className={LEARN_STYLES.h1}>Triad Inversions</h1>
 
       <p>
@@ -55,15 +53,6 @@ export default function TriadInversionsPage() {
         Inversions are often interchangeable for the original chord, and are used to create smoother bass lines in chord progressions.
         A chord's inversion preserves the chord quality, and shows up as the same shape and color in the MusicWheel's interface.
       </p>
-
-      <SeeAlso
-        items={[
-          "chromatic-circle",
-          "chord-quality",
-          "interval-inversions",
-          "major-vs-minor-triads",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

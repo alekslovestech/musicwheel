@@ -6,9 +6,9 @@ import {
   ComparisonGrid3,
   ComparisonGrid4,
 } from "@/components/Learn/layout/ComparisonGrid";
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -24,11 +24,17 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function SymmetryAndDissonancePage() {
   return (
-    <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
-      </Link>
-
+    <ArticlePage
+      id="symmetry-and-dissonance"
+      seeAlso={[
+        {
+          id: "accidentals",
+          blurb: "Why a symmetrical chord like Cdim7 needs a double flat on paper, and why the app skips it",
+        },
+        "chord-quality",
+        "chromatic-circle",
+      ]}
+    >
       <h1 className={LEARN_STYLES.h1}>Symmetry and Dissonance</h1>
 
       <p>
@@ -191,17 +197,6 @@ export default function SymmetryAndDissonancePage() {
         to settle on. The more symmetrical the shape, the less it has to say about where it belongs,
         and the more it seems to demand somewhere to go.
       </p>
-
-      <SeeAlso
-        items={[
-          {
-            id: "accidentals",
-            blurb: "Why a symmetrical chord like Cdim7 needs a double flat on paper, and why the app skips it",
-          },
-          "chord-quality",
-          "chromatic-circle",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

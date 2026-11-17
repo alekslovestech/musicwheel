@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
@@ -15,11 +16,7 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function ModalRotationsPage() {
   return (
-    <>
-      <Link href="/learn/scales" className={LEARN_STYLES.link}>
-        ← Scales
-      </Link>
-
+    <ArticlePage id="modal-families">
       <h1 className={LEARN_STYLES.h1}>Modal Families Beyond the Major Scale</h1>
 
       <p>
@@ -142,6 +139,6 @@ export default function ModalRotationsPage() {
         </Link>{" "}
         for the three most commonly used modes and their formulas.
       </p>
-    </>
+    </ArticlePage>
   );
 }

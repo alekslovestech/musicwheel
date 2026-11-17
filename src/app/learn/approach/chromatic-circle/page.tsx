@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { SpecialType } from "@/types/enums/SpecialType";
@@ -39,11 +39,10 @@ const SYSTEMS = [
 
 export default function ChromaticCirclePage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
+    <ArticlePage
+      id="chromatic-circle"
+      seeAlso={["color-coding", "symmetry-and-dissonance"]}
+    >
       <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
@@ -147,8 +146,6 @@ export default function ChromaticCirclePage() {
         </Link>
         .
       </p>
-
-      <SeeAlso items={["color-coding", "symmetry-and-dissonance"]} />
-    </>
+    </ArticlePage>
   );
 }

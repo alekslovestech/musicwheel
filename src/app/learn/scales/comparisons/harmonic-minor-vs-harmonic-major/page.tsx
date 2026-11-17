@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ScaleDegreeComparison } from "@/components/Learn/figures/ScaleDegreeComparison";
-import { ComparisonsBackLink } from "@/components/Learn/layout/ComparisonsBackLink";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -17,8 +17,7 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function HarmonicMinorVsHarmonicMajorPage() {
   return (
-    <>
-      <ComparisonsBackLink />
+    <ArticlePage parent="comparisons">
       <h1 className={LEARN_STYLES.h1}>Harmonic Minor vs. Harmonic Major</h1>
 
       <p>
@@ -49,6 +48,6 @@ export default function HarmonicMinorVsHarmonicMajorPage() {
         tone - is already identical. Reading it is one thing; the difference is much more obvious
         held under a drone, which is what the links under each figure are for.
       </p>
-    </>
+    </ArticlePage>
   );
 }

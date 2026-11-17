@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { IntervalColorTable } from "@/components/Learn/figures/IntervalColorTable";
@@ -73,11 +74,7 @@ function ColorLegendCell({ group }: { group?: (typeof CHORD_COLOR_GROUPS)[number
 
 export default function ColorCodingPage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
+    <ArticlePage id="color-coding">
       <h1 className={LEARN_STYLES.h1}>Color Coding</h1>
 
       <p>
@@ -193,6 +190,6 @@ export default function ColorCodingPage() {
         Legend panels read their colors from this same system: the swatch next to a chord&apos;s
         name is exactly the color that chord lights up on the wheel.
       </p>
-    </>
+    </ArticlePage>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { BackLink } from "@/components/Learn/layout/BackLink";
 import { LEARN_STYLES } from "@/lib/design";
 import { COMPARISONS } from "@/lib/learn/scales/comparisons";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
@@ -15,9 +16,7 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function ComparisonsIndexPage() {
   return (
     <>
-      <Link href="/learn/scales" className={LEARN_STYLES.link}>
-        ← Scales
-      </Link>
+      <BackLink to="scales" />
 
       <h1 className={LEARN_STYLES.h1}>Scale Comparisons</h1>
       <p>Two modes on the same tonic, one note apart.</p>

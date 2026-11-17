@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { C_DIM7_SPELLED } from "@/lib/learn/spelledFigures";
 import { ChordType } from "@/types/enums/ChordType";
@@ -19,11 +18,13 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function AccidentalsPage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach 
-      </Link>
-
+    <ArticlePage
+      id="accidentals"
+      seeAlso={[
+        "chromatic-circle",
+        "symmetry-and-dissonance",
+      ]}
+    >
       <h1 className={LEARN_STYLES.h1}>Accidentals ♯/♭</h1>
 
       <p>
@@ -81,13 +82,6 @@ export default function AccidentalsPage() {
         will never see a double sharp or double flat here, even where standard notation requires
         one.
       </p>
-
-      <SeeAlso
-        items={[
-          "chromatic-circle",
-          "symmetry-and-dissonance",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

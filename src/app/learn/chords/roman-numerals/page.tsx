@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { RomanQuality } from "@/components/Learn/prose/RomanQuality";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
@@ -19,11 +20,7 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function RomanNumeralsPage() {
   return (
-    <>
-      <Link href="/learn/chords" className={LEARN_STYLES.link}>
-        ← Chords
-      </Link>
-
+    <ArticlePage id="roman-numerals">
       <h1 className={LEARN_STYLES.h1}>Roman Numeral Notation</h1>
 
       <p>
@@ -69,6 +66,6 @@ export default function RomanNumeralsPage() {
         linearShowLabels
         isCompact
       />
-    </>
+    </ArticlePage>
   );
 }

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2, ComparisonGrid3 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -21,13 +20,10 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function MusicTheoryOnTheChromaticCirclePage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
-      <ArticleNav id="music-theory-on-the-chromatic-circle" compact />
-
+    <ArticlePage
+      id="music-theory-on-the-chromatic-circle"
+      seeAlso={["color-coding", "symmetry-and-dissonance", "accidentals"]}
+    >
       <h1 className={LEARN_STYLES.h1}>Music Theory on the Chromatic Circle</h1>
 
       <p>
@@ -156,12 +152,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
         is now the thing you&apos;re looking at, not something you have to reconstruct from
         letters and accidentals.
       </p>
-
-      <SeeAlso
-        items={["scales", "color-coding", "symmetry-and-dissonance", "accidentals"]}
-      />
-
-      <ArticleNav id="music-theory-on-the-chromatic-circle" />
-</>
+    </ArticlePage>
   );
 }

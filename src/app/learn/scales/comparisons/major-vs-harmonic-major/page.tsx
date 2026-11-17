@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { LEARN_STYLES } from "@/lib/design";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ScaleDegreeComparison } from "@/components/Learn/figures/ScaleDegreeComparison";
-import { ComparisonsBackLink } from "@/components/Learn/layout/ComparisonsBackLink";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
@@ -16,8 +16,7 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function MajorVsHarmonicMajorPage() {
   return (
-    <>
-      <ComparisonsBackLink />
+    <ArticlePage parent="comparisons">
       <h1 className={LEARN_STYLES.h1}>Major vs. Harmonic Major</h1>
 
       <p>Both of these start on C, and both are major scales.</p>
@@ -39,6 +38,6 @@ export default function MajorVsHarmonicMajorPage() {
         difference is much more obvious held under a drone, which is what the links under each
         figure are for.
       </p>
-    </>
+    </ArticlePage>
   );
 }

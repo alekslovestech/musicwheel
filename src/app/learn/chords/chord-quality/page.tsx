@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { QualityRow } from "@/components/Learn/prose/QualityRow";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -18,11 +18,14 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function ChordQualityPage() {
   return (
-    <>
-      <Link href="/learn/chords" className={LEARN_STYLES.link}>
-        ← Chords
-      </Link>
-
+    <ArticlePage
+      id="chord-quality"
+      seeAlso={[
+        "symmetry-and-dissonance",
+        "major-vs-minor-triads",
+        "triad-inversions",
+      ]}
+    >
       <h1 className={LEARN_STYLES.h1}>Chord Quality</h1>
 
       <p>
@@ -108,14 +111,6 @@ export default function ChordQualityPage() {
         rotation-independence a step further: not only does the quality stay the same when you
         transpose it, several of its own notes are equally valid roots for the identical shape.
       </p>
-
-      <SeeAlso
-        items={[
-          "symmetry-and-dissonance",
-          "major-vs-minor-triads",
-          "triad-inversions",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

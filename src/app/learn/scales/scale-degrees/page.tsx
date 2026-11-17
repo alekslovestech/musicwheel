@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -12,16 +12,18 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/scales/scale-degrees",
   "Scale Degrees",
-  "What each numbered position in a scale is called, and why the names matter.",
+  "Numbering a scale's notes against the major scale: ♭3, ♯4 and the rest.",
 );
 
 export default function ScaleDegreesPage() {
   return (
-    <>
-      <Link href="/learn/scales" className={LEARN_STYLES.link}>
-        ← Scales
-      </Link>
-
+    <ArticlePage
+      id="scale-degrees"
+      seeAlso={[
+        "comparisons",
+        "roman-numerals",
+      ]}
+    >
       <h1 className={LEARN_STYLES.h1}>Scale Degrees</h1>
 
       <p>
@@ -74,13 +76,6 @@ export default function ScaleDegreesPage() {
         </Link>{" "}
         comparison.
       </p>
-
-      <SeeAlso
-        items={[
-          "comparisons",
-          "roman-numerals",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

@@ -1,8 +1,8 @@
-import Link from "next/link";
 
-import { LearnTags } from "@/components/Learn/layout/LearnTags";
+import { IndexEntry } from "@/components/Learn/layout/IndexEntry";
+import { NextCard } from "@/components/Learn/prose/NextCard";
 import { LEARN_STYLES } from "@/lib/design";
-import { LearnTag } from "@/types/enums/LearnTag";
+import { LEARN_PAGES } from "@/lib/learn/learnPages";
 
 export default function LearnIndexPage() {
   return (
@@ -14,54 +14,30 @@ export default function LearnIndexPage() {
         go and play with it.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/approach" className={LEARN_STYLES.sectionLink}>
-          Approach
-        </Link>
-      </h2>
-      <p>
-        The opinions behind this app: what&apos;s wrong with how music theory usually gets taught,
-        and what we do about it.
-      </p>
+      <NextCard page={LEARN_PAGES["chromatic-circle"]} label="Start here · 1 of 3" />
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales" className={LEARN_STYLES.sectionLink}>
-          Scales
-        </Link>
-      </h2>
-      <p>
-        How the modes relate to each other, what &ldquo;harmonic&rdquo; and &ldquo;melodic&rdquo;
-        actually mean, and pairs that differ by exactly one note.
-      </p>
+      <IndexEntry id="approach">
+        The idea behind this app: the chromatic circle, and the parts of theory it makes easier to
+        see.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/chords" className={LEARN_STYLES.sectionLink}>
-          Chords
-        </Link>
-      </h2>
-      <p>Major vs. minor, inversions, and how roman numerals number chords from the tonic.</p>
+      <IndexEntry id="chords">
+        Interval inversions, major vs. minor, chord quality, and triad inversions.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/interval-inversions" className={LEARN_STYLES.link}>
-          Interval Inversions
-        </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts]} />
-      </h2>
-      <p>
-        Flip an interval upside down and the number changes - but a <i>minor second</i> and a{" "}
-        <i>major seventh</i> still sound like close relatives.
-      </p>
+      <IndexEntry id="scales">
+        How the modes relate to each other, what makes a scale &ldquo;harmonic&rdquo;, and pairs
+        that differ by exactly one note.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/symmetry-and-dissonance" className={LEARN_STYLES.link}>
-          Symmetry and Dissonance
-        </Link>
-        <LearnTags tags={[LearnTag.Geometry]} />
-      </h2>
-      <p>
-        Why the <i>tritone</i>, the <i>augmented triad</i>, and the <i>diminished 7th</i> all sound
-        unsettled: split the octave evenly and no note is left to call home.
-      </p>
+      <IndexEntry id="progressions">
+        What a chord progression is, a few common ones, and how roman numerals number them from the
+        tonic.
+      </IndexEntry>
+
+      <IndexEntry id="side-tracks">
+        Optional reading for the curious.
+      </IndexEntry>
     </>
   );
 }
