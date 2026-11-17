@@ -14,6 +14,12 @@ and needs to be reviewed against what I actually want to say.
 Update the score column as pages are reviewed. Keep this file in the repo so
 review progress is visible in git history.
 
+**Path** is the reading path the page belongs to (see `LEARN_PATHS` in
+`src/lib/learn/learnPages.ts`); "standalone" pages sit outside every path and must
+make sense to a reader who arrives from a search or a forum post. **Promote** marks
+the standalone pages that answer a question people ask on forums - the ones to post
+first, phrased as that question.
+
 ## Learn index
 
 | Page | Path | Score |
@@ -22,41 +28,45 @@ review progress is visible in git history.
 
 ## Approach
 
-| Page | Path | Score |
-|---|---|---|
-| Approach index | `approach/page.tsx` | 4 |
-| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | 4.5 |
-| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | 4 |
-| Chromatic circle | `approach/chromatic-circle/page.tsx` | 4.5 |
-| Music theory on the chromatic circle | `approach/music-theory-on-the-chromatic-circle/page.tsx` | 0 |
-| Color coding | `approach/color-coding/page.tsx` | 4.5 |
-| Accidentals | `approach/accidentals/page.tsx` | 4.5 |
-
-
+| Page | Path | Reading path | Promote | Score |
+|---|---|---|---|---|
+| Approach index | `approach/page.tsx` | - | | 4 |
+| Chromatic circle | `approach/chromatic-circle/page.tsx` | start 1 | | 4.5 |
+| What's useful about music theory | `approach/whats-useful-about-music-theory/page.tsx` | start 2 | | 4 |
+| Music theory on the chromatic circle | `approach/music-theory-on-the-chromatic-circle/page.tsx` | start 3 | | 0 |
+| What's wrong with music theory | `approach/whats-wrong-with-music-theory/page.tsx` | side track | later | 4.5 |
+| Color coding | `approach/color-coding/page.tsx` | standalone | | 4.5 |
+| Chord color formula | `approach/chord-color-formula/page.tsx` | side track | | 0 |
+| Accidentals | `approach/accidentals/page.tsx` | standalone | | 4.5 |
 
 ## Chords
 
-| Page | Path | Score |
-|---|---|---|
-| Chords index | `chords/page.tsx` | 0 |
-| Chord quality | `chords/chord-quality/page.tsx` | 4 |
-| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | 3.5 |
-| Roman numerals | `chords/roman-numerals/page.tsx` | 4 |
-| Triad inversions | `chords/triad-inversions/page.tsx` | 4.5 |
+| Page | Path | Reading path | Promote | Score |
+|---|---|---|---|---|
+| Intervals and Chords index | `chords/page.tsx` | - | | 0 |
+| Progressions index | `progressions/page.tsx` | - | | 0 |
+| Major vs minor triads | `chords/major-vs-minor-triads/page.tsx` | group: intervals and chords | | 3.5 |
+| Chord quality | `chords/chord-quality/page.tsx` | group: intervals and chords | | 4 |
+| Triad inversions | `chords/triad-inversions/page.tsx` | group: intervals and chords | yes | 4.5 |
+| Chord progressions (draft) | `progressions/chord-progressions/page.tsx` | group: progressions | | 0 |
+| Cadences (draft) | `progressions/cadences/page.tsx` | group: progressions | | 0 |
+| Roman numerals | `chords/roman-numerals/page.tsx` | group: progressions | | 4 |
 
 ## Scales
 
-| Page | Path | Score |
-|---|---|---|
-| Scales index | `scales/page.tsx` | 3 |
-| Scale degrees | `scales/scale-degrees/page.tsx` | 3.5 |
-| Greek modes | `scales/greek-modes/page.tsx` | 3.5 |
-| Modal families | `scales/modal-families/page.tsx` | 3 |
-| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | 3.5 |
-| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | 4.5 |
-| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | 3.5 |
+| Page | Path | Reading path | Promote | Score |
+|---|---|---|---|---|
+| Scales index | `scales/page.tsx` | - | | 3 |
+| Scale degrees | `scales/scale-degrees/page.tsx` | scales 1 | | 3.5 |
+| Greek modes | `scales/greek-modes/page.tsx` | scales 2 | | 3.5 |
+| Relative vs parallel modes | `scales/relative-vs-parallel-modes/page.tsx` | scales 3 | yes | 3.5 |
+| Harmonic (major/minor overview) | `scales/harmonic/page.tsx` | scales 4 | | 4.5 |
+| Modal families | `scales/modal-families/page.tsx` | scales 5 | | 3 |
+| Melodic minor modes | `scales/melodic-minor-modes/page.tsx` | standalone | | 3.5 |
 
 ## Scales / Comparisons
+
+All standalone. Minor vs Dorian is the first to promote.
 
 | Page | Path | Score |
 |---|---|---|
@@ -79,7 +89,7 @@ review progress is visible in git history.
 
 ## Other
 
-| Page | Path | Score |
-|---|---|---|
-| Interval inversions | `interval-inversions/page.tsx` | 5 |
-| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | 5 |
+| Page | Path | Reading path | Promote | Score |
+|---|---|---|---|---|
+| Interval inversions | `interval-inversions/page.tsx` | group: intervals and chords | yes | 5 |
+| Symmetry and dissonance | `symmetry-and-dissonance/page.tsx` | side track | yes | 5 |

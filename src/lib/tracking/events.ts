@@ -10,4 +10,6 @@ export const TrackEvent = {
   ScaleTypeChanged: "scale_type_changed", //scale dropdown
   ScalePlaybackModeChanged: "scale_playback_mode_changed",
   ChordPresetChanged: "chord_preset_changed",
+
+  LearnLinkClicked: "learn_link_click", // a tracked link in a /learn article (see TrackedLink)
 } as const;

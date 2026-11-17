@@ -1,3 +1,4 @@
+import { TrackEvent } from "./events";
 import { ph } from "./ph";
 
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
@@ -54,7 +55,21 @@ export function buildModeContext({
   };
 }
 
-export function track(name: string, props: TrackCtx = {}) {
+// Where on a learn page a link sits, so click-through can be compared across link designs.
+export type LearnLinkPlacement =
+  | "next-card"
+  | "article-nav"
+  | "see-also"
+  | "aside"
+  | "app-link";
+
+export type LearnLinkClick = { from: string; to: string; placement: LearnLinkPlacement };
+
+export function trackLearnLinkClick(props: LearnLinkClick) {
+  track(TrackEvent.LearnLinkClicked, props);
+}
+
+export function track(name: string, props: TrackCtx | LearnLinkClick = {}) {
   if (process.env.NODE_ENV !== "production") return;
 
   if (ph.__loaded) {

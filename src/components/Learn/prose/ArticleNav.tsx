@@ -1,68 +1,97 @@
-import Link from "next/link";
-
+import { NextCard } from "@/components/Learn/prose/NextCard";
+import { TrackedLink } from "@/components/Learn/prose/TrackedLink";
 import { LEARN_STYLES } from "@/lib/design";
-import { APPROACH_SEQUENCE, LEARN_PAGES, type LearnPageId } from "@/lib/learn/learnPages";
+import {
+  findLearnPath,
+  LEARN_PAGES,
+  LEARN_PATHS,
+  pathContinuations,
+  type LearnPageId,
+  type LearnPageInfo,
+} from "@/lib/learn/learnPages";
 
-function NavLink({ id, direction }: { id: LearnPageId; direction: "prev" | "next" }) {
-  const { href, title, blurb } = LEARN_PAGES[id];
-  return (
-    <Link
-      href={href}
-      className={`flex flex-col gap-tight no-underline ${direction === "next" ? "text-right" : ""}`}
-    >
-      <span className={`text-xs uppercase tracking-wide text-labels-textDefault opacity-60`}>
-        {direction === "prev" ? "← Previous" : "Next →"}
-      </span>
-      <span className={LEARN_STYLES.link}>{title}</span>
-      <span className="text-sm text-labels-textDefault">{blurb}</span>
-    </Link>
-  );
-}
+// After the last path there is nowhere to continue in order, so offer the whole index.
+const ALL_ARTICLES: LearnPageInfo = {
+  href: "/learn",
+  title: "All articles",
+  blurb: "",
+};
 
-/** Previous/Next between the neighbors of a spine article (see APPROACH_SEQUENCE) - the
- * continuous path through the Approach section's introductory sequence. Only for a page in that
- * sequence; anything else links through SeeAlso instead. `compact` is the one-line version for
- * the top of the page: titles only, no blurbs. */
+/** Previous/Next within a reading path (see LEARN_PATHS), and where the path sits: "Chords · 2 of
+ * 4". At the end of a path it offers the paths that follow instead of a Next. Only for a page in
+ * a path; a standalone piece ends with a NextCard of its own. `compact` is the version for the top
+ * of the page: position and titles only, no cards. */
 export function ArticleNav({ id, compact = false }: { id: LearnPageId; compact?: boolean }) {
-  const index = APPROACH_SEQUENCE.indexOf(id);
-  if (index === -1) {
-    throw new Error(`ArticleNav: "${id}" isn't in APPROACH_SEQUENCE`);
+  const found = findLearnPath(id);
+  if (!found) {
+    throw new Error(`ArticleNav: "${id}" isn't in any of LEARN_PATHS`);
   }
-  const prevId = index > 0 ? APPROACH_SEQUENCE[index - 1] : undefined;
-  const nextId = index < APPROACH_SEQUENCE.length - 1 ? APPROACH_SEQUENCE[index + 1] : undefined;
-  if (!prevId && !nextId) return null;
+  const { pathId, index } = found;
+  const path = LEARN_PATHS[pathId];
+  const pages: readonly LearnPageId[] = path.pages;
+  const prevId = pages[index - 1];
+  const nextId = pages[index + 1];
 
   if (compact) {
     return (
-      <nav
-        aria-label="Previous and next article"
-        className="flex justify-between gap-normal text-sm"
-      >
-        <div>
-          {prevId && (
-            <Link href={LEARN_PAGES[prevId].href} className={LEARN_STYLES.link}>
-              ← {LEARN_PAGES[prevId].title}
-            </Link>
-          )}
-        </div>
-        <div className="text-right">
-          {nextId && (
-            <Link href={LEARN_PAGES[nextId].href} className={LEARN_STYLES.link}>
-              {LEARN_PAGES[nextId].title} →
-            </Link>
-          )}
-        </div>
+      <nav aria-label="Reading path" className="flex flex-col gap-tight text-sm">
+        <TrackedLink href={path.href} placement="article-nav" className={LEARN_STYLES.pathPosition}>
+          {path.title} · {index + 1} of {pages.length}
+        </TrackedLink>
+        {(prevId || nextId) && (
+          <div className="flex justify-between gap-normal">
+            <div>
+              {prevId && (
+                <TrackedLink
+                  href={LEARN_PAGES[prevId].href}
+                  placement="article-nav"
+                  className={LEARN_STYLES.link}
+                >
+                  ← {LEARN_PAGES[prevId].title}
+                </TrackedLink>
+              )}
+            </div>
+            <div className="text-right">
+              {nextId && (
+                <TrackedLink
+                  href={LEARN_PAGES[nextId].href}
+                  placement="article-nav"
+                  className={LEARN_STYLES.link}
+                >
+                  {LEARN_PAGES[nextId].title} →
+                </TrackedLink>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
     );
   }
 
+  const following = pathContinuations(pathId);
   return (
     <nav
       aria-label="Article navigation"
-      className="flex flex-col gap-normal border-t border-containers-divider pt-normal sm:flex-row sm:justify-between"
+      className="flex flex-col gap-snug border-t border-containers-divider pt-normal"
     >
-      <div className="sm:w-1/2">{prevId && <NavLink id={prevId} direction="prev" />}</div>
-      <div className="sm:w-1/2">{nextId && <NavLink id={nextId} direction="next" />}</div>
+      {nextId ? (
+        <NextCard page={LEARN_PAGES[nextId]} label={`Next · ${path.title} ${index + 2} of ${pages.length}`} />
+      ) : following.length > 0 ? (
+        following.map((next) => (
+          <NextCard key={next.href} page={next} label="Pick a topic" />
+        ))
+      ) : (
+        <NextCard page={ALL_ARTICLES} label="Keep exploring" />
+      )}
+      {prevId && (
+        <TrackedLink
+          href={LEARN_PAGES[prevId].href}
+          placement="article-nav"
+          className={`${LEARN_STYLES.link} text-sm`}
+        >
+          ← Previous: {LEARN_PAGES[prevId].title}
+        </TrackedLink>
+      )}
     </nav>
   );
 }

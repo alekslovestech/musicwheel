@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { Fragment, useMemo } from "react";
 
 import { ScaleRibbon } from "@/components/ColorLegend/ScaleRibbon";
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { Staff } from "@/components/Learn/figures/Staff";
+import { TrackedLink } from "@/components/Learn/prose/TrackedLink";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
 import { LEARN_STYLES } from "@/lib/design";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
@@ -173,7 +173,8 @@ export function ScaleFigure({
         <>
           <span>{caption}</span>
           {showAppLink && (
-            <Link
+            <TrackedLink
+              placement="app-link"
               href={scaleSelectionPath({
                 tonic,
                 scaleMode: scaleType,
@@ -182,7 +183,7 @@ export function ScaleFigure({
               className={LEARN_STYLES.link}
             >
               Hear {tonic} {scaleType} in the app
-            </Link>
+            </TrackedLink>
           )}
         </>
       }
