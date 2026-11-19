@@ -30,6 +30,18 @@ export const LEARN_STYLES = {
   /** End-of-article onward reading (see SeeAlso): a ruled-off block, titles over one-line blurbs. */
   seeAlso: "flex flex-col gap-tight border-t border-containers-divider pt-normal",
   seeAlsoList: "m-0 flex list-none flex-col gap-snug p-0 text-sm",
+  /** The one recommended next step (see NextCard): a whole-card link, bordered like a figure so
+   * it reads as the way on rather than as a footer. */
+  nextCard:
+    "flex items-center gap-normal rounded-lg border border-containers-divider bg-canvas-bgScales p-normal no-underline hover:border-links-text",
+  nextCardThumbnail: "hidden w-40 shrink-0 rounded border border-containers-divider sm:block",
+  nextCardLabel: "text-xs uppercase tracking-wide opacity-60",
+  nextCardTitle: "font-semibold text-links-text",
+  // "Chords · 2 of 4" above an article in a reading path.
+  pathPosition: "text-xs uppercase tracking-wide text-labels-textDefault opacity-60 no-underline hover:opacity-100",
+  // An inline pointer to another page at the point the question comes up (see Aside).
+  aside: "border-l-2 border-links-text pl-snug text-sm",
+
   /** Any inline text link in the learn section - figure captions, the article index, prose. */
   link: "text-links-text underline underline-offset-2 hover:text-links-textHover",
 

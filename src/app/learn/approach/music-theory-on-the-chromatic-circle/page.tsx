@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2, ComparisonGrid3 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
@@ -14,21 +13,18 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
-  "/learn/approach/what-the-wheel-shows",
-  "What the Wheel Shows",
+  "/learn/approach/music-theory-on-the-chromatic-circle",
+  "Music Theory on the Chromatic Circle",
   "Intervals, chords, progressions and scales drawn as shapes on the chromatic circle, where each looks the same wherever it starts.",
 );
 
-export default function WhatTheWheelShowsPage() {
+export default function MusicTheoryOnTheChromaticCirclePage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
-      <ArticleNav id="what-the-wheel-shows" compact />
-
-      <h1 className={LEARN_STYLES.h1}>What the Wheel Shows</h1>
+    <ArticlePage
+      id="music-theory-on-the-chromatic-circle"
+      seeAlso={["color-coding", "symmetry-and-dissonance", "accidentals"]}
+    >
+      <h1 className={LEARN_STYLES.h1}>Music Theory on the Chromatic Circle</h1>
 
       <p>
         Intervals, chords, progressions and scales each have a shape that stays the same wherever
@@ -42,7 +38,7 @@ export default function WhatTheWheelShowsPage() {
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
 
       <p>
-        A <i>major third</i> starting on C and one starting on E&nbsp;-&nbsp;the same angle, just
+        A <i>major third</i>&nbsp;starting on C and one starting on E&nbsp;-&nbsp;the same angle, just
         rotated:
       </p>
 
@@ -156,12 +152,6 @@ export default function WhatTheWheelShowsPage() {
         is now the thing you&apos;re looking at, not something you have to reconstruct from
         letters and accidentals.
       </p>
-
-      <SeeAlso
-        items={["scales", "color-coding", "symmetry-and-dissonance", "accidentals"]}
-      />
-
-      <ArticleNav id="what-the-wheel-shows" />
-    </>
+    </ArticlePage>
   );
 }

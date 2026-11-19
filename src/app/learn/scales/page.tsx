@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { LearnTags } from "@/components/Learn/layout/LearnTags";
+import { IndexEntry } from "@/components/Learn/layout/IndexEntry";
+import { BackLink } from "@/components/Learn/layout/BackLink";
 import { LEARN_STYLES } from "@/lib/design";
-import { LearnTag } from "@/types/enums/LearnTag";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 
 export const metadata: Metadata = metadataForSlugPage(
@@ -16,9 +15,7 @@ export const metadata: Metadata = metadataForSlugPage(
 export default function ScalesIndexPage() {
   return (
     <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
-      </Link>
+      <BackLink to="learn" />
 
       <h1 className={LEARN_STYLES.h1}>Scales</h1>
       <p>
@@ -26,53 +23,36 @@ export default function ScalesIndexPage() {
         differ.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/greek-modes" className={LEARN_STYLES.link}>
-          Greek modes (aka Church modes)
-        </Link>
-        <LearnTags tags={[LearnTag.Scales, LearnTag.Essential]} />
-      </h2>
-      <p>The seven traditional names, in order, and one scale rotated seven ways.</p>
+      <IndexEntry id="scale-degrees">
+        Numbering a scale&apos;s notes against the major scale: ♭3, ♯4 and the rest.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/scale-degrees" className={LEARN_STYLES.link}>
-          Scale Degrees
-        </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
-      </h2>
-      <p>What each numbered position in a scale is called, and why the names matter.</p>
+      <IndexEntry id="greek-modes">
+        The seven traditional names, in order, and one scale rotated seven ways.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/relative-vs-parallel-modes" className={LEARN_STYLES.link}>
-          Relative vs. Parallel Modes
-        </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Essential]} />
-      </h2>
-      <p>Same notes, different tonic - or the same tonic, different notes.</p>
+      <IndexEntry id="relative-vs-parallel-modes">
+        Same notes, different tonic - or the same tonic, different notes.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/comparisons" className={LEARN_STYLES.sectionLink}>
-          Scale Comparisons
-        </Link>
-        <LearnTags tags={[LearnTag.Scales]} />
-      </h2>
-      <p>Two modes on the same tonic, one note apart.</p>
+      <IndexEntry id="harmonic">
+        What the name actually means, and the gap it leaves behind.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/harmonic" className={LEARN_STYLES.link}>
-          What Makes a Scale “Harmonic”?
-        </Link>
-        <LearnTags tags={[LearnTag.BasicConcepts, LearnTag.Scales]} />
-      </h2>
-      <p>What the name actually means, and the gap it leaves behind.</p>
+      <IndexEntry id="modal-families">
+        Other scales with famous rotations of their own, the way the <i>major scale</i> has the Greek modes.
+      </IndexEntry>
 
-      <h2 className={LEARN_STYLES.h2}>
-        <Link href="/learn/scales/modal-families" className={LEARN_STYLES.link}>
-          Modal Families Beyond the Major Scale
-        </Link>
-        <LearnTags tags={[LearnTag.Scales]} />
-      </h2>
-      <p>Other scales with famous rotations of their own, the way the <i>major scale</i> has the Greek modes.</p>
+      <h2 className={LEARN_STYLES.h2}>More on scales</h2>
+
+      <IndexEntry id="comparisons">
+        Two modes on the same tonic, one note apart.
+      </IndexEntry>
+
+      <IndexEntry id="melodic-minor-modes">
+        Melodic Minor&apos;s rotation family, mostly known through jazz - the three most commonly used
+        modes and the chords they&apos;re played against.
+      </IndexEntry>
     </>
   );
 }

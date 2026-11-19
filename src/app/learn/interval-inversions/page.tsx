@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import {
@@ -42,11 +42,14 @@ const PAIR_DETAILS: Record<
 
 export default function IntervalInversionsPage() {
   return (
-    <>
-      <Link href="/learn" className={LEARN_STYLES.link}>
-        ← Learn
-      </Link>
-
+    <ArticlePage
+      id="interval-inversions"
+      seeAlso={[
+        "symmetry-and-dissonance",
+        "triad-inversions",
+        "chromatic-circle",
+      ]}
+    >
       <h1 className={LEARN_STYLES.h1}>Interval Inversions</h1>
 
       <p>
@@ -125,14 +128,6 @@ export default function IntervalInversionsPage() {
           </ComparisonGrid2>
         );
       })}
-
-      <SeeAlso
-        items={[
-          "symmetry-and-dissonance",
-          "triad-inversions",
-          "chromatic-circle",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

@@ -23,12 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/learn"),
 
     url("/learn/approach"),
+    url("/learn/side-tracks"),
     url("/learn/approach/whats-wrong-with-music-theory"),
     url("/learn/approach/whats-useful-about-music-theory"),
     url("/learn/approach/color-coding"),
     url("/learn/approach/chord-color-formula"),
     url("/learn/approach/chromatic-circle"),
-    url("/learn/approach/what-the-wheel-shows"),
+    url("/learn/approach/music-theory-on-the-chromatic-circle"),
     url("/learn/approach/accidentals"),
 
     url("/learn/chords"),
@@ -40,6 +41,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/learn/interval-inversions"),
     url("/learn/symmetry-and-dissonance"),
 
+    url("/learn/progressions"),
+    url("/learn/progressions/chord-progressions"),
+    url("/learn/progressions/cadences"),
     url("/learn/scales"),
     url("/learn/scales/greek-modes"),
     url("/learn/scales/scale-degrees"),

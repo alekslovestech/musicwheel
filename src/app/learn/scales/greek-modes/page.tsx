@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -17,11 +16,10 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function GreekModesPage() {
   return (
-    <>
-      <Link href="/learn/scales" className={LEARN_STYLES.link}>
-        ← Scales
-      </Link>
-
+    <ArticlePage
+      id="greek-modes"
+      seeAlso={["modal-families", "comparisons"]}
+    >
       <h1 className={LEARN_STYLES.h1}>How the Greek Modes Relate to Each Other</h1>
 
       <p>
@@ -85,14 +83,6 @@ export default function GreekModesPage() {
         which chord acts as home does. C major resolves strongly to C because C is the tonic in that
         context - the same C <i>major chord</i>, played in A <i>Aeolian</i>&apos;s context, is just the bright <i>major chord</i> sitting on the third degree, with no special claim on being &ldquo;home.&rdquo;
       </p>
-
-      <SeeAlso
-        items={[
-          "relative-vs-parallel-modes",
-          "modal-families",
-          "scale-degrees",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

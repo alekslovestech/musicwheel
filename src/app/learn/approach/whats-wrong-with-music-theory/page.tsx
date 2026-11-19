@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
@@ -30,13 +29,7 @@ const KEY_SIGNATURE_STAFF_WIDTH = 130;
 
 export default function WhatsWrongWithMusicTheoryPage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
-      <ArticleNav id="whats-wrong-with-music-theory" compact />
-
+    <ArticlePage id="whats-wrong-with-music-theory">
       <h1 className={LEARN_STYLES.h1}>What&apos;s Wrong with Music Theory</h1>
 
       <p>
@@ -162,8 +155,6 @@ export default function WhatsWrongWithMusicTheoryPage() {
           caption={"6 flats: B♭, E♭, A♭, D♭, G♭, C♭\nBefore Eating A Donut, Get Coffee First"}
         />
       </div>
-
-      <ArticleNav id="whats-wrong-with-music-theory" />
-    </>
+    </ArticlePage>
   );
 }

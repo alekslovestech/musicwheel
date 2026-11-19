@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo } from "react";
 
 import { Staff } from "@/components/Learn/figures/Staff";
+import { TrackedLink } from "@/components/Learn/prose/TrackedLink";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
 import { LEARN_STYLES } from "@/lib/design";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
@@ -82,12 +82,13 @@ export function ProgressionStaff({
           {showRomanNumerals && <span className="font-bold">{romanNumerals}</span>}
           <span>{chordNames}</span>
           {showAppLink && (
-            <Link
+            <TrackedLink
+              placement="app-link"
               href={progressionSelectionPath({ tonic, progression })}
               className={LEARN_STYLES.link}
             >
               Hear it in the app
-            </Link>
+            </TrackedLink>
           )}
         </>
       }

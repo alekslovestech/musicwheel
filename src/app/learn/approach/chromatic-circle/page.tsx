@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { SpecialType } from "@/types/enums/SpecialType";
@@ -39,11 +39,10 @@ const SYSTEMS = [
 
 export default function ChromaticCirclePage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
+    <ArticlePage
+      id="chromatic-circle"
+      seeAlso={["color-coding", "symmetry-and-dissonance"]}
+    >
       <h1 className={LEARN_STYLES.h1}>The Chromatic Circle</h1>
 
       <p>
@@ -71,8 +70,8 @@ export default function ChromaticCirclePage() {
         whether it starts on a black or a white key. On the circle, an interval is an angular
         distance between 2 points, and a chord is a shape made of several points. Moving either to
         a different starting note rotates it without changing it.{" "}
-        <Link href="/learn/approach/what-the-wheel-shows" className={LEARN_STYLES.link}>
-          What the Wheel Shows
+        <Link href="/learn/approach/music-theory-on-the-chromatic-circle" className={LEARN_STYLES.link}>
+          Music Theory on the Chromatic Circle
         </Link>{" "}
         walks through intervals, chords, progressions and scales this way.
       </p>
@@ -147,8 +146,6 @@ export default function ChromaticCirclePage() {
         </Link>
         .
       </p>
-
-      <SeeAlso items={["color-coding", "symmetry-and-dissonance"]} />
-    </>
+    </ArticlePage>
   );
 }

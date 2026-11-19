@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ScaleDegreeComparison } from "@/components/Learn/figures/ScaleDegreeComparison";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -19,11 +19,17 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function RelativeVsParallelModesPage() {
   return (
-    <>
-      <Link href="/learn/scales" className={LEARN_STYLES.link}>
-        ← Scales
-      </Link>
-
+    <ArticlePage
+      id="relative-vs-parallel-modes"
+      seeAlso={[
+        {
+          href: "/learn/scales/comparisons/major-vs-lydian",
+          title: "Major vs. Lydian",
+          blurb: "A closer look at the parallel pair above",
+        },
+        "comparisons",
+      ]}
+    >
       <h1 className={LEARN_STYLES.h1}>Relative vs. Parallel Modes</h1>
 
       <p>
@@ -98,18 +104,6 @@ export default function RelativeVsParallelModesPage() {
         Relative and parallel aren&apos;t opposites so much as two different questions you can ask
         about the same pair of modes.
       </p>
-
-      <SeeAlso
-        items={[
-          {
-            href: "/learn/scales/comparisons/major-vs-lydian",
-            title: "Major vs. Lydian",
-            blurb: "A closer look at the parallel pair above",
-          },
-          "comparisons",
-          "greek-modes",
-        ]}
-      />
-    </>
+    </ArticlePage>
   );
 }

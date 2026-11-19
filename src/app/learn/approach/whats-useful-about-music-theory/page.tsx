@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
-import { ArticleNav } from "@/components/Learn/prose/ArticleNav";
+import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
-import { SeeAlso } from "@/components/Learn/prose/SeeAlso";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
 import { C_MAJOR_TRIAD, C_TO_E, E_MAJOR_TRIAD, E_TO_G_SHARP } from "@/lib/learn/spelledFigures";
@@ -26,13 +24,10 @@ export const metadata: Metadata = metadataForSlugPage(
 
 export default function WhatsUsefulAboutMusicTheoryPage() {
   return (
-    <>
-      <Link href="/learn/approach" className={LEARN_STYLES.link}>
-        ← Approach
-      </Link>
-
-      <ArticleNav id="whats-useful-about-music-theory" compact />
-
+    <ArticlePage
+      id="whats-useful-about-music-theory"
+      seeAlso={["chord-quality", "roman-numerals", "color-coding"]}
+    >
       <h1 className={LEARN_STYLES.h1}>What&apos;s Useful About Music Theory</h1>
 
       <p>
@@ -158,12 +153,6 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         behind them for you to work out. A way of seeing harmony that showed those shapes directly
         would make them far easier to learn.
       </p>
-
-      <SeeAlso
-        items={["chord-quality", "triad-inversions", "roman-numerals", "scales", "color-coding"]}
-      />
-
-      <ArticleNav id="whats-useful-about-music-theory" />
-    </>
+    </ArticlePage>
   );
 }
