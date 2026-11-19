@@ -36,7 +36,7 @@ export default function MajorVsLydianPage() {
         That single degree is why <i>Lydian</i> is called the brighter major - raising the fourth
         removes the only note in the <i>major scale</i> that leans toward the tonic from above,
         leaving a scale that floats rather than resolves. Reading it is one thing; the difference is
-        much more obvious held under a drone, which is what the links under each figure are for.
+        much more obvious held under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

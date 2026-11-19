@@ -23,6 +23,10 @@ export const LEARN_STYLES = {
     "m-0 flex flex-col gap-tight rounded-lg border border-containers-divider bg-canvas-bgScales p-tight sm:gap-snug sm:p-normal",
   // Keeps a figure from filling the whole article column.
   figureCardNarrow: "mx-auto w-full max-w-md",
+  // The play/stop control in a figure's top-right corner: a 44px hit target around a small icon,
+  // muted until hovered so it reads as part of the text, not as app chrome.
+  figurePlayButton:
+    "absolute right-0 top-0 flex h-11 w-11 items-center justify-center rounded-full opacity-70 hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-links-text",
   figureCaption: "flex flex-col gap-tight text-center text-xs text-labels-textDefault sm:text-sm",
   /** Title of a legend or table block (e.g. "Interval colors"). Add `text-center` where the
    * element isn't centered already. */

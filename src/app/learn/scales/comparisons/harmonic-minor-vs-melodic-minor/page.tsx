@@ -38,7 +38,7 @@ export default function HarmonicMinorVsMelodicMinorPage() {
         scale leaves open. <i>Melodic Minor</i> closes it by raising the sixth, trading that exotic
         leap for a scale that runs smoothly in both directions, which is the whole point of its
         name. Reading it is one thing; the difference is much more obvious held under a drone, which
-        is what the links under each figure are for.
+        is what the play buttons are for.
       </p>
     </ArticlePage>
   );

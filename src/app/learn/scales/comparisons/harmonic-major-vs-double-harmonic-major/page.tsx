@@ -39,7 +39,7 @@ export default function HarmonicMajorVsDoubleHarmonicMajorPage() {
         <i>augmented-second</i> gap that gives <i>Phrygian Dominant</i> its exotic color - only here
         it shows up twice, once low in the scale and once again between the flat sixth and the{" "}
         <i>major seventh</i>. Reading it is one thing; the difference is much more obvious held
-        under a drone, which is what the links under each figure are for.
+        under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

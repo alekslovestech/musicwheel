@@ -40,7 +40,7 @@ export default function MajorVsMelodicMinorPage() {
         <i>harmonic minor</i>, the flat seventh of <i>natural minor</i> - is simply absent here;{" "}
         <i>Melodic Minor</i> keeps the <i>major scale</i>&apos;s brighter upper half intact and
         touches only the third. Reading it is one thing; the difference is much more obvious held
-        under a drone, which is what the links under each figure are for.
+        under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

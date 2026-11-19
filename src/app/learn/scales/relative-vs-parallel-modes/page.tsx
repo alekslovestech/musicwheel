@@ -54,6 +54,7 @@ export default function RelativeVsParallelModesPage() {
           scaleType={ScaleModeType.Ionian}
           showStepAnnotations
           caption="C Ionian: seven colored arcs, one whole or half step apart."
+          play
         />
         <ScaleFigure
           tonic="F"
@@ -61,6 +62,7 @@ export default function RelativeVsParallelModesPage() {
           showStepAnnotations
           caption="F Lydian: the same seven arcs, in the same places on the wheel - only the flag has
             moved."
+          play
         />
       </ComparisonGrid2>
 

@@ -37,7 +37,7 @@ export default function HarmonicMinorVsHungarianMinorPage() {
         already has one: alongside the wide step between the flat sixth and the leading tone,{" "}
         <i>Hungarian Minor</i> opens a matching one between the raised fourth and the fifth, which
         is what gives it its dramatic, folk-tinged color. Reading it is one thing; the difference is
-        much more obvious held under a drone, which is what the links under each figure are for.
+        much more obvious held under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

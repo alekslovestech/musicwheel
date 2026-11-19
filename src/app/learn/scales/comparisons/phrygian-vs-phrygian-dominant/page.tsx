@@ -38,7 +38,7 @@ export default function PhrygianVsPhrygianDominantPage() {
         <i>major third</i> sitting one half-step above a flat second - the gap listeners hear as
         “exotic,” and the reason <i>Phrygian Dominant</i> turns up under names like the Spanish or
         Gypsy scale. Reading the two side by side is one thing; the difference is much more obvious
-        held under a drone, which is what the links under each figure are for.
+        held under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

@@ -42,6 +42,7 @@ export default function ScaleDegreesPage() {
         caption="C Ionian, the reference scale for the seven scale degrees."
         linearShowLabels
         isCompact
+        play
       />
 
       <p><i>Lydian</i> is <i>Ionian</i> with the 4th degree raised a semitone: sharp 4.</p>
@@ -53,6 +54,7 @@ export default function ScaleDegreesPage() {
         caption="C Lydian: ♯4, a raised 4th degree (F♯)"
         linearShowLabels
         isCompact
+        play
       />
 
       <p>
@@ -67,6 +69,7 @@ export default function ScaleDegreesPage() {
         caption="C Aeolian: ♭3, ♭6, and ♭7 (E♭, A♭, B♭) compared to C Ionian."
         linearShowLabels
         isCompact
+        play
       />
 
       <p>

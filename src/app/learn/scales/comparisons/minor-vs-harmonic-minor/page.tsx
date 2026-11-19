@@ -34,7 +34,7 @@ export default function MinorVsHarmonicMinorPage() {
         <i>natural minor</i> has no note that leans back into the tonic, but raising the seventh
         creates one, at the cost of stretching the gap behind it into the wide, exotic step between
         the sixth and seventh. Reading it is one thing; the difference is much more obvious held
-        under a drone, which is what the links under each figure are for.
+        under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

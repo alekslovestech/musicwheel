@@ -21,6 +21,7 @@ Write a comment of 1 or 2 lines as `//` lines, never as `/** ... */` or `/* ... 
 - Avoid stating the same concept twice in different words within the same passage (e.g. don't say "three semitones" and then restate it as "a step and a half").
 - Prefer semitones over steps/tones for interval sizes (e.g. "3 semitones" instead of "1½ steps" or "1½ tones").
 - Italicize full names of scales/modes, intervals, and chords in narrative text (e.g. *Dorian*, *minor third*, *dominant 7th*) with `<i>`. Don't italicize abbreviations or symbols (m3, V7, Cmaj7), or anything inside figures, captions, or tables.
+- Add `play` to a figure (`ChordWheel`, `ScaleFigure`) only where hearing it teaches something. A figure plays what it shows and nothing else: no tempo, instrument or note-editing controls - that's what the app is for. Sequences light the current note and clear when done.
 
 ### Article frame and onward links
 

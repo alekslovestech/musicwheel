@@ -37,7 +37,7 @@ export default function DoubleHarmonicMajorVsPanthuVaraaliPage() {
         That single degree adds a third tight interval to a scale that already has two: alongside
         the flat-second-to-third gap and the flat-sixth-to-seventh gap, <i>Panthu Varaali</i> opens
         a third one between the raised fourth and the fifth. Reading it is one thing; the difference
-        is much more obvious held under a drone, which is what the links under each figure are for.
+        is much more obvious held under a drone, which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

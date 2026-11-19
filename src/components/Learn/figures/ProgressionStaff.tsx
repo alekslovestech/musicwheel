@@ -3,31 +3,24 @@
 import { useMemo } from "react";
 
 import { Staff } from "@/components/Learn/figures/Staff";
-import { TrackedLink } from "@/components/Learn/prose/TrackedLink";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
-import { LEARN_STYLES } from "@/lib/design";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
 import { ChordProgressionFormatter } from "@/utils/formatters/ChordProgressionFormatter";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import {
-  progressionSelectionPath,
-  suggestedKeyForProgression,
-} from "@/utils/slug/progressionSelection";
+import { suggestedKeyForProgression } from "@/utils/slug/progressionSelection";
 import { prepareChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 import { StaffUtils } from "@/utils/StaffUtils";
 
 /** A chord progression on the staff the way the app draws it - same chord spelling and key
- * signature - in the given tonic, with its chord names (and optionally Roman numerals) underneath and a link to hear it in the
- * app. Meant for short patterns that fit one line; each chord is a whole note. The tonic must be
+ * signature - in the given tonic, with its chord names (and optionally Roman numerals) underneath. Meant for short patterns that fit one line; each chord is a whole note. The tonic must be
  * one the progression can legally take (see legalTonicsForProgression). */
 export function ProgressionStaff({
   tonic,
   progression,
   caption,
   showRomanNumerals = true,
-  showAppLink = true,
   bare = false,
 }: {
   tonic: string;
@@ -35,9 +28,6 @@ export function ProgressionStaff({
   caption: string;
   /** Roman numerals above the chord names. */
   showRomanNumerals?: boolean;
-  /** The "Hear it in the app" link under the chord names - off for an article that isn't
-   * ready to point at the app yet. */
-  showAppLink?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
 }) {
@@ -81,15 +71,6 @@ export function ProgressionStaff({
           <span>{caption}</span>
           {showRomanNumerals && <span className="font-bold">{romanNumerals}</span>}
           <span>{chordNames}</span>
-          {showAppLink && (
-            <TrackedLink
-              placement="app-link"
-              href={progressionSelectionPath({ tonic, progression })}
-              className={LEARN_STYLES.link}
-            >
-              Hear it in the app
-            </TrackedLink>
-          )}
         </>
       }
     >

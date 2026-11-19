@@ -62,11 +62,13 @@ export default function GreekModesPage() {
           tonic="C"
           scaleType={ScaleModeType.Ionian}
           caption="C Ionian: the seven white keys, starting and ending on C."
+          play
         />
         <ScaleFigure
           tonic="D"
           scaleType={ScaleModeType.Dorian}
           caption="D Dorian: the same seven white keys, starting and ending on D instead."
+          play
         />
       </ComparisonGrid2>
 

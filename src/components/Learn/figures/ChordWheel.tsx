@@ -3,6 +3,8 @@
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
+import { FigurePlayButton } from "@/components/Learn/figures/FigurePlayButton";
+import { playChord } from "@/lib/audio/learnPlayback";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { actualToChromatic, chromaticToActual } from "@/types/IndexTypes";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -23,6 +25,7 @@ export function ChordWheel({
   showKeyboard = true,
   bare = false,
   narrow = false,
+  play = false,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
@@ -36,6 +39,8 @@ export function ChordWheel({
   bare?: boolean;
   // A narrower, centered figure instead of the full article width.
   narrow?: boolean;
+  // Adds a play button that sounds the chord's notes together.
+  play?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
   const chordRef = makeChordReference(
@@ -50,6 +55,9 @@ export function ChordWheel({
       bare={bare}
       narrow={narrow}
       caption={<span className="whitespace-pre-line">{caption}</span>}
+      playControl={
+        play ? <FigurePlayButton onStart={(id) => void playChord(id, chordNotes)} /> : undefined
+      }
     >
       <CircularKeyboardView
         musicalKey={musicalKey}
