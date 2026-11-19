@@ -14,7 +14,7 @@ export default function LearnIndexPage() {
         go and play with it.
       </p>
 
-      <NextCard page={LEARN_PAGES["chromatic-circle"]} label="Start here · 1 of 3" />
+      <NextCard page={LEARN_PAGES["whats-useful-about-music-theory"]} label="Start here · 1 of 3" />
 
       <IndexEntry id="approach">
         The idea behind this app: the chromatic circle, and the parts of theory it makes easier to

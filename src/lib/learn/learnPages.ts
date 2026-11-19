@@ -240,8 +240,8 @@ export const LEARN_PATHS = {
     title: "Start here",
     href: "/learn/approach",
     pages: [
-      "chromatic-circle",
       "whats-useful-about-music-theory",
+      "chromatic-circle",
       "music-theory-on-the-chromatic-circle",
     ],
   },

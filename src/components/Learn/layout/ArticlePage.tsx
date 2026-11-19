@@ -30,7 +30,7 @@ type ArticlePageProps = {
  * where the page sits (see CLAUDE.md):
  * - in a reading path: ArticleNav, with Previous/Next and the end-of-path cards;
  * - a scales page outside the path: the Scales path;
- * - any other page: The Chromatic Circle, the start of the spine. */
+ * - any other page: What's Useful About Music Theory, the start of the spine. */
 export function ArticlePage({ id, parent, seeAlso, seeAlsoTitle, children }: ArticlePageProps) {
   const parentId =
     parent ??
@@ -55,7 +55,7 @@ export function ArticlePage({ id, parent, seeAlso, seeAlsoTitle, children }: Art
       ) : isScales ? (
         <NextCard page={learnPathEntry("scales")} label="Start the Scales path" />
       ) : (
-        <NextCard page={LEARN_PAGES["chromatic-circle"]} label="Start here" />
+        <NextCard page={LEARN_PAGES["whats-useful-about-music-theory"]} label="Start here" />
       )}
       {seeAlso && <SeeAlso items={seeAlso} title={seeAlsoTitle} />}
     </>

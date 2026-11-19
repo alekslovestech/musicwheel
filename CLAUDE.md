@@ -38,7 +38,7 @@ Don't write a back link, `ArticleNav`, `NextCard` or `SeeAlso` on an article pag
 Where each link comes from:
 
 - **Back link:** the page's `parent` in `LEARN_PAGES` (`lib/learn/learnPages.ts`), the id of the page it sits under. Every page but Learn must have one.
-- **Next step:** a page in a reading path gets `ArticleNav`; a scales page outside the path gets a card into the Scales path; every other page gets a card into The Chromatic Circle. These are the wrapper's rules, so don't override them page by page.
+- **Next step:** a page in a reading path gets `ArticleNav`; a scales page outside the path gets a card into the Scales path; every other page gets a card into What's Useful About Music Theory, the start of the spine. These are the wrapper's rules, so don't override them page by page.
 - **See also:** the `seeAlso` prop, at most 3 items (SeeAlso throws past that), with `seeAlsoTitle` to name the block when its links share a kind.
 - **In the text:** `Aside` (`components/Learn/prose/Aside.tsx`) points to another page where its question comes up, at most 1 or 2 per article. Link inline when the link supports a specific claim in that sentence.
 
@@ -48,11 +48,15 @@ Rules for choosing and ordering See also items:
 - Order the items: those that elaborate something in the text come first, in the order that topic appears on the page; the rest follow, from closest to furthest from the page's topic.
 - Link to pages by id from `lib/learn/learnPages.ts`, which holds one title and blurb per page. Each blurb is the question the page answers ("Why does C/E still sound like C major?"), so a link promises an answer rather than naming a topic. Add a blurb of your own only when the reason for the link matters more than the page's topic.
 
+### Testing Learn changes
+
+Don't run the tests after every Learn edit, such as reordering pages, renaming titles or moving links. Run them occasionally, for example once a batch of structural changes has settled or when the user asks.
+
 ### Reading paths
 
 Every article is one of 3 kinds:
 
-- **The spine** (`LEARN_PATHS.start` in `lib/learn/learnPages.ts`): The Chromatic Circle, What's Useful About Music Theory, then Music Theory on the Chromatic Circle. It is the app's idea, and where every standalone piece sends a new reader.
+- **The spine** (`LEARN_PATHS.start` in `lib/learn/learnPages.ts`): What's Useful About Music Theory, The Chromatic Circle, then Music Theory on the Chromatic Circle. It is the app's idea, and where every standalone piece sends a new reader.
 - **Topic paths** (`LEARN_PATHS.scales`): a short sequence read in order, each page building on the last.
 - **Groupings** (`LEARN_GROUPS`: "Intervals and Chords" and "Progressions"): pages on one topic with no order between them, listed on the section's index page. They get no ArticleNav; each ends with a NextCard like a standalone piece.
 - **Side tracks** (`/learn/side-tracks`): optional pieces for the curious that nothing depends on - Symmetry and Dissonance, Interval Inversions, How Chord Colors Are Computed and the opinion essay. Standalone in every other respect, and listed on their own index instead of with a topic.

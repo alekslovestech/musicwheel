@@ -23,14 +23,14 @@ export default function ApproachIndexPage() {
 
       <p>Start here and follow Next through to the end - each article builds on the last.</p>
 
-      <IndexEntry id="chromatic-circle">
-        Why a circle instead of a line makes intervals and inversions easier to see, and how it
-        compares to the circle of fifths and the Tonnetz.
-      </IndexEntry>
-
       <IndexEntry id="whats-useful-about-music-theory">
         The parts that describe sound: 12 equal notes, intervals as distances, chords as shapes, and
         the vocabulary for recognizing what you hear.
+      </IndexEntry>
+
+      <IndexEntry id="chromatic-circle">
+        Why a circle instead of a line makes intervals and inversions easier to see, and how it
+        compares to the circle of fifths and the Tonnetz.
       </IndexEntry>
 
       <IndexEntry id="music-theory-on-the-chromatic-circle">
