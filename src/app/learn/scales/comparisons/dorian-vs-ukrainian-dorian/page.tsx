@@ -37,7 +37,7 @@ export default function DorianVsUkrainianDorianPage() {
         a <i>minor third</i> below the raised fourth, and a major-feeling gap above it, the
         combination that gives <i>Ukrainian Dorian</i> its name and its use in Eastern European folk
         melodies. Reading it is one thing; the difference is much more obvious held under a drone,
-        which is what the links under each figure are for.
+        which is what the play buttons are for.
       </p>
     </ArticlePage>
   );

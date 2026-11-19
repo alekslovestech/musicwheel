@@ -98,13 +98,11 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
           tonic="C"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
-          showAppLink={false}
         />
         <ProgressionStaff
           tonic="D"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
-          showAppLink={false}
         />
       </ComparisonGrid2>
 
@@ -126,7 +124,6 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         views={["staff", "linear"]}
         isCompact
         hasKeySignature={false}
-        showAppLink={false}
       />
       <ScaleFigure
         tonic="C"
@@ -135,7 +132,6 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         views={["staff", "linear"]}
         isCompact
         hasKeySignature={false}
-        showAppLink={false}
       />
 
       <p>

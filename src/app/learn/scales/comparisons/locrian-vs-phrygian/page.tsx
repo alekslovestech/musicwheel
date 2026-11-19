@@ -38,7 +38,7 @@ export default function LocrianVsPhrygianPage() {
         diminished, the only common mode where that&apos;s true, while <i>Phrygian</i>&apos;s{" "}
         <i>perfect fifth</i> gives it an ordinary minor tonic underneath the same unsettled second.
         Reading it is one thing; the difference is much more obvious held under a drone, which is
-        what the links under each figure are for.
+        what the play buttons are for.
       </p>
     </ArticlePage>
   );

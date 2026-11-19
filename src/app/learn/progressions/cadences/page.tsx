@@ -64,7 +64,6 @@ export default function CadencesPage() {
         tonic="C"
         progression={ChordProgressionType.Line_Cliche}
         caption="Line Cliche in C"
-        showAppLink={false}
       />
 
       <p>

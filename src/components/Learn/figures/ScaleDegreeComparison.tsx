@@ -4,20 +4,11 @@ import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
-const DEGREE_ORDINALS = [
-  "zeroth",
-  "first",
-  "second",
-  "third",
-  "fourth",
-  "fifth",
-  "sixth",
-  "seventh",
-];
+const DEGREE_ORDINALS = ["0th", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th"];
 
 /**
- * A figure pair plus the paragraph explaining the geometry, for the "off by one" comparison
- * articles: two modes on the same tonic that disagree on exactly one degree, by a single
+ * A figure pair, each with a play button, plus the paragraph explaining the geometry, for the
+ * "off by one" comparison articles: two modes on the same tonic that disagree on exactly one degree, by a single
  * semitone, from modeA to modeB. Tonic is hardcoded to C - true of every article in this category
  * so far. isClockwise defaults to true (modeB raises the degree) since that's the common case;
  * pass false for the rarer pairs where modeB lowers it instead (e.g. Harmonic Major's natural
@@ -33,7 +24,7 @@ export function ScaleDegreeComparison({
 }: {
   modeA: ScaleModeType;
   modeB: ScaleModeType;
-  /** Scale degree both modes highlight - the one they disagree on. */
+  /** Scale degree the 2 modes disagree on - named in the paragraph under the figures. */
   degree: ScaleDegree;
   /** Whether modeB's wedge sits clockwise (raised) or counterclockwise (lowered) from modeA's. */
   isClockwise?: boolean;
@@ -51,24 +42,23 @@ export function ScaleDegreeComparison({
           tonic={tonic}
           scaleType={modeA}
           scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
-          highlightedDegree={degree}
           caption={captionA}
           isCompact
+          play
         />
         <ScaleFigure
           tonic={tonic}
           scaleType={modeB}
           scalePlaybackMode={ScalePlaybackMode.DronedSingleNote}
-          highlightedDegree={degree}
           caption={captionB}
           isCompact
+          play
         />
       </ComparisonGrid2>
 
       <p>
-        The wheel makes the difference positional rather than verbal: the {ordinal}-degree wedge
-        sits one wedge further {direction} in <i>{modeB}</i>, and the spoke drawn from the center
-        recolors to the interval that degree now forms with the tonic. Everything else on the two
+        The wheel makes the difference positional rather than verbal: the {ordinal} degree&apos;s
+        wedge sits one wedge further {direction} in <i>{modeB}</i>. Everything else on the two
         wheels is identical.
       </p>
     </>

@@ -1,20 +1,20 @@
 "use client";
 
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 import { ScaleRibbon } from "@/components/ColorLegend/ScaleRibbon";
 import { CircularKeyboardView } from "@/components/Keyboard/Circular/CircularKeyboardView";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { Staff } from "@/components/Learn/figures/Staff";
-import { TrackedLink } from "@/components/Learn/prose/TrackedLink";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
-import { LEARN_STYLES } from "@/lib/design";
+import { FigurePlayButton } from "@/components/Learn/figures/FigurePlayButton";
+import { playScale } from "@/lib/audio/learnPlayback";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { actualToChromatic, NoteIndices } from "@/types/IndexTypes";
 import { DEFAULT_MUSICAL_KEY, MusicalKey } from "@/types/Keys/MusicalKey";
 import { ScaleDegree, scaleDegreeToIndex } from "@/types/ScaleModes/ScaleDegreeType";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import { AnyScaleType, scaleSelectionPath } from "@/utils/slug/scaleSelection";
+import { AnyScaleType } from "@/utils/slug/scaleSelection";
 import { SCALE_STAFF_DRAW_OPTIONS, StaffUtils } from "@/utils/StaffUtils";
 import { buildScaleRibbonData } from "@/utils/visual/scaleRibbonUtils";
 
@@ -25,8 +25,7 @@ const DEFAULT_VIEWS: readonly ScaleView[] = ["wheel", "linear"];
 
 /** One scale, drawn from the app's own logic - its note spelling, key signature and highlighting -
  * as any mix of: the wheel, the ribbon (scale-degree numbers with step sizes), the staff
- * (ascending, tonic to its octave) and the linear keyboard, in the order given by `views`. Ends
- * with a link to hear it in the app. Handles both diatonic and non-diatonic scales.
+ * (ascending, tonic to its octave) and the linear keyboard, in the order given by `views`. Handles both diatonic and non-diatonic scales.
  *
  * Highlighting is shared by every view: `highlightedDegree` lights that one degree; without it,
  * nothing is lit - just the scale's plain shape (its notes in the scale color), or its step
@@ -47,8 +46,8 @@ export function ScaleFigure({
   linearShowLabels,
   isCompact = false,
   hasKeySignature = true,
-  showAppLink = true,
   bare = false,
+  play = false,
 }: {
   tonic: string;
   scaleType: AnyScaleType;
@@ -77,26 +76,29 @@ export function ScaleFigure({
   /** Set false to draw the staff in C major's empty signature, so the scale's altered notes carry
    * their own accidentals instead of the app's usual key signature. */
   hasKeySignature?: boolean;
-  /** The "Hear it in the app" link under the caption - off for an article that isn't ready to
-   * point at the app yet. */
-  showAppLink?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
+  /** Adds a play button that sounds the scale in `scalePlaybackMode`, lighting each step on the
+   * wheel, ribbon and keyboard as it plays. */
+  play?: boolean;
 }) {
   const musicalKey = useMemo(() => MusicalKey.fromScale(tonic, scaleType), [tonic, scaleType]);
+  // The step now sounding, while the play button's run is going; null otherwise.
+  const [playing, setPlaying] = useState<{ step: number; notes: NoteIndices } | null>(null);
   const showsStaff = views.includes("staff");
   // The keyboard is just showing the scale next to its staff (no degree spotlighted).
   const echoesStaffNotes = showsStaff && highlightedDegree == null;
 
   // Leave undefined rather than [] when nothing's highlighted - the keyboard views already
   // default highlightedNoteIndices to [] themselves.
-  const highlightedNoteIndices = useMemo((): NoteIndices | undefined => {
+  const staticHighlightedNoteIndices = useMemo((): NoteIndices | undefined => {
     if (highlightedDegree == null) return undefined;
     return musicalKey.getNoteIndicesForScaleDegree(
       scaleDegreeToIndex(highlightedDegree),
       scalePlaybackMode,
     );
   }, [musicalKey, highlightedDegree, scalePlaybackMode]);
+  const highlightedNoteIndices = playing?.notes ?? staticHighlightedNoteIndices;
 
   const staffSpellingKey = useMemo(
     () => (hasKeySignature ? musicalKey.getStaffSpellingKey() : DEFAULT_MUSICAL_KEY),
@@ -137,7 +139,11 @@ export function ScaleFigure({
           <ScaleRibbon
             ribbon={ribbonData}
             activeDegreeIndex={
-              highlightedDegree == null ? null : scaleDegreeToIndex(highlightedDegree)
+              playing
+                ? playing.step
+                : highlightedDegree == null
+                  ? null
+                  : scaleDegreeToIndex(highlightedDegree)
             }
             showTitle={false}
             showLabels={ribbonShowLabels}
@@ -169,24 +175,22 @@ export function ScaleFigure({
   return (
     <FigureFrame
       bare={bare}
-      caption={
-        <>
-          <span>{caption}</span>
-          {showAppLink && (
-            <TrackedLink
-              placement="app-link"
-              href={scaleSelectionPath({
-                tonic,
-                scaleMode: scaleType,
-                playbackMode: scalePlaybackMode,
-              })}
-              className={LEARN_STYLES.link}
-            >
-              Hear {tonic} {scaleType} in the app
-            </TrackedLink>
-          )}
-        </>
+      playControl={
+        play ? (
+          <FigurePlayButton
+            onStart={(id) =>
+              void playScale(
+                id,
+                musicalKey,
+                scalePlaybackMode,
+                (step, notes) => setPlaying({ step, notes }),
+                () => setPlaying(null),
+              )
+            }
+          />
+        ) : undefined
       }
+      caption={caption}
     >
       {views.map((view) => (
         <Fragment key={view}>{renderView(view)}</Fragment>

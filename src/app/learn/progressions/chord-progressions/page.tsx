@@ -79,13 +79,11 @@ export default function ChordProgressionsPage() {
           tonic="C"
           progression={ChordProgressionType.Fifties_Progression}
           caption="In C"
-          showAppLink={false}
         />
         <ProgressionStaff
           tonic="D"
           progression={ChordProgressionType.Fifties_Progression}
           caption="In D"
-          showAppLink={false}
         />
       </ComparisonGrid2>
 

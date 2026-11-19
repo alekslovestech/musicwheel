@@ -9,6 +9,7 @@ export function FigureFrame({
   caption,
   bare = false,
   narrow = false,
+  playControl,
   children,
 }: {
   // The caption's content - the frame supplies the `<figcaption>` and its styling.
@@ -16,6 +17,8 @@ export function FigureFrame({
   bare?: boolean;
   // A narrower, centered card instead of the full article width.
   narrow?: boolean;
+  // A FigurePlayButton, placed in the card's top-right corner. Not shown when `bare`.
+  playControl?: React.ReactNode;
   children: React.ReactNode;
 }) {
   if (bare) {
@@ -28,10 +31,11 @@ export function FigureFrame({
 
   return (
     <figure
-      className={`${LEARN_STYLES.figureCard} ${narrow ? LEARN_STYLES.figureCardNarrow : ""}`}
+      className={`relative ${LEARN_STYLES.figureCard} ${narrow ? LEARN_STYLES.figureCardNarrow : ""}`}
       style={FIGURE_KEY_BORDER}
     >
       {children}
+      {playControl}
       <figcaption className={LEARN_STYLES.figureCaption}>{caption}</figcaption>
     </figure>
   );

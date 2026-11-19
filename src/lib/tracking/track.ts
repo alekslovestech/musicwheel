@@ -60,8 +60,7 @@ export type LearnLinkPlacement =
   | "next-card"
   | "article-nav"
   | "see-also"
-  | "aside"
-  | "app-link";
+  | "aside";
 
 export type LearnLinkClick = { from: string; to: string; placement: LearnLinkPlacement };
 
