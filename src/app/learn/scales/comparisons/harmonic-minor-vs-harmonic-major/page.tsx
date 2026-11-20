@@ -45,8 +45,7 @@ export default function HarmonicMinorVsHarmonicMajorPage() {
         That single degree is the last mile between them: <i>Harmonic Minor</i>&apos;s flat third is what
         makes it read as minor at all, and <i>Harmonic Major</i>&apos;s natural third is what keeps it
         major despite the borrowed flat sixth. Everything else - the <i>augmented second</i>, the leading
-        tone - is already identical. Reading it is one thing; the difference is much more obvious
-        held under a drone, which is what the play buttons are for.
+        tone - is already identical.
       </p>
     </ArticlePage>
   );

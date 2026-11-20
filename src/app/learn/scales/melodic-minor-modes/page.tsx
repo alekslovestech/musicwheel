@@ -54,7 +54,6 @@ export default function MelodicMinorModesPage() {
         showStepAnnotations
         caption="C Melodic Minor."
         isCompact
-        play
       />
 
       <p>
@@ -72,7 +71,6 @@ export default function MelodicMinorModesPage() {
         showStepAnnotations
         caption="F Lydian Dominant: the same seven notes as C Melodic Minor, started on the 4th
           degree instead of the 1st."
-        play
       />
 
       <p>
@@ -90,7 +88,6 @@ export default function MelodicMinorModesPage() {
         showStepAnnotations
         caption="B Super Locrian: the same seven notes as C Melodic Minor, started on the 7th
           degree - the leading tone - instead of the 1st."
-        play
       />
     </ArticlePage>
   );

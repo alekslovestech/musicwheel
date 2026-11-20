@@ -36,8 +36,7 @@ export default function MajorVsMixolydianPage() {
       <p>
         That single degree is the difference between a leading tone that pulls back to the tonic and
         a flat seventh that doesn&apos;t - the note that gives <i>Mixolydian</i> its bluesy,
-        dominant-seventh pull instead of the <i>major scale</i>&apos;s settled resolution. Reading
-        it is one thing; the difference is much more obvious held under a drone, which is what the play buttons are for.
+        dominant-seventh pull instead of the <i>major scale</i>&apos;s settled resolution.
       </p>
     </ArticlePage>
   );

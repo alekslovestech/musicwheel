@@ -41,7 +41,7 @@ export function ComparisonGrid3({
     <div className={LEARN_STYLES.comparisonGrid3}>
       {first}
       {second}
-      <div className="col-span-2 mx-auto w-1/2 sm:col-span-1 sm:w-auto">{third}</div>
+      <div className="col-span-2 mx-auto w-1/2 sm:col-span-1 sm:mx-0 sm:w-auto">{third}</div>
     </div>
   );
 }

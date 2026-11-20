@@ -24,8 +24,8 @@ export function ChordWheel({
   showLabels = false,
   showKeyboard = true,
   bare = false,
-  narrow = false,
-  play = false,
+  narrow = true,
+  play = true,
 }: {
   rootNote: string;
   chordType: NoteGroupingId;
@@ -37,9 +37,10 @@ export function ChordWheel({
   showKeyboard?: boolean;
   // Render just the figure - no card, padding or caption - for use as an image.
   bare?: boolean;
-  // A narrower, centered figure instead of the full article width.
+  // A narrower, centered figure; set false for the full article width.
   narrow?: boolean;
-  // Adds a play button that sounds the chord's notes together.
+  // Shows a play button that sounds the chord's notes together; set false for a silent figure.
+  // Hidden regardless when the chord has no notes.
   play?: boolean;
 }) {
   const musicalKey = MusicalKey.fromGreekMode(rootNote, ScaleModeType.Ionian);
@@ -56,7 +57,7 @@ export function ChordWheel({
       narrow={narrow}
       caption={<span className="whitespace-pre-line">{caption}</span>}
       playControl={
-        play ? <FigurePlayButton onStart={(id) => void playChord(id, chordNotes)} /> : undefined
+        play && chordNotes.length > 0 ? <FigurePlayButton onStart={(id) => void playChord(id, chordNotes)} /> : undefined
       }
     >
       <CircularKeyboardView

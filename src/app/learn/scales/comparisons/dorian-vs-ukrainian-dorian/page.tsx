@@ -36,8 +36,7 @@ export default function DorianVsUkrainianDorianPage() {
         That single degree turns a plain <i>minor scale</i> into something with a foot in two camps:
         a <i>minor third</i> below the raised fourth, and a major-feeling gap above it, the
         combination that gives <i>Ukrainian Dorian</i> its name and its use in Eastern European folk
-        melodies. Reading it is one thing; the difference is much more obvious held under a drone,
-        which is what the play buttons are for.
+        melodies.
       </p>
     </ArticlePage>
   );

@@ -37,8 +37,7 @@ export default function HarmonicMinorVsMelodicMinorPage() {
         Middle-Eastern gap between the sixth and seventh - a step and a half that no other common
         scale leaves open. <i>Melodic Minor</i> closes it by raising the sixth, trading that exotic
         leap for a scale that runs smoothly in both directions, which is the whole point of its
-        name. Reading it is one thing; the difference is much more obvious held under a drone, which
-        is what the play buttons are for.
+        name.
       </p>
     </ArticlePage>
   );

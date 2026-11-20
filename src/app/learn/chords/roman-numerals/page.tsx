@@ -9,7 +9,6 @@ import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordType } from "@/types/enums/ChordType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
-import { ixScaleDegree } from "@/types/ScaleModes/ScaleDegreeType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -60,12 +59,10 @@ export default function RomanNumeralsPage() {
         tonic="C"
         scaleType={ScaleModeType.Ionian}
         scalePlaybackMode={ScalePlaybackMode.Triad}
-        highlightedDegree={ixScaleDegree(4)}
-        caption="All seven degrees of C major, with IV selected (the 4th degree's major triad)."
+        caption="All 7 degrees of C major, each with its triad."
         views={["wheel", "ribbon", "linear"]}
         linearShowLabels
         isCompact
-        play
       />
     </ArticlePage>
   );

@@ -178,14 +178,12 @@ export default function SymmetryAndDissonancePage() {
           scaleType={OtherScaleType.WholeTone}
           caption="Root C: C, D, E, F♯, G♯, A♯."
           showStepAnnotations
-          play
         />
         <ScaleFigure
           tonic="D"
           scaleType={OtherScaleType.WholeTone}
           caption="Call D the root instead - the same six wedges, D, E, F♯, G♯, A♯, C."
           showStepAnnotations
-          play
         />
       </ComparisonGrid2>
 

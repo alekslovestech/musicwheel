@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
 import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
-import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
+import { ProgressionFigure } from "@/components/Learn/figures/ProgressionFigure";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { SpelledStaff } from "@/components/Learn/figures/SpelledStaff";
 import { LEARN_STYLES } from "@/lib/design";
@@ -94,15 +94,17 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <ProgressionStaff
+        <ProgressionFigure
           tonic="C"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
+          views={["staff"]}
         />
-        <ProgressionStaff
+        <ProgressionFigure
           tonic="D"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
+          views={["staff"]}
         />
       </ComparisonGrid2>
 

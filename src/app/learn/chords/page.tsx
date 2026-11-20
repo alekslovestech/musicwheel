@@ -28,6 +28,10 @@ export default function ChordsIndexPage() {
         <i>major seventh</i> still sound like close relatives.
       </IndexEntry>
 
+      <IndexEntry id="triad-inversions">
+        Same three notes, different note on the bottom.
+      </IndexEntry>
+
       <IndexEntry id="major-vs-minor-triads">
         The two most common chords in Western music - one semitone apart on the third.
       </IndexEntry>
@@ -35,10 +39,6 @@ export default function ChordsIndexPage() {
       <IndexEntry id="chord-quality">
         Why &ldquo;major&rdquo; is a shape, not a set of notes - and stays the same color and
         suffix no matter which note it&apos;s rooted on.
-      </IndexEntry>
-
-      <IndexEntry id="triad-inversions">
-        Same three notes, different note on the bottom.
       </IndexEntry>
     </>
   );

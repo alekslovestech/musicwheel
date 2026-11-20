@@ -6,7 +6,11 @@ import { Factory } from "vexflow";
 import { COMMON_STYLES, STAFF_HEIGHT_PX } from "@/lib/design";
 import type { DuratedNoteChord } from "@/types/Durated";
 import { VexFlowFormatter } from "@/utils/formatters/VexFlowFormatter";
-import { type VexFlowDrawVoiceOptions, VexFlowUtils } from "@/utils/VexFlowUtils";
+import {
+  StaffHighlightOverlay,
+  type VexFlowDrawVoiceOptions,
+  VexFlowUtils,
+} from "@/utils/VexFlowUtils";
 
 /** A treble staff with a key signature and one voice of chords, in a fixed-height strip that
  * fills its container's width. All the VexFlow drawing lives here; figures just supply data.
@@ -17,6 +21,8 @@ export function Staff({
   voiceTime,
   stemless,
   maxWidth,
+  activeIndex,
+  activeFill,
 }: {
   /** VexFlow key spec, e.g. "Cm" or "F#". */
   keySignature?: string;
@@ -27,7 +33,14 @@ export function Staff({
   stemless?: VexFlowDrawVoiceOptions["stemless"];
   /** Cap on the drawn staff's width in px; the staff is centered in the strip. */
   maxWidth?: number;
+  /** Index into `steps` of the chord to highlight, e.g. the one now sounding; none when null. */
+  activeIndex?: number | null;
+  /** CSS color of the highlight behind the active chord. */
+  activeFill?: string;
 }) {
+  const overlayRef = useRef<StaffHighlightOverlay | null>(null);
+  const highlightRef = useRef({ index: activeIndex, fill: activeFill });
+  highlightRef.current = { index: activeIndex, fill: activeFill };
   const staffId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const staffDivRef = useRef<HTMLDivElement>(null);
@@ -49,6 +62,7 @@ export function Staff({
     if (!staffDiv || !container || width === 0) return;
 
     staffDiv.innerHTML = "";
+    overlayRef.current = null;
     const drawWidth = maxWidth === undefined ? width : Math.min(width, maxWidth);
     const factory = new Factory({
       renderer: { elementId: staffId, width: drawWidth, height: container.clientHeight },
@@ -60,13 +74,20 @@ export function Staff({
     stave.setContext(factory.getContext()).draw();
     if (steps.length === 0) return;
 
-    VexFlowUtils.drawVoice(
+    const highlightBoxes = VexFlowUtils.drawVoice(
       factory,
       stave,
       VexFlowFormatter.createStaveChordNotes([...steps], factory),
       { voiceTime, stemless },
     );
+    // A fresh drawing starts blank, so it is told where the highlight already is.
+    overlayRef.current = StaffHighlightOverlay.create(factory.getContext(), highlightBoxes);
+    overlayRef.current?.apply(highlightRef.current.index, highlightRef.current.fill);
   }, [keySignature, steps, voiceTime, stemless, maxWidth, staffId, width]);
+
+  useEffect(() => {
+    overlayRef.current?.apply(activeIndex, activeFill);
+  }, [activeIndex, activeFill]);
 
   return (
     <div ref={containerRef} className={COMMON_STYLES.staff} style={{ height: STAFF_HEIGHT_PX }}>

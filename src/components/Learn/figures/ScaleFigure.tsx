@@ -47,7 +47,8 @@ export function ScaleFigure({
   isCompact = false,
   hasKeySignature = true,
   bare = false,
-  play = false,
+  narrow = true,
+  play = true,
 }: {
   tonic: string;
   scaleType: AnyScaleType;
@@ -78,8 +79,10 @@ export function ScaleFigure({
   hasKeySignature?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
-  /** Adds a play button that sounds the scale in `scalePlaybackMode`, lighting each step on the
-   * wheel, ribbon and keyboard as it plays. */
+  /** A narrower, centered figure; set false for the full article width. */
+  narrow?: boolean;
+  /** Shows a play button that sounds the scale in `scalePlaybackMode`, lighting each step on the
+   * wheel, ribbon and keyboard as it plays; set false for a silent figure. */
   play?: boolean;
 }) {
   const musicalKey = useMemo(() => MusicalKey.fromScale(tonic, scaleType), [tonic, scaleType]);
@@ -175,6 +178,7 @@ export function ScaleFigure({
   return (
     <FigureFrame
       bare={bare}
+      narrow={narrow}
       playControl={
         play ? (
           <FigurePlayButton

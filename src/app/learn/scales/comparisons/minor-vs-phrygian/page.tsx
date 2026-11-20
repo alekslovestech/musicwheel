@@ -36,8 +36,7 @@ export default function MinorVsPhrygianPage() {
       <p>
         That single degree is the whole reason <i>Phrygian</i> sounds unsettled where the{" "}
         <i>natural minor</i> sounds merely sad: a half-step down from the tonic is the tightest
-        interval a scale can open right at its root, and no other common minor mode has it. Reading
-        it is one thing; the difference is much more obvious held under a drone, which is what the play buttons are for.
+        interval a scale can open right at its root, and no other common minor mode has it.
       </p>
     </ArticlePage>
   );

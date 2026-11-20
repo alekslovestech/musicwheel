@@ -18,25 +18,6 @@ export const metadata: Metadata = metadataForSlugPage(
   },
 );
 
-// The 3 note arrangements side by side, one row per system.
-const SYSTEMS = [
-  {
-    system: "Chromatic circle",
-    neighbors: "1 semitone",
-    makesVisible: "Interval sizes, chord shapes and inversions",
-  },
-  {
-    system: "Circle of fifths",
-    neighbors: "A perfect fifth",
-    makesVisible: "Key signatures, which keys share the most notes, chords a fifth apart",
-  },
-  {
-    system: "Tonnetz",
-    neighbors: "A perfect fifth, a major third or a minor third",
-    makesVisible: "Triads as triangles, and which triads differ by only 1 note",
-  },
-];
-
 export default function ChromaticCirclePage() {
   return (
     <ArticlePage
@@ -60,7 +41,6 @@ export default function ChromaticCirclePage() {
         isCompact
         showLabels
         showKeyboard={false}
-        narrow
       />
 
       <h2 className={LEARN_STYLES.h2}>What a circle makes easy</h2>
@@ -88,31 +68,12 @@ export default function ChromaticCirclePage() {
         is the same wedges lit up with a different bass note marked.
       </p>
 
-      <h2 className={LEARN_STYLES.h2}>Other circles and maps</h2>
+      <h2 className={LEARN_STYLES.h2}>Other ways to arrange the 12 notes</h2>
 
       <p>
-        The chromatic circle is one of several ways to arrange the 12 notes. What tells them apart
-        is which interval puts 2 notes next to each other.
+        What tells these arrangements apart is which interval puts 2 notes next to each other. On
+        the chromatic circle it is 1 semitone.
       </p>
-
-      <table className="w-full border-collapse text-left">
-        <thead>
-          <tr className={LEARN_STYLES.comparisonTableRow}>
-            <th className="px-snug py-tight">Arrangement</th>
-            <th className="px-snug py-tight">Neighbors differ by</th>
-            <th className="px-snug py-tight">Makes visible</th>
-          </tr>
-        </thead>
-        <tbody>
-          {SYSTEMS.map(({ system, neighbors, makesVisible }) => (
-            <tr key={system} className={LEARN_STYLES.comparisonTableRow}>
-              <td className="px-snug py-tight">{system}</td>
-              <td className="px-snug py-tight">{neighbors}</td>
-              <td className="px-snug py-tight">{makesVisible}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
 
       <p>
         The{" "}
@@ -124,7 +85,7 @@ export default function ChromaticCirclePage() {
         >
           circle of fifths
         </Link>{" "}
-        orders the notes by <i>perfect fifth</i> instead of by semitone. That puts keys that share
+        orders the notes by <i>perfect fifth</i>&nbsp; instead of by semitone. That puts keys that share
         most of their notes next to each other, which is why it&apos;s the usual way to explain key
         signatures, and it turns a ii–V–I into a run of adjacent steps. The cost is that interval
         sizes get scrambled: a perfect fifth is 1 step away, and a semitone is 5 steps away. Shapes
@@ -134,8 +95,8 @@ export default function ChromaticCirclePage() {
       <p>
         The Tonnetz goes a step further and arranges the notes on a lattice with 3 kinds of
         neighbor: a <i>perfect fifth</i>, a <i>major third</i> and a <i>minor third</i>. Triads
-        become triangles. It&apos;s worth a look if you&apos;re curious how chords relate, and there
-        is an interactive one at{" "}
+        become triangles, and triads that differ by only 1 note sit side by side. It&apos;s worth a
+        look if you&apos;re curious how chords relate, and there is an interactive one at{" "}
         <Link
           href="https://thetonnetz.com/"
           className={LEARN_STYLES.link}
