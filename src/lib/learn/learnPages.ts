@@ -280,9 +280,9 @@ export const LEARN_GROUPS = {
     href: LEARN_PAGES.chords.href,
     pages: [
       "interval-inversions",
+      "triad-inversions",
       "major-vs-minor-triads",
       "chord-quality",
-      "triad-inversions",
     ],
   },
   progressions: {

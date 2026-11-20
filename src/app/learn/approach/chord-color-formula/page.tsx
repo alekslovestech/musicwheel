@@ -112,6 +112,7 @@ export default function ChordColorFormulaPage() {
           inversionIndex={0}
           caption="C major"
           showKeyboard={false}
+          play
         />
         <ChordWheel
           rootNote="C"
@@ -119,6 +120,7 @@ export default function ChordColorFormulaPage() {
           inversionIndex={0}
           caption="C minor"
           showKeyboard={false}
+          play
         />
       </ComparisonGrid2>
 
@@ -258,6 +260,7 @@ export default function ChordColorFormulaPage() {
           inversionIndex={0}
           caption="Cmaj7"
           showKeyboard={false}
+          play
         />
         <ChordWheel
           rootNote="C"
@@ -265,6 +268,7 @@ export default function ChordColorFormulaPage() {
           inversionIndex={0}
           caption="Cm7"
           showKeyboard={false}
+          play
         />
       </ComparisonGrid2>
 

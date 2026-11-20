@@ -1,8 +1,13 @@
-import { buildScaleSchedule, type SequenceStepVisual } from "@/lib/audio/sequenceSchedules";
+import {
+  buildProgressionSchedule,
+  buildScaleSchedule,
+  type SequenceStepVisual,
+} from "@/lib/audio/sequenceSchedules";
 import { resolveClickProfile, type SynthEnvelope } from "@/lib/audio/playbackProfiles";
 import type { NoteIndices } from "@/types/IndexTypes";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import type { MusicalKey } from "@/types/Keys/MusicalKey";
+import type { PreparedChordProgressionSequence } from "@/utils/SequencePlaybackUtils";
 
 /**
  * Playback for Learn figures. The app's audio engine lives under the (app) route group so static
@@ -150,6 +155,28 @@ export async function playScale(
 
     loaded.startScheduledSequence(
       buildScaleSchedule(key, mode, onStep, () => finish(myToken)),
+    );
+  } catch {
+    finish(myToken);
+  }
+}
+
+/** Plays a chord progression, each chord for its notated length. */
+export async function playProgression(
+  id: string,
+  prepared: PreparedChordProgressionSequence,
+): Promise<void> {
+  const myToken = begin(id, null);
+  try {
+    const loaded = await loadEngine();
+    if (myToken !== token) return;
+
+    loaded.startScheduledSequence(
+      buildProgressionSchedule(
+        prepared,
+        () => {},
+        () => finish(myToken),
+      ),
     );
   } catch {
     finish(myToken);
