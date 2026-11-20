@@ -39,8 +39,6 @@ export default function ChordProgressionsPage() {
         tonic="C"
         progression={ChordProgressionType.Fifties_Progression}
         caption="The 50s progression in C"
-        narrow
-        play
       />
 
       <p>
@@ -52,8 +50,6 @@ export default function ChordProgressionsPage() {
         tonic="D"
         progression={ChordProgressionType.Fifties_Progression}
         caption="The 50s progression in D"
-        narrow
-        play
       />
 
       <h2 className={LEARN_STYLES.h2}>In a minor key</h2>
@@ -67,8 +63,6 @@ export default function ChordProgressionsPage() {
         tonic="A"
         progression={ChordProgressionType.Andalusian_Cadence}
         caption="The Andalusian cadence in A minor"
-        narrow
-        play
       />
     </ArticlePage>
   );

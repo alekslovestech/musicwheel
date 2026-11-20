@@ -37,8 +37,6 @@ export default function CadencesPage() {
         tonic="C"
         progression={ChordProgressionType.Perfect_Cadence}
         caption="The perfect cadence in C"
-        narrow
-        play
       />
 
       <h2 className={LEARN_STYLES.h2}>Line Cliche: I–I+–vi/I</h2>
@@ -53,8 +51,6 @@ export default function CadencesPage() {
         tonic="C"
         progression={ChordProgressionType.Line_Cliche}
         caption="The line cliche in C"
-        narrow
-        play
       />
     </ArticlePage>
   );

@@ -63,7 +63,6 @@ export default function RomanNumeralsPage() {
         views={["wheel", "ribbon", "linear"]}
         linearShowLabels
         isCompact
-        play
       />
     </ArticlePage>
   );

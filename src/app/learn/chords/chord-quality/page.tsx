@@ -51,14 +51,12 @@ export default function ChordQualityPage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="C major - major third, then minor third, from C"
-          play
         />
         <ChordWheel
           rootNote="E"
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="E major - the same stack of intervals, from E"
-          play
         />
       </ComparisonGrid2>
 

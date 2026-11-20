@@ -8,14 +8,14 @@ import { FIGURE_KEY_BORDER, LEARN_STYLES } from "@/lib/design";
 export function FigureFrame({
   caption,
   bare = false,
-  narrow = false,
+  narrow = true,
   playControl,
   children,
 }: {
   // The caption's content - the frame supplies the `<figcaption>` and its styling.
   caption: React.ReactNode;
   bare?: boolean;
-  // A narrower, centered card instead of the full article width.
+  // A narrower, centered card; set false for the full article width.
   narrow?: boolean;
   // A FigurePlayButton, placed in the card's top-right corner. Not shown when `bare`.
   playControl?: React.ReactNode;

@@ -67,7 +67,6 @@ export default function HarmonicScalesPage() {
           caption="C Harmonic Minor: the ♭6 and 7, an augmented second apart."
           isCompact
           views={["wheel", "ribbon", "linear"]}
-          play
         />
         <ScaleFigure
           tonic="C"
@@ -76,7 +75,6 @@ export default function HarmonicScalesPage() {
           caption="C Harmonic Major: the same ♭6 and 7, an augmented second apart."
           isCompact
           views={["wheel", "ribbon", "linear"]}
-          play
         />
       </ComparisonGrid2>
 
@@ -98,7 +96,6 @@ export default function HarmonicScalesPage() {
           caption="C Double Harmonic Major: two augmented second intervals, on opposite sides of the wheel."
           isCompact
           views={["wheel", "ribbon", "linear"]}
-          play
         />
         <ScaleFigure
           tonic="C"
@@ -107,7 +104,6 @@ export default function HarmonicScalesPage() {
           caption="C Hungarian Minor: the same two-interval shape, but starting from a different tonic."
           isCompact
           views={["wheel", "ribbon", "linear"]}
-          play
         />
       </ComparisonGrid2>
     </ArticlePage>

@@ -109,7 +109,6 @@ export default function IntervalInversionsPage() {
                 </>
               }
               isCompact
-              play
             />
             <ChordWheel
               rootNote="C"
@@ -125,7 +124,6 @@ export default function IntervalInversionsPage() {
                 )
               }
               isCompact
-              play
             />
           </ComparisonGrid2>
         );

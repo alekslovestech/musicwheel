@@ -66,14 +66,12 @@ export default function SymmetryAndDissonancePage() {
           chordType={IntervalType.Tritone}
           inversionIndex={0}
           caption="C–F♯: 6 semitones apart"
-          play
         />
         <ChordWheel
           rootNote="C"
           chordType={IntervalType.Tritone}
           inversionIndex={1}
           caption="F♯–C: still 6 semitones apart"
-          play
         />
       </ComparisonGrid2>
 
@@ -93,21 +91,18 @@ export default function SymmetryAndDissonancePage() {
           chordType={ChordType.Augmented}
           inversionIndex={0}
           caption="Caug"
-          play
         />
         <ChordWheel
           rootNote="E"
           chordType={ChordType.Augmented}
           inversionIndex={0}
           caption="Caug/E (or Eaug) "
-          play
         />
         <ChordWheel
           rootNote="G#"
           chordType={ChordType.Augmented}
           inversionIndex={0}
           caption="Caug/G♯ (or G♯aug)"
-          play
         />
       </ComparisonGrid3>
 
@@ -134,28 +129,24 @@ export default function SymmetryAndDissonancePage() {
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7"
-          play
         />
         <ChordWheel
           rootNote="D#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7/D♯ (or D♯dim7)"
-          play
         />
         <ChordWheel
           rootNote="F#"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7/F♯ (or F♯dim7)"
-          play
         />
         <ChordWheel
           rootNote="A"
           chordType={ChordType.Diminished7}
           inversionIndex={0}
           caption="Cdim7/A (or Adim7)"
-          play
         />
       </ComparisonGrid4>
 
@@ -187,14 +178,12 @@ export default function SymmetryAndDissonancePage() {
           scaleType={OtherScaleType.WholeTone}
           caption="Root C: C, D, E, F♯, G♯, A♯."
           showStepAnnotations
-          play
         />
         <ScaleFigure
           tonic="D"
           scaleType={OtherScaleType.WholeTone}
           caption="Call D the root instead - the same six wedges, D, E, F♯, G♯, A♯, C."
           showStepAnnotations
-          play
         />
       </ComparisonGrid2>
 

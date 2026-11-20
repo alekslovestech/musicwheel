@@ -48,7 +48,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption="C–E"
-          play
           isCompact
         />
         <ChordWheel
@@ -56,7 +55,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={IntervalType.Major3}
           inversionIndex={0}
           caption="E–G♯"
-          play
           isCompact
         />
       </ComparisonGrid2>
@@ -73,7 +71,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="C major"
-          play
           isCompact
         />
         <ChordWheel
@@ -81,7 +78,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="E major"
-          play
           isCompact
         />
       </ComparisonGrid2>
@@ -98,7 +94,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={ChordType.Minor}
           inversionIndex={0}
           caption="ii: D minor"
-          play
           showKeyboard={false}
         />
         <ChordWheel
@@ -106,7 +101,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="V: G major"
-          play
           showKeyboard={false}
         />
         <ChordWheel
@@ -114,7 +108,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="I: C major"
-          play
           showKeyboard={false}
         />
       </ComparisonGrid3>
@@ -133,7 +126,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           tonic="C"
           scaleType={ScaleModeType.Dorian}
           caption="C Dorian"
-          play
           views={["wheel", "linear"]}
           isCompact
         />
@@ -141,7 +133,6 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
           tonic="C"
           scaleType={ScaleModeType.Lydian}
           caption="C Lydian"
-          play
           views={["wheel", "linear"]}
           isCompact
         />

@@ -41,7 +41,6 @@ export default function ChromaticCirclePage() {
         isCompact
         showLabels
         showKeyboard={false}
-        narrow
       />
 
       <h2 className={LEARN_STYLES.h2}>What a circle makes easy</h2>

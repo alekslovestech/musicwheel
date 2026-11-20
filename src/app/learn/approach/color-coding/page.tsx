@@ -106,7 +106,6 @@ export default function ColorCodingPage() {
           inversionIndex={0}
           isCompact={true}
           caption="C–E: major third"
-          play
         />
         <ChordWheel
           rootNote="E"
@@ -114,7 +113,6 @@ export default function ColorCodingPage() {
           inversionIndex={0}
           isCompact={true}
           caption="E–G♯: major third"
-          play
         />
       </ComparisonGrid2>
 
@@ -131,7 +129,6 @@ export default function ColorCodingPage() {
           inversionIndex={0}
           isCompact={true}
           caption="C major"
-          play
         />
         <ChordWheel
           rootNote="C"
@@ -139,7 +136,6 @@ export default function ColorCodingPage() {
           inversionIndex={0}
           isCompact={true}
           caption="C minor"
-          play
         />
       </ComparisonGrid2>
 

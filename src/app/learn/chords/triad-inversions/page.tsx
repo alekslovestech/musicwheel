@@ -33,7 +33,6 @@ export default function TriadInversionsPage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="C major (C)"
-          play
         />
 
         <ChordWheel
@@ -41,7 +40,6 @@ export default function TriadInversionsPage() {
           chordType={ChordType.Major}
           inversionIndex={1}
           caption="First inversion: C/E"
-          play
         />
 
         <ChordWheel
@@ -49,7 +47,6 @@ export default function TriadInversionsPage() {
           chordType={ChordType.Major}
           inversionIndex={2}
           caption="Second inversion: C/G"
-          play
         />
       </ComparisonGrid3>
       <p>

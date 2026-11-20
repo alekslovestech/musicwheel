@@ -37,8 +37,8 @@ export function ProgressionFigure({
   showRomanNumerals = true,
   isCompact = false,
   bare = false,
-  narrow = false,
-  play = false,
+  narrow = true,
+  play = true,
 }: {
   tonic: string;
   progression: ChordProgressionType;
@@ -51,9 +51,10 @@ export function ProgressionFigure({
   isCompact?: boolean;
   // Render just the figure - no card, padding or caption - for use as an image.
   bare?: boolean;
-  // A narrower, centered figure instead of the full article width.
+  // A narrower, centered figure; set false for the full article width.
   narrow?: boolean;
-  // Adds a play button that sounds the progression, following each chord as it plays.
+  // Shows a play button that sounds the progression, following each chord as it plays; set
+  // false for a silent figure.
   play?: boolean;
 }) {
   const musicalKey = useMemo(

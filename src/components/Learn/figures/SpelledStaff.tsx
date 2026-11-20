@@ -35,7 +35,8 @@ export function SpelledStaff({
   staffMaxWidth,
   bare = false,
   crossedOut = false,
-  play = false,
+  narrow = true,
+  play = true,
 }: {
   chords: readonly (readonly NoteWithOctave[])[];
   caption: string;
@@ -53,8 +54,11 @@ export function SpelledStaff({
   bare?: boolean;
   // Strike through the staff, for a spelling the article shows only to set aside.
   crossedOut?: boolean;
-  // Adds a play button that sounds highlightedNoteIndices together - the notes the staff shows,
-  // for a figure with one chord.
+  // A narrower, centered figure; set false for the full article width.
+  narrow?: boolean;
+  // Shows a play button that sounds highlightedNoteIndices together - the notes the staff shows,
+  // for a figure with one chord; set false for a silent figure. Hidden regardless when there are
+  // no notes to sound.
   play?: boolean;
 }) {
   const steps = useMemo(() => chords.map((chord) => makeDurated([...chord], 1)), [chords]);
@@ -64,6 +68,7 @@ export function SpelledStaff({
   return (
     <FigureFrame
       bare={bare}
+      narrow={narrow}
       playControl={
         play && highlightedNoteIndices?.length ? (
           <FigurePlayButton onStart={(id) => void playChord(id, highlightedNoteIndices)} />

@@ -82,7 +82,6 @@ export default function ModalRotationsPage() {
         showStepAnnotations
         caption="G Phrygian Dominant: the same seven notes as C Harmonic Minor, started on the 5th
           degree instead of the 1st."
-        play
       />
 
       <h2 id="harmonic-major-family" className={LEARN_STYLES.h2}>
@@ -102,7 +101,6 @@ export default function ModalRotationsPage() {
         showStepAnnotations
         caption="G Mixolydian ♭2: the same seven notes as C Harmonic Major, started on the 5th
           degree instead of the 1st."
-        play
       />
 
       <h2 id="double-harmonic-family" className={LEARN_STYLES.h2}>
@@ -126,7 +124,6 @@ export default function ModalRotationsPage() {
         showStepAnnotations
         caption="F Hungarian Minor: the same seven notes as C Double Harmonic Major, started on the
           4th degree instead of the 1st."
-        play
       />
 
       <h2 id="melodic-minor-family" className={LEARN_STYLES.h2}>
