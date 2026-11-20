@@ -36,8 +36,7 @@ export default function HarmonicMinorVsHungarianMinorPage() {
         That single degree adds a second stretched, <i>augmented-second</i> gap to a scale that
         already has one: alongside the wide step between the flat sixth and the leading tone,{" "}
         <i>Hungarian Minor</i> opens a matching one between the raised fourth and the fifth, which
-        is what gives it its dramatic, folk-tinged color. Reading it is one thing; the difference is
-        much more obvious held under a drone, which is what the play buttons are for.
+        is what gives it its dramatic, folk-tinged color.
       </p>
     </ArticlePage>
   );

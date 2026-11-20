@@ -34,8 +34,7 @@ export default function MajorVsHarmonicMajorPage() {
         That single degree is what pulls a <i>major scale</i> toward minor without touching its
         third: <i>Harmonic Major</i> keeps the bright <i>major third</i> and seventh, but the
         flattened sixth opens the same <i>augmented-second</i> gap - the stretched, exotic step -
-        that <i>Harmonic Minor</i> gets from the opposite direction. Reading it is one thing; the
-        difference is much more obvious held under a drone, which is what the play buttons are for.
+        that <i>Harmonic Minor</i> gets from the opposite direction.
       </p>
     </ArticlePage>
   );

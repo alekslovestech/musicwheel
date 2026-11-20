@@ -34,8 +34,7 @@ export default function MinorVsDorianPage() {
 
       <p>
         That single degree is why <i>Dorian</i> is the brighter minor - it is the scale that keeps a{" "}
-        <i>minor third</i> but refuses the <i>minor sixth</i>. Reading it is one thing; the
-        difference is much more obvious held under a drone, which is what the play buttons are for.
+        <i>minor third</i> but refuses the <i>minor sixth</i>.
       </p>
     </ArticlePage>
   );

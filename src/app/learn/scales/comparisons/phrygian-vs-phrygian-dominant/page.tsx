@@ -37,8 +37,7 @@ export default function PhrygianVsPhrygianDominantPage() {
         That single degree is the whole difference between a minor mode and what is really a{" "}
         <i>major third</i> sitting one half-step above a flat second - the gap listeners hear as
         “exotic,” and the reason <i>Phrygian Dominant</i> turns up under names like the Spanish or
-        Gypsy scale. Reading the two side by side is one thing; the difference is much more obvious
-        held under a drone, which is what the play buttons are for.
+        Gypsy scale.
       </p>
     </ArticlePage>
   );

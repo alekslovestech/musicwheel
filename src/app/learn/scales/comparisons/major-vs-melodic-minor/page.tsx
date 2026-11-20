@@ -39,8 +39,7 @@ export default function MajorVsMelodicMinorPage() {
         one degree lowered. Every other minor color a scale can have - the flat sixth of{" "}
         <i>harmonic minor</i>, the flat seventh of <i>natural minor</i> - is simply absent here;{" "}
         <i>Melodic Minor</i> keeps the <i>major scale</i>&apos;s brighter upper half intact and
-        touches only the third. Reading it is one thing; the difference is much more obvious held
-        under a drone, which is what the play buttons are for.
+        touches only the third.
       </p>
     </ArticlePage>
   );
