@@ -49,6 +49,7 @@ export default function AccidentalsPage() {
         caption="Accidentals (♯/♭) are present, but downplayed"
         isCompact={true}
         showLabels={true}
+        narrow
       />
 
       <h2 className={LEARN_STYLES.h2}>What about double accidentals? (𝄪/𝄫)</h2>
@@ -75,6 +76,8 @@ export default function AccidentalsPage() {
         caption={"Cdim7 as the app shows it:\n4 notes, each 3 semitones apart"}
         isCompact={true}
         showLabels={true}
+        narrow
+        play
       />
 
       <p>

@@ -116,18 +116,15 @@ export function playScale(
   );
 }
 
-/** Plays a chord progression, each chord for its notated length. */
+/** Plays a chord progression, each chord for its notated length; `onStep` follows each chord,
+ * `onEnd` runs when it stops or ends. */
 export function playProgression(
   id: string,
   prepared: PreparedChordProgressionSequence,
+  onStep: SequenceStepVisual = () => {},
+  onEnd: (() => void) | null = null,
 ): Promise<void> {
-  return run(id, null, (myToken) =>
-    startScheduledSequence(
-      buildProgressionSchedule(
-        prepared,
-        () => {},
-        () => finish(myToken),
-      ),
-    ),
+  return run(id, onEnd, (myToken) =>
+    startScheduledSequence(buildProgressionSchedule(prepared, onStep, () => finish(myToken))),
   );
 }

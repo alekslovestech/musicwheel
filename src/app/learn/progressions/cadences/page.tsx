@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 
 import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
-import { ComparisonGrid2, ComparisonGrid3 } from "@/components/Learn/layout/ComparisonGrid";
-import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
-import { ProgressionStaff } from "@/components/Learn/figures/ProgressionStaff";
+import { ProgressionFigure } from "@/components/Learn/figures/ProgressionFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
-import { ChordType } from "@/types/enums/ChordType";
 
 export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
@@ -36,64 +33,29 @@ export default function CadencesPage() {
         In C, the root moves 5 semitones up to the tonic.
       </p>
 
-      <ComparisonGrid2>
-        <ChordWheel
-          rootNote="G"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="V: G major"
-          showKeyboard={false}
-        />
-        <ChordWheel
-          rootNote="C"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="I: C major"
-          showKeyboard={false}
-        />
-      </ComparisonGrid2>
+      <ProgressionFigure
+        tonic="C"
+        progression={ChordProgressionType.Perfect_Cadence}
+        caption="The perfect cadence in C"
+        narrow
+        play
+      />
 
       <h2 className={LEARN_STYLES.h2}>Line Cliche: I–I+–vi/I</h2>
 
       <p>
         Written out, the <i>line cliche</i> looks like 3 unrelated chords, 2 of them with extra
-        symbols: C, C+, and A minor over C.
+        symbols: C, C+, and A minor over C. On the circle, 2 wedges, C and E, stay lit throughout.
+        The third one climbs 1 semitone at a time: G, G♯, A.
       </p>
 
-      <ProgressionStaff
+      <ProgressionFigure
         tonic="C"
         progression={ChordProgressionType.Line_Cliche}
-        caption="Line Cliche in C"
+        caption="The line cliche in C"
+        narrow
+        play
       />
-
-      <p>
-        On the circle, 2 wedges, C and E, stay lit throughout. The third one climbs 1 semitone at a
-        time: G, G♯, A.
-      </p>
-
-      <ComparisonGrid3>
-        <ChordWheel
-          rootNote="C"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption={"I: C major\nC E G"}
-          showKeyboard={false}
-        />
-        <ChordWheel
-          rootNote="C"
-          chordType={ChordType.Augmented}
-          inversionIndex={0}
-          caption={"I+: C augmented\nC E G♯"}
-          showKeyboard={false}
-        />
-        <ChordWheel
-          rootNote="A"
-          chordType={ChordType.Minor}
-          inversionIndex={1}
-          caption={"vi/I: A minor over C\nC E A"}
-          showKeyboard={false}
-        />
-      </ComparisonGrid3>
     </ArticlePage>
   );
 }
