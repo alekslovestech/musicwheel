@@ -39,12 +39,14 @@ export default function MajorVsMinorPage() {
           chordType={ChordType.Major}
           inversionIndex={0}
           caption="G major (G)"
+          play
         />
         <ChordWheel
           rootNote="G"
           chordType={ChordType.Minor}
           inversionIndex={0}
           caption="G minor (Gm)"
+          play
         />
       </ComparisonGrid2>
     </ArticlePage>
