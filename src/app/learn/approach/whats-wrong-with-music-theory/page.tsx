@@ -81,10 +81,12 @@ export default function WhatsWrongWithMusicTheoryPage() {
         <SpelledStaff
           {...AUGMENTED_4TH}
           caption="C–F♯ (augmented fourth)"
+          play
         />
         <SpelledStaff
           {...DIMINISHED_5TH}
           caption="C–G♭ (diminished fifth)"
+          play
         />
       </ComparisonGrid2>
 
@@ -118,11 +120,13 @@ export default function WhatsWrongWithMusicTheoryPage() {
           {...C_MAJOR_TRIAD_IN_C_MINOR}
           keySignature="Cm"
           caption="C major chord in the key of C minor"
+          play
         />
         <SpelledStaff
           {...C_MAJOR_TRIAD_IN_E_MAJOR}
           keySignature="E"
           caption="C major chord in the key of E major"
+          play
         />
       </ComparisonGrid2>
 

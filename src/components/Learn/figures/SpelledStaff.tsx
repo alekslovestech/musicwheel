@@ -5,6 +5,8 @@ import { useMemo } from "react";
 import { LinearKeyboardView } from "@/components/Keyboard/Linear/LinearKeyboardView";
 import { Staff } from "@/components/Learn/figures/Staff";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
+import { FigurePlayButton } from "@/components/Learn/figures/FigurePlayButton";
+import { playChord } from "@/lib/audio/learnPlayback";
 import { makeDurated } from "@/types/Durated";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
 import type { NoteIndices } from "@/types/IndexTypes";
@@ -33,6 +35,7 @@ export function SpelledStaff({
   staffMaxWidth,
   bare = false,
   crossedOut = false,
+  play = false,
 }: {
   chords: readonly (readonly NoteWithOctave[])[];
   caption: string;
@@ -50,6 +53,9 @@ export function SpelledStaff({
   bare?: boolean;
   // Strike through the staff, for a spelling the article shows only to set aside.
   crossedOut?: boolean;
+  // Adds a play button that sounds highlightedNoteIndices together - the notes the staff shows,
+  // for a figure with one chord.
+  play?: boolean;
 }) {
   const steps = useMemo(() => chords.map((chord) => makeDurated([...chord], 1)), [chords]);
   const maxWidth =
@@ -58,6 +64,11 @@ export function SpelledStaff({
   return (
     <FigureFrame
       bare={bare}
+      playControl={
+        play && highlightedNoteIndices?.length ? (
+          <FigurePlayButton onStart={(id) => void playChord(id, highlightedNoteIndices)} />
+        ) : undefined
+      }
       caption={
         <>
           <span className="whitespace-pre-line">{caption}</span>

@@ -47,8 +47,8 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       </p>
 
       <ComparisonGrid2>
-        <SpelledStaff {...C_TO_E} caption="C–E" />
-        <SpelledStaff {...E_TO_G_SHARP} caption="E–G♯" />
+        <SpelledStaff {...C_TO_E} caption="C–E" play />
+        <SpelledStaff {...E_TO_G_SHARP} caption="E–G♯" play />
       </ComparisonGrid2>
 
       <p>
@@ -75,8 +75,8 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
       <p>Start on any note, and the same stack gives you a major chord.</p>
 
       <ComparisonGrid2>
-        <SpelledStaff {...C_MAJOR_TRIAD} caption="C major" />
-        <SpelledStaff {...E_MAJOR_TRIAD} caption="E major" />
+        <SpelledStaff {...C_MAJOR_TRIAD} caption="C major" play />
+        <SpelledStaff {...E_MAJOR_TRIAD} caption="E major" play />
       </ComparisonGrid2>
 
       <p>
@@ -98,11 +98,13 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
           tonic="C"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
+          play
         />
         <ProgressionStaff
           tonic="D"
           progression={ChordProgressionType.Two_Five_One}
           caption=""
+          play
         />
       </ComparisonGrid2>
 
@@ -124,6 +126,7 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         views={["staff", "linear"]}
         isCompact
         hasKeySignature={false}
+        play
       />
       <ScaleFigure
         tonic="C"
@@ -132,6 +135,7 @@ export default function WhatsUsefulAboutMusicTheoryPage() {
         views={["staff", "linear"]}
         isCompact
         hasKeySignature={false}
+        play
       />
 
       <p>

@@ -4,6 +4,8 @@ import { useMemo } from "react";
 
 import { Staff } from "@/components/Learn/figures/Staff";
 import { FigureFrame } from "@/components/Learn/figures/FigureFrame";
+import { FigurePlayButton } from "@/components/Learn/figures/FigurePlayButton";
+import { playProgression } from "@/lib/audio/learnPlayback";
 import { ChordProgressionLibrary } from "@/types/ChordProgressions/ChordProgressionLibrary";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { MusicalKey } from "@/types/Keys/MusicalKey";
@@ -22,6 +24,7 @@ export function ProgressionStaff({
   caption,
   showRomanNumerals = true,
   bare = false,
+  play = false,
 }: {
   tonic: string;
   progression: ChordProgressionType;
@@ -30,6 +33,8 @@ export function ProgressionStaff({
   showRomanNumerals?: boolean;
   /** Render just the figure - no card, padding or caption - for use as an image. */
   bare?: boolean;
+  /** Adds a play button that sounds the progression, each chord for its notated length. */
+  play?: boolean;
 }) {
   const musicalKey = useMemo(
     () =>
@@ -54,18 +59,27 @@ export function ProgressionStaff({
     [musicalKey],
   );
 
-  const steps = useMemo(() => {
-    const prepared = prepareChordProgressionSequence(progression, musicalKey);
-    return StaffUtils.buildDuratedChordStepsForBar(
-      prepared,
-      prepared.steps.map((_, index) => index),
-      musicalKey.getStaffSpellingKey(),
-    );
-  }, [musicalKey, progression]);
+  const prepared = useMemo(
+    () => prepareChordProgressionSequence(progression, musicalKey),
+    [musicalKey, progression],
+  );
+
+  const steps = useMemo(
+    () =>
+      StaffUtils.buildDuratedChordStepsForBar(
+        prepared,
+        prepared.steps.map((_, index) => index),
+        musicalKey.getStaffSpellingKey(),
+      ),
+    [prepared, musicalKey],
+  );
 
   return (
     <FigureFrame
       bare={bare}
+      playControl={
+        play ? <FigurePlayButton onStart={(id) => void playProgression(id, prepared)} /> : undefined
+      }
       caption={
         <>
           <span>{caption}</span>
