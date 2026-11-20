@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useSyncExternalStore } from "react";
+import { isAudioReady, subscribeAudioEngine } from "@/lib/audio/audioEngine";
 import { ScalePlaybackMode } from "@/types/enums/ScalePlaybackMode";
 import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 
@@ -16,7 +17,6 @@ export enum PlaybackState {
 interface AudioContextType {
   isAudioInitialized: boolean;
   playbackState: PlaybackState;
-  setAudioInitialized: (initialized: boolean) => void;
 
   // Unified sequence playback
   startSequencePlayback: (options?: StartSequencePlaybackOptions) => void;
@@ -49,7 +49,7 @@ export const useAudio = () => {
 };
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAudioInitialized, setIsAudioInitialized] = useState(false);
+  const isAudioInitialized = useSyncExternalStore(subscribeAudioEngine, isAudioReady, () => false);
   const [playbackState, setPlaybackState] = useState<PlaybackState>(PlaybackState.SequenceComplete);
 
   const sequencePlayback = useSequencePlayback({
@@ -61,7 +61,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const value: AudioContextType = {
     isAudioInitialized,
     playbackState,
-    setAudioInitialized: setIsAudioInitialized,
     ...sequencePlayback,
   };
 
