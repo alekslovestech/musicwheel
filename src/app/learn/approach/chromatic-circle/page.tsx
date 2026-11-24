@@ -65,7 +65,7 @@ export default function ChromaticCirclePage() {
         <Link href="/learn/chords/triad-inversions" className={LEARN_STYLES.link}>
           chord&apos;s inversion
         </Link>{" "}
-        is the same wedges lit up with a different bass note marked.
+        is the same notes lit up with a different bass note marked.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Other ways to arrange the 12 notes</h2>

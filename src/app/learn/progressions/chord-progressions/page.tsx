@@ -42,7 +42,7 @@ export default function ChordProgressionsPage() {
       />
 
       <p>
-        Start the same pattern on D and every shape moves 2 wedges around the circle together. The
+        Start the same pattern on D and every shape moves 2 semitones around the circle together. The
         chords are different, the progression is the same:
       </p>
 

@@ -43,7 +43,7 @@ export default function CadencesPage() {
 
       <p>
         Written out, the <i>line cliche</i> looks like 3 unrelated chords, 2 of them with extra
-        symbols: C, C+, and A minor over C. On the circle, 2 wedges, C and E, stay lit throughout.
+        symbols: C, C+, and A minor over C. On the circle, 2 notes, C and E, stay lit throughout.
         The third one climbs 1 semitone at a time: G, G♯, A.
       </p>
 

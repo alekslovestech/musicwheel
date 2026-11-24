@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArticlePage } from "@/components/Learn/layout/ArticlePage";
-import { ComparisonGrid2, ComparisonGrid3 } from "@/components/Learn/layout/ComparisonGrid";
+import { ComparisonGrid2 } from "@/components/Learn/layout/ComparisonGrid";
 import { ChordWheel } from "@/components/Learn/figures/ChordWheel";
+import { ProgressionFigure } from "@/components/Learn/figures/ProgressionFigure";
 import { ScaleFigure } from "@/components/Learn/figures/ScaleFigure";
 import { LEARN_STYLES } from "@/lib/design";
 import { learnViewMetadata, metadataForSlugPage } from "@/lib/metadata";
+import { ChordProgressionType } from "@/types/enums/ChordProgressionType";
 import { ChordType } from "@/types/enums/ChordType";
 import { IntervalType } from "@/types/enums/IntervalType";
 import { ScaleModeType } from "@/types/enums/ScaleModeType";
@@ -28,11 +30,12 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
 
       <p>
         Intervals, chords, progressions and scales each have a shape that stays the same wherever
-        it starts. On the wheel, the keyboard&apos;s line of 12 notes bent into a loop (the{" "}
+        it starts. Put the 12 notes of an octave around a circle, and each of these becomes a
+        shape you can see. A shape moved to a new starting note is rotated, never changed. (The{" "}
         <Link href="/learn/approach/chromatic-circle" className={LEARN_STYLES.link}>
           chromatic circle
-        </Link>
-        ), that shape is what you see.
+        </Link>{" "}
+        covers how the wheel is built.)
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Intervals</h2>
@@ -59,11 +62,15 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
         />
       </ComparisonGrid2>
 
-      <p>No staff lines to compare, no sharp to explain away - the 2 wedges are the same shape.</p>
+      <p>Both intervals are 4 semitones, and on the wheel the 2 shapes are identical.</p>
 
       <h2 className={LEARN_STYLES.h2}>Chords</h2>
 
-      <p>A chord is a shape, so a chord&apos;s own wheel is that shape:</p>
+      <p>
+        Stack 2 intervals and you have a chord. A <i>major third</i> (4 semitones) with a{" "}
+        <i>minor third</i> (3 semitones) on top makes a <i>major chord</i>, and its wheel shows the
+        shape:
+      </p>
 
       <ComparisonGrid2>
         <ChordWheel
@@ -82,73 +89,56 @@ export default function MusicTheoryOnTheChromaticCirclePage() {
         />
       </ComparisonGrid2>
 
-      <p>The same triangle, moved to a different starting wedge - nothing else changes.</p>
+      <p>The same triangle, moved to a different starting note - the 4 + 3 stays intact.</p>
 
       <h2 className={LEARN_STYLES.h2}>Chord progressions</h2>
 
-      <p>The 2-5-1, ii–V–I, in C:</p>
+      <p>
+        A chord progression is several chords in a sequence. Each triad chord is a
+        triangle on the wheel, so a progression is a triangle that moves, and what makes it
+        recognizable is how far it moves each time. Take the 2-5-1 (ii–V–I), a common
+        progression in jazz: the chords built on the 2nd, 5th and 1st degrees of the key. Press
+        play and watch the sequence develop:
+      </p>
 
-      <ComparisonGrid3>
-        <ChordWheel
-          rootNote="D"
-          chordType={ChordType.Minor}
-          inversionIndex={0}
-          caption="ii: D minor"
-          showKeyboard={false}
-        />
-        <ChordWheel
-          rootNote="G"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="V: G major"
-          showKeyboard={false}
-        />
-        <ChordWheel
-          rootNote="C"
-          chordType={ChordType.Major}
-          inversionIndex={0}
-          caption="I: C major"
-          showKeyboard={false}
-        />
-      </ComparisonGrid3>
+      <ProgressionFigure
+        tonic="C"
+        progression={ChordProgressionType.Two_Five_One}
+        caption="The 2-5-1 in C"
+        views={["wheel"]}
+      />
 
       <p>
-        A minor triangle, then 2 major ones. Start the same pattern on any other note and it&apos;s
-        the same 2-5-1 in that key.
+        A minor chord, followed by 2 major chords, each rooted on a different note. Start the same
+        pattern on any other note and it&apos;s the same 2-5-1 pattern in a different key.
       </p>
 
       <h2 className={LEARN_STYLES.h2}>Scales</h2>
 
-      <p>C Dorian and C Lydian, same tonic, different pattern of wedges:</p>
+      <p>
+        A scale is a pattern of 7 notes out of the 12. For example, a major scale and a minor scale are 2 different patterns of 7 notes. 
+      </p>
 
       <ComparisonGrid2>
         <ScaleFigure
           tonic="C"
-          scaleType={ScaleModeType.Dorian}
-          caption="C Dorian"
+          scaleType={ScaleModeType.Ionian}
+          caption="C major"
           views={["wheel", "linear"]}
           isCompact
         />
         <ScaleFigure
           tonic="C"
-          scaleType={ScaleModeType.Lydian}
-          caption="C Lydian"
+          scaleType={ScaleModeType.Aeolian}
+          caption="C minor"
           views={["wheel", "linear"]}
           isCompact
         />
       </ComparisonGrid2>
 
       <p>
-        The darker and brighter moods aren&apos;t a few accidentals apart - they&apos;re 2
-        differently-shaped rings around the same point.
-      </p>
-
-      <h2 className={LEARN_STYLES.h2}>The common thread, visible</h2>
-
-      <p>
-        Nothing in the 4 ideas above changed. What changed is that the shape each one depends on
-        is now the thing you&apos;re looking at, not something you have to reconstruct from
-        letters and accidentals.
+        Each scale is a ring around the same tonic, the major scale is <i>brighter</i> while a minor scale is <i>darker</i>. The main difference is the order of the intervals, and that
+        shape is what determines the <i>mood</i> of the scale. 
       </p>
     </ArticlePage>
   );

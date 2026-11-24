@@ -18,7 +18,7 @@ export const metadata: Metadata = metadataForSlugPage(
   learnViewMetadata,
   "/learn/approach/color-coding",
   "Color Coding",
-  "Why every wedge, chord, and step in Music Wheel is colored the way it is - and what that color is actually telling you.",
+  "Why every note, chord, and step in Music Wheel is colored the way it is - and what that color is actually telling you.",
   {
     slug: "color-coding",
     alt: "The wheel with a C major triad highlighted, above a ribbon of the 7 triads of C major, each in the color of its chord quality",

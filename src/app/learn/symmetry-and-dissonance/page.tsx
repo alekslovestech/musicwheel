@@ -82,7 +82,7 @@ export default function SymmetryAndDissonancePage() {
         Unlike the <i>major triad</i>, rotating this shape doesn&apos;t change the gap pattern at all:
         every gap is the same four semitones, so C augmented, E augmented, and G♯ augmented
         aren&apos;t three different chords that happen to share a color - they&apos;re the same
-        three wedges on the wheel, lit for the same reason, no matter which note you call the root.
+        three notes on the wheel, lit for the same reason, no matter which note you call the root.
       </p>
 
       <ComparisonGrid3>
@@ -120,7 +120,7 @@ export default function SymmetryAndDissonancePage() {
         The same logic applies with one more note added: C, D♯, F♯, and A are all three semitones
         from their neighbor, so the shape has four-fold symmetry instead of the <i>augmented
         triad</i>&apos;s three-fold. Root any of those four notes and you light the identical four
-        wedges.
+        notes.
       </p>
 
       <ComparisonGrid4>
@@ -182,7 +182,7 @@ export default function SymmetryAndDissonancePage() {
         <ScaleFigure
           tonic="D"
           scaleType={OtherScaleType.WholeTone}
-          caption="Call D the root instead - the same six wedges, D, E, F♯, G♯, A♯, C."
+          caption="Call D the root instead - the same six notes, D, E, F♯, G♯, A♯, C."
           showStepAnnotations
         />
       </ComparisonGrid2>
@@ -191,7 +191,7 @@ export default function SymmetryAndDissonancePage() {
 
       <p>
         In all four cases the mechanism is identical: an evenly spaced shape maps onto itself when
-        you rotate it, so the wheel can&apos;t point back to any one wedge as more
+        you rotate it, so the wheel can&apos;t point back to any one note as more
         &ldquo;root&rdquo; than the others. What the ear experiences as unresolved tension is that
         structural fact, heard rather than reasoned about - a shape with no distinguishing feature
         to settle on. The more symmetrical the shape, the less it has to say about where it belongs,

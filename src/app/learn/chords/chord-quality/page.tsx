@@ -42,7 +42,7 @@ export default function ChordQualityPage() {
         Because quality is a pattern rather than a specific set of notes, it doesn&apos;t care what
         key you&apos;re in or which note you build it on. A <i>major triad</i> rooted on C and a <i>major
         triad</i> rooted on E are different chords - different notes, different sound in context - but
-        the same quality, the same shape, just rotated to a different starting wedge.
+        the same quality, the same shape, just rotated to a different starting note.
       </p>
 
       <ComparisonGrid2>
